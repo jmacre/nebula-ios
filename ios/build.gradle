@@ -1,0 +1,22 @@
+sourceSets.main.java.srcDirs = [ "src/" ]
+
+sourceCompatibility = '1.7'
+[compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
+
+ext {
+	mainClassName = "IOSLauncher"
+}
+
+launchIPhoneSimulator.dependsOn build
+launchIPadSimulator.dependsOn build
+launchIOSDevice.dependsOn build
+createIPA.dependsOn build
+
+
+robovm {
+	archs = "thumbv7:arm64"
+	iosSignIdentity = "Apple Development: jimmy.macre@gmail.com (7QKY57WL48)"
+	iosProvisioningProfile = "iOS Team Provisioning Profile: com.mygdx.NEBULA"
+}
+
+eclipse.project.name = appName + "-ios"

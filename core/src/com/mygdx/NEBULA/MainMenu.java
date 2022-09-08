@@ -1,0 +1,203 @@
+package com.mygdx.NEBULA;
+
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
+
+import java.util.ArrayList;
+
+public class MainMenu extends GameElements implements Screen {
+    public Prefs prefs = new Prefs();
+    Assets assets;
+
+    Button startButton, TsSoundButton;
+    public Background background;
+
+    float transitionOutOpacity = 0;
+    float transitionInOpacity = 1;
+
+    ArrayList<Float> deltaList = new ArrayList<>();
+    float deltaSum;
+
+    Main game;
+    int score;
+
+    Sprite startButtonInactive, startButtonActive,  blackTransition;
+
+    boolean switchScreens = false;
+    boolean transitionOutReady = false;
+    boolean transitionInDone = false;
+    boolean isTransitioningIn = false;
+    boolean isFadingOut = false;
+    boolean isFadingIn = false;
+    boolean beganFading = false;
+    boolean canRenderBackground = false;
+    boolean isShopOpen = false;
+    boolean soundEnabled, soundLoaded, playSoundHasPlayed;
+    GameInterface gameInterface;
+
+    public MainMenu(Main game, int score, Assets assets) {
+        this.game = game;
+        this.score = score;
+        this.assets = assets;
+        gameInterface = new GameInterface(assets);
+        this.background = new Background(assets);
+
+        prefs.setHighScore(score);
+    }
+
+    @Override
+    public void show() {
+
+        startButton = new Button(assets.assetManager.get(Assets.start_button_inactive, Texture.class), START_BUTTON_X, START_BUTTON_Y_TRANSITIONED, START_BUTTON_WIDTH, START_BUTTON_HEIGHT);
+        TsSoundButton = new Button(assets.assetManager.get(Assets.sound_off_button_ts, Texture.class), TS_SOUND_BUTTON_X, TS_SOUND_BUTTON_Y, TS_SOUND_BUTTON_WIDTH, TS_SOUND_BUTTON_HEIGHT, 100, 100);
+        soundEnabled = prefs.hasSound();
+
+        startButtonInactive = new Sprite(assets.assetManager.get(Assets.start_button_inactive, Texture.class));
+        startButtonActive = new Sprite(assets.assetManager.get(Assets.start_button_active, Texture.class));
+
+        blackTransition = new Sprite(assets.assetManager.get(Assets.black_transition, Texture.class));
+        blackTransition.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
+        blackTransition.setColor(0, 0, 0, 0);
+
+
+    }
+
+    @Override
+    public void render(float delta) {
+        Gdx.gl.glClearColor(0f, 0f, 0f, 1f);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
+        game.batch.enableBlending();
+        game.batch.begin();
+        deltaList.add(delta);
+
+        if(deltaList.size() > 100) {
+            for(int i = 0; i < deltaList.size(); i++){
+                deltaSum += deltaList.get(i);
+            }
+
+            delta = deltaSum / deltaList.size();
+            deltaList.remove(0);
+            deltaSum = 0;
+        }
+
+        if(deltaList.size() >= 100 || canRenderBackground) {
+            if (START_BUTTON_Y >= START_BUTTON_Y_TRANSITIONED && !switchScreens) {
+                isTransitioningIn = true;
+                transitionIn(delta);
+            }
+            else {
+                isTransitioningIn = false;
+                transitionInDone = true;
+                if(!isShopOpen) {
+                    if (gameInterface.checkForStartButtonTap(switchScreens)) {
+                        switchScreens = true;
+                    }
+                }
+
+                if(gameInterface.checkForShopButtonTap(game, isShopOpen, switchScreens, soundEnabled)) {
+                    isShopOpen = true;
+                }
+                if(gameInterface.checkForXButtonTap(game, isShopOpen, soundEnabled)){
+                    isShopOpen = false;
+                }
+            }
+        }
+
+        if(beganFading || (START_BUTTON_Y <= START_BUTTON_Y_TRANSITIONED))
+            canRenderBackground = true;
+
+
+        if(canRenderBackground)
+            background.updateAndRender(delta, false, false, 0, starsAnim, game.batch, true, false, false, true);
+
+        if(switchScreens){
+            if(soundEnabled && !playSoundHasPlayed) {
+                game.playSound.play(0.2f);
+                playSoundHasPlayed = true;
+            }
+                transitionOut(delta);
+                transitionInDone = false;
+
+        }
+
+        if (!soundLoaded) {
+            soundLoaded = true;
+        }
+
+        if(!isShopOpen)
+            gameInterface.drawTitleScreen(game, transitionInDone);
+        else {
+            gameInterface.drawDefaultShopScreen(game, soundEnabled);
+
+        }
+
+        if(isTransitioningIn && !isFadingOut) {
+            fadeIn(delta);
+        }
+
+        if(transitionOutReady) {
+            fadeOut(delta);
+        }
+
+        if(!isFadingOut && !isTransitioningIn){
+            if(transitionInDone  && !switchScreens && !isShopOpen)
+                soundEnabled = gameInterface.checkForTSSoundButtonTap(game, soundEnabled);
+        }
+        game.batch.end();
+    }
+    public void transitionOut(float delta) {
+        transitionOutReady = true;
+
+        if (START_BUTTON_Y < SCREEN_HEIGHT * 1.2f) {
+            START_BUTTON_Y += 1250 * delta;
+            TITLE_LOGO_Y += 1250 * delta;
+            SHOP_BUTTON_Y += 1250 * delta;
+        }
+        if (START_BUTTON_Y > Gdx.graphics.getHeight() * 1.2f) {
+            dispose();
+        }
+    }
+
+    public void transitionIn(float delta){
+        START_BUTTON_Y -= 1250 * delta;
+        SHOP_BUTTON_Y -= 1250 * delta;
+        TITLE_LOGO_Y -= 1250 * delta;
+    }
+
+    @Override
+    public void dispose() {
+        game.setScreen(new MainGame(game, assets, background));
+    }
+
+    public void fadeOut(float delta){
+        isFadingOut = true;
+        transitionOutOpacity += 0.8f * delta;
+        blackTransition.setColor(0,0,0,transitionOutOpacity);
+        blackTransition.draw(game.batch);
+    }
+
+    public void fadeIn(float delta){
+        beganFading = true;
+        isFadingIn = true;
+        transitionInOpacity -= 0.6f * delta;
+        blackTransition.setColor(0,0,0, transitionInOpacity);
+
+        blackTransition.draw(game.batch);
+    }
+
+    @Override
+    public void pause() {}
+
+    @Override
+    public void resume() {}
+
+    @Override
+    public void hide() {}
+
+    @Override
+    public void resize(int width, int height) {}
+}
