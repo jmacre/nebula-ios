@@ -66,14 +66,14 @@ public class GameElements {
     public float LASER_TRAP_H_HEIGHT = LASER_TRAP_H_WIDTH / 12;
     public static final float HEART_HEIGHT = SCREEN_WIDTH/14f;
     public static final float HEART_WIDTH = HEART_HEIGHT * (13.0f/11.0f);
-    public static final float TOP_ELEM_Y = SCREEN_HEIGHT - HEART_HEIGHT * 2.5f;
+    public static float TOP_ELEM_Y = SCREEN_HEIGHT - HEART_HEIGHT * 2.5f;
 
     public static final float RIGHT_HEART_X = SCREEN_WIDTH - SCREEN_WIDTH / 4f;
     public static final float MIDDLE_HEART_X = RIGHT_HEART_X - HEART_WIDTH*1.1f;
     public static final float LEFT_HEART_X = MIDDLE_HEART_X - HEART_WIDTH*1.1f;
 
 
-    public static final float SCORE_Y = SCREEN_HEIGHT - HEART_HEIGHT * 2.5f;
+    public static final float SCORE_Y = SCREEN_HEIGHT - MAIN_UI_HEIGHT/3.175f;
     public static final float SCORE_X = TITLE_LOGO_X;
 
     public static final float MENU_BACK_WIDTH = SCREEN_WIDTH*.9f;

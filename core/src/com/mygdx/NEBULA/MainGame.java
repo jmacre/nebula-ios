@@ -1,5 +1,6 @@
 package com.mygdx.NEBULA;
 
+import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
@@ -187,6 +188,8 @@ public class MainGame extends GameElements implements Screen{
         this.assets = assets;
         gameInterface = new GameInterface(assets);
         this.background = background;
+
+
     }
 
     @Override

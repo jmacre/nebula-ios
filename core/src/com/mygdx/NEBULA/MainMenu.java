@@ -1,5 +1,6 @@
 package com.mygdx.NEBULA;
 
+import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
@@ -40,6 +41,9 @@ public class MainMenu extends GameElements implements Screen {
     boolean soundEnabled, soundLoaded, playSoundHasPlayed;
     GameInterface gameInterface;
 
+    public float scoreY = SCORE_Y;
+    public float soundButtonY = TS_SOUND_BUTTON_Y;
+
     public MainMenu(Main game, int score, Assets assets) {
         this.game = game;
         this.score = score;
@@ -63,7 +67,10 @@ public class MainMenu extends GameElements implements Screen {
         blackTransition.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
         blackTransition.setColor(0, 0, 0, 0);
 
-
+        if(Gdx.app.getType() == Application.ApplicationType.iOS){
+            scoreY = SCREEN_HEIGHT - HEART_HEIGHT * 2.5f;
+            soundButtonY = scoreY - TS_SOUND_BUTTON_HEIGHT/1.5f;
+        }
     }
 
     @Override
