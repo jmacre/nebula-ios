@@ -7,13 +7,14 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
+import static com.mygdx.NEBULA.GameElements.SCREEN_HEIGHT;
 import static com.mygdx.NEBULA.GameElements.SCREEN_WIDTH;
 import static com.mygdx.NEBULA.ItemDrop.HOURGLASS_SPEED_MULTIPLIER;
 
 
 public class Background {
     Assets assets;
-    public static final int DEFAULT_SPEED = 1000;
+    public static final float DEFAULT_SPEED = SCREEN_HEIGHT/3.12f;
 
     Animation<TextureRegion> starsAnimation;
     Sprite backgroundSprite, defaultBackgroundSprite, starsSheet;
@@ -27,7 +28,7 @@ public class Background {
     float hourglassMultiplier = 1;
 
     float speed;
-    int goalSpeed;
+    float goalSpeed;
 
     public Background(Assets assets){
         this.assets = assets;
@@ -45,7 +46,7 @@ public class Background {
 
         speed = DEFAULT_SPEED;
 
-        goalSpeed = 1750;
+        goalSpeed = SCREEN_HEIGHT/1.78f;
         starsAnimation = Anim.createAnimation(starsSheet, 4, 0.1f);
     }
 
