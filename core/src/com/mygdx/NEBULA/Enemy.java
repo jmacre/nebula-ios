@@ -10,6 +10,8 @@ import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 
 import java.util.Random;
 
+import static com.mygdx.NEBULA.ItemDrop.HOURGLASS_SPEED_MULTIPLIER;
+
 public class Enemy extends GameElements {
     public static final int EYEBAT_ID = 0;
     public static final int ENEMY_SHIP_ID = 1;
@@ -20,7 +22,7 @@ public class Enemy extends GameElements {
     ShaderProgram shader = new ShaderProgram(Gdx.files.internal("shaders/hit_blink.vsh"), Gdx.files.internal("shaders/hit_blink.fsh"));
 
     private Sprite enemySheet;
-    private static final int SPEED = 2000;
+    public static final float SPEED = SCREEN_HEIGHT/1.56f;
     public float ENEMY_WIDTH;
     public float ENEMY_HEIGHT;
 
@@ -175,7 +177,7 @@ public class Enemy extends GameElements {
 
     public void update(float delta, Enemy enemy, boolean isHourglass){
         if(isHourglass){
-            hourglassMultiplier = ItemDrop.HOURGLASS_SPEED_MULTIPLIER;
+            hourglassMultiplier = HOURGLASS_SPEED_MULTIPLIER;
         }
         else{
             hourglassMultiplier = 1;
@@ -183,7 +185,7 @@ public class Enemy extends GameElements {
 
         if(id == EYEBAT_ID) {
             if(!isHurt())
-                ENEMY_Y -= SCREEN_HEIGHT/1.5f * delta * ENEMY_Y_SPEED_MULTIPLIER * hourglassMultiplier;
+                ENEMY_Y -= SPEED * delta * ENEMY_Y_SPEED_MULTIPLIER * hourglassMultiplier;
         }
 
         else if(id == ENEMY_SHIP_ID && !shipMovingToPos) {

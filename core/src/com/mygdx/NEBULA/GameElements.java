@@ -32,9 +32,6 @@ public class GameElements {
     public static float TITLE_LOGO_Y = Gdx.graphics.getHeight() * .75f + SCREEN_HEIGHT;
     public static final float TITLE_LOGO_X = SCREEN_WIDTH / 2 - TITLE_LOGO_WIDTH/2;
 
-    public static final float SCORE_Y = SCREEN_HEIGHT - MAIN_UI_HEIGHT/3.175f;
-    public static final float SCORE_X = TITLE_LOGO_X;
-
     public static final float SHIP_WIDTH = SCREEN_WIDTH/6.5f;
     public static final float SHIP_HEIGHT = SHIP_WIDTH * (51.0f/43.0f);
 
@@ -53,6 +50,9 @@ public class GameElements {
     public static float GREEN_EYEBAT_WIDTH = BLUE_EYEBAT_WIDTH * 43/38f;
     public static float GREEN_EYEBAT_HEIGHT = GREEN_EYEBAT_WIDTH * (27f/43f);
 
+    public static float RED_EYEBAT_WIDTH = GREEN_EYEBAT_WIDTH;
+    public static float RED_EYEBAT_HEIGHT = GREEN_EYEBAT_HEIGHT;
+
     public static final float MIN_ENEMY_SHIP_SPAWN_TIME = 4.25f; //seconds
     public static final float MAX_ENEMY_SHIP_SPAWN_TIME = 7f;
 
@@ -66,11 +66,15 @@ public class GameElements {
     public float LASER_TRAP_H_HEIGHT = LASER_TRAP_H_WIDTH / 12;
     public static final float HEART_HEIGHT = SCREEN_WIDTH/14f;
     public static final float HEART_WIDTH = HEART_HEIGHT * (13.0f/11.0f);
-    public static final float TOP_ELEM_Y = SCREEN_HEIGHT - HEART_HEIGHT * 1.75f;
+    public static final float TOP_ELEM_Y = SCREEN_HEIGHT - HEART_HEIGHT * 2.5f;
 
     public static final float RIGHT_HEART_X = SCREEN_WIDTH - SCREEN_WIDTH / 4f;
     public static final float MIDDLE_HEART_X = RIGHT_HEART_X - HEART_WIDTH*1.1f;
     public static final float LEFT_HEART_X = MIDDLE_HEART_X - HEART_WIDTH*1.1f;
+
+
+    public static final float SCORE_Y = SCREEN_HEIGHT - HEART_HEIGHT * 2.5f;
+    public static final float SCORE_X = TITLE_LOGO_X;
 
     public static final float MENU_BACK_WIDTH = SCREEN_WIDTH*.9f;
     public static final float MENU_BACK_HEIGHT = MENU_BACK_WIDTH/1.733f;

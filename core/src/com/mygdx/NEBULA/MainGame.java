@@ -19,6 +19,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
 
+import static com.mygdx.NEBULA.ItemDrop.HOURGLASS_TIMER;
+import static com.mygdx.NEBULA.ItemDrop.MISSILE_TIMER;
+import static com.mygdx.NEBULA.ItemDrop.RAPID_FIRE_TIMER;
 import static com.mygdx.NEBULA.Anim.DEFAULT_FRAME_DURATION;
 import static com.mygdx.NEBULA.Enemy.ENEMY_SHIP_ID;
 import static com.mygdx.NEBULA.Enemy.EYEBAT_ID;
@@ -266,7 +269,6 @@ public class MainGame extends GameElements implements Screen{
 
         deltaList.add(delta);
 
-
         if(deltaList.size() >= 60) {
             for (int i = 0; i < deltaList.size(); i++) {
                 deltaSum += deltaList.get(i);
@@ -301,7 +303,7 @@ public class MainGame extends GameElements implements Screen{
 
         if (fadeInOpacity < 1) {
             musicPosition = mainMusic.getPosition();
-            background.updateAndRender(deltaP, isAlive, isHourglass, score,starsAnim, game.batch, false, isResettingScreen, false, false);
+            background.updateAndRender(deltaP, isAlive, isHourglass, score, starsAnim, game.batch, false, isResettingScreen, false, false);
             if(!isRunningResumeCountdown) {
                 bulletTimer += deltaP;
                 for (Enemy enemy : enemies) {
@@ -820,7 +822,7 @@ public class MainGame extends GameElements implements Screen{
         }
         if(isTransitionedIn) {
             gl.setText(Main.scoreFont, String.valueOf(score));
-            Main.scoreFont.draw(game.batch, gl, SCORE_X, SCREEN_HEIGHT - gl.height);
+            Main.scoreFont.draw(game.batch, gl, SCORE_X, SCREEN_HEIGHT - gl.height*2f);
             gameInterface.drawTopUI(game, isPaused || isRunningResumeCountdown, health, isAlive, isTransitionedIn);
         }
     }
@@ -930,7 +932,7 @@ public class MainGame extends GameElements implements Screen{
                 eyebatSpawnTimer = random.nextFloat() * (maxEyebatSpawnTime - minEyebatSpawnTime) + minEyebatSpawnTime;
             }
             else if(score <= 3000){
-                enemies.add(new Enemy(EYEBAT_ID, RED_ID, 2, randomSpawnLocation, 1.2f * BLUE_EYEBAT_WIDTH, 1.2f * BLUE_EYEBAT_HEIGHT, 0.65f + speedIncrease / 1.5f, 0.2f + speedIncrease / 1.5f, (float) (DEFAULT_FRAME_DURATION * (1.5 - speedIncrease / 2)), false, hurtTimer, assets));
+                enemies.add(new Enemy(EYEBAT_ID, RED_ID, 2, randomSpawnLocation, RED_EYEBAT_WIDTH, RED_EYEBAT_HEIGHT, 0.65f + speedIncrease / 1.5f, 0.2f + speedIncrease / 1.5f, (float) (DEFAULT_FRAME_DURATION * (1.5 - speedIncrease / 2)), false, hurtTimer, assets));
                 eyebatSpawnTimer = random.nextFloat() * (maxEyebatSpawnTime - minEyebatSpawnTime) + minEyebatSpawnTime;
             }
             else if(score <= 4000){

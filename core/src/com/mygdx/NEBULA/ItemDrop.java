@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
+import static com.mygdx.NEBULA.GameElements.SCREEN_HEIGHT;
 import static com.mygdx.NEBULA.MainGame.MAIN_UI_HEIGHT;
 
 public class ItemDrop {
@@ -43,7 +44,7 @@ public class ItemDrop {
     public Sprite itemSheet;
     Anim itemAnim;
 
-    public static final int SPEED = 2000;
+    public static final float SPEED = SCREEN_HEIGHT/1.56f;
 
     public int lastChangedDirectionTime;
 
@@ -61,7 +62,7 @@ public class ItemDrop {
 
     public ItemDrop(float ITEM_X, float ITEM_HEIGHT, float ITEM_WIDTH, int itemId, Assets assets) {
         this.ITEM_X = ITEM_X;
-        this.ITEM_Y = 1.2f * MainGame.SCREEN_HEIGHT;
+        this.ITEM_Y = 1.2f * SCREEN_HEIGHT;
         ItemDrop.ITEM_HEIGHT = ITEM_HEIGHT;
         ItemDrop.ITEM_WIDTH = ITEM_WIDTH;
 

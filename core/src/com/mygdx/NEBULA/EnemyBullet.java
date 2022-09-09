@@ -5,12 +5,13 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import static com.mygdx.NEBULA.GameElements.ENEMY_SHIP_WIDTH;
+import static com.mygdx.NEBULA.GameElements.SCREEN_HEIGHT;
 
 
 public class EnemyBullet {
     public Sprite enemyBulletSprite;
     Assets assets;
-    public static final int SPEED = 2000;
+    public static final float SPEED = SCREEN_HEIGHT/1.56f;
 
     float ENEMY_BULLET_X, ENEMY_BULLET_Y;
     public static float ENEMY_BULLET_WIDTH = ENEMY_SHIP_WIDTH * (2/31f);

@@ -18,6 +18,8 @@ public class MainMenu extends GameElements implements Screen {
     float transitionOutOpacity = 0;
     float transitionInOpacity = 1;
 
+    float transitionSpeed = SCREEN_HEIGHT / 2.496f;
+
     ArrayList<Float> deltaList = new ArrayList<>();
     float deltaSum;
 
@@ -50,7 +52,6 @@ public class MainMenu extends GameElements implements Screen {
 
     @Override
     public void show() {
-
         startButton = new Button(assets.assetManager.get(Assets.start_button_inactive, Texture.class), START_BUTTON_X, START_BUTTON_Y_TRANSITIONED, START_BUTTON_WIDTH, START_BUTTON_HEIGHT);
         TsSoundButton = new Button(assets.assetManager.get(Assets.sound_off_button_ts, Texture.class), TS_SOUND_BUTTON_X, TS_SOUND_BUTTON_Y, TS_SOUND_BUTTON_WIDTH, TS_SOUND_BUTTON_HEIGHT, 100, 100);
         soundEnabled = prefs.hasSound();
@@ -153,9 +154,9 @@ public class MainMenu extends GameElements implements Screen {
         transitionOutReady = true;
 
         if (START_BUTTON_Y < SCREEN_HEIGHT * 1.2f) {
-            START_BUTTON_Y += 1250 * delta;
-            TITLE_LOGO_Y += 1250 * delta;
-            SHOP_BUTTON_Y += 1250 * delta;
+            START_BUTTON_Y += transitionSpeed * delta;
+            TITLE_LOGO_Y += transitionSpeed * delta;
+            SHOP_BUTTON_Y += transitionSpeed * delta;
         }
         if (START_BUTTON_Y > Gdx.graphics.getHeight() * 1.2f) {
             dispose();
@@ -163,9 +164,9 @@ public class MainMenu extends GameElements implements Screen {
     }
 
     public void transitionIn(float delta){
-        START_BUTTON_Y -= 1250 * delta;
-        SHOP_BUTTON_Y -= 1250 * delta;
-        TITLE_LOGO_Y -= 1250 * delta;
+        START_BUTTON_Y -= transitionSpeed * delta;
+        SHOP_BUTTON_Y -= transitionSpeed * delta;
+        TITLE_LOGO_Y -= transitionSpeed * delta;
     }
 
     @Override

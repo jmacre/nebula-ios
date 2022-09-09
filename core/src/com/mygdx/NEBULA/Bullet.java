@@ -5,11 +5,13 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
+import static com.mygdx.NEBULA.ItemDrop.HOURGLASS_SPEED_MULTIPLIER;
+
 public class Bullet extends GameElements {
     public Sprite bulletSprite, missileSheet;
     Animation<TextureRegion> missileAnimation;
 
-    public static final int SPEED = 2000;
+    public static final float SPEED = SCREEN_HEIGHT/1.56f;
 
     public static float BULLET_WIDTH = SHIP_WIDTH*(2/27f);
     public static float BULLET_HEIGHT = BULLET_WIDTH*4f;
@@ -53,7 +55,7 @@ public class Bullet extends GameElements {
             BULLET_Y += SPEED * delta;
 
         else {
-            BULLET_Y += (SPEED * delta) * .75f  * ItemDrop.HOURGLASS_SPEED_MULTIPLIER;;
+            BULLET_Y += (SPEED * delta) * .75f  * HOURGLASS_SPEED_MULTIPLIER;;
         }
 
         if (BULLET_Y > SCREEN_HEIGHT)
