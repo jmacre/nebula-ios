@@ -10,9 +10,7 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 
 
 public class Main extends Game {
-
 	public SpriteBatch batch;
-
 
 	public static BitmapFont scoreFont;
 	public FreeTypeFontGenerator generator;

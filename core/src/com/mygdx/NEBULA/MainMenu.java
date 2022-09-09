@@ -1,6 +1,5 @@
 package com.mygdx.NEBULA;
 
-import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
@@ -13,7 +12,6 @@ public class MainMenu extends GameElements implements Screen {
     public Prefs prefs = new Prefs();
     Assets assets;
 
-    Button startButton, TsSoundButton;
     public Background background;
 
     float transitionOutOpacity = 0;
@@ -41,9 +39,6 @@ public class MainMenu extends GameElements implements Screen {
     boolean soundEnabled, soundLoaded, playSoundHasPlayed;
     GameInterface gameInterface;
 
-    public float scoreY = SCORE_Y;
-    public float soundButtonY = TS_SOUND_BUTTON_Y;
-
     public MainMenu(Main game, int score, Assets assets) {
         this.game = game;
         this.score = score;
@@ -56,8 +51,6 @@ public class MainMenu extends GameElements implements Screen {
 
     @Override
     public void show() {
-        startButton = new Button(assets.assetManager.get(Assets.start_button_inactive, Texture.class), START_BUTTON_X, START_BUTTON_Y_TRANSITIONED, START_BUTTON_WIDTH, START_BUTTON_HEIGHT);
-        TsSoundButton = new Button(assets.assetManager.get(Assets.sound_off_button_ts, Texture.class), TS_SOUND_BUTTON_X, TS_SOUND_BUTTON_Y, TS_SOUND_BUTTON_WIDTH, TS_SOUND_BUTTON_HEIGHT, 100, 100);
         soundEnabled = prefs.hasSound();
 
         startButtonInactive = new Sprite(assets.assetManager.get(Assets.start_button_inactive, Texture.class));
@@ -66,11 +59,6 @@ public class MainMenu extends GameElements implements Screen {
         blackTransition = new Sprite(assets.assetManager.get(Assets.black_transition, Texture.class));
         blackTransition.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
         blackTransition.setColor(0, 0, 0, 0);
-
-        if(Gdx.app.getType() == Application.ApplicationType.iOS){
-            scoreY = SCREEN_HEIGHT - HEART_HEIGHT * 2.5f;
-            soundButtonY = scoreY - TS_SOUND_BUTTON_HEIGHT/1.5f;
-        }
     }
 
     @Override
@@ -154,6 +142,7 @@ public class MainMenu extends GameElements implements Screen {
         if(!isFadingOut && !isTransitioningIn){
             if(transitionInDone  && !switchScreens && !isShopOpen)
                 soundEnabled = gameInterface.checkForTSSoundButtonTap(game, soundEnabled);
+
         }
         game.batch.end();
     }

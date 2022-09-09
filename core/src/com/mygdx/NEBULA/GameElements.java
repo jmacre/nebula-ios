@@ -66,14 +66,17 @@ public class GameElements {
     public float LASER_TRAP_H_HEIGHT = LASER_TRAP_H_WIDTH / 12;
     public static final float HEART_HEIGHT = SCREEN_WIDTH/14f;
     public static final float HEART_WIDTH = HEART_HEIGHT * (13.0f/11.0f);
-    public static float TOP_ELEM_Y = SCREEN_HEIGHT - HEART_HEIGHT * 2.5f;
+
+    public static float TOP_ELEM_Y_AND = SCREEN_HEIGHT - HEART_HEIGHT * 1.75f;
+    public static float TOP_ELEM_Y_IOS = SCREEN_HEIGHT - HEART_HEIGHT * 2.5f;
 
     public static final float RIGHT_HEART_X = SCREEN_WIDTH - SCREEN_WIDTH / 4f;
     public static final float MIDDLE_HEART_X = RIGHT_HEART_X - HEART_WIDTH*1.1f;
     public static final float LEFT_HEART_X = MIDDLE_HEART_X - HEART_WIDTH*1.1f;
 
 
-    public static final float SCORE_Y = SCREEN_HEIGHT - MAIN_UI_HEIGHT/3.175f;
+    public static final float SCORE_Y_AND = SCREEN_HEIGHT - MAIN_UI_HEIGHT/3.175f;
+    public static final float SCORE_Y_IOS = SCREEN_HEIGHT - MAIN_UI_HEIGHT/1.25f;
     public static final float SCORE_X = TITLE_LOGO_X;
 
     public static final float MENU_BACK_WIDTH = SCREEN_WIDTH*.9f;
@@ -131,10 +134,11 @@ public class GameElements {
     public static float SHOP_BUTTON_Y = .3f * (.75f*START_BUTTON_Y) - START_BUTTON_HEIGHT + SCREEN_HEIGHT;
     public static float SHOP_BUTTON_Y_TRANSITIONED = .3f* (.7f*START_BUTTON_Y) - START_BUTTON_HEIGHT;
 
-    public static final float TS_SOUND_BUTTON_WIDTH = SCREEN_WIDTH / 12;
+    public static final float TS_SOUND_BUTTON_WIDTH = SCREEN_WIDTH / 10;
     public static final float TS_SOUND_BUTTON_HEIGHT = TS_SOUND_BUTTON_WIDTH;
-    public static final float TS_SOUND_BUTTON_X = SCREEN_WIDTH - SCREEN_WIDTH / 10;
-    public static final float TS_SOUND_BUTTON_Y = SCORE_Y - TS_SOUND_BUTTON_HEIGHT/1.5f;
+    public static final float TS_SOUND_BUTTON_X = SCREEN_WIDTH - SCREEN_WIDTH / 8;
+    public static final float TS_SOUND_BUTTON_Y_AND = SCORE_Y_AND - TS_SOUND_BUTTON_HEIGHT/1.5f;
+    public static final float TS_SOUND_BUTTON_Y_IOS = SCORE_Y_IOS - TS_SOUND_BUTTON_HEIGHT/1.5f;
 
     public static final float PAUSE_BUTTON_X = SCREEN_WIDTH - SCREEN_WIDTH / 7.5f;
     public static final float PAUSE_BUTTON_Y = SCREEN_HEIGHT - MAIN_UI_HEIGHT / 2.1f - (MAIN_UI_HEIGHT / 2.5f) / 2;

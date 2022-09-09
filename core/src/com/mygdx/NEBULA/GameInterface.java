@@ -1,5 +1,6 @@
 package com.mygdx.NEBULA;
 
+import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
@@ -35,6 +36,10 @@ public class GameInterface extends GameElements{
     GlyphLayout gl;
     Boolean confirmLeaveScreenOpen = false;
 
+    float tsSoundButtonY;
+    float scoreY;
+    float topElemY;
+
     public Prefs prefs = new Prefs();
     public FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
 
@@ -47,14 +52,25 @@ public class GameInterface extends GameElements{
         soundButton = new Button(assets.assetManager.get(Assets.sound_on_button_active, Texture.class), SOUND_BUTTON_X, SOUND_BUTTON_Y, SOUND_BUTTON_WIDTH, SOUND_BUTTON_HEIGHT);
 
         xButton = new Button(assets.assetManager.get(Assets.x_button, Texture.class), X_BUTTON_X, X_BUTTON_Y, X_BUTTON_WIDTH, X_BUTTON_HEIGHT, X_BUTTON_WIDTH/2, X_BUTTON_HEIGHT/2);
-        yesButton = new Button(assets.assetManager.get(Assets.yes_button_inactive, Texture.class), YES_BUTTON_X, YES_BUTTON_Y, YES_BUTTON_WIDTH, YES_BUTTON_HEIGHT, 0, 0);
-        noButton = new Button(assets.assetManager.get(Assets.no_button_inactive, Texture.class), NO_BUTTON_X, NO_BUTTON_Y, NO_BUTTON_WIDTH, NO_BUTTON_HEIGHT, 0, 0);
+        yesButton = new Button(assets.assetManager.get(Assets.yes_button_inactive, Texture.class), YES_BUTTON_X, YES_BUTTON_Y, YES_BUTTON_WIDTH, YES_BUTTON_HEIGHT);
+        noButton = new Button(assets.assetManager.get(Assets.no_button_inactive, Texture.class), NO_BUTTON_X, NO_BUTTON_Y, NO_BUTTON_WIDTH, NO_BUTTON_HEIGHT);
 //        upgradeButton = new Button(assets.assetManager.get(Assets.upgrade_button, Texture.class), 0,0,0,0);
 
         textParameter.size = Gdx.graphics.getWidth()/14;
         storeFont = generator.generateFont(textParameter);
 
-        tsSoundButton = new Button(assets.assetManager.get(Assets.sound_off_button_ts, Texture.class), TS_SOUND_BUTTON_X, TS_SOUND_BUTTON_Y, TS_SOUND_BUTTON_WIDTH, TS_SOUND_BUTTON_HEIGHT, TS_SOUND_BUTTON_WIDTH, TS_SOUND_BUTTON_HEIGHT);
+        if(Gdx.app.getType() == Application.ApplicationType.Android){
+            tsSoundButtonY = TS_SOUND_BUTTON_Y_AND;
+            scoreY = SCORE_Y_AND;
+            topElemY = TOP_ELEM_Y_AND;
+        }
+        else{
+            tsSoundButtonY = TS_SOUND_BUTTON_Y_IOS;
+            scoreY = SCORE_Y_IOS;
+            topElemY = TOP_ELEM_Y_IOS;
+        }
+
+        tsSoundButton = new Button(assets.assetManager.get(Assets.sound_off_button_ts, Texture.class), TS_SOUND_BUTTON_X, tsSoundButtonY, TS_SOUND_BUTTON_WIDTH, TS_SOUND_BUTTON_HEIGHT, TS_SOUND_BUTTON_WIDTH/2, TS_SOUND_BUTTON_HEIGHT/2);
         pauseButton = new Button(assets.assetManager.get(Assets.pause_button, Texture.class), PAUSE_BUTTON_X, PAUSE_BUTTON_Y, PAUSE_BUTTON_WIDTH, PAUSE_BUTTON_HEIGHT, PAUSE_BUTTON_WIDTH, PAUSE_BUTTON_HEIGHT);
         homeButton = new Button(assets.assetManager.get(Assets.home_button_inactive, Texture.class), HOME_BUTTON_X, HOME_BUTTON_Y, HOME_BUTTON_WIDTH, HOME_BUTTON_HEIGHT);
         playButton = new Button(assets.assetManager.get(Assets.play_button_inactive, Texture.class), PLAY_BUTTON_X, PLAY_BUTTON_Y, PLAY_BUTTON_WIDTH, PLAY_BUTTON_HEIGHT);
@@ -77,27 +93,27 @@ public class GameInterface extends GameElements{
 
     public void drawTopUI(Main game, boolean isPaused, int health, boolean isAlive, boolean isTransitionedIn){
         if(!isPaused && isAlive && isTransitionedIn)
-            game.batch.draw(pauseButton.getTexture(), SCREEN_WIDTH - SCREEN_WIDTH / 7.5f, TOP_ELEM_Y, HEART_WIDTH * 1.3f, HEART_HEIGHT);
+            game.batch.draw(pauseButton.getTexture(), SCREEN_WIDTH - SCREEN_WIDTH / 7.5f, topElemY, HEART_WIDTH * 1.3f, HEART_HEIGHT);
 
         if(health == 3) {
-            game.batch.draw(heart1, RIGHT_HEART_X, TOP_ELEM_Y, HEART_WIDTH, HEART_HEIGHT);
-            game.batch.draw(heart2, MIDDLE_HEART_X, TOP_ELEM_Y, HEART_WIDTH, HEART_HEIGHT);
-            game.batch.draw(heart3, LEFT_HEART_X, TOP_ELEM_Y, HEART_WIDTH, HEART_HEIGHT);
+            game.batch.draw(heart1, RIGHT_HEART_X, topElemY, HEART_WIDTH, HEART_HEIGHT);
+            game.batch.draw(heart2, MIDDLE_HEART_X, topElemY, HEART_WIDTH, HEART_HEIGHT);
+            game.batch.draw(heart3, LEFT_HEART_X, topElemY, HEART_WIDTH, HEART_HEIGHT);
         }
         if(health == 2) {
-            game.batch.draw(heartMissing1, RIGHT_HEART_X, TOP_ELEM_Y, HEART_WIDTH, HEART_HEIGHT);
-            game.batch.draw(heart2, MIDDLE_HEART_X, TOP_ELEM_Y, HEART_WIDTH, HEART_HEIGHT);
-            game.batch.draw(heart3, LEFT_HEART_X, TOP_ELEM_Y, HEART_WIDTH, HEART_HEIGHT);
+            game.batch.draw(heartMissing1, RIGHT_HEART_X, topElemY, HEART_WIDTH, HEART_HEIGHT);
+            game.batch.draw(heart2, MIDDLE_HEART_X, topElemY, HEART_WIDTH, HEART_HEIGHT);
+            game.batch.draw(heart3, LEFT_HEART_X, topElemY, HEART_WIDTH, HEART_HEIGHT);
         }
         if(health == 1) {
-            game.batch.draw(heartMissing1, RIGHT_HEART_X, TOP_ELEM_Y, HEART_WIDTH, HEART_HEIGHT);
-            game.batch.draw(heartMissing2, MIDDLE_HEART_X, TOP_ELEM_Y, HEART_WIDTH, HEART_HEIGHT);
-            game.batch.draw(heart3, LEFT_HEART_X, TOP_ELEM_Y, HEART_WIDTH, HEART_HEIGHT);
+            game.batch.draw(heartMissing1, RIGHT_HEART_X, topElemY, HEART_WIDTH, HEART_HEIGHT);
+            game.batch.draw(heartMissing2, MIDDLE_HEART_X, topElemY, HEART_WIDTH, HEART_HEIGHT);
+            game.batch.draw(heart3, LEFT_HEART_X, topElemY, HEART_WIDTH, HEART_HEIGHT);
         }
         if(health == 0) {
-            game.batch.draw(heartMissing1, RIGHT_HEART_X, TOP_ELEM_Y, HEART_WIDTH, HEART_HEIGHT);
-            game.batch.draw(heartMissing2, MIDDLE_HEART_X, TOP_ELEM_Y, HEART_WIDTH, HEART_HEIGHT);
-            game.batch.draw(heartMissing3, LEFT_HEART_X, TOP_ELEM_Y, HEART_WIDTH, HEART_HEIGHT);
+            game.batch.draw(heartMissing1, RIGHT_HEART_X, topElemY, HEART_WIDTH, HEART_HEIGHT);
+            game.batch.draw(heartMissing2, MIDDLE_HEART_X, topElemY, HEART_WIDTH, HEART_HEIGHT);
+            game.batch.draw(heartMissing3, LEFT_HEART_X, topElemY, HEART_WIDTH, HEART_HEIGHT);
         }
     }
     public void drawTitleScreen(Main game, boolean transitionInDone) {
@@ -112,20 +128,27 @@ public class GameInterface extends GameElements{
 
         if (transitionInDone) {
             titleTexture.setTexture(assets.assetManager.get(Assets.title_logo, Texture.class));
-            scoreFont.draw(game.batch, "HIGH SCORE: " + prefs.getHighScore(), SCORE_X, SCORE_Y);
-            game.batch.draw(tsSoundButton.getTexture(), TS_SOUND_BUTTON_X, TS_SOUND_BUTTON_Y, TS_SOUND_BUTTON_WIDTH, TS_SOUND_BUTTON_HEIGHT);
+                scoreFont.draw(game.batch, "HIGH SCORE: " + prefs.getHighScore(), SCORE_X, scoreY);
+                game.batch.draw(tsSoundButton.getTexture(), TS_SOUND_BUTTON_X, tsSoundButtonY, TS_SOUND_BUTTON_WIDTH, TS_SOUND_BUTTON_HEIGHT);
+
         }
     }
 
     public boolean checkForTSSoundButtonTap(Main game, boolean soundEnabled) {
-        if(tsSoundButton.getTapped()) {
+        if(tsSoundButton.getTappedBefore()) {
             if (prefs.hasSound()) {
                 tsSoundButton.setTexture(assets.assetManager.get(Assets.sound_off_button_ts, Texture.class));
+            }
+            else {
+                tsSoundButton.setTexture(assets.assetManager.get(Assets.sound_on_button_ts, Texture.class));
+            }
+        }
+        if(tsSoundButton.getReleased()){
+            if (prefs.hasSound()) {
                 prefs.setSound(false);
                 soundEnabled = false;
             }
             else {
-                tsSoundButton.setTexture(assets.assetManager.get(Assets.sound_on_button_ts, Texture.class));
                 prefs.setSound(true);
                 soundEnabled = true;
                 game.playSound.play(0.2f);
