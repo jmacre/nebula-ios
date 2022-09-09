@@ -825,7 +825,13 @@ public class MainGame extends GameElements implements Screen{
         }
         if(isTransitionedIn) {
             gl.setText(Main.scoreFont, String.valueOf(score));
-            Main.scoreFont.draw(game.batch, gl, SCORE_X, SCREEN_HEIGHT - gl.height*2f);
+
+            if(Gdx.app.getType() == Application.ApplicationType.iOS) {
+                Main.scoreFont.draw(game.batch, gl, SCORE_X, SCREEN_HEIGHT - gl.height * 2f);
+            }
+            else{
+                Main.scoreFont.draw(game.batch, gl, SCORE_X, SCREEN_HEIGHT - gl.height);
+            }
             gameInterface.drawTopUI(game, isPaused || isRunningResumeCountdown, health, isAlive, isTransitionedIn);
         }
     }

@@ -75,8 +75,8 @@ public class GameElements {
     public static final float LEFT_HEART_X = MIDDLE_HEART_X - HEART_WIDTH*1.1f;
 
 
-    public static final float SCORE_Y_AND = SCREEN_HEIGHT - MAIN_UI_HEIGHT/3.175f;
-    public static final float SCORE_Y_IOS = SCREEN_HEIGHT - MAIN_UI_HEIGHT/1.25f;
+    public static final float SCORE_Y_AND = SCREEN_HEIGHT - MAIN_UI_HEIGHT/3f;
+    public static final float SCORE_Y_IOS = SCREEN_HEIGHT - MAIN_UI_HEIGHT;
     public static final float SCORE_X = TITLE_LOGO_X;
 
     public static final float MENU_BACK_WIDTH = SCREEN_WIDTH*.9f;
