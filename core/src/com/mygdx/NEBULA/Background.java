@@ -34,6 +34,7 @@ public class Background {
         this.assets = assets;
 
         backgroundSprite = new Sprite(assets.assetManager.get(Assets.default_background, Texture.class));
+        backgroundSprite.setBounds(0,0, SCREEN_WIDTH, SCREEN_WIDTH*12);
         transitionSprite = backgroundSprite;
 
         defaultBackgroundSprite = backgroundSprite;

@@ -24,7 +24,7 @@ public class Assets implements Disposable {
     public static final String red_background = "ui/red_background.png";
     public static final String black_background = "ui/black_background.png";
 
-    public static final String stars = "misc/stars.png";
+    public static final String stars = "ui/stars.png";
 
     public static final String start_button_inactive = "ui/start_button_inactive.png";
     public static final String start_button_inactive_clear = "ui/start_button_inactive_clear.png";

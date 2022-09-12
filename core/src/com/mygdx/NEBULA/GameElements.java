@@ -32,7 +32,7 @@ public class GameElements {
     public static float TITLE_LOGO_Y = Gdx.graphics.getHeight() * .75f + SCREEN_HEIGHT;
     public static final float TITLE_LOGO_X = SCREEN_WIDTH / 2 - TITLE_LOGO_WIDTH/2;
 
-    public static final float SHIP_WIDTH = SCREEN_WIDTH/6.5f;
+    public static final float SHIP_WIDTH = SCREEN_WIDTH/6.5185185f;
     public static final float SHIP_HEIGHT = SHIP_WIDTH * (51.0f/43.0f);
 
     public static float SHIP_X = SCREEN_WIDTH/2 - SHIP_WIDTH/2;
