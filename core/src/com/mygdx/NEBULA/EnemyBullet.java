@@ -35,6 +35,7 @@ public class EnemyBullet {
 
         this.rect = new Collision(ENEMY_BULLET_X, ENEMY_BULLET_Y, ENEMY_BULLET_WIDTH, ENEMY_BULLET_HEIGHT);
         enemyBulletSprite = new Sprite(assets.assetManager.get(Assets.bullet_red, Texture.class));
+        enemyBulletSprite.setSize(ENEMY_BULLET_WIDTH, ENEMY_BULLET_HEIGHT);
 
     }
 
@@ -44,6 +45,9 @@ public class EnemyBullet {
             remove = true;
         }
         rect.move(ENEMY_BULLET_X, ENEMY_BULLET_Y);
+        if(enemyBulletSprite != null) {
+            enemyBulletSprite.setPosition(ENEMY_BULLET_X, ENEMY_BULLET_Y);
+        }
     }
 
     public float getBulletY(){
@@ -54,8 +58,8 @@ public class EnemyBullet {
         return ENEMY_BULLET_X;
     }
 
-    public void render (SpriteBatch batch, float width, float height) {
-        batch.draw(enemyBulletSprite, ENEMY_BULLET_X, ENEMY_BULLET_Y, width, height);
+    public void render (SpriteBatch batch) {
+        enemyBulletSprite.draw(batch);
     }
 
     public Collision getCollision() {

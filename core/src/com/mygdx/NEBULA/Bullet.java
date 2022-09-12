@@ -33,16 +33,19 @@ public class Bullet extends GameElements {
         if(isMissile) {
             this.rect = new Collision(BULLET_X, BULLET_Y, MISSILE_WIDTH, MISSILE_HEIGHT);
             missileSheet = new Sprite(assets.assetManager.get(Assets.missile_ss, Texture.class));
+            missileSheet.setSize(MISSILE_WIDTH, MISSILE_HEIGHT);
             missileAnimation = Anim.createAnimation(missileSheet, 4, Anim.DEFAULT_FRAME_DURATION*1.5f);
         }
         else if(isRapidFire){
             this.rect = new Collision(BULLET_X, BULLET_Y, BULLET_WIDTH, BULLET_HEIGHT);
             bulletSprite = new Sprite(assets.assetManager.get(Assets.bullet_blue, Texture.class));
+            bulletSprite.setSize(BULLET_WIDTH, BULLET_HEIGHT);
         }
 
         else {
             this.rect = new Collision(BULLET_X, BULLET_Y, BULLET_WIDTH, BULLET_HEIGHT);
             bulletSprite = new Sprite(assets.assetManager.get(Assets.bullet_yellow, Texture.class));
+            bulletSprite.setSize(BULLET_WIDTH, BULLET_HEIGHT);
         }
     }
 
@@ -62,6 +65,10 @@ public class Bullet extends GameElements {
             remove = true;
 
         rect.move(this.BULLET_X, this.BULLET_Y);
+
+        if(bulletSprite != null) {
+            bulletSprite.setPosition(BULLET_X, BULLET_Y);
+        }
     }
 
     public float getBulletY(){
@@ -80,11 +87,10 @@ public class Bullet extends GameElements {
         return BULLET_HEIGHT;
     }
 
-    public void render (SpriteBatch batch, float delta, float width, float height) {
-        stateTime += delta / 6;
-        batch.draw(bulletSprite, BULLET_X, BULLET_Y, width, height);
-
+    public void render (SpriteBatch batch) {
+        bulletSprite.draw(batch);
     }
+
     public void render (Anim missileAnim, float delta, float width, float height, SpriteBatch batch) {
         stateTime += delta / 6;
         missileAnim.drawAnim(missileAnimation, stateTime, BULLET_X, BULLET_Y, width, height, true, batch);

@@ -72,6 +72,8 @@ public class MainGame extends GameElements implements Screen{
     float rapidFireTimer = RAPID_FIRE_TIMER;
     float hourglassTimer = HOURGLASS_TIMER;
 
+    float moveSpeed = SCREEN_WIDTH / 72f;
+
     float shipHitTimer = -2.2f;
     float hurtTimer = -0.15f;
     float countDownTimer = 0f;
@@ -375,7 +377,7 @@ public class MainGame extends GameElements implements Screen{
                     shipBulletCollision();
 
                 if(!isRunningResumeCountdown)
-                    updatePlayer();
+                    player.update();
             }
 
             if (isAlive && !isTransitioningOut && !isTransitionedOut)
@@ -685,20 +687,19 @@ public class MainGame extends GameElements implements Screen{
     public void movePlayer(){
         if (!isPaused && isTransitionedIn && !isShipLeaving && !isFadingOut) {
             if (!(Gdx.input.getY() < 6 * gameInterface.pauseButton.getHeight())) {
-                if (Gdx.input.isTouched()) {
-                    if(Gdx.input.getX() < SHIP_X - SHIP_WIDTH/2) {
-                        playerPosition = SHIP_X - deltaP * 50 * (SHIP_X - (Gdx.input.getX() - SHIP_WIDTH / 2));
 
-                        if(playerPosition >= 0 && playerPosition <= SCREEN_WIDTH - SHIP_WIDTH) {
-                            SHIP_X -= deltaP * 50 * (SHIP_X - (Gdx.input.getX() - SHIP_WIDTH / 2));
-                        }
+                if(Gdx.input.getX() < SHIP_X - SHIP_WIDTH/2) {
+                    playerPosition = SHIP_X - deltaP * moveSpeed * (SHIP_X - (Gdx.input.getX() - SHIP_WIDTH / 2));
+
+                    if(playerPosition >= 0 && playerPosition <= SCREEN_WIDTH - SHIP_WIDTH) {
+                        SHIP_X -= deltaP * moveSpeed * (SHIP_X - (Gdx.input.getX() - SHIP_WIDTH / 2));
                     }
-                    if(Gdx.input.getX() > SHIP_X - SHIP_WIDTH/2) {
-                        playerPosition = SHIP_X + deltaP * 30 * (Gdx.input.getX() - SHIP_X - SHIP_WIDTH / 2);
+                }
+                if(Gdx.input.getX() > SHIP_X - SHIP_WIDTH/2) {
+                    playerPosition = SHIP_X + deltaP * moveSpeed * (Gdx.input.getX() - SHIP_X - SHIP_WIDTH / 2);
 
-                        if (playerPosition >=0 && playerPosition <= SCREEN_WIDTH - SHIP_WIDTH) {
-                            SHIP_X += deltaP * 50 * (Gdx.input.getX() - SHIP_X - SHIP_WIDTH / 2);
-                        }
+                    if (playerPosition >= 0 && playerPosition <= SCREEN_WIDTH - SHIP_WIDTH) {
+                        SHIP_X += deltaP * moveSpeed * (Gdx.input.getX() - SHIP_X - SHIP_WIDTH / 2);
                     }
                 }
                 CURRENT_SHIP_X = SHIP_X;
@@ -818,31 +819,40 @@ public class MainGame extends GameElements implements Screen{
         if(isTransitioningIn) {
             shipAnim.drawAnim(shipAnimation, stateTime, SHIP_X, SHIP_START_Y, SHIP_WIDTH, SHIP_HEIGHT, true, game.batch, true);
         }
-        else if(!justHit && health != 0)
-            shipAnim.drawAnim(shipAnimation, stateTime, SHIP_X, SHIP_START_Y, SHIP_WIDTH, SHIP_HEIGHT,   true, game.batch);
+
+        else if(!justHit && health != 0) {
+            shipAnim.drawAnim(shipAnimation, stateTime, SHIP_X, SHIP_START_Y, SHIP_WIDTH, SHIP_HEIGHT, true, game.batch);
+        }
+
         else if(!isTransitioningOut){
             shipAnim.drawAnim(shipBlinkingAnimation, stateTime, SHIP_X, SHIP_START_Y, SHIP_WIDTH, SHIP_HEIGHT,   true, game.batch,true);
         }
+
         if(isTransitionedIn) {
             gl.setText(Main.scoreFont, String.valueOf(score));
 
             if(Gdx.app.getType() == Application.ApplicationType.iOS) {
                 Main.scoreFont.draw(game.batch, gl, SCORE_X, SCREEN_HEIGHT - gl.height * 2f);
             }
+
             else{
                 Main.scoreFont.draw(game.batch, gl, SCORE_X, SCREEN_HEIGHT - gl.height);
             }
+
             gameInterface.drawTopUI(game, isPaused || isRunningResumeCountdown, health, isAlive, isTransitionedIn);
         }
     }
 
     public void runBulletTimers(){
-        if(isMissile)
+        if(isMissile) {
             bulletThreshold = 0.55f;
-        else if(isRapidFire)
+        }
+        else if(isRapidFire) {
             bulletThreshold = 0.225f;
-        else
+        }
+        else {
             bulletThreshold = 0.4f;
+        }
 
         if (bulletTimer > bulletThreshold) {
             if (score < 99999 && !isShipLeaving) {
@@ -899,7 +909,7 @@ public class MainGame extends GameElements implements Screen{
             if(bullet.isMissile())
                 bullet.render(missileAnim, deltaP, Bullet.MISSILE_WIDTH, Bullet.MISSILE_HEIGHT, game.batch);
             else
-                bullet.render(game.batch, deltaP, Bullet.BULLET_WIDTH, Bullet.BULLET_HEIGHT);
+                bullet.render(game.batch);
 
             if (bullet.remove) {
                 bulletsToRemove.add(bullet);
@@ -918,7 +928,7 @@ public class MainGame extends GameElements implements Screen{
         for (EnemyBullet enemyBullet : enemyBullets) {
 
             enemyBullet.update(deltaP * hourglassMultiplier);
-            enemyBullet.render(game.batch, EnemyBullet.ENEMY_BULLET_WIDTH, EnemyBullet.ENEMY_BULLET_HEIGHT);
+            enemyBullet.render(game.batch);
 
             if (enemyBullet.remove) {
                 enemyBulletsToRemove.add(enemyBullet);
@@ -1199,10 +1209,6 @@ public class MainGame extends GameElements implements Screen{
                 explosionsToRemove.add(explosion);
             }
         }
-    }
-
-    public void updatePlayer(){
-        player.update();
     }
 
     public void shipEnemyCollision(){

@@ -27,9 +27,6 @@ public class Enemy extends GameElements {
     public float ENEMY_WIDTH;
     public float ENEMY_HEIGHT;
 
-    public int lastChangedDirectionTime;
-    public final int CHANGE_DIRECTION_PERIOD = 200;
-
     Random random = new Random();
     SpriteBatch hurtBatch = new SpriteBatch();
 
@@ -100,7 +97,6 @@ public class Enemy extends GameElements {
 
             }
 
-            this.lastChangedDirectionTime = 0;
         }
         enemyAnimation = Anim.createAnimation(enemySheet, 4, ENEMY_FRAME_DURATION);
         enemyAnimation.setPlayMode(Animation.PlayMode.LOOP);
@@ -126,7 +122,6 @@ public class Enemy extends GameElements {
         this.position = position;
 
         this.collision = new Collision(ENEMY_X, ENEMY_Y, ENEMY_WIDTH, ENEMY_HEIGHT);
-        this.lastChangedDirectionTime = 0;
 
         if(id == ENEMY_SHIP_ID) {
             switch (colorId) {
@@ -165,12 +160,12 @@ public class Enemy extends GameElements {
         this.ENEMY_FRAME_DURATION = frameDuration;
 
         this.collision = new Collision(ENEMY_X, ENEMY_Y, ENEMY_WIDTH, ENEMY_HEIGHT);
-        this.lastChangedDirectionTime = 0;
 
         if(id == LASER_TRAP_ID) {
             enemySheet = new Sprite(assets.assetManager.get(Assets.laser_trap_h_ss, Texture.class));
         }
 
+        enemySheet.setSize(ENEMY_WIDTH, ENEMY_HEIGHT);
         enemyAnimation = Anim.createAnimation(enemySheet, 4, ENEMY_FRAME_DURATION);
         enemyAnimation.setPlayMode(Animation.PlayMode.LOOP);
 
@@ -221,17 +216,16 @@ public class Enemy extends GameElements {
                 moveLaserTrap(enemyAnim, ENEMY_WIDTH, ENEMY_HEIGHT, delta, batch);
                 break;
         }
+
+        if(enemySheet != null){
+            enemySheet.setPosition(ENEMY_X, ENEMY_Y);
+        }
     }
 
     public void moveEyebat(Anim enemyAnim, Enemy enemy, float width, float height, float delta, boolean isPaused, SpriteBatch batch){
         if(!isHurt()) {
             stateTime += delta / 6 * hourglassMultiplier;
         }
-
-
-//        System.out.println(getEnemyAnimation().getKeyFrameIndex(enemy.stateTime));
-
-        lastChangedDirectionTime += stateTime*12f;
 
             if (enemy.getEnemyY() > SCREEN_HEIGHT) {
                 movingRight = random.nextBoolean();
@@ -248,14 +242,6 @@ public class Enemy extends GameElements {
                 movingRight = false;
             }
 
-            if (lastChangedDirectionTime >= CHANGE_DIRECTION_PERIOD) {
-                lastChangedDirectionTime = 0;
-                if (enemy.getEnemyY() + ENEMY_HEIGHT >= SCREEN_HEIGHT)
-                    stateTime = 0;
-
-                randomNumber = random.nextInt(2);
-            }
-
             if (!isPaused && !movingRight && (movingLeft || (randomNumber == 0))) {
                 ENEMY_X -= (SCREEN_WIDTH / 2) * delta * ENEMY_X_SPEED_MULTIPLIER * hourglassMultiplier;
             }
@@ -267,11 +253,14 @@ public class Enemy extends GameElements {
         if(ENEMY_Y <= SCREEN_HEIGHT && enemyAnimation != null) {
             if (!isHurt()) {
                 enemyAnim.drawAnim(enemyAnimation, stateTime, ENEMY_X, ENEMY_Y, width, height, true, batch);
-            } else {
+            }
+            else {
                 enemyAnim.drawAnim(enemyAnimation, stateTime, ENEMY_X, ENEMY_Y, width, height, true, batch);
                 batch.end();
+
                 hurtBatch.setShader(shader);
                 hurtBatch.begin();
+
                 enemyAnim.drawAnim(enemyAnimation, stateTime, ENEMY_X, ENEMY_Y, width, height, true, hurtBatch);
                 hurtBatch.end();
                 batch.begin();
@@ -291,8 +280,6 @@ public class Enemy extends GameElements {
     public void moveEnemyShip(Anim enemyAnim, Enemy enemy, float width, float height, float delta, boolean isPaused,  SpriteBatch batch){
         stateTime += (delta / 3) * hourglassMultiplier;
 
-        lastChangedDirectionTime += stateTime;
-
         if(enemy.getEnemyY() > SCREEN_HEIGHT) {
             movingRight = random.nextBoolean();
             movingLeft = !movingRight;
@@ -306,12 +293,6 @@ public class Enemy extends GameElements {
         else if(enemy.getEnemyX() >= SCREEN_WIDTH - ENEMY_WIDTH) {
             movingLeft = true;
             movingRight = false;
-        }
-
-        if(lastChangedDirectionTime >= CHANGE_DIRECTION_PERIOD) {
-            lastChangedDirectionTime = 0;
-            stateTime = 0;
-            randomNumber = random.nextInt(4);
         }
 
         if(ENEMY_Y <= SCREEN_HEIGHT - 6.5f*(ENEMY_HEIGHT) + (1.15f*ENEMY_HEIGHT * position-1)) {
