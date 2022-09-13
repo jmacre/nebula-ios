@@ -686,7 +686,7 @@ public class MainGame extends GameElements implements Screen{
 
     public void movePlayer(){
         if (!isPaused && isTransitionedIn && !isShipLeaving && !isFadingOut) {
-            if (!(Gdx.input.getY() < gameInterface.pauseButton.getY() * .8f)) {
+            if (!(Gdx.input.getY() < SCREEN_HEIGHT/5)) {
 
                 if(Gdx.input.getX() < SHIP_X - SHIP_WIDTH/2) {
                     playerPosition = SHIP_X - deltaP * moveSpeed * (SHIP_X - (Gdx.input.getX() - SHIP_WIDTH / 2));
