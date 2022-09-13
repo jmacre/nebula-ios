@@ -72,7 +72,7 @@ public class MainGame extends GameElements implements Screen{
     float rapidFireTimer = RAPID_FIRE_TIMER;
     float hourglassTimer = HOURGLASS_TIMER;
 
-    float moveSpeed = SCREEN_WIDTH / 72f;
+    float moveSpeed = 20f;
 
     float shipHitTimer = -2.2f;
     float hurtTimer = -0.15f;
@@ -686,7 +686,7 @@ public class MainGame extends GameElements implements Screen{
 
     public void movePlayer(){
         if (!isPaused && isTransitionedIn && !isShipLeaving && !isFadingOut) {
-            if (!(Gdx.input.getY() < 6 * gameInterface.pauseButton.getHeight())) {
+            if (!(Gdx.input.getY() < gameInterface.pauseButton.getY() * .8f)) {
 
                 if(Gdx.input.getX() < SHIP_X - SHIP_WIDTH/2) {
                     playerPosition = SHIP_X - deltaP * moveSpeed * (SHIP_X - (Gdx.input.getX() - SHIP_WIDTH / 2));

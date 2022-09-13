@@ -40,15 +40,15 @@ public class Background {
         defaultBackgroundSprite = backgroundSprite;
         background_y1 = 0;
         background_y2 = backgroundSprite.getHeight();
-
-        starsSheet = new Sprite(assets.assetManager.get(Assets.stars, Texture.class));
-        stars_y1 = 0;
-        stars_y2 = starsSheet.getHeight();
+//
+//        starsSheet = new Sprite(assets.assetManager.get(Assets.stars, Texture.class));
+//        stars_y1 = 0;
+//        stars_y2 = starsSheet.getHeight();
 
         speed = DEFAULT_SPEED;
 
         goalSpeed = SCREEN_HEIGHT/1.78f;
-        starsAnimation = Anim.createAnimation(starsSheet, 4, 0.1f);
+//        starsAnimation = Anim.createAnimation(starsSheet, 4, 0.1f);
     }
 
     public void updateAndRender(float delta, boolean isAlive, boolean isHourglass, int score, Anim starsAnim, SpriteBatch batch, boolean constantSpeed, boolean isResettingScreen, boolean stayStill, boolean isOnTitleScreen){
@@ -91,8 +91,8 @@ public class Background {
             background_y1 -= speed*.7 * delta * titleScreenSpeedModifier * hourglassMultiplier;
             background_y2 -= speed*.7 * delta * titleScreenSpeedModifier * hourglassMultiplier;
 
-            stars_y1 -= speed * delta * titleScreenSpeedModifier * hourglassMultiplier;
-            stars_y2 -= speed * delta * titleScreenSpeedModifier * hourglassMultiplier;
+//            stars_y1 -= speed * delta * titleScreenSpeedModifier * hourglassMultiplier;
+//            stars_y2 -= speed * delta * titleScreenSpeedModifier * hourglassMultiplier;
         }
         if (background_y1 + backgroundSprite.getHeight()  <= 0) {
             background_y1 = background_y2 + backgroundSprite.getHeight();
@@ -101,17 +101,17 @@ public class Background {
         if (background_y2 + backgroundSprite.getHeight()  <= 0) {
             background_y2 = background_y1 + backgroundSprite.getHeight();
         }
-
-        if (stars_y1 + starsSheet.getHeight()  <= 0) {
-            stars_y1 = stars_y2 + starsSheet.getHeight();
-        }
-
-        if (stars_y2 + starsSheet.getHeight()  <= 0) {
-            stars_y2 = stars_y1 + starsSheet.getHeight();
-        }
+//
+//        if (stars_y1 + starsSheet.getHeight()  <= 0) {
+//            stars_y1 = stars_y2 + starsSheet.getHeight();
+//        }
+//
+//        if (stars_y2 + starsSheet.getHeight()  <= 0) {
+//            stars_y2 = stars_y1 + starsSheet.getHeight();
+//        }
 
         backgroundSprite.setSize(SCREEN_WIDTH, backgroundSprite.getHeight());
-        starsSheet.setSize(SCREEN_WIDTH, starsSheet.getHeight());
+//        starsSheet.setSize(SCREEN_WIDTH, starsSheet.getHeight());
 
         backgroundSprite.setPosition(0, background_y1);
         backgroundSprite.draw(batch);
@@ -124,8 +124,8 @@ public class Background {
         if(!isHourglass)
             stateTime += delta / 10 * hourglassMultiplier;
 
-        starsAnim.drawAnim(starsAnimation, stateTime, 0, stars_y1, SCREEN_WIDTH, starsSheet.getHeight(), true,batch);
-        starsAnim.drawAnim(starsAnimation, stateTime, 0, stars_y2, SCREEN_WIDTH, starsSheet.getHeight(), true, batch);
+//        starsAnim.drawAnim(starsAnimation, stateTime, 0, stars_y1, SCREEN_WIDTH, starsSheet.getHeight(), true,batch);
+//        starsAnim.drawAnim(starsAnimation, stateTime, 0, stars_y2, SCREEN_WIDTH, starsSheet.getHeight(), true, batch);
     }
 
     public void changeBackgroundColor(float delta, int score, Batch batch, boolean isAlive){
