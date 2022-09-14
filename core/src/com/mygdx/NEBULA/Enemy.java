@@ -116,7 +116,6 @@ public class Enemy extends GameElements {
         this.ENEMY_X_SPEED_MULTIPLIER = xSpeedMult;
         this.ENEMY_Y_SPEED_MULTIPLIER= ySpeedMult;
         this.ENEMY_FRAME_DURATION = frameDuration;
-        System.out.println(this.ENEMY_FRAME_DURATION);
         this.ENEMY_BULLET_DELAY = bulletDelay;
         this.ENEMY_BULLET_THRESHOLD = bulletThreshold;
         this.position = position;

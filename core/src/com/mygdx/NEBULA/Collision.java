@@ -20,7 +20,7 @@ public class Collision {
         this.width = width;
         this.height = height;
     }
-//
+
     public Collision(Enemy enemy, float x, float y, float width, float height){
         this.x = x;
         this.y = y;
@@ -130,6 +130,17 @@ public class Collision {
             polygon.setPosition(this.x, this.y);
     }
 
+    public static boolean isNearby(Collision col1, Collision col2){
+        return (col1.getY() >= col2.getY() - col2.getHeight()
+                && col1.getY() + col1.getHeight() <= col2.getY() + col2.getHeight())
+                || (col2.getY() >= col1.getY() - col1.getHeight()
+                && col2.getY() + col2.getHeight() <= col1.getY() + col1.getHeight())
+
+                && (col1.getX() >= col2.getX() - col2.getWidth()
+                && col1.getX() + col1.getWidth() <= col2.getX() + col2.getWidth())
+                || (col2.getX() >= col1.getX() - col1.getWidth()
+                && col2.getX() + col2.getWidth() <= col1.getX() + col1.getWidth());
+    }
 
     public static boolean isColliding(Collision col1, Collision col2){
         return Intersector.intersectPolygons(FloatArray.with(col1.polygon.getVertices()), FloatArray.with(col2.polygon.getVertices()));

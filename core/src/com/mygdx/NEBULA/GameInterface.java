@@ -284,7 +284,7 @@ public class GameInterface extends GameElements{
     }
 
     public void drawDefaultShopScreen(Main game, boolean soundEnabled){
-//        List<Cell> cellList = new ArrayList<>();
+//        List<Cell> cellList = new Array<>();
 
 //        cellList.add(new Cell(upgradeButton, UPGRADE_DIM_WIDTH/UPGRADE_DIM_HEIGHT));
 

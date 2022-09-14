@@ -8,8 +8,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
-
-import java.util.ArrayList;
+import com.badlogic.gdx.utils.Array;
 
 public class GameElements {
     Button pauseButton, replayResumeButton, soundButton, homeButton;
@@ -163,7 +162,7 @@ public class GameElements {
 
     Sprite blackTransition, whiteFlash, shipSS, shipBlinkingSS;
     Animation<TextureRegion> shipAnimation, shipBlinkingAnimation;
-    ArrayList<Enemy> enemies = new ArrayList<>();
+    Array<Enemy> enemies = new Array<>();
 
     Music mainMusic;
     Sound pauseSound;

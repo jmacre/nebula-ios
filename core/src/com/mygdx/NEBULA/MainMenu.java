@@ -5,8 +5,7 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
-
-import java.util.ArrayList;
+import com.badlogic.gdx.utils.Array;
 
 public class MainMenu extends GameElements implements Screen {
     public Prefs prefs = new Prefs();
@@ -19,7 +18,7 @@ public class MainMenu extends GameElements implements Screen {
 
     float transitionSpeed = SCREEN_HEIGHT / 2.496f;
 
-    ArrayList<Float> deltaList = new ArrayList<>();
+    Array<Float> deltaList = new Array<>();
     float deltaSum;
 
     Main game;
@@ -70,17 +69,17 @@ public class MainMenu extends GameElements implements Screen {
         game.batch.begin();
         deltaList.add(delta);
 
-        if(deltaList.size() > 100) {
-            for(int i = 0; i < deltaList.size(); i++){
+        if(deltaList.size > 100) {
+            for(int i = 0; i < deltaList.size; i++){
                 deltaSum += deltaList.get(i);
             }
 
-            delta = deltaSum / deltaList.size();
-            deltaList.remove(0);
+            delta = deltaSum / deltaList.size;
+            deltaList.removeIndex(0);
             deltaSum = 0;
         }
 
-        if(deltaList.size() >= 100 || canRenderBackground) {
+        if(deltaList.size >= 100 || canRenderBackground) {
             if (START_BUTTON_Y >= START_BUTTON_Y_TRANSITIONED && !switchScreens) {
                 isTransitioningIn = true;
                 transitionIn(delta);

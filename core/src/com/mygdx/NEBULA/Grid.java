@@ -56,7 +56,6 @@ public class Grid {
 
                 if (cell.getCellButton().getTappedBefore()) {
 //                    cell.getCellButton().setTexture(assetManager.get(Assets.start_button_active, Texture.class));
-                    System.out.println("test1");
                 }
                 else {
 //                    cell.getCellButton().setTexture(assetManager.get(Assets.start_button_inactive, Texture.class));

@@ -16,7 +16,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.FloatArray;
 
-import java.util.ArrayList;
+import com.badlogic.gdx.utils.Array;
 import java.util.Collections;
 import java.util.Random;
 
@@ -49,7 +49,7 @@ public class MainGame extends GameElements implements Screen{
     Assets assets;
     Background background;
     GlyphLayout gl;
-    ArrayList<Integer> shipPositions;
+    Array<Integer> shipPositions;
 
     Vector2 center;
     FloatArray vertices;
@@ -162,21 +162,21 @@ public class MainGame extends GameElements implements Screen{
 
     MyInputProcessor inputProcessor = new MyInputProcessor();
 
-    ArrayList<Bullet> bullets = new ArrayList<>();
-    ArrayList<Bullet> bulletsToRemove = new ArrayList<>();
+    Array<Bullet> bullets = new Array<>();
+    Array<Bullet> bulletsToRemove = new Array<>();
 
-    ArrayList<EnemyBullet> enemyBullets = new ArrayList<>();
-    ArrayList<EnemyBullet> enemyBulletsToRemove = new ArrayList<>();
+    Array<EnemyBullet> enemyBullets = new Array<>();
+    Array<EnemyBullet> enemyBulletsToRemove = new Array<>();
 
-    ArrayList<Enemy> enemiesToRemove = new ArrayList<>();
+    Array<Enemy> enemiesToRemove = new Array<>();
 
-    ArrayList<Explosion> explosions = new ArrayList<>();
-    ArrayList<Explosion> explosionsToRemove =  new ArrayList<>();
+    Array<Explosion> explosions = new Array<>();
+    Array<Explosion> explosionsToRemove =  new Array<>();
 
-    ArrayList<ItemDrop> itemDrops = new ArrayList<>();
-    ArrayList<ItemDrop> itemsToRemove = new ArrayList<>();
+    Array<ItemDrop> itemDrops = new Array<>();
+    Array<ItemDrop> itemsToRemove = new Array<>();
 
-    ArrayList<Float> deltaList = new ArrayList<>();
+    Array<Float> deltaList = new Array<>();
     float deltaSum;
     float speedIncrease;
 
@@ -205,7 +205,7 @@ public class MainGame extends GameElements implements Screen{
         minLaserSpawnTime = MIN_LASER_TRAP_SPAWN_TIME;
         maxLaserSpawnTime = MAX_LASER_TRAP_SPAWN_TIME;
 
-        shipPositions = new ArrayList<>();
+        shipPositions = new Array<>();
 
         random = new Random();
         eyebatSpawnTimer = random.nextFloat() * (MAX_EYEBAT_SPAWN_TIME - MIN_EYEBAT_SPAWN_TIME) + MIN_EYEBAT_SPAWN_TIME;
@@ -274,18 +274,18 @@ public class MainGame extends GameElements implements Screen{
 
         deltaList.add(delta);
 
-        if(deltaList.size() >= 60) {
-            for (int i = 0; i < deltaList.size(); i++) {
+        if(deltaList.size >= 60) {
+            for (int i = 0; i < deltaList.size; i++) {
                 deltaSum += deltaList.get(i);
             }
-            delta = deltaSum / deltaList.size();
+            delta = deltaSum / deltaList.size;
 
             if(isPaused || isRunningResumeCountdown)
                 deltaP = 0;
             else
                 deltaP = delta;
 
-            deltaList.remove(0);
+            deltaList.removeIndex(0);
             deltaSum = 0;
         }
 
@@ -373,7 +373,7 @@ public class MainGame extends GameElements implements Screen{
 
                 shipEnemyCollision();
 
-                if(enemyShipsSpawning && enemyBullets.size() > 0)
+                if(enemyShipsSpawning && enemyBullets.size > 0)
                     shipBulletCollision();
 
                 if(!isRunningResumeCountdown)
@@ -636,22 +636,22 @@ public class MainGame extends GameElements implements Screen{
         missileUsed = false;
         rapidFireUsed = false;
 
-        if(explosions.size() > 0)
+        if(explosions.size > 0)
             explosions.clear();
 
-        if(enemies.size() > 0)
+        if(enemies.size > 0)
             enemies.clear();
 
-        if(bullets.size() > 0)
+        if(bullets.size > 0)
             bullets.clear();
 
-        if(itemDrops.size() > 0)
+        if(itemDrops.size > 0)
             itemDrops.clear();
 
-        if(enemyBullets.size() > 0)
+        if(enemyBullets.size > 0)
             enemyBullets.clear();
 
-        if(shipPositions.size() > 0)
+        if(shipPositions.size > 0)
             shipPositions.clear();
 
         SHIP_X = SCREEN_WIDTH / 2 - SHIP_WIDTH / 2;
@@ -968,14 +968,14 @@ public class MainGame extends GameElements implements Screen{
     public void addEnemyShips(){
         randomColor = random.nextInt(2);
         enemyShipSpawnTimer -= deltaP * hourglassMultiplier;;
-        if(enemyShipSpawnTimer <= 0 && 3 - shipPositions.size() >= 0) {
+        if(enemyShipSpawnTimer <= 0 && 3 - shipPositions.size >= 0) {
             int i = 3;
             int position = 0;
             for(Enemy enemy : enemies) {
-                if(enemy.getId() == (ENEMY_SHIP_ID) && !shipPositions.contains(enemy.getPosition())){
+                if(enemy.getId() == (ENEMY_SHIP_ID) && !shipPositions.contains(enemy.getPosition(), true)){
                     shipPositions.add(enemy.getPosition());
             }
-                if(shipPositions.contains(i)) {
+                if(shipPositions.contains(i, true)) {
                     i--;
                 }
                 else {
@@ -1131,7 +1131,8 @@ public class MainGame extends GameElements implements Screen{
 
             for (Enemy enemy : enemies) {
                 if (enemy.getEnemyY() < SCREEN_HEIGHT) {
-                    if (bombUsed || Collision.isColliding(bullet.getCollision(), enemy.getCollision())) {
+                    if (bombUsed || (Collision.isNearby(bullet.getCollision(), enemy.getCollision())
+                    && Collision.isColliding(bullet.getCollision(), enemy.getCollision()))) {
 
                         if (!bombUsed && !bullet.isMissile() && enemy.getId() != LASER_TRAP_ID)
                             bulletsToRemove.add(bullet);
@@ -1142,7 +1143,7 @@ public class MainGame extends GameElements implements Screen{
                                 playHitSound = true;
                         }
 
-                        if (!bullet.isMissile() && enemy.getId() != LASER_TRAP_ID && !Collision.isColliding(enemy.getCollision(), player.getCollision())) {
+                        if (!bullet.isMissile() && enemy.getId() != LASER_TRAP_ID) {
                             enemy.HP -= 1;
                             if (soundEnabled && enemy.getHP() == 0) {
                                 playHitSound = true;
@@ -1154,7 +1155,7 @@ public class MainGame extends GameElements implements Screen{
 
                         if (enemy.HP <= 0 && enemy.getId() != LASER_TRAP_ID) {
                             if (enemy.getId() == (ENEMY_SHIP_ID))
-                                shipPositions.removeAll(Collections.singletonList(enemy.getPosition()));
+                                shipPositions.removeValue(enemy.getPosition(), true);
                             enemiesToRemove.add(enemy);
 
                             if (enemy.getId() != ENEMY_SHIP_ID)
@@ -1191,9 +1192,9 @@ public class MainGame extends GameElements implements Screen{
                 runEnemyHitSoundTimer();
             }
         }
-        bullets.removeAll(bulletsToRemove);
-        enemies.removeAll(enemiesToRemove);
-        explosions.removeAll(explosionsToRemove);
+        bullets.removeAll(bulletsToRemove, true);
+        enemies.removeAll(enemiesToRemove, true);
+        explosions.removeAll(explosionsToRemove, true);
 
     }
 
@@ -1227,7 +1228,8 @@ public class MainGame extends GameElements implements Screen{
 //            sr.polygon(enemy.getCollision().getPolygon().getVertices());
 //            sr.end();
 //            game.batch.begin();
-            if(Collision.isColliding(enemy.getCollision(), player.getCollision())){
+            if(Collision.isNearby(enemy.getCollision(), player.getCollision())
+            &&(Collision.isColliding(enemy.getCollision(), player.getCollision()))){
 
                 if(soundEnabled && !playerHitSoundPlayed){
                     hitSound.play(0.2f);
@@ -1254,7 +1256,8 @@ public class MainGame extends GameElements implements Screen{
 
     public void shipBulletCollision(){
         for(EnemyBullet enemyBullet : enemyBullets){
-            if(Collision.isColliding(enemyBullet.getCollision(), player.getCollision())){
+            if(Collision.isNearby(enemyBullet.getCollision(), player.getCollision())
+            && Collision.isColliding(enemyBullet.getCollision(), player.getCollision())){
 
                 if(soundEnabled){
                     hitSound.play(0.2f);
@@ -1272,12 +1275,13 @@ public class MainGame extends GameElements implements Screen{
                 }
             }
         }
-        enemyBullets.removeAll(enemyBulletsToRemove);
+        enemyBullets.removeAll(enemyBulletsToRemove, true);
     }
 
     public void shipItemCollision() {
         for (ItemDrop itemDrop : itemDrops) {
-            if (Collision.isColliding(itemDrop.getCollision(),player.getCollision())) {
+            if (Collision.isNearby(itemDrop.getCollision(),player.getCollision())
+            && Collision.isColliding(itemDrop.getCollision(),player.getCollision())) {
                 itemsToRemove.add(itemDrop);
 
                 switch (itemDrop.getItemId()) {
@@ -1345,7 +1349,7 @@ public class MainGame extends GameElements implements Screen{
                         break;
                 }
             }
-            itemDrops.removeAll(itemsToRemove);
+            itemDrops.removeAll(itemsToRemove, true);
         }
     }
 
