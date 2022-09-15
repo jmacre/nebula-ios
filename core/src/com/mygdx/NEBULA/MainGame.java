@@ -17,9 +17,13 @@ import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.FloatArray;
 
 import com.badlogic.gdx.utils.Array;
+
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Random;
 
+import static com.mygdx.NEBULA.EnemyBullet.ENEMY_BULLET_HEIGHT;
 import static com.mygdx.NEBULA.ItemDrop.HOURGLASS_TIMER;
 import static com.mygdx.NEBULA.ItemDrop.MISSILE_TIMER;
 import static com.mygdx.NEBULA.ItemDrop.RAPID_FIRE_TIMER;
@@ -49,7 +53,11 @@ public class MainGame extends GameElements implements Screen{
     Assets assets;
     Background background;
     GlyphLayout gl;
-    Array<Integer> shipPositions;
+    ArrayList<Integer> shipPositions;
+
+    BulletPool bp = new BulletPool();
+    EnemyBulletPool ebp = new EnemyBulletPool();
+    EnemyPool ep = new EnemyPool();
 
     Vector2 center;
     FloatArray vertices;
@@ -163,12 +171,9 @@ public class MainGame extends GameElements implements Screen{
     MyInputProcessor inputProcessor = new MyInputProcessor();
 
     Array<Bullet> bullets = new Array<>();
-    Array<Bullet> bulletsToRemove = new Array<>();
-
     Array<EnemyBullet> enemyBullets = new Array<>();
-    Array<EnemyBullet> enemyBulletsToRemove = new Array<>();
 
-    Array<Enemy> enemiesToRemove = new Array<>();
+//    Array<Enemy> enemiesToRemove = new Array<>();
 
     Array<Explosion> explosions = new Array<>();
     Array<Explosion> explosionsToRemove =  new Array<>();
@@ -205,7 +210,7 @@ public class MainGame extends GameElements implements Screen{
         minLaserSpawnTime = MIN_LASER_TRAP_SPAWN_TIME;
         maxLaserSpawnTime = MAX_LASER_TRAP_SPAWN_TIME;
 
-        shipPositions = new Array<>();
+        shipPositions = new ArrayList<>();
 
         random = new Random();
         eyebatSpawnTimer = random.nextFloat() * (MAX_EYEBAT_SPAWN_TIME - MIN_EYEBAT_SPAWN_TIME) + MIN_EYEBAT_SPAWN_TIME;
@@ -266,6 +271,7 @@ public class MainGame extends GameElements implements Screen{
 
     @Override
     public void render(float delta) {
+//        System.out.println(shipPositions);
         Gdx.gl.glClearColor(0f, 0f, 0f, 1f);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 
@@ -351,7 +357,7 @@ public class MainGame extends GameElements implements Screen{
                 addEyebats();
                 eyebatsSpawning = true;
 
-                if (score >= 100) {
+                if (score >= 0) {
                     addEnemyShips();
                     enemyShipsSpawning = true;
                 }
@@ -651,7 +657,7 @@ public class MainGame extends GameElements implements Screen{
         if(enemyBullets.size > 0)
             enemyBullets.clear();
 
-        if(shipPositions.size > 0)
+        if(shipPositions.size() > 0)
             shipPositions.clear();
 
         SHIP_X = SCREEN_WIDTH / 2 - SHIP_WIDTH / 2;
@@ -877,7 +883,7 @@ public class MainGame extends GameElements implements Screen{
         if(enemyShipsSpawning) {
             for (Enemy enemy : enemies) {
                 if (enemy.getId() == (ENEMY_SHIP_ID)) {
-                    if (enemy.getEnemyBulletTimer() > enemy.getEnemyBulletThreshold()) {
+                    if (enemy.getEnemyY() < SCREEN_HEIGHT && enemy.getEnemyBulletTimer() > enemy.getEnemyBulletThreshold()) {
                         if (!isShipLeaving && SHIP_START_Y >= SHIP_Y) {
                             addEnemyBullets(enemy);
                             enemy.setEnemyBulletTimer(enemy.getEnemyBulletTimer() - enemy.getEnemyBulletThreshold());
@@ -889,38 +895,58 @@ public class MainGame extends GameElements implements Screen{
     }
 
     public void addBullets(){
+        Bullet bullet1 = bp.obtain();
+        Bullet bullet2 = bp.obtain();
+
         if(isMissile) {
-            bullets.add(new Bullet(SHIP_X, true, false, assets));
+            bullet1.create(SHIP_X, true, false, assets);
+            bullets.add(bullet1);
         }
         else if(isRapidFire) {
-            bullets.add(new Bullet(SHIP_X + SHIP_WIDTH * (4/27f), false, true, assets));
-            bullets.add(new Bullet(SHIP_X + SHIP_WIDTH - SHIP_WIDTH * (6/27f), false, true, assets));
+            bullet1.create(SHIP_X + SHIP_WIDTH * (4/27f), false, true, assets);
+            bullets.add(bullet1);
+
+            bullet2.create(SHIP_X + SHIP_WIDTH - SHIP_WIDTH * (6/27f), false, true, assets);
+            bullets.add(bullet2);;
         }
+
         else {
-            bullets.add(new Bullet(SHIP_X + SHIP_WIDTH * (4/27f), false, false, assets));
-            bullets.add(new Bullet(SHIP_X + SHIP_WIDTH - SHIP_WIDTH * (6/27f), false, false, assets));
+            bullet1.create(SHIP_X + SHIP_WIDTH * (4/27f), false, false, assets);
+            bullets.add(bullet1);
+
+            bullet2.create(SHIP_X + SHIP_WIDTH - SHIP_WIDTH * (6/27f), false, false, assets);
+            bullets.add(bullet2);
+
+
             missileTimer = MISSILE_TIMER;
         }
     }
 
     public void updateBullets(Main game) {
         for (Bullet bullet : bullets) {
+            if(bullet.getBulletY() - Bullet.getBulletHeight() > 2*SCREEN_HEIGHT){
+                bp.free(bullet);
+                bullets.removeValue(bullet, true);
+            }
             bullet.update(deltaP, isHourglass);
             if(bullet.isMissile())
                 bullet.render(missileAnim, deltaP, Bullet.MISSILE_WIDTH, Bullet.MISSILE_HEIGHT, game.batch);
             else
                 bullet.render(game.batch);
-
-            if (bullet.remove) {
-                bulletsToRemove.add(bullet);
-            }
         }
     }
 
     public void addEnemyBullets(Enemy enemy){
-        if(enemy.getId() == (ENEMY_SHIP_ID) && enemy.getEnemyBulletTimer() > enemy.getEnemyBulletThreshold()){
-            enemyBullets.add(new EnemyBullet(enemy.ENEMY_X + ENEMY_SHIP_WIDTH * (5/31f), enemy.ENEMY_Y + enemy.ENEMY_HEIGHT * (3/27f), RED_ID, assets));
-            enemyBullets.add(new EnemyBullet(enemy.ENEMY_X + ENEMY_SHIP_WIDTH - ENEMY_SHIP_WIDTH * (7/31f), enemy.ENEMY_Y + enemy.ENEMY_HEIGHT * (3/27f), RED_ID, assets));
+        if(enemy.HP > 0) {
+            EnemyBullet enemyBullet1 = ebp.obtain();
+            EnemyBullet enemyBullet2 = ebp.obtain();
+            if (enemy.getId() == (ENEMY_SHIP_ID) && enemy.getEnemyBulletTimer() > enemy.getEnemyBulletThreshold()) {
+                enemyBullet1.create(enemy.ENEMY_X + ENEMY_SHIP_WIDTH * (5 / 31f), enemy.ENEMY_Y + enemy.ENEMY_HEIGHT * (3 / 27f), RED_ID, assets);
+                enemyBullets.add(enemyBullet1);
+
+                enemyBullet2.create(enemy.ENEMY_X + ENEMY_SHIP_WIDTH - ENEMY_SHIP_WIDTH * (7 / 31f), enemy.ENEMY_Y + enemy.ENEMY_HEIGHT * (3 / 27f), RED_ID, assets);
+                enemyBullets.add(enemyBullet2);
+            }
         }
     }
 
@@ -930,8 +956,9 @@ public class MainGame extends GameElements implements Screen{
             enemyBullet.update(deltaP * hourglassMultiplier);
             enemyBullet.render(game.batch);
 
-            if (enemyBullet.remove) {
-                enemyBulletsToRemove.add(enemyBullet);
+            if(enemyBullet.getY() + ENEMY_BULLET_HEIGHT < -.5 * SCREEN_HEIGHT){
+                ebp.free(enemyBullet);
+                enemyBullets.removeValue(enemyBullet, true);
             }
         }
     }
@@ -939,84 +966,95 @@ public class MainGame extends GameElements implements Screen{
     public void addEyebats() {
         eyebatSpawnTimer -= deltaP * hourglassMultiplier;
         if (eyebatSpawnTimer <= 0) {
+            Enemy enemy = ep.obtain();
+
             randomSpawnLocation = random.nextInt((int) ((int) SCREEN_WIDTH- BLUE_EYEBAT_WIDTH));
 
             if(score <= 1000){
-                enemies.add(new Enemy(EYEBAT_ID, BLUE_ID, 1, randomSpawnLocation, BLUE_EYEBAT_WIDTH, BLUE_EYEBAT_HEIGHT, 0.35f + speedIncrease / 1.5f, 0.8f + speedIncrease / 1.5f, (float) (DEFAULT_FRAME_DURATION * (1.25 - speedIncrease / 2)), false, hurtTimer, assets));
+                enemy.create(EYEBAT_ID, BLUE_ID, 1, randomSpawnLocation, BLUE_EYEBAT_WIDTH, BLUE_EYEBAT_HEIGHT, 0.35f + speedIncrease / 1.5f, 0.8f + speedIncrease / 1.5f, (float) (DEFAULT_FRAME_DURATION * (1.25 - speedIncrease / 2)), false, hurtTimer, assets);
                 eyebatSpawnTimer = random.nextFloat() * (maxEyebatSpawnTime - minEyebatSpawnTime) + minEyebatSpawnTime;
 
             }
             else if(score <= 2000){
-                enemies.add(new Enemy(EYEBAT_ID, GREEN_ID, 2, randomSpawnLocation, GREEN_EYEBAT_WIDTH,  GREEN_EYEBAT_HEIGHT, 0.8f + speedIncrease / 1.5f, 0.4f + speedIncrease / 1.5f, (float) (DEFAULT_FRAME_DURATION * (1.5 - speedIncrease / 2)), false, hurtTimer, assets));
+                enemy.create(EYEBAT_ID, GREEN_ID, 2, randomSpawnLocation, GREEN_EYEBAT_WIDTH,  GREEN_EYEBAT_HEIGHT, 0.8f + speedIncrease / 1.5f, 0.4f + speedIncrease / 1.5f, (float) (DEFAULT_FRAME_DURATION * (1.5 - speedIncrease / 2)), false, hurtTimer, assets);
                 eyebatSpawnTimer = random.nextFloat() * (maxEyebatSpawnTime - minEyebatSpawnTime) + minEyebatSpawnTime;
             }
             else if(score <= 3000){
-                enemies.add(new Enemy(EYEBAT_ID, RED_ID, 2, randomSpawnLocation, RED_EYEBAT_WIDTH, RED_EYEBAT_HEIGHT, 0.65f + speedIncrease / 1.5f, 0.2f + speedIncrease / 1.5f, (float) (DEFAULT_FRAME_DURATION * (1.5 - speedIncrease / 2)), false, hurtTimer, assets));
+                enemy.create(EYEBAT_ID, RED_ID, 2, randomSpawnLocation, RED_EYEBAT_WIDTH, RED_EYEBAT_HEIGHT, 0.65f + speedIncrease / 1.5f, 0.2f + speedIncrease / 1.5f, (float) (DEFAULT_FRAME_DURATION * (1.5 - speedIncrease / 2)), false, hurtTimer, assets);
                 eyebatSpawnTimer = random.nextFloat() * (maxEyebatSpawnTime - minEyebatSpawnTime) + minEyebatSpawnTime;
             }
             else if(score <= 4000){
-                enemies.add(new Enemy(EYEBAT_ID, PURPLE_ID, 3, randomSpawnLocation, 1.4f * BLUE_EYEBAT_WIDTH, 1.4f * BLUE_EYEBAT_HEIGHT, 0.5f + speedIncrease / 1.75f, 0.2f + speedIncrease / 1.75f, (float)(DEFAULT_FRAME_DURATION * (2.5 - speedIncrease / 2)), false, hurtTimer, assets));
+                enemy.create(EYEBAT_ID, PURPLE_ID, 3, randomSpawnLocation, 1.4f * BLUE_EYEBAT_WIDTH, 1.4f * BLUE_EYEBAT_HEIGHT, 0.5f + speedIncrease / 1.75f, 0.2f + speedIncrease / 1.75f, (float)(DEFAULT_FRAME_DURATION * (2.5 - speedIncrease / 2)), false, hurtTimer, assets);
                 eyebatSpawnTimer = random.nextFloat() * (1.45f*maxEyebatSpawnTime - 1.45f*minEyebatSpawnTime) + 1.45f*minEyebatSpawnTime;
             }
             else{
-                enemies.add(new Enemy(EYEBAT_ID, WHITE_ID, 4, randomSpawnLocation, 1.6f * BLUE_EYEBAT_WIDTH, 1.6f * BLUE_EYEBAT_HEIGHT, 0.4f + speedIncrease / 1.75f, 0.18f + speedIncrease / 1.75f, (float)(DEFAULT_FRAME_DURATION * (2.5 - speedIncrease / 2)), false, hurtTimer, assets));
+                enemy.create(EYEBAT_ID, WHITE_ID, 4, randomSpawnLocation, 1.6f * BLUE_EYEBAT_WIDTH, 1.6f * BLUE_EYEBAT_HEIGHT, 0.4f + speedIncrease / 1.75f, 0.18f + speedIncrease / 1.75f, (float)(DEFAULT_FRAME_DURATION * (2.5 - speedIncrease / 2)), false, hurtTimer, assets);
                 eyebatSpawnTimer = random.nextFloat() * (1.65f*maxEyebatSpawnTime - 1.65f*minEyebatSpawnTime) + 1.65f*minEyebatSpawnTime;
             }
+            enemies.add(enemy);
         }
     }
 
     public void addEnemyShips(){
         randomColor = random.nextInt(2);
         enemyShipSpawnTimer -= deltaP * hourglassMultiplier;;
-        if(enemyShipSpawnTimer <= 0 && 3 - shipPositions.size >= 0) {
-            int i = 3;
-            int position = 0;
-            for(Enemy enemy : enemies) {
-                if(enemy.getId() == (ENEMY_SHIP_ID) && !shipPositions.contains(enemy.getPosition(), true)){
-                    shipPositions.add(enemy.getPosition());
-            }
-                if(shipPositions.contains(i, true)) {
-                    i--;
+
+
+        if(enemyShipSpawnTimer <= 0) {
+            Enemy enemy = ep.obtain();
+
+
+            if (3 - shipPositions.size() >= 0) {
+
+
+                int i = 3;
+                int position = 0;
+
+                shipPositions.clear();
+                for (Enemy e : enemies) {
+
+                    if (e.getId() == (ENEMY_SHIP_ID) && !shipPositions.contains(e.getPosition()) && e.getEnemyY() < SCREEN_HEIGHT) {
+                        shipPositions.add(e.getPosition());
+                    }
+                    if (shipPositions.contains(i)) {
+                        i--;
+                    } else {
+                        position = i;
+                    }
                 }
-                else {
-                    position = i;
+
+                if (score <= 1000) {
+                    enemy.create(ENEMY_SHIP_ID, BLUE_ID, 3, random.nextInt(((int) SCREEN_WIDTH - (int) ENEMY_SHIP_WIDTH)), ENEMY_SHIP_WIDTH, ENEMY_SHIP_HEIGHT,
+                            1.25f + speedIncrease, 1.25f + speedIncrease, DEFAULT_FRAME_DURATION * 1.5f, enemyBulletDelay, blueShipBulletThreshold,
+                            false, hurtTimer, position, assets);
+
+                    enemyShipSpawnTimer = random.nextFloat() * (maxEnemyShipSpawnTime - minEnemyShipSpawnTime) + minEnemyShipSpawnTime;
+                } else if (score <= 2000) {
+                    enemy.create(ENEMY_SHIP_ID, GREEN_ID, 4, random.nextInt(((int) SCREEN_WIDTH - (int) ENEMY_SHIP_WIDTH)), ENEMY_SHIP_WIDTH, ENEMY_SHIP_HEIGHT,
+                            1.15f + speedIncrease, 1.15f + speedIncrease, DEFAULT_FRAME_DURATION * 1.5f, enemyBulletDelay, greenShipBulletThreshold,
+                            false, hurtTimer, position, assets);
+
+                    enemyShipSpawnTimer = random.nextFloat() * (1.2f * maxEnemyShipSpawnTime - 1.2f * minEnemyShipSpawnTime) + 1.2f * minEnemyShipSpawnTime;
+                } else if (score <= 3000) {
+                    enemy.create(ENEMY_SHIP_ID, RED_ID, 5, random.nextInt(((int) SCREEN_WIDTH - (int) ENEMY_SHIP_WIDTH)), ENEMY_SHIP_WIDTH, ENEMY_SHIP_HEIGHT,
+                            0.95f + speedIncrease, 0.95f + speedIncrease, DEFAULT_FRAME_DURATION * 1.5f, enemyBulletDelay, redShipBulletThreshold,
+                            false, hurtTimer, position, assets);
+
+                    enemyShipSpawnTimer = random.nextFloat() * (1.2f * maxEnemyShipSpawnTime - 1.2f * minEnemyShipSpawnTime) + 1.2f * minEnemyShipSpawnTime;
+                } else if (score <= 4000) {
+                    enemy.create(ENEMY_SHIP_ID, PURPLE_ID, 5, random.nextInt(((int) SCREEN_WIDTH - (int) ENEMY_SHIP_WIDTH)), ENEMY_SHIP_WIDTH, ENEMY_SHIP_HEIGHT,
+                            0.85f + speedIncrease, 0.85f + speedIncrease, DEFAULT_FRAME_DURATION * 1.5f, enemyBulletDelay, purpleShipBulletThreshold,
+                            false, hurtTimer, position, assets);
+
+                    enemyShipSpawnTimer = random.nextFloat() * (1.2f * maxEnemyShipSpawnTime - 1.2f * minEnemyShipSpawnTime) + 1.2f * minEnemyShipSpawnTime;
+                } else {
+                    enemy.create(ENEMY_SHIP_ID, WHITE_ID, 5, random.nextInt(((int) SCREEN_WIDTH - (int) ENEMY_SHIP_WIDTH)), ENEMY_SHIP_WIDTH, ENEMY_SHIP_HEIGHT,
+                            0.75f + speedIncrease, 0.75f + speedIncrease, DEFAULT_FRAME_DURATION * 1.5f, enemyBulletDelay, whiteShipBulletThreshold,
+                            false, hurtTimer, position, assets);
+
+                    enemyShipSpawnTimer = random.nextFloat() * (1.3f * maxEnemyShipSpawnTime - 1.3f * minEnemyShipSpawnTime) + 1.3f * minEnemyShipSpawnTime;
                 }
-            }
-
-            if(score <= 1000){
-                enemies.add(new Enemy(ENEMY_SHIP_ID, BLUE_ID, 3, random.nextInt(((int) SCREEN_WIDTH - (int) ENEMY_SHIP_WIDTH)), ENEMY_SHIP_WIDTH, ENEMY_SHIP_HEIGHT,
-                        1.25f + speedIncrease, 1.25f + speedIncrease, DEFAULT_FRAME_DURATION * 1.5f, enemyBulletDelay, blueShipBulletThreshold,
-                        false, hurtTimer, position, assets));
-
-                enemyShipSpawnTimer = random.nextFloat() * (maxEnemyShipSpawnTime - minEnemyShipSpawnTime) + minEnemyShipSpawnTime;
-            }
-            else if(score <= 2000){
-                enemies.add(new Enemy(ENEMY_SHIP_ID, GREEN_ID, 4, random.nextInt(((int) SCREEN_WIDTH - (int) ENEMY_SHIP_WIDTH)), ENEMY_SHIP_WIDTH, ENEMY_SHIP_HEIGHT,
-                        1.15f + speedIncrease, 1.15f + speedIncrease, DEFAULT_FRAME_DURATION * 1.5f, enemyBulletDelay, greenShipBulletThreshold,
-                        false, hurtTimer, position, assets));
-
-                enemyShipSpawnTimer = random.nextFloat() * (1.2f*maxEnemyShipSpawnTime - 1.2f*minEnemyShipSpawnTime) + 1.2f*minEnemyShipSpawnTime;
-            }
-            else if(score <= 3000){
-                enemies.add(new Enemy(ENEMY_SHIP_ID, RED_ID, 5, random.nextInt(((int) SCREEN_WIDTH - (int) ENEMY_SHIP_WIDTH)), ENEMY_SHIP_WIDTH, ENEMY_SHIP_HEIGHT,
-                        0.95f + speedIncrease, 0.95f + speedIncrease, DEFAULT_FRAME_DURATION * 1.5f, enemyBulletDelay, redShipBulletThreshold,
-                        false, hurtTimer, position, assets));
-
-                enemyShipSpawnTimer = random.nextFloat() * (1.2f*maxEnemyShipSpawnTime - 1.2f*minEnemyShipSpawnTime) + 1.2f*minEnemyShipSpawnTime;
-            }
-            else if(score <= 4000){
-                enemies.add(new Enemy(ENEMY_SHIP_ID, PURPLE_ID, 5, random.nextInt(((int) SCREEN_WIDTH - (int) ENEMY_SHIP_WIDTH)), ENEMY_SHIP_WIDTH, ENEMY_SHIP_HEIGHT,
-                        0.85f + speedIncrease, 0.85f + speedIncrease, DEFAULT_FRAME_DURATION * 1.5f, enemyBulletDelay, purpleShipBulletThreshold,
-                        false, hurtTimer, position, assets));
-
-                enemyShipSpawnTimer = random.nextFloat() * (1.2f*maxEnemyShipSpawnTime - 1.2f*minEnemyShipSpawnTime) + 1.2f*minEnemyShipSpawnTime;
-            }
-            else {
-                enemies.add(new Enemy(ENEMY_SHIP_ID, WHITE_ID, 5, random.nextInt(((int) SCREEN_WIDTH - (int) ENEMY_SHIP_WIDTH)), ENEMY_SHIP_WIDTH, ENEMY_SHIP_HEIGHT,
-                        0.75f + speedIncrease, 0.75f + speedIncrease, DEFAULT_FRAME_DURATION * 1.5f, enemyBulletDelay, whiteShipBulletThreshold,
-                        false, hurtTimer, position, assets));
-
-                enemyShipSpawnTimer = random.nextFloat() * (1.3f*maxEnemyShipSpawnTime - 1.3f*minEnemyShipSpawnTime) + 1.3f*minEnemyShipSpawnTime;
+                enemies.add(enemy);
             }
         }
     }
@@ -1024,16 +1062,25 @@ public class MainGame extends GameElements implements Screen{
     public void addLaserTraps(){
         laserTrapSpawnTimer -= deltaP * hourglassMultiplier;;
         if(laserTrapSpawnTimer <= 0) {
+            Enemy enemy = ep.obtain();
             laserTrapSpawnTimer = random.nextFloat() * (maxLaserSpawnTime - minLaserSpawnTime) + minLaserSpawnTime;
 
-            enemies.add(new Enemy(LASER_TRAP_ID, random.nextInt(((int)SCREEN_WIDTH - (int)LASER_TRAP_H_WIDTH)), LASER_TRAP_H_WIDTH, LASER_TRAP_H_HEIGHT,
-                    0, 0.65f + speedIncrease, DEFAULT_FRAME_DURATION*1.5f, assets));
+            enemy.create(LASER_TRAP_ID, random.nextInt(((int)SCREEN_WIDTH - (int)LASER_TRAP_H_WIDTH)), LASER_TRAP_H_WIDTH, LASER_TRAP_H_HEIGHT,
+                    0, 0.65f + speedIncrease, DEFAULT_FRAME_DURATION*1.5f, assets);
 
         }
     }
 
     public void updateEnemies(){
         for (Enemy enemy : enemies) {
+
+            if(enemy.getEnemyY() + enemy.getHeight() < -1.5 * SCREEN_HEIGHT){
+
+                ep.free(enemy);
+                enemies.removeValue(enemy, true);
+
+            }
+
             if(isAlive) {
 
                 enemy.update(deltaP, enemy, isHourglass);
@@ -1043,16 +1090,13 @@ public class MainGame extends GameElements implements Screen{
                         enemy.render(eyebatAnim, enemy, deltaP, isPaused , game.batch);
                         break;
                     case ENEMY_SHIP_ID:
+//                        System.out.println(enemy.position);
                         enemy.render(enemyShipAnim, enemy, deltaP, isPaused , game.batch);
                         break;
                     case LASER_TRAP_ID:
                          enemy.render(laserTrapHAnim, enemy, deltaP, isPaused , game.batch);
                          break;
                 }
-            }
-
-            if (enemy.remove) {
-                enemiesToRemove.add(enemy);
             }
         }
     }
@@ -1130,12 +1174,15 @@ public class MainGame extends GameElements implements Screen{
 //            game.batch.begin();
 
             for (Enemy enemy : enemies) {
+
                 if (enemy.getEnemyY() < SCREEN_HEIGHT) {
                     if (bombUsed || (Collision.isNearby(bullet.getCollision(), enemy.getCollision())
                     && Collision.isColliding(bullet.getCollision(), enemy.getCollision()))) {
 
-                        if (!bombUsed && !bullet.isMissile() && enemy.getId() != LASER_TRAP_ID)
-                            bulletsToRemove.add(bullet);
+                        if (!bombUsed && !bullet.isMissile() && enemy.getId() != LASER_TRAP_ID) {
+                            bp.free(bullet);
+                            bullets.removeValue(bullet, true);
+                        }
 
                         if (bullet.isMissile() && bullet.getBulletY() + Bullet.MISSILE_HEIGHT < SCREEN_HEIGHT && enemy.getId() != LASER_TRAP_ID) {
                             enemy.HP = 0;
@@ -1154,9 +1201,15 @@ public class MainGame extends GameElements implements Screen{
                         }
 
                         if (enemy.HP <= 0 && enemy.getId() != LASER_TRAP_ID) {
-                            if (enemy.getId() == (ENEMY_SHIP_ID))
-                                shipPositions.removeValue(enemy.getPosition(), true);
-                            enemiesToRemove.add(enemy);
+                            if(enemy.getId() == ENEMY_SHIP_ID && enemy.HP <= 0){
+                                shipPositions.removeAll(Collections.singletonList(enemy.position));
+                                enemy.position = null;
+//                                shipPositions.clear();
+                            }
+
+
+                            ep.free(enemy);
+                            enemies.removeValue(enemy, true);
 
                             if (enemy.getId() != ENEMY_SHIP_ID)
                                 explosions.add(new Explosion(enemy.getEnemyX(), enemy.getEnemyY() - enemy.getHeight() / 4f, enemy.getWidth(), assets));
@@ -1192,9 +1245,11 @@ public class MainGame extends GameElements implements Screen{
                 runEnemyHitSoundTimer();
             }
         }
-        bullets.removeAll(bulletsToRemove, true);
-        enemies.removeAll(enemiesToRemove, true);
+//        bullets.removeAll(bulletsToRemove, true);
         explosions.removeAll(explosionsToRemove, true);
+
+//        bulletsToRemove.clear();
+        explosionsToRemove.clear();
 
     }
 
@@ -1236,8 +1291,10 @@ public class MainGame extends GameElements implements Screen{
                     playerHitSoundPlayed = true;
                 }
 
-                if(enemy.getId() != LASER_TRAP_ID)
-                    enemiesToRemove.add(enemy);
+                if(enemy.getId() != LASER_TRAP_ID){
+                    ep.free(enemy);
+                    enemies.removeValue(enemy, true);
+                }
                 if(enemy.getId() != LASER_TRAP_ID)
                     explosions.add(new Explosion(enemy.getEnemyX(), enemy.getEnemyY()- enemy.getHeight()/4f, enemy.getWidth(), assets));
 
@@ -1262,7 +1319,8 @@ public class MainGame extends GameElements implements Screen{
                 if(soundEnabled){
                     hitSound.play(0.2f);
                 }
-                enemyBulletsToRemove.add(enemyBullet);
+                ebp.free(enemyBullet);
+                enemyBullets.removeValue(enemyBullet, true);
 
                 if(health > 0 && !justHit){
                     justHit = true;
@@ -1275,7 +1333,6 @@ public class MainGame extends GameElements implements Screen{
                 }
             }
         }
-        enemyBullets.removeAll(enemyBulletsToRemove, true);
     }
 
     public void shipItemCollision() {
@@ -1308,10 +1365,11 @@ public class MainGame extends GameElements implements Screen{
 
                             for (Enemy enemy : enemies) {
                                 enemy.setHP(0);
+                                ep.free(enemy);
+                                enemies.removeValue(enemy, true);
 
                             }
-                            enemiesToRemove.addAll(enemies);
-                            enemyBulletsToRemove.addAll(enemyBullets);
+                            enemyBullets.clear();
                         }
                         break;
 

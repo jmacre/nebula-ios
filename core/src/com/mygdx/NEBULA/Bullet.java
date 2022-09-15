@@ -4,11 +4,13 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.utils.Pool;
 
 import static com.mygdx.NEBULA.ItemDrop.HOURGLASS_SPEED_MULTIPLIER;
 
 public class Bullet extends GameElements {
-    public Sprite bulletSprite, missileSheet;
+    public Sprite missileSprite = new Sprite();
+    public Sprite bulletSprite = new Sprite();
     Animation<TextureRegion> missileAnimation;
 
     public static final float SPEED = SCREEN_HEIGHT/1.56f;
@@ -21,33 +23,20 @@ public class Bullet extends GameElements {
     float BULLET_X, BULLET_Y;
     float stateTime = 0f;
 
-    private final boolean isMissile;
+    private boolean isMissile = false;
     public boolean remove = false;
     Collision rect;
 
-    public Bullet (float BULLET_X, boolean isMissile, boolean isRapidFire, Assets assets) {
-        this.BULLET_X = BULLET_X;
-        this.BULLET_Y = SHIP_Y + SHIP_HEIGHT - BULLET_HEIGHT/2f;
-        this.isMissile = isMissile;
+    public Bullet(){
 
-        if(isMissile) {
-            this.rect = new Collision(BULLET_X, BULLET_Y, MISSILE_WIDTH, MISSILE_HEIGHT);
-            missileSheet = new Sprite(assets.assetManager.get(Assets.missile_ss, Texture.class));
-            missileSheet.setSize(MISSILE_WIDTH, MISSILE_HEIGHT);
-            missileAnimation = Anim.createAnimation(missileSheet, 4, Anim.DEFAULT_FRAME_DURATION*1.5f);
-        }
-        else if(isRapidFire){
-            this.rect = new Collision(BULLET_X, BULLET_Y, BULLET_WIDTH, BULLET_HEIGHT);
-            bulletSprite = new Sprite(assets.assetManager.get(Assets.bullet_blue, Texture.class));
-            bulletSprite.setSize(BULLET_WIDTH, BULLET_HEIGHT);
-        }
-
-        else {
-            this.rect = new Collision(BULLET_X, BULLET_Y, BULLET_WIDTH, BULLET_HEIGHT);
-            bulletSprite = new Sprite(assets.assetManager.get(Assets.bullet_yellow, Texture.class));
-            bulletSprite.setSize(BULLET_WIDTH, BULLET_HEIGHT);
-        }
     }
+//
+//    @Override
+//    public void reset() {
+//        this.BULLET_X = BULLET_X;
+//        this.BULLET_Y = BULLET_Y;
+//
+//    }
 
 
     public void update(float delta, boolean isHourglass){
@@ -102,6 +91,29 @@ public class Bullet extends GameElements {
 
     public boolean isMissile(){
         return isMissile;
+    }
+    public void create(float BULLET_X, boolean isMissile, boolean isRapidFire, Assets assets){
+        this.BULLET_X = BULLET_X;
+        this.BULLET_Y = SHIP_Y + SHIP_HEIGHT - BULLET_HEIGHT/2f;
+        this.isMissile = isMissile;
+
+        if(isMissile) {
+            this.rect = new Collision(BULLET_X, BULLET_Y, MISSILE_WIDTH, MISSILE_HEIGHT);
+            missileSprite.setTexture(assets.assetManager.get(Assets.missile_ss,Texture.class));
+            missileSprite.setSize(MISSILE_WIDTH, MISSILE_HEIGHT);
+            missileAnimation = Anim.createAnimation(missileSprite, 4, Anim.DEFAULT_FRAME_DURATION*1.5f);
+        }
+        else if(isRapidFire){
+            this.rect = new Collision(BULLET_X, BULLET_Y, BULLET_WIDTH, BULLET_HEIGHT);
+            bulletSprite.setTexture(assets.assetManager.get(Assets.bullet_blue,Texture.class));
+            bulletSprite.setSize(BULLET_WIDTH, BULLET_HEIGHT);
+        }
+
+        else {
+            this.rect = new Collision(BULLET_X, BULLET_Y, BULLET_WIDTH, BULLET_HEIGHT);
+            bulletSprite.setTexture(assets.assetManager.get(Assets.bullet_yellow,Texture.class));
+            bulletSprite.setSize(BULLET_WIDTH, BULLET_HEIGHT);
+        }
     }
 }
 

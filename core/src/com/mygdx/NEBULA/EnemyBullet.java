@@ -26,7 +26,9 @@ public class EnemyBullet {
     int bulletColor;
     Collision rect;
 
-    public EnemyBullet (float ENEMY_BULLET_X, float ENEMY_BULLET_Y, int bulletColor, Assets assets) {
+    public EnemyBullet(){}
+
+    public void create (float ENEMY_BULLET_X, float ENEMY_BULLET_Y, int bulletColor, Assets assets) {
         this.assets = assets;
         this.ENEMY_BULLET_X = ENEMY_BULLET_X;
         this.ENEMY_BULLET_Y = ENEMY_BULLET_Y;
@@ -50,11 +52,11 @@ public class EnemyBullet {
         }
     }
 
-    public float getBulletY(){
+    public float getY(){
         return ENEMY_BULLET_Y;
     }
 
-    public float getBulletX(){
+    public float getX(){
         return ENEMY_BULLET_X;
     }
 

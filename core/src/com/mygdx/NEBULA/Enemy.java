@@ -8,12 +8,13 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
+import com.badlogic.gdx.utils.Pool;
 
 import java.util.Random;
 
 import static com.mygdx.NEBULA.ItemDrop.HOURGLASS_SPEED_MULTIPLIER;
 
-public class Enemy extends GameElements {
+public class Enemy extends GameElements implements Pool.Poolable{
     public static final int EYEBAT_ID = 0;
     public static final int ENEMY_SHIP_ID = 1;
 
@@ -37,7 +38,7 @@ public class Enemy extends GameElements {
     float ENEMY_FRAME_DURATION;
     float ENEMY_BULLET_DELAY;
     float ENEMY_BULLET_THRESHOLD;
-    int position;
+    Integer position;
 
     float stateTime = 0f;
 
@@ -50,7 +51,7 @@ public class Enemy extends GameElements {
     float hourglassMultiplier = 1;
 
     int HP;
-    private final int id;
+    private int id;
     private int colorId;
 
     float randomNumber;
@@ -58,8 +59,18 @@ public class Enemy extends GameElements {
     Collision collision;
     public boolean remove = false;
 
+    @Override
+    public void reset() {
+//        this.position = null;
+    }
+
+    public Enemy(){
+//        this.position = null;
+    }
+
+
     //EYEBAT CONSTRUCTOR
-    public Enemy (int id, int colorId, int HP, float ENEMY_X, float ENEMY_WIDTH, float ENEMY_HEIGHT, float xSpeedMult, float ySpeedMult, float frameDuration, boolean hurt, float hurtTimer, Assets assets) {
+    public void create(int id, int colorId, int HP, float ENEMY_X, float ENEMY_WIDTH, float ENEMY_HEIGHT, float xSpeedMult, float ySpeedMult, float frameDuration, boolean hurt, float hurtTimer, Assets assets) {
         this.id = id;
         this.colorId = colorId;
         this.HP = HP;
@@ -102,7 +113,7 @@ public class Enemy extends GameElements {
         enemyAnimation.setPlayMode(Animation.PlayMode.LOOP);
     }
     //SHIP CONSTRUCTOR
-    public Enemy (int id, int colorId, int HP, float ENEMY_X, float ENEMY_WIDTH, float ENEMY_HEIGHT, float xSpeedMult, float ySpeedMult, float frameDuration, float bulletDelay, float bulletThreshold, boolean hurt, float hurtTimer, int position, Assets assets) {
+    public void create (int id, int colorId, int HP, float ENEMY_X, float ENEMY_WIDTH, float ENEMY_HEIGHT, float xSpeedMult, float ySpeedMult, float frameDuration, float bulletDelay, float bulletThreshold, boolean hurt, float hurtTimer, int position, Assets assets) {
         this.id = id;
         this.colorId = colorId;
         this.HP = HP;
@@ -147,7 +158,7 @@ public class Enemy extends GameElements {
     }
 
     //LASER TRAP CONSTRUCTOR
-    public Enemy (int id, float ENEMY_X, float ENEMY_WIDTH, float ENEMY_HEIGHT, float xSpeedMult, float ySpeedMult, float frameDuration, Assets assets) {
+    public void create (int id, float ENEMY_X, float ENEMY_WIDTH, float ENEMY_HEIGHT, float xSpeedMult, float ySpeedMult, float frameDuration, Assets assets) {
         this.id = id;
 
         this.ENEMY_X = ENEMY_X;
@@ -396,7 +407,11 @@ public class Enemy extends GameElements {
         return position;
     }
 
+
+
     public Animation<TextureRegion> getEnemyAnimation() {
         return enemyAnimation;
     }
+
+
 }
