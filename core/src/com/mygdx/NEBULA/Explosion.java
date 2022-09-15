@@ -15,17 +15,19 @@ public class Explosion {
 
     public boolean remove = false;
 
-    public Explosion(float x, float y, float size, Assets assets){
+    public Explosion(){}
+
+    public void create(float x, float y, float size, Assets assets){
         this.x = x;
         this.y = y;
         this.size = size;
         stateTime = 0;
         explosionSheet = new Sprite(assets.assetManager.get(Assets.explosion, Texture.class));
+        explosionAnimation = Anim.createAnimation(explosionSheet, 4, 0.075f);
 
     }
 
     public void update(float delta){
-        explosionAnimation = Anim.createAnimation(explosionSheet, 4, 0.075f);
 
         stateTime += delta;
         if (explosionAnimation.isAnimationFinished(stateTime))
@@ -38,5 +40,8 @@ public class Explosion {
         if(y<MainGame.SCREEN_HEIGHT)
         explosionAnim.drawAnim(explosionAnimation, stateTime, x, y - size/4, size, size, false, batch);
 
+    }
+    public float getStateTime(){
+        return stateTime;
     }
 }

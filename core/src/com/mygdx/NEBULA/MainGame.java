@@ -58,6 +58,7 @@ public class MainGame extends GameElements implements Screen{
     BulletPool bp = new BulletPool();
     EnemyBulletPool ebp = new EnemyBulletPool();
     EnemyPool ep = new EnemyPool();
+    ExplosionPool exp = new ExplosionPool();
 
     Vector2 center;
     FloatArray vertices;
@@ -165,6 +166,7 @@ public class MainGame extends GameElements implements Screen{
     boolean isPaused = false;
     boolean isAlive = true;
     boolean isResettingScreen = false;
+    boolean enemySpritesCreated = false;
 
     ShapeRenderer sr = new ShapeRenderer();
 
@@ -173,10 +175,8 @@ public class MainGame extends GameElements implements Screen{
     Array<Bullet> bullets = new Array<>();
     Array<EnemyBullet> enemyBullets = new Array<>();
 
-//    Array<Enemy> enemiesToRemove = new Array<>();
 
     Array<Explosion> explosions = new Array<>();
-    Array<Explosion> explosionsToRemove =  new Array<>();
 
     Array<ItemDrop> itemDrops = new Array<>();
     Array<ItemDrop> itemsToRemove = new Array<>();
@@ -196,11 +196,15 @@ public class MainGame extends GameElements implements Screen{
         gameInterface = new GameInterface(assets);
         this.background = background;
 
-
     }
 
     @Override
     public void show() {
+        if(!enemySpritesCreated) {
+            Enemy.createEnemySprites(assets);
+            enemySpritesCreated = true;
+        }
+
         minEnemyShipSpawnTime = MIN_ENEMY_SHIP_SPAWN_TIME;
         maxEnemyShipSpawnTime = MAX_ENEMY_SHIP_SPAWN_TIME;
 
@@ -349,10 +353,9 @@ public class MainGame extends GameElements implements Screen{
             isFadingIn = false;
         }
         if(!isRunningResumeCountdown) {
-            if (isTransitionedIn) {
+            if (isTransitionedIn && isAlive) {
 
-                if(isAlive)
-                    runScoreTickerTimer();
+                runScoreTickerTimer();
 
                 addEyebats();
                 eyebatsSpawning = true;
@@ -362,14 +365,15 @@ public class MainGame extends GameElements implements Screen{
                     enemyShipsSpawning = true;
                 }
 
-            }
-            if (score >= 1000) {
-                addLaserTraps();
-                laserTrapsSpawning = true;
-            }
+
+                if (score >= 1000) {
+                    addLaserTraps();
+                    laserTrapsSpawning = true;
+                }
 
 
-            enemyBulletCollision(bombUsed);
+                enemyBulletCollision();
+            }
 
             if (isAlive) {
                 if (!bombUsed && !heartUsed && !missileUsed && !rapidFireUsed && score >= 100) {
@@ -956,7 +960,7 @@ public class MainGame extends GameElements implements Screen{
             enemyBullet.update(deltaP * hourglassMultiplier);
             enemyBullet.render(game.batch);
 
-            if(enemyBullet.getY() + ENEMY_BULLET_HEIGHT < -.5 * SCREEN_HEIGHT){
+            if(enemyBullet.getY() + ENEMY_BULLET_HEIGHT < -2 * SCREEN_HEIGHT){
                 ebp.free(enemyBullet);
                 enemyBullets.removeValue(enemyBullet, true);
             }
@@ -1163,7 +1167,7 @@ public class MainGame extends GameElements implements Screen{
         }
     }
 
-    public void enemyBulletCollision(boolean bombUsed){
+    public void enemyBulletCollision(){
         boolean pointsEarned = false;
         for(Bullet bullet : bullets) {
 
@@ -1211,10 +1215,16 @@ public class MainGame extends GameElements implements Screen{
                             ep.free(enemy);
                             enemies.removeValue(enemy, true);
 
-                            if (enemy.getId() != ENEMY_SHIP_ID)
-                                explosions.add(new Explosion(enemy.getEnemyX(), enemy.getEnemyY() - enemy.getHeight() / 4f, enemy.getWidth(), assets));
-                            else
-                                explosions.add(new Explosion(enemy.getEnemyX(), enemy.getEnemyY(), enemy.getWidth() * 1.5f, assets));
+                            Explosion explosion;
+                            if (enemy.getId() != ENEMY_SHIP_ID) {
+                                explosion = exp.obtain();
+                                explosion.create(enemy.getEnemyX(), enemy.getEnemyY() - enemy.getHeight() / 4f, enemy.getWidth(), assets);
+                            }
+                            else {
+                                explosion = exp.obtain();
+                                explosion.create(enemy.getEnemyX(), enemy.getEnemyY(), enemy.getWidth() * 1.5f, assets);
+                            }
+                            explosions.add(explosion);
 
                             if (enemy.getId() == (EYEBAT_ID) && !pointsEarned) {
                                 switch (enemy.getColorId()) {
@@ -1245,11 +1255,9 @@ public class MainGame extends GameElements implements Screen{
                 runEnemyHitSoundTimer();
             }
         }
-//        bullets.removeAll(bulletsToRemove, true);
-        explosions.removeAll(explosionsToRemove, true);
-
-//        bulletsToRemove.clear();
-        explosionsToRemove.clear();
+//        explosions.clear();
+//        enemies.clear();
+//        bullets.clear();
 
     }
 
@@ -1261,8 +1269,9 @@ public class MainGame extends GameElements implements Screen{
                     explosion.render(explosionAnim,  deltaP, game.batch);
 
             }
-            if (explosion.remove) {
-                explosionsToRemove.add(explosion);
+            if (explosion.explosionAnimation.isAnimationFinished(explosion.getStateTime())) {
+                exp.free(explosion);
+                explosions.removeValue(explosion, true);
             }
         }
     }
@@ -1295,9 +1304,11 @@ public class MainGame extends GameElements implements Screen{
                     ep.free(enemy);
                     enemies.removeValue(enemy, true);
                 }
-                if(enemy.getId() != LASER_TRAP_ID)
-                    explosions.add(new Explosion(enemy.getEnemyX(), enemy.getEnemyY()- enemy.getHeight()/4f, enemy.getWidth(), assets));
-
+                if(enemy.getId() != LASER_TRAP_ID) {
+                    Explosion explosion = exp.obtain();
+                    explosion.create(enemy.getEnemyX(), enemy.getEnemyY() - enemy.getHeight() / 4f, enemy.getWidth(), assets);
+                    explosions.add(explosion);
+                }
                 if(health > 0 && !justHit){
                     justHit = true;
                     health -= 1;

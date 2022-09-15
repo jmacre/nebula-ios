@@ -14,7 +14,7 @@ import java.util.Random;
 
 import static com.mygdx.NEBULA.ItemDrop.HOURGLASS_SPEED_MULTIPLIER;
 
-public class Enemy extends GameElements implements Pool.Poolable{
+public class Enemy extends GameElements{
     public static final int EYEBAT_ID = 0;
     public static final int ENEMY_SHIP_ID = 1;
 
@@ -59,15 +59,27 @@ public class Enemy extends GameElements implements Pool.Poolable{
     Collision collision;
     public boolean remove = false;
 
-    @Override
-    public void reset() {
-//        this.position = null;
-    }
+    static Sprite blueBat, greenBat, redBat, purpleBat, whiteBat;
+    static Sprite blueShip, greenShip, redShip, purpleShip, whiteShip;
+    static Sprite laserTrap;
 
-    public Enemy(){
-//        this.position = null;
-    }
 
+    public Enemy(){  }
+
+    public static void createEnemySprites(Assets assets){
+        blueBat = new Sprite(assets.assetManager.get(Assets.eyebat_blue_ss, Texture.class));
+        greenBat = new Sprite(assets.assetManager.get(Assets.eyebat_green_ss, Texture.class));
+        redBat = new Sprite(assets.assetManager.get(Assets.eyebat_red_ss, Texture.class));
+        purpleBat = new Sprite(assets.assetManager.get(Assets.eyebat_purple_ss, Texture.class));
+        whiteBat = new Sprite(assets.assetManager.get(Assets.eyebat_white_ss, Texture.class));
+        blueShip = new Sprite(assets.assetManager.get(Assets.enemy_ship_blue_ss, Texture.class));
+        greenShip = new Sprite(assets.assetManager.get(Assets.enemy_ship_green_ss, Texture.class));
+        redShip = new Sprite(assets.assetManager.get(Assets.enemy_ship_red_ss, Texture.class));
+        purpleShip = new Sprite(assets.assetManager.get(Assets.enemy_ship_purple_ss, Texture.class));
+        whiteShip = new Sprite(assets.assetManager.get(Assets.enemy_ship_white_ss, Texture.class));
+        laserTrap = new Sprite(assets.assetManager.get(Assets.laser_trap_h_ss, Texture.class));
+
+    }
 
     //EYEBAT CONSTRUCTOR
     public void create(int id, int colorId, int HP, float ENEMY_X, float ENEMY_WIDTH, float ENEMY_HEIGHT, float xSpeedMult, float ySpeedMult, float frameDuration, boolean hurt, float hurtTimer, Assets assets) {
@@ -91,19 +103,19 @@ public class Enemy extends GameElements implements Pool.Poolable{
             switch (colorId) {
 
                 case BLUE_ID:
-                    enemySheet = new Sprite(assets.assetManager.get(Assets.eyebat_blue_ss, Texture.class));
+                    enemySheet = blueBat;
                     break;
                 case GREEN_ID:
-                    enemySheet = new Sprite(assets.assetManager.get(Assets.eyebat_green_ss, Texture.class));
+                    enemySheet = greenBat;
                     break;
                 case RED_ID:
-                    enemySheet = new Sprite(assets.assetManager.get(Assets.eyebat_red_ss, Texture.class));
+                    enemySheet = redBat;
                     break;
                 case PURPLE_ID:
-                    enemySheet = new Sprite(assets.assetManager.get(Assets.eyebat_purple_ss, Texture.class));
+                    enemySheet = purpleBat;
                     break;
                 case WHITE_ID:
-                    enemySheet = new Sprite(assets.assetManager.get(Assets.eyebat_white_ss, Texture.class));
+                    enemySheet = whiteBat;
                     break;
 
             }
@@ -136,19 +148,19 @@ public class Enemy extends GameElements implements Pool.Poolable{
         if(id == ENEMY_SHIP_ID) {
             switch (colorId) {
                 case BLUE_ID:
-                    enemySheet = new Sprite(assets.assetManager.get(Assets.enemy_ship_blue_ss, Texture.class));
+                    enemySheet = blueShip;
                     break;
                 case GREEN_ID:
-                    enemySheet = new Sprite(assets.assetManager.get(Assets.enemy_ship_green_ss, Texture.class));
+                    enemySheet = greenShip;
                     break;
                 case RED_ID:
-                    enemySheet = new Sprite(assets.assetManager.get(Assets.enemy_ship_red_ss, Texture.class));
+                    enemySheet = redShip;
                     break;
                 case PURPLE_ID:
-                    enemySheet = new Sprite(assets.assetManager.get(Assets.enemy_ship_purple_ss, Texture.class));
+                    enemySheet = purpleShip;
                     break;
                 case WHITE_ID:
-                    enemySheet = new Sprite(assets.assetManager.get(Assets.enemy_ship_white_ss, Texture.class));
+                    enemySheet = whiteShip;
                     break;
             }
         }
@@ -172,7 +184,7 @@ public class Enemy extends GameElements implements Pool.Poolable{
         this.collision = new Collision(ENEMY_X, ENEMY_Y, ENEMY_WIDTH, ENEMY_HEIGHT);
 
         if(id == LASER_TRAP_ID) {
-            enemySheet = new Sprite(assets.assetManager.get(Assets.laser_trap_h_ss, Texture.class));
+            enemySheet = laserTrap;
         }
 
         enemySheet.setSize(ENEMY_WIDTH, ENEMY_HEIGHT);

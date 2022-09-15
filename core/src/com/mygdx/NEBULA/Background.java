@@ -17,7 +17,8 @@ public class Background {
     public static final float DEFAULT_SPEED = SCREEN_HEIGHT/3.12f;
 
     Animation<TextureRegion> starsAnimation;
-    Sprite backgroundSprite, defaultBackgroundSprite, starsSheet;
+    Sprite backgroundSprite, defaultBackgroundSprite, blueBackgroundSprite, greenBackgroundSprite;
+    Sprite redBackgroundSprite, purpleBackgroundSprite, blackBackgroundSprite, starsSheet;
     float background_y1, background_y2, stars_y1, stars_y2;
 
     Sprite transitionSprite;
@@ -34,6 +35,12 @@ public class Background {
         this.assets = assets;
 
         backgroundSprite = new Sprite(assets.assetManager.get(Assets.default_background, Texture.class));
+        blueBackgroundSprite = new Sprite(assets.assetManager.get(Assets.blue_background, Texture.class));
+        greenBackgroundSprite = new Sprite(assets.assetManager.get(Assets.green_background, Texture.class));
+        redBackgroundSprite = new Sprite(assets.assetManager.get(Assets.red_background, Texture.class));
+        purpleBackgroundSprite = new Sprite(assets.assetManager.get(Assets.purple_background, Texture.class));
+        blackBackgroundSprite = new Sprite(assets.assetManager.get(Assets.black_background, Texture.class));
+
         backgroundSprite.setBounds(0,0, SCREEN_WIDTH, SCREEN_WIDTH*12);
         transitionSprite = backgroundSprite;
 
@@ -144,22 +151,22 @@ public class Background {
 
         }
         else if (score < 100 || !isAlive) {
-            transitionSprite = new Sprite(assets.assetManager.get(Assets.default_background, Texture.class));
+            transitionSprite = defaultBackgroundSprite;
         }
         else if (score < 1000) {
-            transitionSprite = new Sprite(assets.assetManager.get(Assets.blue_background, Texture.class));
+            transitionSprite = blueBackgroundSprite;
         }
         else if (score < 2000) {
-            transitionSprite = new Sprite(assets.assetManager.get(Assets.green_background, Texture.class));
+            transitionSprite = greenBackgroundSprite;
         }
         else if (score < 3000) {
-            transitionSprite = new Sprite(assets.assetManager.get(Assets.red_background, Texture.class));
+            transitionSprite = redBackgroundSprite;
         }
         else if (score < 4000) {
-            transitionSprite = new Sprite(assets.assetManager.get(Assets.purple_background, Texture.class));
+            transitionSprite = purpleBackgroundSprite;
         }
         else{
-            transitionSprite = new Sprite(assets.assetManager.get(Assets.black_background, Texture.class));
+            transitionSprite = blackBackgroundSprite;
 
         }
     }
