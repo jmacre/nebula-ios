@@ -85,7 +85,7 @@ public class MainGame extends GameElements implements Screen{
 
     float shipHitTimer = -2.2f;
 
-    float hurtTimer = -0.2f;
+    float hurtTimer = -0.1f;
     float hurtDelayTimer = -.03f;
 
     float explosionDelayTimer = -.025f;
@@ -364,7 +364,7 @@ public class MainGame extends GameElements implements Screen{
                 addEyebats();
                 eyebatsSpawning = true;
 
-                if (score >= 0) {
+                if (score >= 100) {
                     addEnemyShips();
                     enemyShipsSpawning = true;
                 }
