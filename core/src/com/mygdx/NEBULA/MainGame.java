@@ -85,7 +85,7 @@ public class MainGame extends GameElements implements Screen{
 
     float shipHitTimer = -2.2f;
 
-    float hurtTimer = -0.15f;
+    float hurtTimer = -0.2f;
     float hurtDelayTimer = -.03f;
 
     float explosionDelayTimer = -.025f;
