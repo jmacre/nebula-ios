@@ -8,7 +8,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 public class Explosion {
     Animation<TextureRegion> explosionAnimation;
-    public Sprite explosionSheet;
+    public static Sprite explosionSheet;
     float x,y;
     float stateTime;
     float size;
@@ -17,12 +17,14 @@ public class Explosion {
 
     public Explosion(){}
 
+    public static void createExplosionSprite(Assets assets){
+        explosionSheet = new Sprite(assets.assetManager.get(Assets.explosion, Texture.class));
+    }
     public void create(float x, float y, float size, Assets assets){
         this.x = x;
         this.y = y;
         this.size = size;
         stateTime = 0;
-        explosionSheet = new Sprite(assets.assetManager.get(Assets.explosion, Texture.class));
         explosionAnimation = Anim.createAnimation(explosionSheet, 4, 0.075f);
 
     }
@@ -37,8 +39,8 @@ public class Explosion {
     public void render (Anim explosionAnim,float delta, SpriteBatch batch) {
         stateTime += delta;
 
-        if(y<MainGame.SCREEN_HEIGHT)
-        explosionAnim.drawAnim(explosionAnimation, stateTime, x, y - size/4, size, size, false, batch);
+        if(y < MainGame.SCREEN_HEIGHT)
+            explosionAnim.drawAnim(explosionAnimation, stateTime, x, y - size/4, size, size, false, batch);
 
     }
     public float getStateTime(){
