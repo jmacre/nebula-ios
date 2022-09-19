@@ -24,19 +24,10 @@ public class Bullet extends GameElements {
     float stateTime = 0f;
 
     private boolean isMissile = false;
-    public boolean remove = false;
     Collision rect;
 
     public Bullet(){
-
     }
-//
-//    @Override
-//    public void reset() {
-//        this.BULLET_X = BULLET_X;
-//        this.BULLET_Y = BULLET_Y;
-//
-//    }
 
 
     public void update(float delta, boolean isHourglass){
@@ -49,9 +40,6 @@ public class Bullet extends GameElements {
         else {
             BULLET_Y += (SPEED * delta) * .75f  * HOURGLASS_SPEED_MULTIPLIER;;
         }
-
-        if (BULLET_Y > SCREEN_HEIGHT)
-            remove = true;
 
         rect.move(this.BULLET_X, this.BULLET_Y);
 

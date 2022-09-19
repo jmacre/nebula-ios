@@ -177,12 +177,19 @@ public class MainGame extends GameElements implements Screen{
     MyInputProcessor inputProcessor = new MyInputProcessor();
 
     Array<Bullet> bullets = new Array<>();
-    Array<EnemyBullet> enemyBullets = new Array<>();
+    Array<Bullet> bulletsToRemove = new Array<>();
 
+    Array<EnemyBullet> enemyBullets = new Array<>();
+    Array<EnemyBullet> enemyBulletsToRemove = new Array<>();
+
+    Array<Enemy> enemies = new Array<>();
     Array<Enemy> hurtEnemies = new Array<>();
+    Array<Enemy> enemiesToRemove = new Array<>();
 
     Array<Explosion> explosions = new Array<>();
     Array<Explosion> explosionsToDelay = new Array<>();
+    Array<Explosion> explosionsToRemove = new Array<>();
+
 
     Array<ItemDrop> itemDrops = new Array<>();
     Array<ItemDrop> itemsToRemove = new Array<>();
@@ -343,6 +350,7 @@ public class MainGame extends GameElements implements Screen{
             updateExplosions();
             updateItems();
         }
+
         if(!soundLoaded) {
             soundLoaded = true;
         }
@@ -917,6 +925,9 @@ public class MainGame extends GameElements implements Screen{
         Bullet bullet1 = bp.obtain();
         Bullet bullet2 = bp.obtain();
 
+        System.out.println(bullet1.isMissile());
+        System.out.println(bullet2.isMissile());
+
         if(isMissile) {
             bullet1.create(SHIP_X, true, false, assets);
             bullets.add(bullet1);
@@ -936,19 +947,22 @@ public class MainGame extends GameElements implements Screen{
             bullet2.create(SHIP_X + SHIP_WIDTH - SHIP_WIDTH * (6/27f), false, false, assets);
             bullets.add(bullet2);
 
-
             missileTimer = MISSILE_TIMER;
         }
     }
 
     public void updateBullets(Main game) {
-        for (Bullet bullet : bullets) {
-            if(bullet.getBulletY() - Bullet.getBulletHeight() > 2*SCREEN_HEIGHT){
-                bullets.removeValue(bullet, true);
-                bp.free(bullet);
+        bp.freeAll(bulletsToRemove);
+        bullets.removeAll(bulletsToRemove, true);
+        bulletsToRemove.clear();
 
-            }
+        for (Bullet bullet : bullets) {
             bullet.update(deltaP, isHourglass);
+
+            if(bullet.getBulletY() - Bullet.getBulletHeight() > SCREEN_HEIGHT && !bulletsToRemove.contains(bullet, true)){
+                bulletsToRemove.add(bullet);
+            }
+
             if(bullet.isMissile())
                 bullet.render(missileAnim, deltaP, Bullet.MISSILE_WIDTH, Bullet.MISSILE_HEIGHT, game.batch);
             else
@@ -971,14 +985,16 @@ public class MainGame extends GameElements implements Screen{
     }
 
     public void updateEnemyBullets(Main game) {
-        for (EnemyBullet enemyBullet : enemyBullets) {
+        ebp.freeAll(enemyBulletsToRemove);
+        enemyBullets.removeAll(enemyBulletsToRemove, true);
+        enemyBulletsToRemove.clear();
 
+        for (EnemyBullet enemyBullet : enemyBullets) {
             enemyBullet.update(deltaP * hourglassMultiplier);
             enemyBullet.render(game.batch);
 
-            if(enemyBullet.getY() + ENEMY_BULLET_HEIGHT < -2 * SCREEN_HEIGHT){
-                ebp.free(enemyBullet);
-                enemyBullets.removeValue(enemyBullet, true);
+            if(enemyBullet.getY() + ENEMY_BULLET_HEIGHT < 0 && !enemyBulletsToRemove.contains(enemyBullet, true)){
+                enemyBulletsToRemove.add(enemyBullet);
             }
         }
     }
@@ -1092,13 +1108,14 @@ public class MainGame extends GameElements implements Screen{
     }
 
     public void updateEnemies(){
+        ep.freeAll(enemiesToRemove);
+        enemies.removeAll(enemiesToRemove, true);
+        enemiesToRemove.clear();
+
         for (Enemy enemy : enemies) {
 
-            if(enemy.getEnemyY() + enemy.getHeight() < -1.5 * SCREEN_HEIGHT){
-
-                ep.free(enemy);
-                enemies.removeValue(enemy, true);
-
+            if(enemy.getEnemyY() + enemy.getHeight() < -1.5 * SCREEN_HEIGHT && !enemiesToRemove.contains(enemy, true)){
+                enemiesToRemove.add(enemy);
             }
 
             if(isAlive) {
@@ -1199,9 +1216,8 @@ public class MainGame extends GameElements implements Screen{
                     if (bombUsed || (Collision.isNearby(bullet.getCollision(), enemy.getCollision())
                     && Collision.isColliding(bullet.getCollision(), enemy.getCollision()))) {
 
-                        if (!bombUsed && !bullet.isMissile() && enemy.getId() != LASER_TRAP_ID) {
-                            bp.free(bullet);
-                            bullets.removeValue(bullet, true);
+                        if (!bombUsed && !bullet.isMissile() && enemy.getId() != LASER_TRAP_ID && !bulletsToRemove.contains(bullet, true)) {
+                            bulletsToRemove.add(bullet);
                         }
 
                         if (bullet.isMissile() && bullet.getBulletY() + Bullet.MISSILE_HEIGHT < SCREEN_HEIGHT && enemy.getId() != LASER_TRAP_ID) {
@@ -1230,8 +1246,9 @@ public class MainGame extends GameElements implements Screen{
                             }
 
 
-                            ep.free(enemy);
-                            enemies.removeValue(enemy, true);
+                            if(!enemiesToRemove.contains(enemy, true)) {
+                                enemiesToRemove.add(enemy);
+                            }
 
                             Explosion explosion;
                             if (enemy.getId() != ENEMY_SHIP_ID) {
@@ -1281,15 +1298,18 @@ public class MainGame extends GameElements implements Screen{
     }
 
     public void updateExplosions(){
+        exp.freeAll(explosionsToRemove);
+        explosions.removeAll(explosionsToRemove, true);
+        explosionsToRemove.clear();
+
         for (Explosion explosion : explosions) {
             if(explosion.y < SCREEN_HEIGHT && explosion.y > 0) {
                     explosion.update(deltaP);
                     explosion.render(explosionAnim,  deltaP, game.batch);
             }
 
-            if (explosion.explosionAnimation.isAnimationFinished(explosion.getStateTime())) {
-                explosions.removeValue(explosion, true);
-                exp.free(explosion);
+            if (explosion.explosionAnimation.isAnimationFinished(explosion.getStateTime()) && !explosionsToRemove.contains(explosion, true)) {
+                explosionsToRemove.add(explosion);
             }
         }
     }
@@ -1348,8 +1368,9 @@ public class MainGame extends GameElements implements Screen{
                 if(soundEnabled){
                     hitSound.play(0.2f);
                 }
-                ebp.free(enemyBullet);
-                enemyBullets.removeValue(enemyBullet, true);
+                if(!enemyBulletsToRemove.contains(enemyBullet, true)) {
+                    enemyBulletsToRemove.add(enemyBullet);
+                }
 
                 if(health > 0 && !justHit){
                     justHit = true;

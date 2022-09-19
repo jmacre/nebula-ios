@@ -49,6 +49,9 @@ public class Background {
         background_y2 = backgroundSprite.getHeight();
 
         starsSheet = new Sprite(assets.assetManager.get(Assets.stars, Texture.class));
+
+        starsSheet.setBounds(0,0, SCREEN_WIDTH, SCREEN_WIDTH*12);
+
         stars_y1 = 0;
         stars_y2 = starsSheet.getHeight();
 
@@ -131,7 +134,10 @@ public class Background {
         if(!isHourglass)
             stateTime += delta / 10 * hourglassMultiplier;
 
+        starsSheet.setPosition(0, stars_y1);
         starsAnim.drawAnim(starsAnimation, stateTime, 0, stars_y1, SCREEN_WIDTH, starsSheet.getHeight(), true,batch);
+
+        starsSheet.setPosition(0, stars_y2);
         starsAnim.drawAnim(starsAnimation, stateTime, 0, stars_y2, SCREEN_WIDTH, starsSheet.getHeight(), true, batch);
     }
 

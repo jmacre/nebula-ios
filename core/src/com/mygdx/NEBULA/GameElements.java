@@ -162,7 +162,6 @@ public class GameElements {
 
     Sprite blackTransition, whiteFlash, shipSS, shipBlinkingSS;
     Animation<TextureRegion> shipAnimation, shipBlinkingAnimation;
-    Array<Enemy> enemies = new Array<>();
 
     Music mainMusic;
     Sound pauseSound;
