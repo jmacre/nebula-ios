@@ -2,6 +2,7 @@ package com.mygdx.NEBULA;
 
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -9,6 +10,9 @@ import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.utils.Align;
+import com.badlogic.gdx.utils.viewport.FillViewport;
+import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 public class GameInterface extends GameElements{
     Assets assets;
@@ -45,7 +49,7 @@ public class GameInterface extends GameElements{
 
     public GameInterface(Assets assets){
         this.assets = assets;
-        parameter.size = Gdx.graphics.getWidth()/40;
+        parameter.size = ACTUAL_WIDTH/40;
         startButton = new Button(assets.assetManager.get(Assets.start_button_inactive_clear, Texture.class), START_BUTTON_X, START_BUTTON_Y_TRANSITIONED, START_BUTTON_WIDTH, START_BUTTON_HEIGHT);
 
         shopButton = new Button(assets.assetManager.get(Assets.shop_button_inactive_clear, Texture.class), SHOP_BUTTON_X, SHOP_BUTTON_Y_TRANSITIONED, SHOP_BUTTON_WIDTH, SHOP_BUTTON_HEIGHT);
@@ -56,7 +60,7 @@ public class GameInterface extends GameElements{
         noButton = new Button(assets.assetManager.get(Assets.no_button_inactive, Texture.class), NO_BUTTON_X, NO_BUTTON_Y, NO_BUTTON_WIDTH, NO_BUTTON_HEIGHT);
 //        upgradeButton = new Button(assets.assetManager.get(Assets.upgrade_button, Texture.class), 0,0,0,0);
 
-        textParameter.size = Gdx.graphics.getWidth()/14;
+        textParameter.size = ACTUAL_WIDTH/14;
         storeFont = generator.generateFont(textParameter);
 
         if(Gdx.app.getType() == Application.ApplicationType.Android){
@@ -116,7 +120,7 @@ public class GameInterface extends GameElements{
             game.batch.draw(heartMissing3, LEFT_HEART_X, topElemY, HEART_WIDTH, HEART_HEIGHT);
         }
     }
-    public void drawTitleScreen(Main game, boolean transitionInDone) {
+    public void drawTitleScreen(Main game, boolean transitionInDone, ScreenViewport svp, Camera textCamera) {
         game.batch.draw(startButton.getTexture(), START_BUTTON_X, START_BUTTON_Y, START_BUTTON_WIDTH, START_BUTTON_HEIGHT);
         game.batch.draw(shopButton.getTexture(), SHOP_BUTTON_X, SHOP_BUTTON_Y, SHOP_BUTTON_WIDTH, SHOP_BUTTON_HEIGHT);
         game.batch.draw(titleTexture, TITLE_LOGO_X, TITLE_LOGO_Y - TITLE_LOGO_HEIGHT, TITLE_LOGO_WIDTH, TITLE_LOGO_HEIGHT);
@@ -128,8 +132,17 @@ public class GameInterface extends GameElements{
 
         if (transitionInDone) {
             titleTexture.setTexture(assets.assetManager.get(Assets.title_logo, Texture.class));
-                scoreFont.draw(game.batch, "HIGH SCORE: " + prefs.getHighScore(), SCORE_X, scoreY);
-                game.batch.draw(tsSoundButton.getTexture(), TS_SOUND_BUTTON_X, tsSoundButtonY, TS_SOUND_BUTTON_WIDTH, TS_SOUND_BUTTON_HEIGHT);
+            game.batch.draw(tsSoundButton.getTexture(), TS_SOUND_BUTTON_X, tsSoundButtonY, TS_SOUND_BUTTON_WIDTH, TS_SOUND_BUTTON_HEIGHT);
+
+            textCamera.position.set(textCamera.viewportWidth/2, textCamera.viewportHeight/2, 0);
+            textCamera.update();
+
+            game.batch.setProjectionMatrix(textCamera.combined);
+            svp.apply();
+
+            svp.update(ACTUAL_WIDTH, ACTUAL_HEIGHT);
+
+            scoreFont.draw(game.batch, "HIGH SCORE: " + prefs.getHighScore(), SCORE_X, scoreY);
 
         }
     }
@@ -283,7 +296,7 @@ public class GameInterface extends GameElements{
         return homeButton.getReleased();
     }
 
-    public void drawDefaultShopScreen(Main game, boolean soundEnabled){
+    public void drawShopScreen(Main game, boolean soundEnabled, Camera textCamera, ScreenViewport svp){
 //        List<Cell> cellList = new Array<>();
 
 //        cellList.add(new Cell(upgradeButton, UPGRADE_DIM_WIDTH/UPGRADE_DIM_HEIGHT));
@@ -302,36 +315,56 @@ public class GameInterface extends GameElements{
 
 
         game.batch.draw(shopBack, SHOP_BACK_X, SHOP_BACK_Y, SHOP_BACK_WIDTH, SHOP_BACK_HEIGHT);
+        game.batch.draw(xButton.getTexture(), X_BUTTON_X, X_BUTTON_Y, X_BUTTON_WIDTH, X_BUTTON_HEIGHT);
+
 //        Grid grid = new Grid(assets.assetManager,  soundEnabled);
 //        grid.createGrid(game, 2,1, SHOP_BACK_X + SHOP_BACK_WIDTH * 0.01346f, SHOP_BACK_Y + SHOP_BACK_HEIGHT*0.01346f, SHOP_BACK_WIDTH - SHOP_BACK_WIDTH * (2 * 0.01346f), SHOP_BACK_HEIGHT - SHOP_BACK_HEIGHT * (2* 0.01346f), 200, cellList);
 
-        gl.setText(storeFont, "COMING SOON", Color.WHITE, SCREEN_WIDTH, Align.center, true);
-        storeFont.draw(game.batch, "COMING SOON", (SCREEN_WIDTH - gl.width) / 2, SCREEN_HEIGHT / 2 + gl.height/2);
-        game.batch.draw(xButton.getTexture(), X_BUTTON_X, X_BUTTON_Y, X_BUTTON_WIDTH, X_BUTTON_HEIGHT);
+        textCamera.position.set(textCamera.viewportWidth/2, textCamera.viewportHeight/2, 0);
+        textCamera.update();
+
+        game.batch.setProjectionMatrix(textCamera.combined);
+        svp.apply();
+
+        svp.update(ACTUAL_WIDTH, ACTUAL_HEIGHT);
+        gl.setText(storeFont, "COMING SOON", Color.WHITE, ACTUAL_WIDTH, Align.center, true);
+        storeFont.draw(game.batch, "COMING SOON", (ACTUAL_WIDTH - gl.width) / 2, ACTUAL_HEIGHT / 2 + gl.height/2);
 
     }
 
-    public void drawPauseScreen(Main game, BitmapFont scoreFont, int score) {
+    public void drawPauseScreen(Main game, BitmapFont scoreFont, int score,  Camera textCamera, ScreenViewport svp) {
         game.batch.draw(pauseMenuBack, MENU_BACK_X, MENU_BACK_Y, MENU_BACK_WIDTH, MENU_BACK_HEIGHT);
 
         if (!confirmLeaveScreenOpen) {
-
+            game.batch.draw(soundButton.getTexture(), SOUND_BUTTON_X, SOUND_BUTTON_Y, SOUND_BUTTON_WIDTH, SOUND_BUTTON_HEIGHT);
             game.batch.draw(playButton.getTexture(), PLAY_BUTTON_X, PLAY_BUTTON_Y, PLAY_BUTTON_WIDTH, PLAY_BUTTON_HEIGHT);
             game.batch.draw(homeButton.getTexture(), HOME_BUTTON_X, HOME_BUTTON_Y, HOME_BUTTON_WIDTH, HOME_BUTTON_HEIGHT);
+
+
+            textCamera.position.set(textCamera.viewportWidth/2, textCamera.viewportHeight/2, 0);
+            textCamera.update();
+
+            game.batch.setProjectionMatrix(textCamera.combined);
+            svp.apply();
+
+            svp.update(ACTUAL_WIDTH, ACTUAL_HEIGHT);
+
             if (score > prefs.getHighScore())
                 scoreFont.draw(game.batch, "HIGH SCORE: " + score, MENU_SCORE_X, MENU_SCORE_Y);
             else
                 scoreFont.draw(game.batch, "HIGH SCORE: " + prefs.getHighScore(), MENU_SCORE_X, MENU_SCORE_Y);
 
-            game.batch.draw(soundButton.getTexture(), SOUND_BUTTON_X, SOUND_BUTTON_Y, SOUND_BUTTON_WIDTH, SOUND_BUTTON_HEIGHT);
         }
     }
 
-    public void drawConfirmLeave(Main game, BitmapFont confirmScreenFont){
-        gl.setText(confirmScreenFont, "ARE YOU SURE YOU \n\n WANT TO LEAVE?", Color.valueOf("6a11f6"), MENU_BACK_WIDTH, Align.left, true);
-        confirmScreenFont.draw(game.batch, "ARE YOU SURE YOU \n\n WANT TO LEAVE?", YES_BUTTON_X, CONFIRM_LEAVE_FONT_Y);
+    public void drawConfirmLeave(Main game, BitmapFont confirmScreenFont, Camera textCamera){
         game.batch.draw(yesButton.getTexture(), YES_BUTTON_X, YES_BUTTON_Y, YES_BUTTON_WIDTH, YES_BUTTON_HEIGHT);
         game.batch.draw(noButton.getTexture(), NO_BUTTON_X, NO_BUTTON_Y, NO_BUTTON_WIDTH, NO_BUTTON_HEIGHT);
+
+        game.batch.setProjectionMatrix(textCamera.combined);
+
+        gl.setText(confirmScreenFont, "ARE YOU SURE YOU \n\n WANT TO LEAVE?", Color.valueOf("6a11f6"), MENU_BACK_WIDTH, Align.left, true);
+        confirmScreenFont.draw(game.batch, "ARE YOU SURE YOU \n\n WANT TO LEAVE?", CONFIRM_LEAVE_FONT_X, CONFIRM_LEAVE_FONT_Y);
 
     }
 
@@ -343,7 +376,7 @@ public class GameInterface extends GameElements{
         return confirmLeaveScreenOpen;
     }
 
-    public void drawReplayScreen(Main game, BitmapFont scoreFont, BitmapFont gameOverFont, boolean newHighScore) {
+    public void drawReplayScreen(Main game, BitmapFont scoreFont, BitmapFont gameOverFont, boolean newHighScore, ScreenViewport svp, Camera textCamera) {
         scoreFont.setColor(Color.valueOf("6a11f6"));
 
         game.batch.draw(pauseMenuBack, MENU_BACK_X, MENU_BACK_Y, MENU_BACK_WIDTH, MENU_BACK_HEIGHT);
@@ -351,19 +384,21 @@ public class GameInterface extends GameElements{
 
             game.batch.draw(replayButton.getTexture(), PLAY_BUTTON_X, PLAY_BUTTON_Y, PLAY_BUTTON_WIDTH, PLAY_BUTTON_HEIGHT);
             game.batch.draw(homeButton.getTexture(), HOME_BUTTON_X, HOME_BUTTON_Y, HOME_BUTTON_WIDTH, HOME_BUTTON_HEIGHT);
+            game.batch.draw(soundButton.getTexture(), SOUND_BUTTON_X, SOUND_BUTTON_Y, SOUND_BUTTON_WIDTH, SOUND_BUTTON_HEIGHT);
+
+            game.batch.setProjectionMatrix(textCamera.combined);
 
             if (newHighScore) {
                 scoreFont.draw(game.batch, "HIGH SCORE:  " + prefs.getHighScore(), MENU_SCORE_X, MENU_SCORE_Y);
-                gl.setText(gameOverFont, "HIGH SCORE", Color.WHITE, SCREEN_WIDTH, Align.center, true);
-                gameOverFont.draw(game.batch, "HIGH SCORE", (SCREEN_WIDTH - gl.width) / 2, GAME_OVER_TEXT_Y);
+                gl.setText(gameOverFont, "HIGH SCORE", Color.WHITE, ACTUAL_WIDTH, Align.center, true);
+                gameOverFont.draw(game.batch, "HIGH SCORE", (ACTUAL_WIDTH - gl.width) / 2, GAME_OVER_TEXT_Y);
 
             } else {
                 scoreFont.draw(game.batch, "HIGH SCORE:  " + prefs.getHighScore(), MENU_SCORE_X, MENU_SCORE_Y);
-                gl.setText(gameOverFont, "GAME OVER", Color.WHITE, SCREEN_WIDTH, Align.center, true);
-                gameOverFont.draw(game.batch, "GAME OVER", (SCREEN_WIDTH - gl.width) / 2, GAME_OVER_TEXT_Y);
+                gl.setText(gameOverFont, "GAME OVER", Color.WHITE, ACTUAL_WIDTH, Align.center, true);
+                gameOverFont.draw(game.batch, "GAME OVER", (ACTUAL_WIDTH - gl.width) / 2, GAME_OVER_TEXT_Y);
 
             }
-            game.batch.draw(soundButton.getTexture(), SOUND_BUTTON_X, SOUND_BUTTON_Y, SOUND_BUTTON_WIDTH, SOUND_BUTTON_HEIGHT);
         }
     }
 

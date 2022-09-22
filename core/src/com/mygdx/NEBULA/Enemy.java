@@ -1,7 +1,9 @@
 package com.mygdx.NEBULA;
 
 import com.badlogic.gdx.Application;
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -9,6 +11,8 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.utils.Pool;
+import com.badlogic.gdx.utils.viewport.FillViewport;
+import com.badlogic.gdx.utils.viewport.Viewport;
 
 import java.util.Random;
 
@@ -64,7 +68,9 @@ public class Enemy extends GameElements{
     static Sprite laserTrap;
 
 
-    public Enemy(){  }
+    public Enemy(){
+
+    }
 
     public static void createEnemySprites(Assets assets){
         blueBat = new Sprite(assets.assetManager.get(Assets.eyebat_blue_ss, Texture.class));
@@ -193,7 +199,9 @@ public class Enemy extends GameElements{
 
     }
 
-    public void update(float delta, Enemy enemy, boolean isHourglass){
+    public void update(float delta, Enemy enemy, boolean isHourglass, Camera camera){
+        hurtBatch.setProjectionMatrix(camera.combined);
+
         if(isHourglass){
             hourglassMultiplier = HOURGLASS_SPEED_MULTIPLIER;
         }

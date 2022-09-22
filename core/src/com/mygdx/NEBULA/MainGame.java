@@ -7,16 +7,20 @@ import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.FloatArray;
 
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.viewport.FillViewport;
+import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -45,6 +49,7 @@ import static com.mygdx.NEBULA.ItemDrop.HEART_ID;
 import static com.mygdx.NEBULA.ItemDrop.MAX_ITEM_SPAWN_TIME;
 import static com.mygdx.NEBULA.ItemDrop.MIN_ITEM_SPAWN_TIME;
 import static com.mygdx.NEBULA.ItemDrop.MISSILE_ID;
+import static com.mygdx.NEBULA.MainMenu.newPoints;
 import static com.mygdx.NEBULA.ItemDrop.RAPID_FIRE_TIMER;
 
 
@@ -64,6 +69,7 @@ public class MainGame extends GameElements implements Screen{
     FloatArray vertices;
 
     ShaderProgram invertedShader;
+    ScreenViewport screenViewport;
 
 
     float fadeInOpacity = 1;
@@ -92,7 +98,7 @@ public class MainGame extends GameElements implements Screen{
 
     float countDownTimer = 0f;
     float resumeCountdownTimer = -1.5f;
-    float playerPosition = SHIP_X;
+    int playerPosition = SHIP_X;
 
     float bulletThreshold = 0.4f;
     float musicVolume = 0.35f;
@@ -106,6 +112,8 @@ public class MainGame extends GameElements implements Screen{
     float laserTrapSpawnTimer;
 
     float itemSpawnTimer;
+
+    boolean isUsingTextViewport;
 
     boolean isShipLeaving = false;
     boolean isTransitionedIn = false;
@@ -171,6 +179,7 @@ public class MainGame extends GameElements implements Screen{
     boolean isPaused = false;
     boolean isAlive = true;
     boolean isResettingScreen = false;
+    boolean updatingScore;
 
     ShapeRenderer sr = new ShapeRenderer();
 
@@ -197,8 +206,11 @@ public class MainGame extends GameElements implements Screen{
     Array<Float> deltaList = new Array<>();
     float deltaSum;
     float speedIncrease;
+    public static final int WIDTH = 176;
 
     float hourglassMultiplier = 1;
+    OrthographicCamera camera, textCamera;
+    FillViewport viewport;
 
     Player player;
     int health = 3;
@@ -215,6 +227,14 @@ public class MainGame extends GameElements implements Screen{
     public void show() {
         Enemy.createEnemySprites(assets);
         Explosion.createExplosionSprite(assets);
+        camera = new OrthographicCamera();
+        textCamera = new OrthographicCamera();
+        screenViewport = new ScreenViewport(textCamera);
+
+        viewport = new FillViewport(SCREEN_WIDTH, SCREEN_HEIGHT, camera);
+        viewport.apply();
+
+        camera.position.set(camera.viewportWidth/2,camera.viewportHeight/2,0);
 
         minEnemyShipSpawnTime = MIN_ENEMY_SHIP_SPAWN_TIME;
         maxEnemyShipSpawnTime = MAX_ENEMY_SHIP_SPAWN_TIME;
@@ -257,19 +277,19 @@ public class MainGame extends GameElements implements Screen{
         shipAnimation = Anim.createAnimation(shipSS, 4, DEFAULT_FRAME_DURATION*1.5f);
         shipBlinkingAnimation = Anim.createAnimation(shipBlinkingSS, 4, (DEFAULT_FRAME_DURATION*1.5f));
 
-        textParameter.size = Gdx.graphics.getWidth()/40;
+        textParameter.size = ACTUAL_WIDTH/40;
         menuScoreFont = generator.generateFont(textParameter);
         menuScoreFont.setColor(Color.valueOf("6a11f6"));
 
-        textParameter.size = Gdx.graphics.getWidth()/22;
+        textParameter.size = ACTUAL_WIDTH/22;
         confirmScreenFont = generator.generateFont(textParameter);
         confirmScreenFont.setColor(Color.valueOf("6a11f6"));
 
-        textParameter.size = Gdx.graphics.getWidth()/10;
+        textParameter.size = ACTUAL_WIDTH/10;
         gameOverFont = generator.generateFont(textParameter);
         gameOverFont.setColor(Color.valueOf("FFFFFF"));
 
-        textParameter.size = Gdx.graphics.getWidth()/6;
+        textParameter.size = ACTUAL_WIDTH/6;
         countdownFont = generator.generateFont(textParameter);
         countdownFont.setColor(Color.valueOf("FFFFFF"));
 
@@ -280,17 +300,23 @@ public class MainGame extends GameElements implements Screen{
         ShaderProgram.pedantic = false;
         invertedShader = new ShaderProgram(Gdx.files.internal("shaders/invert.vsh"), Gdx.files.internal("shaders/invert.fsh"));
 
-        game.batch.setShader(invertedShader);
         game.batch.setShader(null);
     }
 
     @Override
     public void render(float delta) {
-//        System.out.println(shipPositions);
+        isUsingTextViewport = false;
+
+        camera.update();
+        textCamera.update();
+
         Gdx.gl.glClearColor(0f, 0f, 0f, 1f);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        newPoints = viewport.unproject(new Vector3(Gdx.input.getX(),ACTUAL_HEIGHT - Gdx.input.getY(), 0));
 
         game.batch.enableBlending();
+        game.batch.setProjectionMatrix(camera.combined);
+
         game.batch.begin();
 
         deltaList.add(delta);
@@ -402,8 +428,9 @@ public class MainGame extends GameElements implements Screen{
                     player.update();
             }
 
-            if (isAlive && !isTransitioningOut && !isTransitionedOut)
+            if (isAlive && !isTransitioningOut && !isTransitionedOut) {
                 transitionIn();
+            }
 
             if (isMissile)
                 runMissileTimer();
@@ -475,7 +502,8 @@ public class MainGame extends GameElements implements Screen{
 
         if (isPaused && !isRunningResumeCountdown) {
             songPausePosition = mainMusic.getPosition();
-            gameInterface.drawPauseScreen(game, menuScoreFont, score);
+            useDefaultViewport();
+            gameInterface.drawPauseScreen(game, menuScoreFont, score, textCamera, screenViewport);
 
             if (gameInterface.checkForPlayButtonTap() && !isTransitioningOut && !isFadingIn && !isTransitioningIn &!gameInterface.getConfirmLeaveScreenOpen()){
                 playButtonTapVal = inputProcessor.getTapCount();
@@ -494,7 +522,8 @@ public class MainGame extends GameElements implements Screen{
                 }
 
 
-                gameInterface.drawConfirmLeave(game, confirmScreenFont);
+                useDefaultViewport();
+                gameInterface.drawConfirmLeave(game, confirmScreenFont,  textCamera);
 
                 if(gameInterface.checkForYesButtonTap()) {
                     yesButtonTapVal = inputProcessor.getTapCount();
@@ -518,14 +547,18 @@ public class MainGame extends GameElements implements Screen{
         }
 
         if(!isAlive){
+            useDefaultViewport();
             game.batch.setShader(null);
 
-            if(inputProcessor.getTapCount() == 0)
+            if(inputProcessor.getTapCount() == 0) {
                 transitionOut(SHIP_X);
-            else
+            }
+            else {
                 transitionOut(CURRENT_SHIP_X);
+            }
             if(isTransitionedOut && !isFadingOut) {
-                gameInterface.drawReplayScreen(game, menuScoreFont, gameOverFont, newHighscore);
+                useDefaultViewport();
+                gameInterface.drawReplayScreen(game, menuScoreFont, gameOverFont, newHighscore, screenViewport, textCamera);
             }
 
             if (gameInterface.checkForReplayButtonTap() && isTransitionedOut){
@@ -542,7 +575,7 @@ public class MainGame extends GameElements implements Screen{
 
 
                     if (!isFadingOut) {
-                        gameInterface.drawConfirmLeave(game, confirmScreenFont);
+                        gameInterface.drawConfirmLeave(game, confirmScreenFont, textCamera);
 
                         if (gameInterface.checkForYesButtonTap()) {
                             yesButtonTapVal = inputProcessor.getTapCount();
@@ -687,7 +720,7 @@ public class MainGame extends GameElements implements Screen{
         if(shipPositions.size() > 0)
             shipPositions.clear();
 
-        SHIP_X = SCREEN_WIDTH / 2 - SHIP_WIDTH / 2;
+        SHIP_X = (int) (SCREEN_WIDTH / 2 - SHIP_WIDTH / 2);
         CURRENT_SHIP_X = SHIP_X;
 
         isResettingScreen = false;
@@ -719,46 +752,51 @@ public class MainGame extends GameElements implements Screen{
 
     public void movePlayer(){
         if (!isPaused && isTransitionedIn && !isShipLeaving && !isFadingOut) {
-            if (!(Gdx.input.getY() < SCREEN_HEIGHT/5)) {
+            if (!(newPoints.y < SCREEN_HEIGHT/5f)) {
 
-                if(Gdx.input.getX() < SHIP_X - SHIP_WIDTH/2) {
-                    playerPosition = SHIP_X - deltaP * moveSpeed * (SHIP_X - (Gdx.input.getX() - SHIP_WIDTH / 2));
+                if(newPoints.x < SHIP_X - SHIP_WIDTH/2) {
+                    playerPosition =(int) (SHIP_X - deltaP * moveSpeed * (SHIP_X - (newPoints.x - SHIP_WIDTH / 2)));
 
                     if(playerPosition >= 0 && playerPosition <= SCREEN_WIDTH - SHIP_WIDTH) {
-                        SHIP_X -= deltaP * moveSpeed * (SHIP_X - (Gdx.input.getX() - SHIP_WIDTH / 2));
+                        SHIP_X -= (int)(deltaP * moveSpeed * (SHIP_X - (newPoints.x - SHIP_WIDTH / 2)));
                     }
                 }
-                if(Gdx.input.getX() > SHIP_X - SHIP_WIDTH/2) {
-                    playerPosition = SHIP_X + deltaP * moveSpeed * (Gdx.input.getX() - SHIP_X - SHIP_WIDTH / 2);
+                if(newPoints.x > SHIP_X - SHIP_WIDTH/2) {
+                    playerPosition = (int) (SHIP_X + deltaP * moveSpeed * (newPoints.x - SHIP_X - SHIP_WIDTH / 2));
 
                     if (playerPosition >= 0 && playerPosition <= SCREEN_WIDTH - SHIP_WIDTH) {
-                        SHIP_X += deltaP * moveSpeed * (Gdx.input.getX() - SHIP_X - SHIP_WIDTH / 2);
+                        SHIP_X += (int) (deltaP * moveSpeed * (newPoints.x - SHIP_X - SHIP_WIDTH / 2));
                     }
                 }
                 CURRENT_SHIP_X = SHIP_X;
             }
+            System.out.println(playerPosition);
+
         }
     }
 
     public void runResumeCountdown(float delta){
+        if(resumeCountdownTimer < 0.25f) {
+            useTextViewport();
+        }
         resumeCountdownTimer += delta;
         if (resumeCountdownTimer >= -1) {
             if (resumeCountdownTimer < -0.66f) {
-                gl.setText(countdownFont, "3", Color.WHITE, SCREEN_WIDTH, Align.center, true);
-                countdownFont.draw(game.batch, "3", (SCREEN_WIDTH - gl.width) / 2, SCREEN_HEIGHT / 2 + gl.height);
+                gl.setText(countdownFont, "3");
+                countdownFont.draw(game.batch, "3", (ACTUAL_WIDTH - gl.width) / 2, ACTUAL_HEIGHT / 2 + gl.height);
 
             } else if (resumeCountdownTimer <= -0.33) {
                 gl.setText(countdownFont, "2", Color.WHITE, SCREEN_WIDTH, Align.center, true);
-                countdownFont.draw(game.batch, "2", (SCREEN_WIDTH - gl.width) / 2, SCREEN_HEIGHT / 2 + gl.height);
+                countdownFont.draw(game.batch, "2", (ACTUAL_WIDTH - gl.width) / 2, ACTUAL_HEIGHT / 2 + gl.height);
 
             } else if (resumeCountdownTimer < 0) {
                 gl.setText(countdownFont, "1", Color.WHITE, SCREEN_WIDTH, Align.center, true);
-                countdownFont.draw(game.batch, "1", (SCREEN_WIDTH - gl.width) / 2, SCREEN_HEIGHT / 2 + gl.height);
+                countdownFont.draw(game.batch, "1", (ACTUAL_WIDTH - gl.width) / 2, ACTUAL_HEIGHT / 2 + gl.height);
 
             } else {
                 if (resumeCountdownTimer < 0.25f) {
                     gl.setText(countdownFont, "GO", Color.WHITE, SCREEN_WIDTH, Align.center, true);
-                    countdownFont.draw(game.batch, "GO", (SCREEN_WIDTH - gl.width) / 2, SCREEN_HEIGHT / 2 + gl.height);
+                    countdownFont.draw(game.batch, "GO", (ACTUAL_WIDTH - gl.width) / 2, ACTUAL_HEIGHT / 2 + gl.height);
 
                 } else {
                     runResumeCountdown = false;
@@ -767,32 +805,56 @@ public class MainGame extends GameElements implements Screen{
             }
         }
     }
+    public void useTextViewport(){
+        isUsingTextViewport = true;
 
+        textCamera.position.set(textCamera.viewportWidth/2, textCamera.viewportHeight/2, 0);
+        textCamera.update();
+
+        game.batch.setProjectionMatrix(textCamera.combined);
+        screenViewport.apply();
+
+        screenViewport.update(ACTUAL_WIDTH, ACTUAL_HEIGHT);
+    }
+
+    public void useDefaultViewport(){
+        isUsingTextViewport = false;
+
+        camera.position.set(camera.viewportWidth/2, camera.viewportHeight/2, 0);
+        camera.update();
+
+        game.batch.setProjectionMatrix(camera.combined);
+        viewport.apply();
+
+        viewport.update(ACTUAL_WIDTH, ACTUAL_HEIGHT);
+    }
     public void transitionIn(){
         if(SHIP_START_Y <= SHIP_Y) {
-            SHIP_X = SCREEN_WIDTH / 2 - SHIP_WIDTH / 2;
+            SHIP_X = (int) (SCREEN_WIDTH / 2 - SHIP_WIDTH / 2);
             SHIP_START_Y += 1.6 * SHIP_Y * deltaP;
             transitionDistTraveled += 1.6 * SHIP_Y * deltaP;
             transitionInTapVal = inputProcessor.getTapCount();
         }
-
+        if(isTransitioningIn || countDownTimer < 0.25f) {
+            useTextViewport();
+        }
         if (transitionDistTraveled <= totalTransitionDist/3) {
-            gl.setText(countdownFont, "3", Color.WHITE, SCREEN_WIDTH, Align.center, true);
-            countdownFont.draw(game.batch, "3", (SCREEN_WIDTH - gl.width) / 2, SCREEN_HEIGHT / 2 + gl.height/2);
+            gl.setText(countdownFont, "3", Color.WHITE, ACTUAL_WIDTH, Align.center, true);
+            countdownFont.draw(game.batch, "3", (ACTUAL_WIDTH - gl.width) / 2, ACTUAL_HEIGHT / 2 + gl.height/2);
         }
         else if (transitionDistTraveled <= 2*totalTransitionDist/3) {
-            gl.setText(countdownFont, "2", Color.WHITE, SCREEN_WIDTH, Align.center, true);
-            countdownFont.draw(game.batch, "2", (SCREEN_WIDTH - gl.width) / 2, SCREEN_HEIGHT / 2 + gl.height/2);
+            gl.setText(countdownFont, "2", Color.WHITE, ACTUAL_WIDTH, Align.center, true);
+            countdownFont.draw(game.batch, "2", (ACTUAL_WIDTH - gl.width) / 2, ACTUAL_HEIGHT / 2 + gl.height/2);
         }
         else if (transitionDistTraveled < totalTransitionDist) {
-            gl.setText(countdownFont, "1", Color.WHITE, SCREEN_WIDTH, Align.center, true);
-            countdownFont.draw(game.batch, "1", (SCREEN_WIDTH - gl.width) / 2, SCREEN_HEIGHT / 2 + gl.height/2);
+            gl.setText(countdownFont, "1", Color.WHITE, ACTUAL_WIDTH, Align.center, true);
+            countdownFont.draw(game.batch, "1", (ACTUAL_WIDTH - gl.width) / 2, ACTUAL_HEIGHT / 2 + gl.height/2);
         }
         else if (transitionDistTraveled >= totalTransitionDist && SHIP_START_Y >= SHIP_Y) {
             if(countDownTimer < 0.25f) {
                 countDownTimer += deltaP;
-                gl.setText(countdownFont, "GO", Color.WHITE, SCREEN_WIDTH, Align.center, true);
-                countdownFont.draw(game.batch, "GO", (SCREEN_WIDTH - gl.width) / 2, SCREEN_HEIGHT / 2 + gl.height/2);
+                gl.setText(countdownFont, "GO", Color.WHITE, ACTUAL_WIDTH, Align.center, true);
+                countdownFont.draw(game.batch, "GO", (ACTUAL_WIDTH - gl.width) / 2, ACTUAL_HEIGHT / 2 + gl.height/2);
             }
             isTransitionedIn = true;
             isTransitioningIn = false;
@@ -862,17 +924,21 @@ public class MainGame extends GameElements implements Screen{
         }
 
         if(isTransitionedIn) {
+            gameInterface.drawTopUI(game, isPaused || isRunningResumeCountdown, health, isAlive, isTransitionedIn);
+
+            useTextViewport();
+
             gl.setText(Main.scoreFont, String.valueOf(score));
 
             if(Gdx.app.getType() == Application.ApplicationType.iOS) {
-                Main.scoreFont.draw(game.batch, gl, SCORE_X, SCREEN_HEIGHT - gl.height * 2f);
+                Main.scoreFont.draw(game.batch, gl, SCORE_X, ACTUAL_HEIGHT - gl.height * 2f);
             }
 
             else{
-                Main.scoreFont.draw(game.batch, gl, SCORE_X, SCREEN_HEIGHT - gl.height);
+                Main.scoreFont.draw(game.batch, gl, SCORE_X, ACTUAL_HEIGHT - gl.height);
             }
-
-            gameInterface.drawTopUI(game, isPaused || isRunningResumeCountdown, health, isAlive, isTransitionedIn);
+            updatingScore = false;
+            viewport.apply();
         }
     }
 
@@ -924,9 +990,6 @@ public class MainGame extends GameElements implements Screen{
     public void addBullets(){
         Bullet bullet1 = bp.obtain();
         Bullet bullet2 = bp.obtain();
-
-        System.out.println(bullet1.isMissile());
-        System.out.println(bullet2.isMissile());
 
         if(isMissile) {
             bullet1.create(SHIP_X, true, false, assets);
@@ -1120,14 +1183,13 @@ public class MainGame extends GameElements implements Screen{
 
             if(isAlive) {
 
-                enemy.update(deltaP, enemy, isHourglass);
+                enemy.update(deltaP, enemy, isHourglass, camera);
 
                 switch (enemy.getId()) {
                     case EYEBAT_ID:
                         enemy.render(eyebatAnim, enemy, deltaP, isPaused , game.batch);
                         break;
                     case ENEMY_SHIP_ID:
-//                        System.out.println(enemy.position);
                         enemy.render(enemyShipAnim, enemy, deltaP, isPaused , game.batch);
                         break;
                     case LASER_TRAP_ID:
@@ -1153,22 +1215,22 @@ public class MainGame extends GameElements implements Screen{
                     if(health == 3)
                         addItemDrops();
                     else
-                        itemDrops.add(new ItemDrop(random.nextInt((int) (Gdx.graphics.getWidth() - ItemDrop.HEART_WIDTH)), ItemDrop.HEART_HEIGHT, ItemDrop.HEART_WIDTH, HEART_ID, assets));
+                        itemDrops.add(new ItemDrop(random.nextInt((int) (SCREEN_WIDTH - ItemDrop.HEART_WIDTH)), ItemDrop.HEART_HEIGHT, ItemDrop.HEART_WIDTH, HEART_ID, assets));
                 }
                 else if (randomDrop == 1) {
-                    itemDrops.add(new ItemDrop(random.nextInt((int) (Gdx.graphics.getWidth() - ItemDrop.BOMB_WIDTH)), ItemDrop.BOMB_HEIGHT, ItemDrop.BOMB_WIDTH, BOMB_ID, assets));
+                    itemDrops.add(new ItemDrop(random.nextInt((int) (SCREEN_WIDTH - ItemDrop.BOMB_WIDTH)), ItemDrop.BOMB_HEIGHT, ItemDrop.BOMB_WIDTH, BOMB_ID, assets));
                 }
                 else if (randomDrop == 2) {
-                    itemDrops.add(new ItemDrop(random.nextInt((int) (Gdx.graphics.getWidth() - ItemDrop.MISSILE_WIDTH)), ItemDrop.MISSILE_HEIGHT, ItemDrop.MISSILE_WIDTH, MISSILE_ID, assets));
+                    itemDrops.add(new ItemDrop(random.nextInt((int) (SCREEN_WIDTH - ItemDrop.MISSILE_WIDTH)), ItemDrop.MISSILE_HEIGHT, ItemDrop.MISSILE_WIDTH, MISSILE_ID, assets));
                 }
                 else if( randomDrop ==3){
-                    itemDrops.add(new ItemDrop(random.nextInt((int) (Gdx.graphics.getWidth() - ItemDrop.RAPID_FIRE_WIDTH)), ItemDrop.RAPID_FIRE_HEIGHT, ItemDrop.RAPID_FIRE_WIDTH, RAPID_FIRE_ID, assets));
+                    itemDrops.add(new ItemDrop(random.nextInt((int) (SCREEN_WIDTH - ItemDrop.RAPID_FIRE_WIDTH)), ItemDrop.RAPID_FIRE_HEIGHT, ItemDrop.RAPID_FIRE_WIDTH, RAPID_FIRE_ID, assets));
                 }
                 else{
                     if(score < 1000)
                         addItemDrops();
                     else
-                        itemDrops.add(new ItemDrop(random.nextInt((int) (Gdx.graphics.getWidth() - ItemDrop.HOURGLASS_WIDTH)), ItemDrop.HOURGLASS_HEIGHT, ItemDrop.HOURGLASS_WIDTH, HOURGLASS_ID, assets));
+                        itemDrops.add(new ItemDrop(random.nextInt((int) (SCREEN_WIDTH - ItemDrop.HOURGLASS_WIDTH)), ItemDrop.HOURGLASS_HEIGHT, ItemDrop.HOURGLASS_WIDTH, HOURGLASS_ID, assets));
                 }
             }
             lastItemDrop = randomDrop;
@@ -1504,6 +1566,7 @@ public class MainGame extends GameElements implements Screen{
     public void runBombUsedTimer( ){
         if(bombUsedTimer < 0){
             bombUsedTimer += deltaP;
+            useDefaultViewport();
             whiteFlash.draw(game.batch);
         }
         else{
@@ -1610,7 +1673,8 @@ public class MainGame extends GameElements implements Screen{
 
     @Override
     public void resize(int width, int height) {
-
+        viewport.update(width, height);
+        camera.position.set(camera.viewportWidth / 2, camera.viewportHeight / 2, 0);
     }
 
     @Override

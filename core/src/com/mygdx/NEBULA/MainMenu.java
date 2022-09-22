@@ -3,9 +3,13 @@ package com.mygdx.NEBULA;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.viewport.FillViewport;
+import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 public class MainMenu extends GameElements implements Screen {
     public Prefs prefs = new Prefs();
@@ -37,6 +41,10 @@ public class MainMenu extends GameElements implements Screen {
     boolean isShopOpen = false;
     boolean soundEnabled, soundLoaded, playSoundHasPlayed;
     GameInterface gameInterface;
+    OrthographicCamera camera, textCamera;
+    FillViewport viewport;
+    ScreenViewport screenViewport;
+    static Vector3 newPoints = new Vector3();
 
     public MainMenu(Main game, int score, Assets assets) {
         this.game = game;
@@ -44,13 +52,22 @@ public class MainMenu extends GameElements implements Screen {
         this.assets = assets;
         gameInterface = new GameInterface(assets);
         this.background = new Background(assets);
-
         prefs.setHighScore(score);
     }
 
     @Override
     public void show() {
         soundEnabled = prefs.hasSound();
+
+        camera = new OrthographicCamera();
+        textCamera = new OrthographicCamera();
+        screenViewport = new ScreenViewport(textCamera);
+
+        viewport = new FillViewport(SCREEN_WIDTH,SCREEN_HEIGHT, camera);
+        viewport.apply();
+
+
+        camera.position.set(camera.viewportWidth/2,camera.viewportHeight/2,0);
 
         startButtonInactive = new Sprite(assets.assetManager.get(Assets.start_button_inactive, Texture.class));
         startButtonActive = new Sprite(assets.assetManager.get(Assets.start_button_active, Texture.class));
@@ -62,10 +79,15 @@ public class MainMenu extends GameElements implements Screen {
 
     @Override
     public void render(float delta) {
+        camera.update();
+        textCamera.update();
         Gdx.gl.glClearColor(0f, 0f, 0f, 1f);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        newPoints = viewport.unproject(new Vector3 (Gdx.input.getX(),Gdx.graphics.getHeight()- Gdx.input.getY(), 0));
 
         game.batch.enableBlending();
+        game.batch.setProjectionMatrix(camera.combined);
+
         game.batch.begin();
         deltaList.add(delta);
 
@@ -123,10 +145,11 @@ public class MainMenu extends GameElements implements Screen {
             soundLoaded = true;
         }
 
-        if(!isShopOpen)
-            gameInterface.drawTitleScreen(game, transitionInDone);
+        if(!isShopOpen) {
+            gameInterface.drawTitleScreen(game, transitionInDone, screenViewport, textCamera);
+        }
         else {
-            gameInterface.drawDefaultShopScreen(game, soundEnabled);
+            gameInterface.drawShopScreen(game, soundEnabled, textCamera, screenViewport);
 
         }
 
@@ -153,7 +176,7 @@ public class MainMenu extends GameElements implements Screen {
             TITLE_LOGO_Y += transitionSpeed * delta;
             SHOP_BUTTON_Y += transitionSpeed * delta;
         }
-        if (START_BUTTON_Y > Gdx.graphics.getHeight() * 1.2f) {
+        if (START_BUTTON_Y > SCREEN_HEIGHT * 1.2f) {
             dispose();
         }
     }
@@ -195,5 +218,8 @@ public class MainMenu extends GameElements implements Screen {
     public void hide() {}
 
     @Override
-    public void resize(int width, int height) {}
+    public void resize(int width, int height) {
+        viewport.update(width, height);
+        camera.position.set(camera.viewportWidth/2,camera.viewportHeight/2,0);
+    }
 }

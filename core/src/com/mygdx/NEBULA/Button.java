@@ -4,6 +4,9 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 
 import static com.mygdx.NEBULA.GameElements.SCREEN_HEIGHT;
+import static com.mygdx.NEBULA.GameElements.TS_SOUND_BUTTON_X;
+import static com.mygdx.NEBULA.GameElements.TS_SOUND_BUTTON_Y_AND;
+import static com.mygdx.NEBULA.MainMenu.newPoints;
 
 public class Button {
     private float height, width, x, y, extendXTapBy, extendYTapBy;
@@ -20,6 +23,7 @@ public class Button {
         this.extendYTapBy = 0;
     }
     public Button(Texture texture, float x, float y, float width, float height, float extendXTapBy, float extendYTapBy){
+
         this.texture = texture;
         this.x = x;
         this.y = y;
@@ -28,13 +32,13 @@ public class Button {
         this.extendXTapBy = extendXTapBy;
         this.extendYTapBy = extendYTapBy;
     }
-    private boolean checkFocused(int tapX, int tapY, float extendXTapBy, float extendYTapBy){
+    private boolean checkFocused(float tapX, float tapY, float extendXTapBy, float extendYTapBy){
         this.focused = (Gdx.input.isTouched()) && tapX < this.x + this.width + extendXTapBy && tapX > this.x - extendXTapBy
                 && SCREEN_HEIGHT - tapY < this.y + this.height + extendYTapBy && SCREEN_HEIGHT - tapY > this.y - extendYTapBy;
         return this.focused;
     }
 
-    private boolean checkTapped(int tapX, int tapY, float extendXTapBy, float extendYTapBy){
+    private boolean checkTapped(float tapX, float tapY, float extendXTapBy, float extendYTapBy){
         this.focused = (Gdx.input.isTouched()) && tapX < this.x + this.width + extendXTapBy && tapX > this.x - extendXTapBy
                 && SCREEN_HEIGHT - tapY < this.y + this.height + extendYTapBy && SCREEN_HEIGHT - tapY > this.y - extendYTapBy;
 
@@ -42,7 +46,7 @@ public class Button {
 
         return this.tapped;
     }
-    private boolean getReleased(int tapX, int tapY, float extendXTapBy, float extendYTapBy){
+    private boolean getReleased(float tapX, float tapY, float extendXTapBy, float extendYTapBy){
         if (!(tapX < this.x + this.width + extendXTapBy || !(tapX > this.x - extendXTapBy) ||
                 !(SCREEN_HEIGHT - tapY < this.y + this.height + extendYTapBy) || !(SCREEN_HEIGHT - tapY > this.y - extendYTapBy)))
             this.tapped = false;
@@ -60,10 +64,10 @@ public class Button {
     }
 
     public boolean getTappedBefore(){
-        if (Gdx.input.isTouched() && this.checkFocused(Gdx.input.getX(), Gdx.input.getY(), extendXTapBy, extendYTapBy))
+        if (Gdx.input.isTouched() && this.checkFocused(newPoints.x, newPoints.y, extendXTapBy, extendYTapBy))
             this.focused = true;
 
-        if(Gdx.input.justTouched() && this.focused && this.checkTapped(Gdx.input.getX(), Gdx.input.getY(),extendXTapBy, extendYTapBy))
+        if(Gdx.input.justTouched() && this.focused && this.checkTapped(newPoints.x, newPoints.y,extendXTapBy, extendYTapBy))
             this.tapped = true;
         if(!this.focused)
             this.tapped = false;
@@ -72,7 +76,9 @@ public class Button {
     }
 
     public boolean getReleased(){ //Checks if button getTapBefore() finished successfully (situational)
-        if(getReleased(Gdx.input.getX(), Gdx.input.getY(), extendXTapBy, extendYTapBy)) {
+        if(getReleased(newPoints.x, newPoints.y, extendXTapBy, extendYTapBy)) {
+
+
             this.tapped = false;
             return true;
         }

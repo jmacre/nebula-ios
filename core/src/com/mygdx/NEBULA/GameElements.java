@@ -13,8 +13,13 @@ import com.badlogic.gdx.utils.Array;
 public class GameElements {
     Button pauseButton, replayResumeButton, soundButton, homeButton;
 
-    public static final float SCREEN_WIDTH = Gdx.graphics.getWidth();
-    public static final float SCREEN_HEIGHT = Gdx.graphics.getHeight();
+
+    public static final int SCREEN_WIDTH = 176;
+    public static final int SCREEN_HEIGHT = (int) (Gdx.graphics.getHeight() * (176f / Gdx.graphics.getWidth()));
+    public static final int ACTUAL_WIDTH = Gdx.graphics.getWidth();
+    public static final int ACTUAL_HEIGHT = Gdx.graphics.getHeight();
+    public static final float SCALE_HEIGHT = (float) ACTUAL_HEIGHT/SCREEN_HEIGHT;
+    public static final float SCALE_WIDTH = (float) ACTUAL_WIDTH/SCREEN_WIDTH;
 
     public static final int BLUE_ID = 0;
     public static final int GREEN_ID = 1;
@@ -24,18 +29,18 @@ public class GameElements {
 
     public static float SCORE_TICKER_TIMER = -.25f;
 
-    public static final float MAIN_UI_HEIGHT = SCREEN_HEIGHT/12;
+    public static final float MAIN_UI_HEIGHT = SCREEN_HEIGHT/12f;
 
-    public static final float TITLE_LOGO_WIDTH = Gdx.graphics.getWidth() / 1.1f;
+    public static final float TITLE_LOGO_WIDTH = SCREEN_WIDTH / 1.1f;
     public static final float TITLE_LOGO_HEIGHT = TITLE_LOGO_WIDTH*.2197f;
-    public static float TITLE_LOGO_Y = Gdx.graphics.getHeight() * .75f + SCREEN_HEIGHT;
-    public static final float TITLE_LOGO_X = SCREEN_WIDTH / 2 - TITLE_LOGO_WIDTH/2;
+    public static float TITLE_LOGO_Y = SCREEN_HEIGHT * .75f + SCREEN_HEIGHT;
+    public static final float TITLE_LOGO_X = SCREEN_WIDTH / 2f - TITLE_LOGO_WIDTH/2;
 
     public static final float SHIP_WIDTH = SCREEN_WIDTH/6.5185185f;
     public static final float SHIP_HEIGHT = SHIP_WIDTH * (51.0f/43.0f);
 
-    public static float SHIP_X = SCREEN_WIDTH/2 - SHIP_WIDTH/2;
-    public static float CURRENT_SHIP_X = SCREEN_WIDTH/2 - SHIP_WIDTH/2;;
+    public static int SHIP_X = (int) (SCREEN_WIDTH/2f - SHIP_WIDTH/2);
+    public static int CURRENT_SHIP_X = (int) (SCREEN_WIDTH/2f - SHIP_WIDTH/2);;
 
     public static float SHIP_Y = 0.1f*SCREEN_HEIGHT;
     public float SHIP_START_Y = - 3*SHIP_HEIGHT;
@@ -74,19 +79,19 @@ public class GameElements {
     public static final float LEFT_HEART_X = MIDDLE_HEART_X - HEART_WIDTH*1.1f;
 
 
-    public static final float SCORE_Y_AND = SCREEN_HEIGHT - MAIN_UI_HEIGHT/3f;
+    public static final float SCORE_Y_AND = ACTUAL_HEIGHT - (ACTUAL_HEIGHT / 12f) /3f;
     public static final float SCORE_Y_IOS = SCREEN_HEIGHT - MAIN_UI_HEIGHT;
-    public static final float SCORE_X = TITLE_LOGO_X;
+    public static final float SCORE_X = ACTUAL_WIDTH / 2f - (ACTUAL_WIDTH / 1.1f)/2;
 
     public static final float MENU_BACK_WIDTH = SCREEN_WIDTH*.9f;
     public static final float MENU_BACK_HEIGHT = MENU_BACK_WIDTH/1.733f;
-    public static final float MENU_BACK_X = SCREEN_WIDTH/2 - MENU_BACK_WIDTH/2;
-    public static final float MENU_BACK_Y = SCREEN_HEIGHT/2 - MENU_BACK_HEIGHT/2;
+    public static final float MENU_BACK_X = SCREEN_WIDTH/2f - MENU_BACK_WIDTH/2;
+    public static final float MENU_BACK_Y = SCREEN_HEIGHT/2f - MENU_BACK_HEIGHT/2;
 
-    public static final float SHOP_BACK_X = SCREEN_WIDTH/15;
+    public static final float SHOP_BACK_X = SCREEN_WIDTH/15f;
     public static final float SHOP_BACK_HEIGHT = .875f*SCREEN_WIDTH;
     public static final float SHOP_BACK_WIDTH = SHOP_BACK_HEIGHT;
-    public static final float SHOP_BACK_Y = SCREEN_HEIGHT/2 - SHOP_BACK_HEIGHT/2;
+    public static final float SHOP_BACK_Y = SCREEN_HEIGHT/2f - SHOP_BACK_HEIGHT/2;
 
     public static final float X_BUTTON_WIDTH = SHOP_BACK_WIDTH / 12;
     public static final float X_BUTTON_HEIGHT = X_BUTTON_WIDTH;
@@ -98,7 +103,7 @@ public class GameElements {
 
     public static final float PLAY_BUTTON_WIDTH = MENU_BACK_WIDTH/4f;
     public static final float PLAY_BUTTON_HEIGHT = MENU_BACK_WIDTH/4f;
-    public static final float PLAY_BUTTON_X = SCREEN_WIDTH / 2 - PLAY_BUTTON_WIDTH/2f;
+    public static final float PLAY_BUTTON_X = SCREEN_WIDTH / 2f - PLAY_BUTTON_WIDTH/2f;
     public static final float PLAY_BUTTON_Y = MENU_BACK_Y + MENU_BACK_HEIGHT/2 - PLAY_BUTTON_HEIGHT/2;
 
     public static final float HOME_BUTTON_HEIGHT = 0.7f * PLAY_BUTTON_HEIGHT;
@@ -121,35 +126,36 @@ public class GameElements {
     public static final float NO_BUTTON_X = SCREEN_WIDTH - YES_BUTTON_X-NO_BUTTON_WIDTH;
     public static final float NO_BUTTON_Y = SOUND_BUTTON_Y*.9f;
 
-    public static final float START_BUTTON_WIDTH = Gdx.graphics.getWidth()/2f;
+    public static final float START_BUTTON_WIDTH = SCREEN_WIDTH/2f;
     public static final float START_BUTTON_HEIGHT = START_BUTTON_WIDTH / 2;
-    public static final float START_BUTTON_X = SCREEN_WIDTH / 2 - START_BUTTON_WIDTH*.5f;
-    public static float START_BUTTON_Y = .3f*Gdx.graphics.getHeight() + SCREEN_HEIGHT;
-    public static float START_BUTTON_Y_TRANSITIONED = Gdx.graphics.getHeight() * .3f;
+    public static final float START_BUTTON_X = SCREEN_WIDTH / 2f - START_BUTTON_WIDTH*.5f;
+    public static float START_BUTTON_Y = .3f*SCREEN_HEIGHT + SCREEN_HEIGHT;
+    public static float START_BUTTON_Y_TRANSITIONED = SCREEN_HEIGHT * .3f;
 
-    public static final float SHOP_BUTTON_WIDTH = Gdx.graphics.getWidth()/3f;
+    public static final float SHOP_BUTTON_WIDTH = SCREEN_WIDTH/3f;
     public static final float SHOP_BUTTON_HEIGHT = SHOP_BUTTON_WIDTH/2;
-    public static final float SHOP_BUTTON_X = SCREEN_WIDTH / 2 - SHOP_BUTTON_WIDTH*.5f;
+    public static final float SHOP_BUTTON_X = SCREEN_WIDTH / 2f - SHOP_BUTTON_WIDTH*.5f;
     public static float SHOP_BUTTON_Y = .3f * (.75f*START_BUTTON_Y) - START_BUTTON_HEIGHT + SCREEN_HEIGHT;
     public static float SHOP_BUTTON_Y_TRANSITIONED = .3f* (.7f*START_BUTTON_Y) - START_BUTTON_HEIGHT;
 
-    public static final float TS_SOUND_BUTTON_WIDTH = SCREEN_WIDTH / 10;
+    public static final float TS_SOUND_BUTTON_WIDTH = SCREEN_WIDTH / 10f;
     public static final float TS_SOUND_BUTTON_HEIGHT = TS_SOUND_BUTTON_WIDTH;
-    public static final float TS_SOUND_BUTTON_X = SCREEN_WIDTH - SCREEN_WIDTH / 8;
-    public static final float TS_SOUND_BUTTON_Y_AND = SCORE_Y_AND - TS_SOUND_BUTTON_HEIGHT/1.5f;
-    public static final float TS_SOUND_BUTTON_Y_IOS = SCORE_Y_IOS - TS_SOUND_BUTTON_HEIGHT/1.5f;
+    public static final float TS_SOUND_BUTTON_X = SCREEN_WIDTH - SCREEN_WIDTH / 8f;
+    public static final float TS_SOUND_BUTTON_Y_AND = SCREEN_HEIGHT - MAIN_UI_HEIGHT/3f - TS_SOUND_BUTTON_HEIGHT/1.5f;
+    public static final float TS_SOUND_BUTTON_Y_IOS = SCREEN_HEIGHT - MAIN_UI_HEIGHT - TS_SOUND_BUTTON_HEIGHT/1.5f;
 
     public static final float PAUSE_BUTTON_X = SCREEN_WIDTH - SCREEN_WIDTH / 7.5f;
     public static final float PAUSE_BUTTON_Y = SCREEN_HEIGHT - MAIN_UI_HEIGHT / 2.1f - (MAIN_UI_HEIGHT / 2.5f) / 2;
     public static final float PAUSE_BUTTON_HEIGHT = MAIN_UI_HEIGHT/1.2f;
     public static final float PAUSE_BUTTON_WIDTH = PAUSE_BUTTON_HEIGHT * 1.3f;
 
-    public static final float MENU_SCORE_X = HOME_BUTTON_X;
-    public static final float MENU_SCORE_Y = MENU_BACK_Y + MENU_BACK_HEIGHT - .45f * HOME_BUTTON_HEIGHT;
+    public static final float MENU_SCORE_X = HOME_BUTTON_X * ((float)ACTUAL_WIDTH / SCREEN_WIDTH);
+    public static final float MENU_SCORE_Y = (MENU_BACK_Y + MENU_BACK_HEIGHT - .45f * HOME_BUTTON_HEIGHT) * (SCALE_WIDTH);
 
-    public static final float CONFIRM_LEAVE_FONT_Y = MENU_BACK_Y + MENU_BACK_HEIGHT - .55f * HOME_BUTTON_HEIGHT;
+    public static final float CONFIRM_LEAVE_FONT_Y = (MENU_BACK_Y + MENU_BACK_HEIGHT - .55f * HOME_BUTTON_HEIGHT) * SCALE_HEIGHT;
+    public static final float CONFIRM_LEAVE_FONT_X = YES_BUTTON_X * SCALE_WIDTH;
 
-    public static final float GAME_OVER_TEXT_Y = SCREEN_HEIGHT - (MENU_BACK_Y/2);
+    public static final float GAME_OVER_TEXT_Y = (SCREEN_HEIGHT - (MENU_BACK_Y/2)) * SCALE_HEIGHT;
 
     Anim shipAnim = new Anim();
     Anim missileAnim = new Anim();

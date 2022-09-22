@@ -1,12 +1,17 @@
 package com.mygdx.NEBULA;
 
+import static com.mygdx.NEBULA.GameElements.ACTUAL_WIDTH;
+import static com.mygdx.NEBULA.GameElements.SCREEN_WIDTH;
+
 import com.badlogic.gdx.Game;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
+import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 
 public class Main extends Game {
@@ -22,13 +27,15 @@ public class Main extends Game {
 	@Override
 	public void create () {
 
+
 		batch = new SpriteBatch();
+
 		assets = new Assets();
 		assets.load();
 		assets.assetManager.finishLoading();
 		generator = new FreeTypeFontGenerator(Gdx.files.internal("mainfont.ttf"));
 		parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
-		parameter.size = Gdx.graphics.getWidth()/14;
+		parameter.size = ACTUAL_WIDTH/14;
 
 		scoreFont = generator.generateFont(parameter);
 		playSound = assets.assetManager.get(Assets.play_sound, Sound.class);
