@@ -101,8 +101,8 @@ public class Background {
             background_y1 -= speed*.7 * delta * titleScreenSpeedModifier * hourglassMultiplier;
             background_y2 -= speed*.7 * delta * titleScreenSpeedModifier * hourglassMultiplier;
 
-            stars_y1 -= (int)speed * delta * titleScreenSpeedModifier * hourglassMultiplier;
-            stars_y2 -= (int)speed * delta * titleScreenSpeedModifier * hourglassMultiplier;
+            stars_y1 -= speed * delta * titleScreenSpeedModifier * hourglassMultiplier;
+            stars_y2 -= speed * delta * titleScreenSpeedModifier * hourglassMultiplier;
         }
         if (background_y1 + backgroundSprite.getHeight()  <= 0) {
             background_y1 = background_y2 + backgroundSprite.getHeight();
