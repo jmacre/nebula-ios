@@ -39,8 +39,8 @@ public class GameElements {
     public static final float SHIP_WIDTH = SCREEN_WIDTH/6.5185185f;
     public static final float SHIP_HEIGHT = SHIP_WIDTH * (51.0f/43.0f);
 
-    public static int SHIP_X = (int) (SCREEN_WIDTH/2f - SHIP_WIDTH/2);
-    public static int CURRENT_SHIP_X = (int) (SCREEN_WIDTH/2f - SHIP_WIDTH/2);;
+    public static float SHIP_X = (SCREEN_WIDTH/2f - SHIP_WIDTH/2);
+    public static float CURRENT_SHIP_X =  (SCREEN_WIDTH/2f - SHIP_WIDTH/2);;
 
     public static float SHIP_Y = 0.1f*SCREEN_HEIGHT;
     public float SHIP_START_Y = - 3*SHIP_HEIGHT;

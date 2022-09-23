@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.MathUtils;
 
 import static com.mygdx.NEBULA.GameElements.SCREEN_HEIGHT;
 import static com.mygdx.NEBULA.GameElements.SCREEN_WIDTH;
@@ -14,7 +15,7 @@ import static com.mygdx.NEBULA.ItemDrop.HOURGLASS_SPEED_MULTIPLIER;
 
 public class Background {
     Assets assets;
-    public static final float DEFAULT_SPEED = SCREEN_HEIGHT/3.12f;
+    public static final float DEFAULT_SPEED = SCREEN_HEIGHT/4f;
 
     Animation<TextureRegion> starsAnimation;
     Sprite backgroundSprite, defaultBackgroundSprite, blueBackgroundSprite, greenBackgroundSprite;
@@ -46,14 +47,14 @@ public class Background {
 
         defaultBackgroundSprite = backgroundSprite;
         background_y1 = 0;
-        background_y2 = backgroundSprite.getHeight();
+        background_y2 = (int) backgroundSprite.getHeight();
 
         starsSheet = new Sprite(assets.assetManager.get(Assets.stars, Texture.class));
 
         starsSheet.setBounds(0,0, SCREEN_WIDTH, SCREEN_WIDTH*12);
 
         stars_y1 = 0;
-        stars_y2 = starsSheet.getHeight();
+        stars_y2 = (int) starsSheet.getHeight();
 
         speed = DEFAULT_SPEED;
 
@@ -105,19 +106,19 @@ public class Background {
             stars_y2 -= speed * delta * titleScreenSpeedModifier * hourglassMultiplier;
         }
         if (background_y1 + backgroundSprite.getHeight()  <= 0) {
-            background_y1 = background_y2 + backgroundSprite.getHeight();
+            background_y1 = (background_y2 + backgroundSprite.getHeight());
         }
 
         if (background_y2 + backgroundSprite.getHeight()  <= 0) {
-            background_y2 = background_y1 + backgroundSprite.getHeight();
+            background_y2 = (background_y1 + backgroundSprite.getHeight());
         }
 
         if (stars_y1 + starsSheet.getHeight()  <= 0) {
-            stars_y1 = stars_y2 + starsSheet.getHeight();
+            stars_y1 = MathUtils.ceil(stars_y2 + starsSheet.getHeight());
         }
 
         if (stars_y2 + starsSheet.getHeight()  <= 0) {
-            stars_y2 = stars_y1 + starsSheet.getHeight();
+            stars_y2 = MathUtils.ceil(stars_y1 + starsSheet.getHeight());
         }
 
         backgroundSprite.setSize(SCREEN_WIDTH, backgroundSprite.getHeight());
@@ -134,10 +135,10 @@ public class Background {
         if(!isHourglass)
             stateTime += delta / 10 * hourglassMultiplier;
 
-        starsSheet.setPosition(0, stars_y1);
+        starsSheet.setPosition(0, MathUtils.ceil(stars_y1));
         starsAnim.drawAnim(starsAnimation, stateTime, 0, stars_y1, SCREEN_WIDTH, starsSheet.getHeight(), true,batch);
 
-        starsSheet.setPosition(0, stars_y2);
+        starsSheet.setPosition(0, MathUtils.ceil(stars_y2));
         starsAnim.drawAnim(starsAnimation, stateTime, 0, stars_y2, SCREEN_WIDTH, starsSheet.getHeight(), true, batch);
     }
 

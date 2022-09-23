@@ -98,7 +98,7 @@ public class MainGame extends GameElements implements Screen{
 
     float countDownTimer = 0f;
     float resumeCountdownTimer = -1.5f;
-    int playerPosition = SHIP_X;
+    float playerPosition = SHIP_X;
 
     float bulletThreshold = 0.4f;
     float musicVolume = 0.35f;
@@ -755,17 +755,17 @@ public class MainGame extends GameElements implements Screen{
             if (!(newPoints.y < SCREEN_HEIGHT/5f)) {
 
                 if(newPoints.x < SHIP_X - SHIP_WIDTH/2) {
-                    playerPosition =(int) (SHIP_X - deltaP * moveSpeed * (SHIP_X - (newPoints.x - SHIP_WIDTH / 2)));
+                    playerPosition = (SHIP_X - deltaP * moveSpeed * (SHIP_X - (newPoints.x - SHIP_WIDTH / 2)));
 
                     if(playerPosition >= 0 && playerPosition <= SCREEN_WIDTH - SHIP_WIDTH) {
-                        SHIP_X -= (int)(deltaP * moveSpeed * (SHIP_X - (newPoints.x - SHIP_WIDTH / 2)));
+                        SHIP_X -= (deltaP * moveSpeed * (SHIP_X - (newPoints.x - SHIP_WIDTH / 2)));
                     }
                 }
                 if(newPoints.x > SHIP_X - SHIP_WIDTH/2) {
-                    playerPosition = (int) (SHIP_X + deltaP * moveSpeed * (newPoints.x - SHIP_X - SHIP_WIDTH / 2));
+                    playerPosition =  (SHIP_X + deltaP * moveSpeed * (newPoints.x - SHIP_X - SHIP_WIDTH / 2));
 
                     if (playerPosition >= 0 && playerPosition <= SCREEN_WIDTH - SHIP_WIDTH) {
-                        SHIP_X += (int) (deltaP * moveSpeed * (newPoints.x - SHIP_X - SHIP_WIDTH / 2));
+                        SHIP_X +=  (deltaP * moveSpeed * (newPoints.x - SHIP_X - SHIP_WIDTH / 2));
                     }
                 }
                 CURRENT_SHIP_X = SHIP_X;
