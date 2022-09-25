@@ -63,10 +63,10 @@ public class GameElements {
     public static float ENEMY_SHIP_HEIGHT = SHIP_HEIGHT * (27/32f);
     public static float ENEMY_SHIP_WIDTH = ENEMY_SHIP_HEIGHT * (31/27f);
 
-    public static final float MIN_LASER_TRAP_SPAWN_TIME = 3f; //seconds
-    public static final float MAX_LASER_TRAP_SPAWN_TIME = 6f;
+    public static final float MIN_LASER_TRAP_SPAWN_TIME = 2f; //seconds
+    public static final float MAX_LASER_TRAP_SPAWN_TIME = 4f;
 
-    public float LASER_TRAP_H_WIDTH =  BLUE_EYEBAT_WIDTH *1.2f;
+    public float LASER_TRAP_H_WIDTH =  SHIP_WIDTH * (48/27f);
     public float LASER_TRAP_H_HEIGHT = LASER_TRAP_H_WIDTH / 12;
     public static final float HEART_HEIGHT = SCREEN_WIDTH/14f;
     public static final float HEART_WIDTH = HEART_HEIGHT * (13.0f/11.0f);
@@ -163,7 +163,8 @@ public class GameElements {
     Anim enemyShipAnim = new Anim();
     Anim laserTrapHAnim = new Anim();
     Anim explosionAnim = new Anim();
-    Anim starsAnim = new Anim();
+    Anim starsAnimFront = new Anim();
+    Anim starsAnimBack = new Anim();
 
 
     Sprite blackTransition, whiteFlash, shipSS, shipBlinkingSS;

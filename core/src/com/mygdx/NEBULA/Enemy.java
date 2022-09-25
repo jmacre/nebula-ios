@@ -246,10 +246,6 @@ public class Enemy extends GameElements{
                 moveLaserTrap(enemyAnim, ENEMY_WIDTH, ENEMY_HEIGHT, delta, batch);
                 break;
         }
-
-        if(enemySheet != null){
-            enemySheet.setPosition(ENEMY_X, ENEMY_Y);
-        }
     }
 
     public void moveEyebat(Anim enemyAnim, Enemy enemy, float width, float height, float delta, boolean isPaused, SpriteBatch batch){

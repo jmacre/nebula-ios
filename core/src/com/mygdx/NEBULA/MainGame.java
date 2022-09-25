@@ -23,7 +23,6 @@ import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Random;
 
@@ -42,15 +41,12 @@ import static com.mygdx.NEBULA.EnemyBullet.redShipBulletThreshold;
 import static com.mygdx.NEBULA.EnemyBullet.whiteShipBulletThreshold;
 import static com.mygdx.NEBULA.ItemDrop.BOMB_ID;
 import static com.mygdx.NEBULA.ItemDrop.HOURGLASS_ID;
-import static com.mygdx.NEBULA.ItemDrop.HOURGLASS_TIMER;
-import static com.mygdx.NEBULA.ItemDrop.MISSILE_TIMER;
 import static com.mygdx.NEBULA.ItemDrop.RAPID_FIRE_ID;
 import static com.mygdx.NEBULA.ItemDrop.HEART_ID;
 import static com.mygdx.NEBULA.ItemDrop.MAX_ITEM_SPAWN_TIME;
 import static com.mygdx.NEBULA.ItemDrop.MIN_ITEM_SPAWN_TIME;
 import static com.mygdx.NEBULA.ItemDrop.MISSILE_ID;
 import static com.mygdx.NEBULA.MainMenu.newPoints;
-import static com.mygdx.NEBULA.ItemDrop.RAPID_FIRE_TIMER;
 
 
 public class MainGame extends GameElements implements Screen{
@@ -206,7 +202,6 @@ public class MainGame extends GameElements implements Screen{
     Array<Float> deltaList = new Array<>();
     float deltaSum;
     float speedIncrease;
-    public static final int WIDTH = 176;
 
     float hourglassMultiplier = 1;
     OrthographicCamera camera, textCamera;
@@ -234,7 +229,6 @@ public class MainGame extends GameElements implements Screen{
         viewport = new FillViewport(SCREEN_WIDTH, SCREEN_HEIGHT, camera);
         viewport.apply();
 
-        camera.position.set(camera.viewportWidth/2,camera.viewportHeight/2,0);
 
         minEnemyShipSpawnTime = MIN_ENEMY_SHIP_SPAWN_TIME;
         maxEnemyShipSpawnTime = MAX_ENEMY_SHIP_SPAWN_TIME;
@@ -305,13 +299,16 @@ public class MainGame extends GameElements implements Screen{
 
     @Override
     public void render(float delta) {
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
+        Gdx.gl.glClearColor(0f, 0f, 0f, 1f);
+
         isUsingTextViewport = false;
+        camera.position.set(camera.viewportWidth/2,camera.viewportHeight/2,0);
 
         camera.update();
         textCamera.update();
 
-        Gdx.gl.glClearColor(0f, 0f, 0f, 1f);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
         newPoints = viewport.unproject(new Vector3(Gdx.input.getX(),ACTUAL_HEIGHT - Gdx.input.getY(), 0));
 
         game.batch.enableBlending();
@@ -355,7 +352,7 @@ public class MainGame extends GameElements implements Screen{
 
         if (fadeInOpacity < 1) {
             musicPosition = mainMusic.getPosition();
-            background.updateAndRender(deltaP, isAlive, isHourglass, score, starsAnim, game.batch, false, isResettingScreen, false, false);
+            background.updateAndRender(deltaP, isAlive, isHourglass, score, starsAnimFront, starsAnimBack, game.batch, false, isResettingScreen, false, false);
             if(!isRunningResumeCountdown) {
                 bulletTimer += deltaP;
                 for (Enemy enemy : enemies) {
@@ -1070,7 +1067,7 @@ public class MainGame extends GameElements implements Screen{
             randomSpawnLocation = random.nextInt((int) ((int) SCREEN_WIDTH- BLUE_EYEBAT_WIDTH));
 
             if(score <= 1000){
-                enemy.create(EYEBAT_ID, BLUE_ID, 1, randomSpawnLocation, BLUE_EYEBAT_WIDTH, BLUE_EYEBAT_HEIGHT, 0.35f + speedIncrease / 1.5f, 0.8f + speedIncrease / 1.5f, (float) (DEFAULT_FRAME_DURATION * (1.25 - speedIncrease / 2)), false, hurtTimer, assets);
+                enemy.create(EYEBAT_ID, BLUE_ID, 1, randomSpawnLocation, BLUE_EYEBAT_WIDTH, BLUE_EYEBAT_HEIGHT, 0.35f + speedIncrease / 1.5f, 0.9f + speedIncrease / 1.5f, (float) (DEFAULT_FRAME_DURATION * (1.25 - speedIncrease / 2)), false, hurtTimer, assets);
                 eyebatSpawnTimer = random.nextFloat() * (maxEyebatSpawnTime - minEyebatSpawnTime) + minEyebatSpawnTime;
 
             }
@@ -1079,15 +1076,15 @@ public class MainGame extends GameElements implements Screen{
                 eyebatSpawnTimer = random.nextFloat() * (maxEyebatSpawnTime - minEyebatSpawnTime) + minEyebatSpawnTime;
             }
             else if(score <= 3000){
-                enemy.create(EYEBAT_ID, RED_ID, 2, randomSpawnLocation, RED_EYEBAT_WIDTH, RED_EYEBAT_HEIGHT, 0.65f + speedIncrease / 1.5f, 0.2f + speedIncrease / 1.5f, (float) (DEFAULT_FRAME_DURATION * (1.5 - speedIncrease / 2)), false, hurtTimer, assets);
+                enemy.create(EYEBAT_ID, RED_ID, 2, randomSpawnLocation, RED_EYEBAT_WIDTH, RED_EYEBAT_HEIGHT, 0.65f + speedIncrease / 1.5f, 0.3f + speedIncrease / 1.5f, (float) (DEFAULT_FRAME_DURATION * (1.5 - speedIncrease / 2)), false, hurtTimer, assets);
                 eyebatSpawnTimer = random.nextFloat() * (maxEyebatSpawnTime - minEyebatSpawnTime) + minEyebatSpawnTime;
             }
             else if(score <= 4000){
-                enemy.create(EYEBAT_ID, PURPLE_ID, 3, randomSpawnLocation, 1.4f * BLUE_EYEBAT_WIDTH, 1.4f * BLUE_EYEBAT_HEIGHT, 0.5f + speedIncrease / 1.75f, 0.2f + speedIncrease / 1.75f, (float)(DEFAULT_FRAME_DURATION * (2.5 - speedIncrease / 2)), false, hurtTimer, assets);
+                enemy.create(EYEBAT_ID, PURPLE_ID, 3, randomSpawnLocation, 1.4f * BLUE_EYEBAT_WIDTH, 1.4f * BLUE_EYEBAT_HEIGHT, 0.5f + speedIncrease / 1.75f, 0.25f + speedIncrease / 1.75f, (float)(DEFAULT_FRAME_DURATION * (2.5 - speedIncrease / 2)), false, hurtTimer, assets);
                 eyebatSpawnTimer = random.nextFloat() * (1.45f*maxEyebatSpawnTime - 1.45f*minEyebatSpawnTime) + 1.45f*minEyebatSpawnTime;
             }
             else{
-                enemy.create(EYEBAT_ID, WHITE_ID, 4, randomSpawnLocation, 1.6f * BLUE_EYEBAT_WIDTH, 1.6f * BLUE_EYEBAT_HEIGHT, 0.4f + speedIncrease / 1.75f, 0.18f + speedIncrease / 1.75f, (float)(DEFAULT_FRAME_DURATION * (2.5 - speedIncrease / 2)), false, hurtTimer, assets);
+                enemy.create(EYEBAT_ID, WHITE_ID, 4, randomSpawnLocation, 1.6f * BLUE_EYEBAT_WIDTH, 1.6f * BLUE_EYEBAT_HEIGHT, 0.4f + speedIncrease / 1.75f, 0.2f + speedIncrease / 1.75f, (float)(DEFAULT_FRAME_DURATION * (2.5 - speedIncrease / 2)), false, hurtTimer, assets);
                 eyebatSpawnTimer = random.nextFloat() * (1.65f*maxEyebatSpawnTime - 1.65f*minEyebatSpawnTime) + 1.65f*minEyebatSpawnTime;
             }
             enemies.add(enemy);
@@ -1165,7 +1162,8 @@ public class MainGame extends GameElements implements Screen{
             laserTrapSpawnTimer = random.nextFloat() * (maxLaserSpawnTime - minLaserSpawnTime) + minLaserSpawnTime;
 
             enemy.create(LASER_TRAP_ID, random.nextInt(((int)SCREEN_WIDTH - (int)LASER_TRAP_H_WIDTH)), LASER_TRAP_H_WIDTH, LASER_TRAP_H_HEIGHT,
-                    0, 0.65f + speedIncrease, DEFAULT_FRAME_DURATION*1.5f, assets);
+                    0, 0.65f + speedIncrease/1.5f, DEFAULT_FRAME_DURATION*1.5f, assets);
+            enemies.add(enemy);
 
         }
     }
@@ -1177,7 +1175,7 @@ public class MainGame extends GameElements implements Screen{
 
         for (Enemy enemy : enemies) {
 
-            if(enemy.getEnemyY() + enemy.getHeight() < -1.5 * SCREEN_HEIGHT && !enemiesToRemove.contains(enemy, true)){
+            if(enemy.getEnemyY() + enemy.getHeight() < 0 && !enemiesToRemove.contains(enemy, true)){
                 enemiesToRemove.add(enemy);
             }
 
@@ -1304,7 +1302,6 @@ public class MainGame extends GameElements implements Screen{
                             if(enemy.getId() == ENEMY_SHIP_ID && enemy.HP <= 0){
                                 shipPositions.removeAll(Collections.singletonList(enemy.position));
                                 enemy.position = null;
-//                                shipPositions.clear();
                             }
 
 
@@ -1312,17 +1309,14 @@ public class MainGame extends GameElements implements Screen{
                                 enemiesToRemove.add(enemy);
                             }
 
-                            Explosion explosion;
+                            Explosion explosion = exp.obtain();
                             if (enemy.getId() != ENEMY_SHIP_ID) {
-                                explosion = exp.obtain();
                                 explosion.create(enemy.getEnemyX(), enemy.getEnemyY() - enemy.getHeight() / 4f, enemy.getWidth(), assets);
-                                explosionsToDelay.add(explosion);
                             }
                             else {
-                                explosion = exp.obtain();
                                 explosion.create(enemy.getEnemyX(), enemy.getEnemyY(), enemy.getWidth() * 1.5f, assets);
-                                explosionsToDelay.add(explosion);
                             }
+                            explosions.add(explosion);
 
                             if (enemy.getId() == (EYEBAT_ID) && !pointsEarned) {
                                 switch (enemy.getColorId()) {
@@ -1475,12 +1469,6 @@ public class MainGame extends GameElements implements Screen{
                             if (soundEnabled)
                                 bombSound.play();
 
-                            for (Enemy enemy : enemies) {
-                                enemy.setHP(0);
-                                ep.free(enemy);
-                                enemies.removeValue(enemy, true);
-
-                            }
                             enemyBullets.clear();
                         }
                         break;

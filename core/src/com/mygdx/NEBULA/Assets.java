@@ -24,7 +24,8 @@ public class Assets implements Disposable {
     public static final String red_background = "ui/red_background.png";
     public static final String black_background = "ui/black_background.png";
 
-    public static final String stars = "ui/stars.png";
+    public static final String stars_back = "ui/stars_back.png";
+    public static final String stars_front = "ui/stars_front.png";
 
     public static final String start_button_inactive = "ui/start_button_inactive.png";
     public static final String start_button_inactive_clear = "ui/start_button_inactive_clear.png";
@@ -109,7 +110,8 @@ public class Assets implements Disposable {
         assetManager.load(purple_background, Texture.class);
         assetManager.load(red_background, Texture.class);
         assetManager.load(black_background, Texture.class);
-        assetManager.load(stars, Texture.class);
+        assetManager.load(stars_front, Texture.class);
+        assetManager.load(stars_back, Texture.class);
 
         assetManager.load(start_button_inactive, Texture.class);
         assetManager.load(start_button_inactive_clear, Texture.class);
@@ -208,7 +210,8 @@ public class Assets implements Disposable {
         assetManager.unload(red_background);
         assetManager.unload(black_background);
 
-        assetManager.unload(stars);
+        assetManager.unload(stars_front);
+        assetManager.unload(stars_back);
 
         assetManager.unload(start_button_inactive);
         assetManager.unload(start_button_active);

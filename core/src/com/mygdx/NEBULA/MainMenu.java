@@ -82,7 +82,7 @@ public class MainMenu extends GameElements implements Screen {
         camera.update();
         textCamera.update();
         Gdx.gl.glClearColor(0f, 0f, 0f, 1f);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
         newPoints = viewport.unproject(new Vector3 (Gdx.input.getX(),Gdx.graphics.getHeight()- Gdx.input.getY(), 0));
 
         game.batch.enableBlending();
@@ -129,7 +129,7 @@ public class MainMenu extends GameElements implements Screen {
 
 
         if(canRenderBackground)
-            background.updateAndRender(delta, false, false, 0, starsAnim, game.batch, true, false, false, true);
+            background.updateAndRender(delta, false, false, 0, starsAnimFront, starsAnimBack, game.batch, true, false, false, true);
 
         if(switchScreens){
             if(soundEnabled && !playSoundHasPlayed) {
