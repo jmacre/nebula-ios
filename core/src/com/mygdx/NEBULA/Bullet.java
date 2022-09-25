@@ -86,7 +86,7 @@ public class Bullet extends GameElements {
         this.isMissile = isMissile;
 
         if(isMissile) {
-            this.rect = new Collision(BULLET_X, BULLET_Y, MISSILE_WIDTH, MISSILE_HEIGHT);
+            this.rect = new Collision(BULLET_X - MISSILE_WIDTH, BULLET_Y, MISSILE_WIDTH, MISSILE_HEIGHT);
             missileSprite.setTexture(assets.assetManager.get(Assets.missile_ss,Texture.class));
             missileSprite.setSize(MISSILE_WIDTH, MISSILE_HEIGHT);
             missileAnimation = Anim.createAnimation(missileSprite, 4, Anim.DEFAULT_FRAME_DURATION*1.5f);

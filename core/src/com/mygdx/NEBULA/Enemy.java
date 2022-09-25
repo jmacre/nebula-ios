@@ -199,9 +199,7 @@ public class Enemy extends GameElements{
 
     }
 
-    public void update(float delta, Enemy enemy, boolean isHourglass, Camera camera){
-        hurtBatch.setProjectionMatrix(camera.combined);
-
+    public void update(float delta, Enemy enemy, boolean isHourglass){
         if(isHourglass){
             hourglassMultiplier = HOURGLASS_SPEED_MULTIPLIER;
         }

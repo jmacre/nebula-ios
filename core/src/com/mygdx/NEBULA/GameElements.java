@@ -14,12 +14,8 @@ public class GameElements {
     Button pauseButton, replayResumeButton, soundButton, homeButton;
 
 
-    public static final int SCREEN_WIDTH = 176;
-    public static final int SCREEN_HEIGHT = (int) (Gdx.graphics.getHeight() * (176f / Gdx.graphics.getWidth()));
-    public static final int ACTUAL_WIDTH = Gdx.graphics.getWidth();
-    public static final int ACTUAL_HEIGHT = Gdx.graphics.getHeight();
-    public static final float SCALE_HEIGHT = (float) ACTUAL_HEIGHT/SCREEN_HEIGHT;
-    public static final float SCALE_WIDTH = (float) ACTUAL_WIDTH/SCREEN_WIDTH;
+    public static final int SCREEN_WIDTH = Gdx.graphics.getWidth();
+    public static final int SCREEN_HEIGHT = Gdx.graphics.getHeight();
 
     public static final int BLUE_ID = 0;
     public static final int GREEN_ID = 1;
@@ -79,9 +75,9 @@ public class GameElements {
     public static final float LEFT_HEART_X = MIDDLE_HEART_X - HEART_WIDTH*1.1f;
 
 
-    public static final float SCORE_Y_AND = ACTUAL_HEIGHT - (ACTUAL_HEIGHT / 12f) /3f;
+    public static final float SCORE_Y_AND = SCREEN_HEIGHT - (SCREEN_HEIGHT / 12f) /3f;
     public static final float SCORE_Y_IOS = SCREEN_HEIGHT - MAIN_UI_HEIGHT;
-    public static final float SCORE_X = ACTUAL_WIDTH / 2f - (ACTUAL_WIDTH / 1.1f)/2;
+    public static final float SCORE_X = SCREEN_WIDTH / 2f - (SCREEN_WIDTH / 1.1f)/2;
 
     public static final float MENU_BACK_WIDTH = SCREEN_WIDTH*.9f;
     public static final float MENU_BACK_HEIGHT = MENU_BACK_WIDTH/1.733f;
@@ -149,13 +145,13 @@ public class GameElements {
     public static final float PAUSE_BUTTON_HEIGHT = MAIN_UI_HEIGHT/1.2f;
     public static final float PAUSE_BUTTON_WIDTH = PAUSE_BUTTON_HEIGHT * 1.3f;
 
-    public static final float MENU_SCORE_X = HOME_BUTTON_X * ((float)ACTUAL_WIDTH / SCREEN_WIDTH);
-    public static final float MENU_SCORE_Y = (MENU_BACK_Y + MENU_BACK_HEIGHT - .45f * HOME_BUTTON_HEIGHT) * (SCALE_WIDTH);
+    public static final float MENU_SCORE_X = HOME_BUTTON_X;
+    public static final float MENU_SCORE_Y = (MENU_BACK_Y + MENU_BACK_HEIGHT - .45f * HOME_BUTTON_HEIGHT);
 
-    public static final float CONFIRM_LEAVE_FONT_Y = (MENU_BACK_Y + MENU_BACK_HEIGHT - .55f * HOME_BUTTON_HEIGHT) * SCALE_HEIGHT;
-    public static final float CONFIRM_LEAVE_FONT_X = YES_BUTTON_X * SCALE_WIDTH;
+    public static final float CONFIRM_LEAVE_FONT_Y = (MENU_BACK_Y + MENU_BACK_HEIGHT - .55f * HOME_BUTTON_HEIGHT);
+    public static final float CONFIRM_LEAVE_FONT_X = YES_BUTTON_X;
 
-    public static final float GAME_OVER_TEXT_Y = (SCREEN_HEIGHT - (MENU_BACK_Y/2)) * SCALE_HEIGHT;
+    public static final float GAME_OVER_TEXT_Y = (SCREEN_HEIGHT - (MENU_BACK_Y/2));
 
     Anim shipAnim = new Anim();
     Anim missileAnim = new Anim();

@@ -1,6 +1,6 @@
 package com.mygdx.NEBULA;
 
-import static com.mygdx.NEBULA.GameElements.ACTUAL_WIDTH;
+import static com.mygdx.NEBULA.GameElements.SCREEN_WIDTH;
 import static com.mygdx.NEBULA.GameElements.SCREEN_WIDTH;
 
 import com.badlogic.gdx.Game;
@@ -35,7 +35,7 @@ public class Main extends Game {
 		assets.assetManager.finishLoading();
 		generator = new FreeTypeFontGenerator(Gdx.files.internal("mainfont.ttf"));
 		parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
-		parameter.size = ACTUAL_WIDTH/14;
+		parameter.size = SCREEN_WIDTH/14;
 
 		scoreFont = generator.generateFont(parameter);
 		playSound = assets.assetManager.get(Assets.play_sound, Sound.class);

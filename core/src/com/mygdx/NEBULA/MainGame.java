@@ -46,7 +46,6 @@ import static com.mygdx.NEBULA.ItemDrop.HEART_ID;
 import static com.mygdx.NEBULA.ItemDrop.MAX_ITEM_SPAWN_TIME;
 import static com.mygdx.NEBULA.ItemDrop.MIN_ITEM_SPAWN_TIME;
 import static com.mygdx.NEBULA.ItemDrop.MISSILE_ID;
-import static com.mygdx.NEBULA.MainMenu.newPoints;
 
 
 public class MainGame extends GameElements implements Screen{
@@ -65,8 +64,6 @@ public class MainGame extends GameElements implements Screen{
     FloatArray vertices;
 
     ShaderProgram invertedShader;
-    ScreenViewport screenViewport;
-
 
     float fadeInOpacity = 1;
     float fadeOutOpacity = 0;
@@ -204,8 +201,6 @@ public class MainGame extends GameElements implements Screen{
     float speedIncrease;
 
     float hourglassMultiplier = 1;
-    OrthographicCamera camera, textCamera;
-    FillViewport viewport;
 
     Player player;
     int health = 3;
@@ -222,13 +217,6 @@ public class MainGame extends GameElements implements Screen{
     public void show() {
         Enemy.createEnemySprites(assets);
         Explosion.createExplosionSprite(assets);
-        camera = new OrthographicCamera();
-        textCamera = new OrthographicCamera();
-        screenViewport = new ScreenViewport(textCamera);
-
-        viewport = new FillViewport(SCREEN_WIDTH, SCREEN_HEIGHT, camera);
-        viewport.apply();
-
 
         minEnemyShipSpawnTime = MIN_ENEMY_SHIP_SPAWN_TIME;
         maxEnemyShipSpawnTime = MAX_ENEMY_SHIP_SPAWN_TIME;
@@ -271,19 +259,19 @@ public class MainGame extends GameElements implements Screen{
         shipAnimation = Anim.createAnimation(shipSS, 4, DEFAULT_FRAME_DURATION*1.5f);
         shipBlinkingAnimation = Anim.createAnimation(shipBlinkingSS, 4, (DEFAULT_FRAME_DURATION*1.5f));
 
-        textParameter.size = ACTUAL_WIDTH/40;
+        textParameter.size = SCREEN_WIDTH/40;
         menuScoreFont = generator.generateFont(textParameter);
         menuScoreFont.setColor(Color.valueOf("6a11f6"));
 
-        textParameter.size = ACTUAL_WIDTH/22;
+        textParameter.size = SCREEN_WIDTH/22;
         confirmScreenFont = generator.generateFont(textParameter);
         confirmScreenFont.setColor(Color.valueOf("6a11f6"));
 
-        textParameter.size = ACTUAL_WIDTH/10;
+        textParameter.size = SCREEN_WIDTH/10;
         gameOverFont = generator.generateFont(textParameter);
         gameOverFont.setColor(Color.valueOf("FFFFFF"));
 
-        textParameter.size = ACTUAL_WIDTH/6;
+        textParameter.size = SCREEN_WIDTH/6;
         countdownFont = generator.generateFont(textParameter);
         countdownFont.setColor(Color.valueOf("FFFFFF"));
 
@@ -302,17 +290,7 @@ public class MainGame extends GameElements implements Screen{
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
         Gdx.gl.glClearColor(0f, 0f, 0f, 1f);
 
-        isUsingTextViewport = false;
-        camera.position.set(camera.viewportWidth/2,camera.viewportHeight/2,0);
-
-        camera.update();
-        textCamera.update();
-
-
-        newPoints = viewport.unproject(new Vector3(Gdx.input.getX(),ACTUAL_HEIGHT - Gdx.input.getY(), 0));
-
         game.batch.enableBlending();
-        game.batch.setProjectionMatrix(camera.combined);
 
         game.batch.begin();
 
@@ -499,8 +477,7 @@ public class MainGame extends GameElements implements Screen{
 
         if (isPaused && !isRunningResumeCountdown) {
             songPausePosition = mainMusic.getPosition();
-            useDefaultViewport();
-            gameInterface.drawPauseScreen(game, menuScoreFont, score, textCamera, screenViewport);
+            gameInterface.drawPauseScreen(game, menuScoreFont, score);
 
             if (gameInterface.checkForPlayButtonTap() && !isTransitioningOut && !isFadingIn && !isTransitioningIn &!gameInterface.getConfirmLeaveScreenOpen()){
                 playButtonTapVal = inputProcessor.getTapCount();
@@ -517,10 +494,7 @@ public class MainGame extends GameElements implements Screen{
                     if (soundEnabled)
                         pauseSound.play(0.3f);
                 }
-
-
-                useDefaultViewport();
-                gameInterface.drawConfirmLeave(game, confirmScreenFont,  textCamera);
+                gameInterface.drawConfirmLeave(game, confirmScreenFont);
 
                 if(gameInterface.checkForYesButtonTap()) {
                     yesButtonTapVal = inputProcessor.getTapCount();
@@ -544,7 +518,6 @@ public class MainGame extends GameElements implements Screen{
         }
 
         if(!isAlive){
-            useDefaultViewport();
             game.batch.setShader(null);
 
             if(inputProcessor.getTapCount() == 0) {
@@ -554,8 +527,7 @@ public class MainGame extends GameElements implements Screen{
                 transitionOut(CURRENT_SHIP_X);
             }
             if(isTransitionedOut && !isFadingOut) {
-                useDefaultViewport();
-                gameInterface.drawReplayScreen(game, menuScoreFont, gameOverFont, newHighscore, screenViewport, textCamera);
+                gameInterface.drawReplayScreen(game, menuScoreFont, gameOverFont, newHighscore);
             }
 
             if (gameInterface.checkForReplayButtonTap() && isTransitionedOut){
@@ -572,7 +544,7 @@ public class MainGame extends GameElements implements Screen{
 
 
                     if (!isFadingOut) {
-                        gameInterface.drawConfirmLeave(game, confirmScreenFont, textCamera);
+                        gameInterface.drawConfirmLeave(game, confirmScreenFont);
 
                         if (gameInterface.checkForYesButtonTap()) {
                             yesButtonTapVal = inputProcessor.getTapCount();
@@ -749,20 +721,20 @@ public class MainGame extends GameElements implements Screen{
 
     public void movePlayer(){
         if (!isPaused && isTransitionedIn && !isShipLeaving && !isFadingOut) {
-            if (!(newPoints.y < SCREEN_HEIGHT/5f)) {
+            if (!(Gdx.input.getY() < SCREEN_HEIGHT/5f)) {
 
-                if(newPoints.x < SHIP_X - SHIP_WIDTH/2) {
-                    playerPosition = (SHIP_X - deltaP * moveSpeed * (SHIP_X - (newPoints.x - SHIP_WIDTH / 2)));
+                if(Gdx.input.getX() < SHIP_X - SHIP_WIDTH/2) {
+                    playerPosition = (SHIP_X - deltaP * moveSpeed * (SHIP_X - (Gdx.input.getX() - SHIP_WIDTH / 2)));
 
                     if(playerPosition >= 0 && playerPosition <= SCREEN_WIDTH - SHIP_WIDTH) {
-                        SHIP_X -= (deltaP * moveSpeed * (SHIP_X - (newPoints.x - SHIP_WIDTH / 2)));
+                        SHIP_X -= (deltaP * moveSpeed * (SHIP_X - (Gdx.input.getX() - SHIP_WIDTH / 2)));
                     }
                 }
-                if(newPoints.x > SHIP_X - SHIP_WIDTH/2) {
-                    playerPosition =  (SHIP_X + deltaP * moveSpeed * (newPoints.x - SHIP_X - SHIP_WIDTH / 2));
+                if(Gdx.input.getX() > SHIP_X - SHIP_WIDTH/2) {
+                    playerPosition =  (SHIP_X + deltaP * moveSpeed * (Gdx.input.getX() - SHIP_X - SHIP_WIDTH / 2));
 
                     if (playerPosition >= 0 && playerPosition <= SCREEN_WIDTH - SHIP_WIDTH) {
-                        SHIP_X +=  (deltaP * moveSpeed * (newPoints.x - SHIP_X - SHIP_WIDTH / 2));
+                        SHIP_X +=  (deltaP * moveSpeed * (Gdx.input.getX() - SHIP_X - SHIP_WIDTH / 2));
                     }
                 }
                 CURRENT_SHIP_X = SHIP_X;
@@ -773,27 +745,24 @@ public class MainGame extends GameElements implements Screen{
     }
 
     public void runResumeCountdown(float delta){
-        if(resumeCountdownTimer < 0.25f) {
-            useTextViewport();
-        }
         resumeCountdownTimer += delta;
         if (resumeCountdownTimer >= -1) {
             if (resumeCountdownTimer < -0.66f) {
                 gl.setText(countdownFont, "3");
-                countdownFont.draw(game.batch, "3", (ACTUAL_WIDTH - gl.width) / 2, ACTUAL_HEIGHT / 2 + gl.height);
+                countdownFont.draw(game.batch, "3", (SCREEN_WIDTH - gl.width) / 2, SCREEN_HEIGHT / 2 + gl.height);
 
             } else if (resumeCountdownTimer <= -0.33) {
                 gl.setText(countdownFont, "2", Color.WHITE, SCREEN_WIDTH, Align.center, true);
-                countdownFont.draw(game.batch, "2", (ACTUAL_WIDTH - gl.width) / 2, ACTUAL_HEIGHT / 2 + gl.height);
+                countdownFont.draw(game.batch, "2", (SCREEN_WIDTH - gl.width) / 2, SCREEN_HEIGHT / 2 + gl.height);
 
             } else if (resumeCountdownTimer < 0) {
                 gl.setText(countdownFont, "1", Color.WHITE, SCREEN_WIDTH, Align.center, true);
-                countdownFont.draw(game.batch, "1", (ACTUAL_WIDTH - gl.width) / 2, ACTUAL_HEIGHT / 2 + gl.height);
+                countdownFont.draw(game.batch, "1", (SCREEN_WIDTH - gl.width) / 2, SCREEN_HEIGHT / 2 + gl.height);
 
             } else {
                 if (resumeCountdownTimer < 0.25f) {
                     gl.setText(countdownFont, "GO", Color.WHITE, SCREEN_WIDTH, Align.center, true);
-                    countdownFont.draw(game.batch, "GO", (ACTUAL_WIDTH - gl.width) / 2, ACTUAL_HEIGHT / 2 + gl.height);
+                    countdownFont.draw(game.batch, "GO", (SCREEN_WIDTH - gl.width) / 2, SCREEN_HEIGHT / 2 + gl.height);
 
                 } else {
                     runResumeCountdown = false;
@@ -802,29 +771,7 @@ public class MainGame extends GameElements implements Screen{
             }
         }
     }
-    public void useTextViewport(){
-        isUsingTextViewport = true;
 
-        textCamera.position.set(textCamera.viewportWidth/2, textCamera.viewportHeight/2, 0);
-        textCamera.update();
-
-        game.batch.setProjectionMatrix(textCamera.combined);
-        screenViewport.apply();
-
-        screenViewport.update(ACTUAL_WIDTH, ACTUAL_HEIGHT);
-    }
-
-    public void useDefaultViewport(){
-        isUsingTextViewport = false;
-
-        camera.position.set(camera.viewportWidth/2, camera.viewportHeight/2, 0);
-        camera.update();
-
-        game.batch.setProjectionMatrix(camera.combined);
-        viewport.apply();
-
-        viewport.update(ACTUAL_WIDTH, ACTUAL_HEIGHT);
-    }
     public void transitionIn(){
         if(SHIP_START_Y <= SHIP_Y) {
             SHIP_X = (int) (SCREEN_WIDTH / 2 - SHIP_WIDTH / 2);
@@ -832,26 +779,24 @@ public class MainGame extends GameElements implements Screen{
             transitionDistTraveled += 1.6 * SHIP_Y * deltaP;
             transitionInTapVal = inputProcessor.getTapCount();
         }
-        if(isTransitioningIn || countDownTimer < 0.25f) {
-            useTextViewport();
-        }
+
         if (transitionDistTraveled <= totalTransitionDist/3) {
-            gl.setText(countdownFont, "3", Color.WHITE, ACTUAL_WIDTH, Align.center, true);
-            countdownFont.draw(game.batch, "3", (ACTUAL_WIDTH - gl.width) / 2, ACTUAL_HEIGHT / 2 + gl.height/2);
+            gl.setText(countdownFont, "3", Color.WHITE, SCREEN_WIDTH, Align.center, true);
+            countdownFont.draw(game.batch, "3", (SCREEN_WIDTH - gl.width) / 2, SCREEN_HEIGHT / 2 + gl.height/2);
         }
         else if (transitionDistTraveled <= 2*totalTransitionDist/3) {
-            gl.setText(countdownFont, "2", Color.WHITE, ACTUAL_WIDTH, Align.center, true);
-            countdownFont.draw(game.batch, "2", (ACTUAL_WIDTH - gl.width) / 2, ACTUAL_HEIGHT / 2 + gl.height/2);
+            gl.setText(countdownFont, "2", Color.WHITE, SCREEN_WIDTH, Align.center, true);
+            countdownFont.draw(game.batch, "2", (SCREEN_WIDTH - gl.width) / 2, SCREEN_HEIGHT / 2 + gl.height/2);
         }
         else if (transitionDistTraveled < totalTransitionDist) {
-            gl.setText(countdownFont, "1", Color.WHITE, ACTUAL_WIDTH, Align.center, true);
-            countdownFont.draw(game.batch, "1", (ACTUAL_WIDTH - gl.width) / 2, ACTUAL_HEIGHT / 2 + gl.height/2);
+            gl.setText(countdownFont, "1", Color.WHITE, SCREEN_WIDTH, Align.center, true);
+            countdownFont.draw(game.batch, "1", (SCREEN_WIDTH - gl.width) / 2, SCREEN_HEIGHT / 2 + gl.height/2);
         }
         else if (transitionDistTraveled >= totalTransitionDist && SHIP_START_Y >= SHIP_Y) {
             if(countDownTimer < 0.25f) {
                 countDownTimer += deltaP;
-                gl.setText(countdownFont, "GO", Color.WHITE, ACTUAL_WIDTH, Align.center, true);
-                countdownFont.draw(game.batch, "GO", (ACTUAL_WIDTH - gl.width) / 2, ACTUAL_HEIGHT / 2 + gl.height/2);
+                gl.setText(countdownFont, "GO", Color.WHITE, SCREEN_WIDTH, Align.center, true);
+                countdownFont.draw(game.batch, "GO", (SCREEN_WIDTH - gl.width) / 2, SCREEN_HEIGHT / 2 + gl.height/2);
             }
             isTransitionedIn = true;
             isTransitioningIn = false;
@@ -923,19 +868,16 @@ public class MainGame extends GameElements implements Screen{
         if(isTransitionedIn) {
             gameInterface.drawTopUI(game, isPaused || isRunningResumeCountdown, health, isAlive, isTransitionedIn);
 
-            useTextViewport();
-
             gl.setText(Main.scoreFont, String.valueOf(score));
 
             if(Gdx.app.getType() == Application.ApplicationType.iOS) {
-                Main.scoreFont.draw(game.batch, gl, SCORE_X, ACTUAL_HEIGHT - gl.height * 2f);
+                Main.scoreFont.draw(game.batch, gl, SCORE_X, SCREEN_HEIGHT - gl.height * 2f);
             }
 
             else{
-                Main.scoreFont.draw(game.batch, gl, SCORE_X, ACTUAL_HEIGHT - gl.height);
+                Main.scoreFont.draw(game.batch, gl, SCORE_X, SCREEN_HEIGHT - gl.height);
             }
             updatingScore = false;
-            viewport.apply();
         }
     }
 
@@ -1181,7 +1123,7 @@ public class MainGame extends GameElements implements Screen{
 
             if(isAlive) {
 
-                enemy.update(deltaP, enemy, isHourglass, camera);
+                enemy.update(deltaP, enemy, isHourglass);
 
                 switch (enemy.getId()) {
                     case EYEBAT_ID:
@@ -1554,7 +1496,6 @@ public class MainGame extends GameElements implements Screen{
     public void runBombUsedTimer( ){
         if(bombUsedTimer < 0){
             bombUsedTimer += deltaP;
-            useDefaultViewport();
             whiteFlash.draw(game.batch);
         }
         else{
@@ -1661,8 +1602,7 @@ public class MainGame extends GameElements implements Screen{
 
     @Override
     public void resize(int width, int height) {
-        viewport.update(width, height);
-        camera.position.set(camera.viewportWidth / 2, camera.viewportHeight / 2, 0);
+
     }
 
     @Override
