@@ -166,7 +166,6 @@ public class Background {
 
         starsBack.setPosition(0, stars_back_y2);
         starsAnimBack.drawAnim(starsBackAnimation, stateTime, 0, stars_back_y2, SCREEN_WIDTH, starsBack.getHeight(), true, batch);
-
     }
 
     public void changeBackgroundColor(float delta, int score, Batch batch, boolean isAlive){
