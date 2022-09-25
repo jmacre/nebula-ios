@@ -1240,6 +1240,10 @@ public class MainGame extends GameElements implements Screen{
                             }
                         }
 
+                        if(bombUsed && enemy.getId() == LASER_TRAP_ID && !enemiesToRemove.contains(enemy, true)){
+                            enemiesToRemove.add(enemy);
+
+                        }
                         if (enemy.HP <= 0 && enemy.getId() != LASER_TRAP_ID) {
                             if(enemy.getId() == ENEMY_SHIP_ID && enemy.HP <= 0){
                                 shipPositions.removeAll(Collections.singletonList(enemy.position));
