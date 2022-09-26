@@ -1215,10 +1215,10 @@ public class MainGame extends GameElements implements Screen{
             for (Enemy enemy : enemies) {
 
                 if (enemy.getEnemyY() < SCREEN_HEIGHT) {
-                    if (bombUsed || (Collision.isNearby(bullet.getCollision(), enemy.getCollision())
+                    if ((Collision.isNearby(bullet.getCollision(), enemy.getCollision())
                     && Collision.isColliding(bullet.getCollision(), enemy.getCollision()))) {
 
-                        if (!bombUsed && !bullet.isMissile() && enemy.getId() != LASER_TRAP_ID && !bulletsToRemove.contains(bullet, true)) {
+                        if (!bullet.isMissile() && enemy.getId() != LASER_TRAP_ID && !bulletsToRemove.contains(bullet, true)) {
                             bulletsToRemove.add(bullet);
                         }
 
@@ -1240,10 +1240,7 @@ public class MainGame extends GameElements implements Screen{
                             }
                         }
 
-                        if(bombUsed && enemy.getId() == LASER_TRAP_ID && !enemiesToRemove.contains(enemy, true)){
-                            enemiesToRemove.add(enemy);
 
-                        }
                         if (enemy.HP <= 0 && enemy.getId() != LASER_TRAP_ID) {
                             if(enemy.getId() == ENEMY_SHIP_ID && enemy.HP <= 0){
                                 shipPositions.removeAll(Collections.singletonList(enemy.position));
@@ -1408,15 +1405,28 @@ public class MainGame extends GameElements implements Screen{
                         break;
 
                     case BOMB_ID:
-                        if (!bombUsed) {
-                            score += 25;
-                            bombUsed = true;
+                        score += 25;
+                        bombUsed = true;
+                        Gdx.input.vibrate(200);
 
-                            if (soundEnabled)
-                                bombSound.play();
-
-                            enemyBullets.clear();
+                        for(Enemy enemy : enemies) {
+                            if (!enemiesToRemove.contains(enemy, true)) {
+                                enemiesToRemove.add(enemy);
+                            }
+                            Explosion explosion = exp.obtain();
+                            if (enemy.getId() != ENEMY_SHIP_ID) {
+                                explosion.create(enemy.getEnemyX(), enemy.getEnemyY() - enemy.getHeight() / 4f, enemy.getWidth(), assets);
+                            }
+                            else {
+                                explosion.create(enemy.getEnemyX(), enemy.getEnemyY(), enemy.getWidth() * 1.5f, assets);
+                            }
+                            explosions.add(explosion);
                         }
+                        if (soundEnabled) {
+                            bombSound.play();
+                        }
+                        enemyBullets.clear();
+
                         break;
 
                     case MISSILE_ID:

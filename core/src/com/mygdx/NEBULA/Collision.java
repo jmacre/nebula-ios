@@ -1,5 +1,8 @@
 package com.mygdx.NEBULA;
 
+import static com.mygdx.NEBULA.GameElements.SCREEN_HEIGHT;
+import static com.mygdx.NEBULA.GameElements.SCREEN_WIDTH;
+
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Rectangle;
@@ -131,15 +134,15 @@ public class Collision {
     }
 
     public static boolean isNearby(Collision col1, Collision col2){
-        return (col1.getY() >= col2.getY() - col2.getHeight()
-                && col1.getY() + col1.getHeight() <= col2.getY() + col2.getHeight())
-                || (col2.getY() >= col1.getY() - col1.getHeight()
-                && col2.getY() + col2.getHeight() <= col1.getY() + col1.getHeight())
+        return (col1.getY() >= col2.getY() - SCREEN_HEIGHT/10f
+                && col1.getY() + SCREEN_HEIGHT/10f <= col2.getY() + SCREEN_HEIGHT/10f)
+                || (col2.getY() >= col1.getY() - SCREEN_HEIGHT
+                && col2.getY() + SCREEN_HEIGHT/10f <= col1.getY() + SCREEN_HEIGHT/10f)
 
-                && (col1.getX() >= col2.getX() - col2.getWidth()
-                && col1.getX() + col1.getWidth() <= col2.getX() + col2.getWidth())
-                || (col2.getX() >= col1.getX() - col1.getWidth()
-                && col2.getX() + col2.getWidth() <= col1.getX() + col1.getWidth());
+                && ((col1.getX() >= col2.getX() - SCREEN_WIDTH
+                && col1.getX() + SCREEN_WIDTH/10f <= col2.getX() + SCREEN_WIDTH/10f)
+                || (col2.getX() >= col1.getX() - SCREEN_WIDTH
+                && col2.getX() + SCREEN_WIDTH/10f <= col1.getX() + SCREEN_WIDTH/10f));
     }
 
     public static boolean isColliding(Collision col1, Collision col2){
