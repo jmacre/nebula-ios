@@ -373,7 +373,7 @@ public class MainGame extends GameElements implements Screen{
                 addEyebats();
                 eyebatsSpawning = true;
 
-                if (score >= 100) {
+                if (score >= 0) {
                     addEnemyShips();
                     enemyShipsSpawning = true;
                 }
@@ -738,9 +738,8 @@ public class MainGame extends GameElements implements Screen{
                     }
                 }
                 CURRENT_SHIP_X = SHIP_X;
+//                System.out.println(shipPositions);
             }
-            System.out.println(playerPosition);
-
         }
     }
 
@@ -1042,57 +1041,57 @@ public class MainGame extends GameElements implements Screen{
             Enemy enemy = ep.obtain();
 
 
-            if (3 - shipPositions.size() >= 0) {
+            if ( shipPositions.size() <= 4) {
 
 
-                int i = 3;
+                int i = 0;
                 int position = 0;
 
-                shipPositions.clear();
                 for (Enemy e : enemies) {
 
-                    if (e.getId() == (ENEMY_SHIP_ID) && !shipPositions.contains(e.getPosition()) && e.getEnemyY() < SCREEN_HEIGHT) {
-                        shipPositions.add(e.getPosition());
-                    }
-                    if (shipPositions.contains(i)) {
-                        i--;
+                    if (shipPositions.contains(i) && e.getId() == ENEMY_SHIP_ID) {
+                        i++;
                     } else {
                         position = i;
                     }
                 }
 
-                if (score <= 1000) {
-                    enemy.create(ENEMY_SHIP_ID, BLUE_ID, 3, random.nextInt(((int) SCREEN_WIDTH - (int) ENEMY_SHIP_WIDTH)), ENEMY_SHIP_WIDTH, ENEMY_SHIP_HEIGHT,
-                            1.25f + speedIncrease, 1.25f + speedIncrease, DEFAULT_FRAME_DURATION * 1.5f, enemyBulletDelay, blueShipBulletThreshold,
-                            false, hurtTimer, position, assets);
+                if(!shipPositions.contains(position)) {
+                    if (score <= 1000) {
+                        enemy.create(ENEMY_SHIP_ID, BLUE_ID, 3, random.nextInt(((int) SCREEN_WIDTH - (int) ENEMY_SHIP_WIDTH)), ENEMY_SHIP_WIDTH, ENEMY_SHIP_HEIGHT,
+                                1.25f + speedIncrease, 1.25f + speedIncrease, DEFAULT_FRAME_DURATION * 1.5f, enemyBulletDelay, blueShipBulletThreshold,
+                                false, hurtTimer, position, assets);
 
-                    enemyShipSpawnTimer = random.nextFloat() * (maxEnemyShipSpawnTime - minEnemyShipSpawnTime) + minEnemyShipSpawnTime;
-                } else if (score <= 2000) {
-                    enemy.create(ENEMY_SHIP_ID, GREEN_ID, 4, random.nextInt(((int) SCREEN_WIDTH - (int) ENEMY_SHIP_WIDTH)), ENEMY_SHIP_WIDTH, ENEMY_SHIP_HEIGHT,
-                            1.15f + speedIncrease, 1.15f + speedIncrease, DEFAULT_FRAME_DURATION * 1.5f, enemyBulletDelay, greenShipBulletThreshold,
-                            false, hurtTimer, position, assets);
+                        enemyShipSpawnTimer = random.nextFloat() * (maxEnemyShipSpawnTime - minEnemyShipSpawnTime) + minEnemyShipSpawnTime;
+                    } else if (score <= 2000) {
+                        enemy.create(ENEMY_SHIP_ID, GREEN_ID, 4, random.nextInt(((int) SCREEN_WIDTH - (int) ENEMY_SHIP_WIDTH)), ENEMY_SHIP_WIDTH, ENEMY_SHIP_HEIGHT,
+                                1.15f + speedIncrease, 1.15f + speedIncrease, DEFAULT_FRAME_DURATION * 1.5f, enemyBulletDelay, greenShipBulletThreshold,
+                                false, hurtTimer, position, assets);
 
-                    enemyShipSpawnTimer = random.nextFloat() * (1.2f * maxEnemyShipSpawnTime - 1.2f * minEnemyShipSpawnTime) + 1.2f * minEnemyShipSpawnTime;
-                } else if (score <= 3000) {
-                    enemy.create(ENEMY_SHIP_ID, RED_ID, 5, random.nextInt(((int) SCREEN_WIDTH - (int) ENEMY_SHIP_WIDTH)), ENEMY_SHIP_WIDTH, ENEMY_SHIP_HEIGHT,
-                            0.95f + speedIncrease, 0.95f + speedIncrease, DEFAULT_FRAME_DURATION * 1.5f, enemyBulletDelay, redShipBulletThreshold,
-                            false, hurtTimer, position, assets);
+                        enemyShipSpawnTimer = random.nextFloat() * (1.2f * maxEnemyShipSpawnTime - 1.2f * minEnemyShipSpawnTime) + 1.2f * minEnemyShipSpawnTime;
+                    } else if (score <= 3000) {
+                        enemy.create(ENEMY_SHIP_ID, RED_ID, 5, random.nextInt(((int) SCREEN_WIDTH - (int) ENEMY_SHIP_WIDTH)), ENEMY_SHIP_WIDTH, ENEMY_SHIP_HEIGHT,
+                                0.95f + speedIncrease, 0.95f + speedIncrease, DEFAULT_FRAME_DURATION * 1.5f, enemyBulletDelay, redShipBulletThreshold,
+                                false, hurtTimer, position, assets);
 
-                    enemyShipSpawnTimer = random.nextFloat() * (1.2f * maxEnemyShipSpawnTime - 1.2f * minEnemyShipSpawnTime) + 1.2f * minEnemyShipSpawnTime;
-                } else if (score <= 4000) {
-                    enemy.create(ENEMY_SHIP_ID, PURPLE_ID, 5, random.nextInt(((int) SCREEN_WIDTH - (int) ENEMY_SHIP_WIDTH)), ENEMY_SHIP_WIDTH, ENEMY_SHIP_HEIGHT,
-                            0.85f + speedIncrease, 0.85f + speedIncrease, DEFAULT_FRAME_DURATION * 1.5f, enemyBulletDelay, purpleShipBulletThreshold,
-                            false, hurtTimer, position, assets);
+                        enemyShipSpawnTimer = random.nextFloat() * (1.2f * maxEnemyShipSpawnTime - 1.2f * minEnemyShipSpawnTime) + 1.2f * minEnemyShipSpawnTime;
+                    } else if (score <= 4000) {
+                        enemy.create(ENEMY_SHIP_ID, PURPLE_ID, 5, random.nextInt(((int) SCREEN_WIDTH - (int) ENEMY_SHIP_WIDTH)), ENEMY_SHIP_WIDTH, ENEMY_SHIP_HEIGHT,
+                                0.85f + speedIncrease, 0.85f + speedIncrease, DEFAULT_FRAME_DURATION * 1.5f, enemyBulletDelay, purpleShipBulletThreshold,
+                                false, hurtTimer, position, assets);
 
-                    enemyShipSpawnTimer = random.nextFloat() * (1.2f * maxEnemyShipSpawnTime - 1.2f * minEnemyShipSpawnTime) + 1.2f * minEnemyShipSpawnTime;
-                } else {
-                    enemy.create(ENEMY_SHIP_ID, WHITE_ID, 5, random.nextInt(((int) SCREEN_WIDTH - (int) ENEMY_SHIP_WIDTH)), ENEMY_SHIP_WIDTH, ENEMY_SHIP_HEIGHT,
-                            0.75f + speedIncrease, 0.75f + speedIncrease, DEFAULT_FRAME_DURATION * 1.5f, enemyBulletDelay, whiteShipBulletThreshold,
-                            false, hurtTimer, position, assets);
+                        enemyShipSpawnTimer = random.nextFloat() * (1.2f * maxEnemyShipSpawnTime - 1.2f * minEnemyShipSpawnTime) + 1.2f * minEnemyShipSpawnTime;
+                    } else {
+                        enemy.create(ENEMY_SHIP_ID, WHITE_ID, 5, random.nextInt(((int) SCREEN_WIDTH - (int) ENEMY_SHIP_WIDTH)), ENEMY_SHIP_WIDTH, ENEMY_SHIP_HEIGHT,
+                                0.75f + speedIncrease, 0.75f + speedIncrease, DEFAULT_FRAME_DURATION * 1.5f, enemyBulletDelay, whiteShipBulletThreshold,
+                                false, hurtTimer, position, assets);
 
-                    enemyShipSpawnTimer = random.nextFloat() * (1.3f * maxEnemyShipSpawnTime - 1.3f * minEnemyShipSpawnTime) + 1.3f * minEnemyShipSpawnTime;
+                        enemyShipSpawnTimer = random.nextFloat() * (1.3f * maxEnemyShipSpawnTime - 1.3f * minEnemyShipSpawnTime) + 1.3f * minEnemyShipSpawnTime;
+                    }
+                    enemies.add(enemy);
+
                 }
-                enemies.add(enemy);
+
             }
         }
     }
@@ -1131,6 +1130,9 @@ public class MainGame extends GameElements implements Screen{
                         break;
                     case ENEMY_SHIP_ID:
                         enemy.render(enemyShipAnim, enemy, deltaP, isPaused , game.batch);
+                        if(!shipPositions.contains(enemy.position) && enemy.getEnemyY() < SCREEN_HEIGHT) {
+                            shipPositions.add(enemy.position);
+                        }
                         break;
                     case LASER_TRAP_ID:
                          enemy.render(laserTrapHAnim, enemy, deltaP, isPaused , game.batch);
@@ -1242,8 +1244,8 @@ public class MainGame extends GameElements implements Screen{
 
 
                         if (enemy.HP <= 0 && enemy.getId() != LASER_TRAP_ID) {
-                            if(enemy.getId() == ENEMY_SHIP_ID && enemy.HP <= 0){
-                                shipPositions.removeAll(Collections.singletonList(enemy.position));
+                            if(enemy.getId() == ENEMY_SHIP_ID && enemy.HP <= 0 || enemiesToRemove.contains(enemy, true)){
+                                shipPositions.remove(enemy.position);
                                 enemy.position = null;
                             }
 
@@ -1412,6 +1414,10 @@ public class MainGame extends GameElements implements Screen{
                         for(Enemy enemy : enemies) {
                             if (!enemiesToRemove.contains(enemy, true)) {
                                 enemiesToRemove.add(enemy);
+                            }
+                            if(enemy.getId() == ENEMY_SHIP_ID && enemy.HP <= 0){
+                                shipPositions.removeAll(Collections.singletonList(enemy.position));
+                                enemy.position = null;
                             }
                             Explosion explosion = exp.obtain();
                             if (enemy.getId() != ENEMY_SHIP_ID) {
