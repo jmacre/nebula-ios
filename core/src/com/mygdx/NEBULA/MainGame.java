@@ -738,7 +738,7 @@ public class MainGame extends GameElements implements Screen{
                     }
                 }
                 CURRENT_SHIP_X = SHIP_X;
-//                System.out.println(shipPositions);
+                System.out.println(shipPositions);
             }
         }
     }
@@ -1041,16 +1041,16 @@ public class MainGame extends GameElements implements Screen{
             Enemy enemy = ep.obtain();
 
 
-            if ( shipPositions.size() <= 4) {
+            if (3 - shipPositions.size() >= 0) {
 
 
-                int i = 0;
+                int i = 3;
                 int position = 0;
 
                 for (Enemy e : enemies) {
 
                     if (shipPositions.contains(i) && e.getId() == ENEMY_SHIP_ID) {
-                        i++;
+                        i--;
                     } else {
                         position = i;
                     }
@@ -1244,7 +1244,7 @@ public class MainGame extends GameElements implements Screen{
 
 
                         if (enemy.HP <= 0 && enemy.getId() != LASER_TRAP_ID) {
-                            if(enemy.getId() == ENEMY_SHIP_ID && enemy.HP <= 0 || enemiesToRemove.contains(enemy, true)){
+                            if((enemy.getId() == ENEMY_SHIP_ID && enemy.HP <= 0 || enemiesToRemove.contains(enemy, true)) && shipPositions.contains(enemy.position)){
                                 shipPositions.remove(enemy.position);
                                 enemy.position = null;
                             }
