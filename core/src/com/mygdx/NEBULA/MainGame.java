@@ -75,7 +75,7 @@ public class MainGame extends GameElements implements Screen{
     float stateTime = 0f;
 
     float bulletTimer = -2f;
-    float enemyBulletDelay = -1f;
+    float enemyBulletDelay = -0.5f;
 
     float missileTimer = MISSILE_TIMER;
     float rapidFireTimer = RAPID_FIRE_TIMER;
@@ -376,7 +376,7 @@ public class MainGame extends GameElements implements Screen{
                 addEyebats();
                 eyebatsSpawning = true;
 
-                if (score >= 0) {
+                if (score >= 100) {
                     addEnemyShips();
                     enemyShipsSpawning = true;
                 }

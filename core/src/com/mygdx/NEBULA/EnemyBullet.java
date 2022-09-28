@@ -17,10 +17,10 @@ public class EnemyBullet {
     public static float ENEMY_BULLET_WIDTH = ENEMY_SHIP_WIDTH * (2/31f);
     public static float ENEMY_BULLET_HEIGHT = ENEMY_BULLET_WIDTH * 4f;
     public static float blueShipBulletThreshold = 1.25f;
-    public static float greenShipBulletThreshold = 1f;
-    public static float redShipBulletThreshold = 1f;
-    public static float purpleShipBulletThreshold = 2f;
-    public static float whiteShipBulletThreshold = 1.5f;
+    public static float greenShipBulletThreshold = 1.25f;
+    public static float redShipBulletThreshold = 1.25f;
+    public static float purpleShipBulletThreshold = 1.5f;
+    public static float whiteShipBulletThreshold = 1.6f;
 
     public boolean remove = false;
     int bulletColor;
