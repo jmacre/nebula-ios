@@ -18,7 +18,7 @@ import java.util.Random;
 
 import static com.mygdx.NEBULA.ItemDrop.HOURGLASS_SPEED_MULTIPLIER;
 
-public class Enemy extends GameElements{
+public class Enemy extends GameElements implements Pool.Poolable{
     public static final int EYEBAT_ID = 0;
     public static final int ENEMY_SHIP_ID = 1;
 
@@ -330,6 +330,9 @@ public class Enemy extends GameElements{
                 ENEMY_X += (SCREEN_WIDTH / 4.5) * delta * ENEMY_X_SPEED_MULTIPLIER * hourglassMultiplier;
             }
         }
+        else{
+            shipMovingToPos = false;
+        }
 
         if(ENEMY_Y <= SCREEN_HEIGHT && enemyAnimation != null) {
             enemyAnim.drawAnim(enemyAnimation, stateTime/1.5f, ENEMY_X, ENEMY_Y, width, height, true, batch, hurt);
@@ -349,7 +352,7 @@ public class Enemy extends GameElements{
         return ENEMY_X;
     }
 
-    public float getEnemyY(){
+    public Float getEnemyY(){
         return ENEMY_Y;
     }
 
@@ -428,4 +431,8 @@ public class Enemy extends GameElements{
     }
 
 
+    @Override
+    public void reset() {
+        position = null;
+    }
 }

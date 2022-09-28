@@ -59,8 +59,8 @@ public class GameElements {
     public static float ENEMY_SHIP_HEIGHT = SHIP_HEIGHT * (27/32f);
     public static float ENEMY_SHIP_WIDTH = ENEMY_SHIP_HEIGHT * (31/27f);
 
-    public static final float MIN_LASER_TRAP_SPAWN_TIME = 2f; //seconds
-    public static final float MAX_LASER_TRAP_SPAWN_TIME = 4f;
+    public static final float MIN_LASER_TRAP_SPAWN_TIME = 1.5f; //seconds
+    public static final float MAX_LASER_TRAP_SPAWN_TIME = 3f;
 
     public float LASER_TRAP_H_WIDTH =  SHIP_WIDTH * (48/27f);
     public float LASER_TRAP_H_HEIGHT = LASER_TRAP_H_WIDTH / 12;
