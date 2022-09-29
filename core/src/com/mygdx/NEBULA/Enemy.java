@@ -193,7 +193,6 @@ public class Enemy extends GameElements implements Pool.Poolable{
             enemySheet = laserTrap;
         }
 
-        enemySheet.setSize(ENEMY_WIDTH, ENEMY_HEIGHT);
         enemyAnimation = Anim.createAnimation(enemySheet, 4, ENEMY_FRAME_DURATION);
         enemyAnimation.setPlayMode(Animation.PlayMode.LOOP);
 
@@ -267,11 +266,11 @@ public class Enemy extends GameElements implements Pool.Poolable{
             }
 
             if (!isPaused && !movingRight && (movingLeft || (randomNumber == 0))) {
-                ENEMY_X -= (SCREEN_WIDTH / 2) * delta * ENEMY_X_SPEED_MULTIPLIER * hourglassMultiplier;
+                ENEMY_X -= (SCREEN_WIDTH / 2f) * delta * ENEMY_X_SPEED_MULTIPLIER * hourglassMultiplier;
             }
 
             if (!isPaused && !movingLeft && (movingRight || (randomNumber == 1))) {
-                ENEMY_X += (SCREEN_WIDTH / 2) * delta * ENEMY_X_SPEED_MULTIPLIER * hourglassMultiplier;
+                ENEMY_X += (SCREEN_WIDTH / 2f) * delta * ENEMY_X_SPEED_MULTIPLIER * hourglassMultiplier;
             }
 
         if(ENEMY_Y <= SCREEN_HEIGHT && enemyAnimation != null) {

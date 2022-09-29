@@ -382,7 +382,7 @@ public class MainGame extends GameElements implements Screen{
                 }
 
 
-                if (score >= 1000) {
+                if (score >= 2000) {
                     addLaserTraps();
                     laserTrapsSpawning = true;
                 }
@@ -750,20 +750,20 @@ public class MainGame extends GameElements implements Screen{
         if (resumeCountdownTimer >= -1) {
             if (resumeCountdownTimer < -0.66f) {
                 gl.setText(countdownFont, "3");
-                countdownFont.draw(game.batch, "3", (SCREEN_WIDTH - gl.width) / 2, SCREEN_HEIGHT / 2 + gl.height);
+                countdownFont.draw(game.batch, "3", (SCREEN_WIDTH - gl.width) / 2, SCREEN_HEIGHT / 2f + gl.height);
 
             } else if (resumeCountdownTimer <= -0.33) {
                 gl.setText(countdownFont, "2", Color.WHITE, SCREEN_WIDTH, Align.center, true);
-                countdownFont.draw(game.batch, "2", (SCREEN_WIDTH - gl.width) / 2, SCREEN_HEIGHT / 2 + gl.height);
+                countdownFont.draw(game.batch, "2", (SCREEN_WIDTH - gl.width) / 2, SCREEN_HEIGHT / 2f + gl.height);
 
             } else if (resumeCountdownTimer < 0) {
                 gl.setText(countdownFont, "1", Color.WHITE, SCREEN_WIDTH, Align.center, true);
-                countdownFont.draw(game.batch, "1", (SCREEN_WIDTH - gl.width) / 2, SCREEN_HEIGHT / 2 + gl.height);
+                countdownFont.draw(game.batch, "1", (SCREEN_WIDTH - gl.width) / 2, SCREEN_HEIGHT / 2f + gl.height);
 
             } else {
                 if (resumeCountdownTimer < 0.25f) {
                     gl.setText(countdownFont, "GO", Color.WHITE, SCREEN_WIDTH, Align.center, true);
-                    countdownFont.draw(game.batch, "GO", (SCREEN_WIDTH - gl.width) / 2, SCREEN_HEIGHT / 2 + gl.height);
+                    countdownFont.draw(game.batch, "GO", (SCREEN_WIDTH - gl.width) / 2, SCREEN_HEIGHT / 2f + gl.height);
 
                 } else {
                     runResumeCountdown = false;
@@ -783,21 +783,21 @@ public class MainGame extends GameElements implements Screen{
 
         if (transitionDistTraveled <= totalTransitionDist/3) {
             gl.setText(countdownFont, "3", Color.WHITE, SCREEN_WIDTH, Align.center, true);
-            countdownFont.draw(game.batch, "3", (SCREEN_WIDTH - gl.width) / 2, SCREEN_HEIGHT / 2 + gl.height/2);
+            countdownFont.draw(game.batch, "3", (SCREEN_WIDTH - gl.width) / 2, SCREEN_HEIGHT / 2f + gl.height/2);
         }
         else if (transitionDistTraveled <= 2*totalTransitionDist/3) {
             gl.setText(countdownFont, "2", Color.WHITE, SCREEN_WIDTH, Align.center, true);
-            countdownFont.draw(game.batch, "2", (SCREEN_WIDTH - gl.width) / 2, SCREEN_HEIGHT / 2 + gl.height/2);
+            countdownFont.draw(game.batch, "2", (SCREEN_WIDTH - gl.width) / 2, SCREEN_HEIGHT / 2f + gl.height/2);
         }
         else if (transitionDistTraveled < totalTransitionDist) {
             gl.setText(countdownFont, "1", Color.WHITE, SCREEN_WIDTH, Align.center, true);
-            countdownFont.draw(game.batch, "1", (SCREEN_WIDTH - gl.width) / 2, SCREEN_HEIGHT / 2 + gl.height/2);
+            countdownFont.draw(game.batch, "1", (SCREEN_WIDTH - gl.width) / 2, SCREEN_HEIGHT / 2f + gl.height/2);
         }
         else if (transitionDistTraveled >= totalTransitionDist && SHIP_START_Y >= SHIP_Y) {
             if(countDownTimer < 0.25f) {
                 countDownTimer += deltaP;
                 gl.setText(countdownFont, "GO", Color.WHITE, SCREEN_WIDTH, Align.center, true);
-                countdownFont.draw(game.batch, "GO", (SCREEN_WIDTH - gl.width) / 2, SCREEN_HEIGHT / 2 + gl.height/2);
+                countdownFont.draw(game.batch, "GO", (SCREEN_WIDTH - gl.width) / 2, SCREEN_HEIGHT / 2f + gl.height/2);
             }
             isTransitionedIn = true;
             isTransitioningIn = false;
@@ -1092,7 +1092,7 @@ public class MainGame extends GameElements implements Screen{
 
                     enemyShipSpawnTimer = random.nextFloat() * (1.2f * maxEnemyShipSpawnTime - 1.2f * minEnemyShipSpawnTime) + 1.2f * minEnemyShipSpawnTime;
                 } else {
-                    enemy.create(ENEMY_SHIP_ID, WHITE_ID, 5, random.nextInt(((int) SCREEN_WIDTH - (int) ENEMY_SHIP_WIDTH)), ENEMY_SHIP_WIDTH, ENEMY_SHIP_HEIGHT,
+                    enemy.create(ENEMY_SHIP_ID, WHITE_ID, 5, random.nextInt((SCREEN_WIDTH - (int) ENEMY_SHIP_WIDTH)), ENEMY_SHIP_WIDTH, ENEMY_SHIP_HEIGHT,
                             0.75f + speedIncrease, 0.75f + speedIncrease, DEFAULT_FRAME_DURATION * 1.5f, enemyBulletDelay, whiteShipBulletThreshold,
                             false, hurtTimer, position, assets);
 
@@ -1109,7 +1109,7 @@ public class MainGame extends GameElements implements Screen{
             Enemy enemy = ep.obtain();
             laserTrapSpawnTimer = random.nextFloat() * (maxLaserSpawnTime - minLaserSpawnTime) + minLaserSpawnTime;
 
-            enemy.create(LASER_TRAP_ID, random.nextInt(((int)SCREEN_WIDTH - (int)LASER_TRAP_H_WIDTH)), LASER_TRAP_H_WIDTH, LASER_TRAP_H_HEIGHT,
+            enemy.create(LASER_TRAP_ID, random.nextInt((SCREEN_WIDTH - (int)LASER_TRAP_H_WIDTH)), LASER_TRAP_H_WIDTH, LASER_TRAP_H_HEIGHT,
                     0, 0.65f + speedIncrease/1.5f, DEFAULT_FRAME_DURATION*1.5f, assets);
             enemies.add(enemy);
 
@@ -1123,7 +1123,7 @@ public class MainGame extends GameElements implements Screen{
 
         for (Enemy enemy : enemies) {
 
-            if((enemy.getEnemyY() + enemy.getHeight() < 0 || enemy.HP <= 0) && !enemiesToRemove.contains(enemy, true)){
+            if((enemy.getEnemyY() + enemy.getHeight() < 0 || enemy.HP <= 0 && enemy.getId() != LASER_TRAP_ID) && !enemiesToRemove.contains(enemy, true)){
                 enemy.position = null;
                 enemiesToRemove.add(enemy);
             }
@@ -1138,10 +1138,9 @@ public class MainGame extends GameElements implements Screen{
                         break;
                     case ENEMY_SHIP_ID:
                         enemy.render(enemyShipAnim, enemy, deltaP, isPaused , game.batch);
-
                         break;
                     case LASER_TRAP_ID:
-                         enemy.render(laserTrapHAnim, enemy, deltaP, isPaused , game.batch);
+                        enemy.render(laserTrapHAnim, enemy, deltaP, isPaused , game.batch);
                          break;
                 }
             }
@@ -1344,8 +1343,7 @@ public class MainGame extends GameElements implements Screen{
                 if(enemy.getId() != LASER_TRAP_ID){
                     ep.free(enemy);
                     enemies.removeValue(enemy, true);
-                }
-                if(enemy.getId() != LASER_TRAP_ID) {
+
                     Explosion explosion = exp.obtain();
                     explosion.create(enemy.getEnemyX(), enemy.getEnemyY() - enemy.getHeight() / 4f, enemy.getWidth(), assets);
                     explosionsToDelay.add(explosion);
