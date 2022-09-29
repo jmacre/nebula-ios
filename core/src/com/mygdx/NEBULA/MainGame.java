@@ -387,7 +387,6 @@ public class MainGame extends GameElements implements Screen{
                     laserTrapsSpawning = true;
                 }
 
-
                 enemyBulletCollision();
             }
 
