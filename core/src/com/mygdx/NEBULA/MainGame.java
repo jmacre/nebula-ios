@@ -1023,7 +1023,7 @@ public class MainGame extends GameElements implements Screen{
                 eyebatSpawnTimer = random.nextFloat() * (maxEyebatSpawnTime - minEyebatSpawnTime) + minEyebatSpawnTime;
             }
             else if(score <= 4000){
-                enemy.create(EYEBAT_ID, PURPLE_ID, 3, randomSpawnLocation, 1.4f * BLUE_EYEBAT_WIDTH, 1.4f * BLUE_EYEBAT_HEIGHT, 0.5f + speedIncrease / 1.75f, 0.25f + speedIncrease / 1.75f, (float)(DEFAULT_FRAME_DURATION * (2.5 - speedIncrease / 2)), false, hurtTimer, assets);
+                enemy.create(EYEBAT_ID, PURPLE_ID, 3, randomSpawnLocation, PURPLE_EYEBAT_WIDTH, PURPLE_EYEBAT_HEIGHT, 0.5f + speedIncrease / 1.75f, 0.25f + speedIncrease / 1.75f, (float)(DEFAULT_FRAME_DURATION * (2.5 - speedIncrease / 2)), false, hurtTimer, assets);
                 eyebatSpawnTimer = random.nextFloat() * (1.45f*maxEyebatSpawnTime - 1.45f*minEyebatSpawnTime) + 1.45f*minEyebatSpawnTime;
             }
             else{

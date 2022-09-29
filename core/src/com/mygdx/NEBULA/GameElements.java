@@ -53,6 +53,9 @@ public class GameElements {
     public static float RED_EYEBAT_WIDTH = GREEN_EYEBAT_WIDTH;
     public static float RED_EYEBAT_HEIGHT = GREEN_EYEBAT_HEIGHT;
 
+    public static float PURPLE_EYEBAT_WIDTH = BLUE_EYEBAT_WIDTH * (51f/38f);
+    public static float PURPLE_EYEBAT_HEIGHT = PURPLE_EYEBAT_WIDTH * (32f/51f);
+
     public static final float MIN_ENEMY_SHIP_SPAWN_TIME = 4.25f; //seconds
     public static final float MAX_ENEMY_SHIP_SPAWN_TIME = 7f;
 
