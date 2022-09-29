@@ -85,7 +85,7 @@ public class MainGame extends GameElements implements Screen{
 
     float shipHitTimer = -2.2f;
 
-    float hurtTimer = -0.1f;
+    float hurtTimer = -0.15f;
     float hurtDelayTimer = -.03f;
 
     float explosionDelayTimer = -.025f;
@@ -1095,7 +1095,7 @@ public class MainGame extends GameElements implements Screen{
                             0.75f + speedIncrease, 0.75f + speedIncrease, DEFAULT_FRAME_DURATION * 1.5f, enemyBulletDelay, whiteShipBulletThreshold,
                             false, hurtTimer, position, assets);
 
-                    enemyShipSpawnTimer = random.nextFloat() * (1.3f * maxEnemyShipSpawnTime - 1.3f * minEnemyShipSpawnTime) + 1.3f * minEnemyShipSpawnTime;
+                    enemyShipSpawnTimer = random.nextFloat() * (1.4f * maxEnemyShipSpawnTime - 1.4f * minEnemyShipSpawnTime) + 1.4f * minEnemyShipSpawnTime;
                 }
                 enemies.add(enemy);
             }
