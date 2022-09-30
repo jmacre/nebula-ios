@@ -317,20 +317,19 @@ public class Enemy extends GameElements implements Pool.Poolable{
             movingLeft = true;
             movingRight = false;
         }
+        if(position != null) {
 
-        if(ENEMY_Y <= SCREEN_HEIGHT - 6.5f*(ENEMY_HEIGHT) + (1.15f*ENEMY_HEIGHT * position-1)) {
-            shipMovingToPos = true;
+            if (ENEMY_Y <= SCREEN_HEIGHT - 6.5f * (ENEMY_HEIGHT) + (1.15f * ENEMY_HEIGHT * position - 1)) {
+                shipMovingToPos = true;
 
-            if (!isPaused && !movingRight && (movingLeft || (randomNumber == 0))) {
-                ENEMY_X -= (SCREEN_WIDTH / 4.5) * delta * ENEMY_X_SPEED_MULTIPLIER * hourglassMultiplier;
+                if (!isPaused && !movingRight && (movingLeft || (randomNumber == 0))) {
+                    ENEMY_X -= (SCREEN_WIDTH / 4.5) * delta * ENEMY_X_SPEED_MULTIPLIER * hourglassMultiplier;
+                } else if (!isPaused && !movingLeft && (movingRight || (randomNumber == 1))) {
+                    ENEMY_X += (SCREEN_WIDTH / 4.5) * delta * ENEMY_X_SPEED_MULTIPLIER * hourglassMultiplier;
+                }
+            } else {
+                shipMovingToPos = false;
             }
-
-            else if (!isPaused && !movingLeft && (movingRight || (randomNumber == 1))) {
-                ENEMY_X += (SCREEN_WIDTH / 4.5) * delta * ENEMY_X_SPEED_MULTIPLIER * hourglassMultiplier;
-            }
-        }
-        else{
-            shipMovingToPos = false;
         }
 
         if(ENEMY_Y <= SCREEN_HEIGHT && enemyAnimation != null) {

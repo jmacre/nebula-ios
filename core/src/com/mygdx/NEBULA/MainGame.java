@@ -679,14 +679,29 @@ public class MainGame extends GameElements implements Screen{
         if(enemies.size > 0)
             enemies.clear();
 
+        if(enemiesToRemove.size > 0)
+            enemiesToRemove.clear();
+
+        bp.clear();
+        ep.clear();
+        exp.clear();
+        ebp.clear();
+
         if(bullets.size > 0)
             bullets.clear();
+
+        if(bulletsToRemove.size > 0)
+            bulletsToRemove.clear();
 
         if(itemDrops.size > 0)
             itemDrops.clear();
 
         if(enemyBullets.size > 0)
             enemyBullets.clear();
+
+        if(enemyBulletsToRemove.size > 0){
+            enemyBulletsToRemove.clear();
+        }
 
         if(shipPositions.size> 0)
             shipPositions.clear();
@@ -1019,7 +1034,7 @@ public class MainGame extends GameElements implements Screen{
             }
             else if(score <= 3000){
                 enemy.create(EYEBAT_ID, RED_ID, 2, randomSpawnLocation, RED_EYEBAT_WIDTH, RED_EYEBAT_HEIGHT, 0.65f + speedIncrease / 1.5f, 0.3f + speedIncrease / 1.5f, (float) (DEFAULT_FRAME_DURATION * (1.5 - speedIncrease / 2)), false, hurtTimer, assets);
-                eyebatSpawnTimer = random.nextFloat() * (maxEyebatSpawnTime - minEyebatSpawnTime) + minEyebatSpawnTime;
+                eyebatSpawnTimer = random.nextFloat() * (1.1f*maxEyebatSpawnTime - 1.1f*minEyebatSpawnTime) + 1.1f*minEyebatSpawnTime;
             }
             else if(score <= 4000){
                 enemy.create(EYEBAT_ID, PURPLE_ID, 3, randomSpawnLocation, PURPLE_EYEBAT_WIDTH, PURPLE_EYEBAT_HEIGHT, 0.5f + speedIncrease / 1.75f, 0.25f + speedIncrease / 1.75f, (float)(DEFAULT_FRAME_DURATION * (2.5 - speedIncrease / 2)), false, hurtTimer, assets);
@@ -1123,7 +1138,6 @@ public class MainGame extends GameElements implements Screen{
         for (Enemy enemy : enemies) {
 
             if((enemy.getEnemyY() + enemy.getHeight() < 0 || enemy.HP <= 0 && enemy.getId() != LASER_TRAP_ID) && !enemiesToRemove.contains(enemy, true)){
-                enemy.position = null;
                 enemiesToRemove.add(enemy);
             }
 
@@ -1250,7 +1264,6 @@ public class MainGame extends GameElements implements Screen{
                         if (enemy.HP <= 0 && enemy.getId() != LASER_TRAP_ID) {
 
                             if(!enemiesToRemove.contains(enemy, true)) {
-                                enemy.position = null;
                                 enemiesToRemove.add(enemy);
                             }
 
@@ -1411,9 +1424,6 @@ public class MainGame extends GameElements implements Screen{
                         Gdx.input.vibrate(200);
 
                         for(Enemy enemy : enemies) {
-                            if (enemy.getId() == ENEMY_SHIP_ID) {
-                                enemy.position = null;
-                            }
                             if (!enemiesToRemove.contains(enemy, true)) {
                                 enemiesToRemove.add(enemy);
                             }
