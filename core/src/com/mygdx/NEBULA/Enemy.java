@@ -54,7 +54,7 @@ public class Enemy extends GameElements implements Pool.Poolable{
     float hurtTimer;
     float hourglassMultiplier = 1;
 
-    int HP;
+    float HP;
     private int id;
     private int colorId;
 
@@ -88,7 +88,7 @@ public class Enemy extends GameElements implements Pool.Poolable{
     }
 
     //EYEBAT CONSTRUCTOR
-    public void create(int id, int colorId, int HP, float ENEMY_X, float ENEMY_WIDTH, float ENEMY_HEIGHT, float xSpeedMult, float ySpeedMult, float frameDuration, boolean hurt, float hurtTimer, Assets assets) {
+    public void create(int id, int colorId, float HP, float ENEMY_X, float ENEMY_WIDTH, float ENEMY_HEIGHT, float xSpeedMult, float ySpeedMult, float frameDuration, boolean hurt, float hurtTimer, Assets assets) {
         this.id = id;
         this.colorId = colorId;
         this.HP = HP;
@@ -131,7 +131,7 @@ public class Enemy extends GameElements implements Pool.Poolable{
         enemyAnimation.setPlayMode(Animation.PlayMode.LOOP);
     }
     //SHIP CONSTRUCTOR
-    public void create (int id, int colorId, int HP, float ENEMY_X, float ENEMY_WIDTH, float ENEMY_HEIGHT, float xSpeedMult, float ySpeedMult, float frameDuration, float bulletDelay, float bulletThreshold, boolean hurt, float hurtTimer, int position, Assets assets) {
+    public void create (int id, int colorId, float HP, float ENEMY_X, float ENEMY_WIDTH, float ENEMY_HEIGHT, float xSpeedMult, float ySpeedMult, float frameDuration, float bulletDelay, float bulletThreshold, boolean hurt, float hurtTimer, int position, Assets assets) {
         this.id = id;
         this.colorId = colorId;
         this.HP = HP;
@@ -381,7 +381,7 @@ public class Enemy extends GameElements implements Pool.Poolable{
     public int getId(){
         return id;
     }
-    public int getHP(){
+    public float getHP(){
         return HP;
     }
 

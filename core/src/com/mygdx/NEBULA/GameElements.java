@@ -38,7 +38,7 @@ public class GameElements {
     public static float SHIP_X = (SCREEN_WIDTH/2f - SHIP_WIDTH/2);
     public static float CURRENT_SHIP_X =  (SCREEN_WIDTH/2f - SHIP_WIDTH/2);;
 
-    public static float SHIP_Y = 0.1f*SCREEN_HEIGHT;
+    public static float SHIP_Y = 0.15f*SCREEN_HEIGHT;
     public float SHIP_START_Y = - 3*SHIP_HEIGHT;
 
     public static final float MIN_EYEBAT_SPAWN_TIME = 0.5f; //seconds

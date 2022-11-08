@@ -94,7 +94,7 @@ public class MainGame extends GameElements implements Screen{
     float resumeCountdownTimer = -1.5f;
     float playerPosition = SHIP_X;
 
-    float bulletThreshold = 0.4f;
+    float bulletThreshold = 0f;
     float musicVolume = 0.35f;
     float musicVolumeTemp;
 
@@ -148,7 +148,9 @@ public class MainGame extends GameElements implements Screen{
     boolean playerHitSoundPlayed = false;
     boolean isMainMusicPlaying = false;
     boolean isMissile = false;
+
     boolean isRapidFire = false;
+
     boolean isHourglass = false;
     boolean soundLoaded;
     boolean isEnemyHurt;
@@ -213,7 +215,6 @@ public class MainGame extends GameElements implements Screen{
         this.assets = assets;
         gameInterface = new GameInterface(assets);
         this.background = background;
-
     }
 
     @Override
@@ -241,6 +242,7 @@ public class MainGame extends GameElements implements Screen{
         mainMusic = assets.assetManager.get(Assets.main_theme, Music.class);
 
         pauseSound = assets.assetManager.get(Assets.pause_sound, Sound.class);
+
         hitSound = assets.assetManager.get(Assets.hit_sound, Sound.class);
         bulletSound = assets.assetManager.get(Assets.bullet_sound, Sound.class);
         missileSound = assets.assetManager.get(Assets.missile_sound, Sound.class);
@@ -342,8 +344,10 @@ public class MainGame extends GameElements implements Screen{
                     }
                 }
 
-                if (isAlive)
+                if (isAlive) {
+                    enemyBulletCollision();
                     runBulletTimers(); //Adds bullets/bullet sounds
+                }
             }
         }
 
@@ -387,7 +391,6 @@ public class MainGame extends GameElements implements Screen{
                     laserTrapsSpawning = true;
                 }
 
-                enemyBulletCollision();
             }
 
             if (isAlive) {
@@ -638,6 +641,8 @@ public class MainGame extends GameElements implements Screen{
         countDownTimer = 0f;
 
         bulletTimer = -2f;
+        bulletThreshold = 0;
+
         speedIncrease = 0f;
 
         minEnemyShipSpawnTime = MIN_ENEMY_SHIP_SPAWN_TIME;
@@ -898,12 +903,17 @@ public class MainGame extends GameElements implements Screen{
 
     public void runBulletTimers(){
         if(isMissile) {
-            bulletThreshold = 0.55f;
+            if(missileUsed){
+                bulletThreshold = 0.3f;
+            }
+            else {
+                bulletThreshold = 0.55f;
+            }
         }
         else if(isRapidFire) {
-            bulletThreshold = 0.225f;
+            bulletThreshold = 0.1f;
         }
-        else {
+        else if(!bullets.isEmpty()) {
             bulletThreshold = 0.4f;
         }
 
@@ -916,6 +926,7 @@ public class MainGame extends GameElements implements Screen{
                            missileSound.play(0.1f);
                        }
                        else {
+                           bulletSound.stop();
                            bulletSound.play(0.05f);
                        }
                    }
@@ -923,6 +934,9 @@ public class MainGame extends GameElements implements Screen{
             }
             if (!isShipLeaving && SHIP_START_Y >= SHIP_Y && isAlive) {
                 addBullets();
+            }
+            if(bullets.isEmpty() && !isMissile && !isRapidFire) { // allows bullets to fire immediately after transitioning in
+                bulletThreshold = 0;
             }
             bulletTimer -= bulletThreshold;
         }
@@ -1024,7 +1038,7 @@ public class MainGame extends GameElements implements Screen{
             randomSpawnLocation = random.nextInt((int) ((int) SCREEN_WIDTH- BLUE_EYEBAT_WIDTH));
 
             if(score <= 1000){
-                enemy.create(EYEBAT_ID, BLUE_ID, 1, randomSpawnLocation, BLUE_EYEBAT_WIDTH, BLUE_EYEBAT_HEIGHT, 0.35f + speedIncrease / 1.5f, 0.9f + speedIncrease / 1.5f, (float) (DEFAULT_FRAME_DURATION * (1.25 - speedIncrease / 2)), false, hurtTimer, assets);
+                enemy.create(EYEBAT_ID, BLUE_ID, 1, randomSpawnLocation, BLUE_EYEBAT_WIDTH, BLUE_EYEBAT_HEIGHT, 0.35f + speedIncrease / 1.5f, 0.8f + speedIncrease / 1.5f, (float) (DEFAULT_FRAME_DURATION * (1.25 - speedIncrease / 2)), false, hurtTimer, assets);
                 eyebatSpawnTimer = random.nextFloat() * (maxEyebatSpawnTime - minEyebatSpawnTime) + minEyebatSpawnTime;
 
             }
@@ -1240,17 +1254,24 @@ public class MainGame extends GameElements implements Screen{
 
                         if (!bullet.isMissile() && enemy.getId() != LASER_TRAP_ID && !bulletsToRemove.contains(bullet, true)) {
                             bulletsToRemove.add(bullet);
+
                         }
 
                         if (bullet.isMissile() && bullet.getBulletY() + Bullet.MISSILE_HEIGHT < SCREEN_HEIGHT && enemy.getId() != LASER_TRAP_ID) {
                             enemy.HP = 0;
-                            if (soundEnabled)
+                            if (soundEnabled) {
                                 playHitSound = true;
+                            }
                         }
 
                         if (!bullet.isMissile() && enemy.getId() != LASER_TRAP_ID) {
-                            enemy.HP -= 1;
-                            if (soundEnabled && enemy.getHP() == 0) {
+                            if(bullet.isRapidFire()){
+                                enemy.HP -= 0.5f;
+                            }
+                            else {
+                                enemy.HP -= 1;
+                            }
+                            if (soundEnabled && enemy.getHP() <= 0) {
                                 playHitSound = true;
 
                             }
@@ -1348,6 +1369,9 @@ public class MainGame extends GameElements implements Screen{
             &&(Collision.isColliding(enemy.getCollision(), player.getCollision()))){
 
                 if(soundEnabled && !playerHitSoundPlayed){
+//                    hitSound.stop();
+//                    bulletSound.stop();
+
                     hitSound.play(0.2f);
                     playerHitSoundPlayed = true;
                 }
@@ -1379,6 +1403,9 @@ public class MainGame extends GameElements implements Screen{
             && Collision.isColliding(enemyBullet.getCollision(), player.getCollision())){
 
                 if(soundEnabled){
+//                    hitSound.stop();
+//                    bulletSound.stop();
+
                     hitSound.play(0.2f);
                 }
                 if(!enemyBulletsToRemove.contains(enemyBullet, true)) {
@@ -1458,6 +1485,7 @@ public class MainGame extends GameElements implements Screen{
 
                     case RAPID_FIRE_ID:
                         isRapidFire = true;
+
                         if (soundEnabled)
                             heartSound.play(0.15f);
 
@@ -1543,6 +1571,17 @@ public class MainGame extends GameElements implements Screen{
         }
     }
 
+    public void runRapidFireTimer(){
+        if(rapidFireTimer < 0) {
+            rapidFireTimer += deltaP;
+        }
+        else{
+            isRapidFire = false;
+            rapidFireTimer = RAPID_FIRE_TIMER;
+
+        }
+    }
+
     public void runMissileUsedTimer(){ //missile item drop
         if(missileUsedTimer < 0){
             missileUsedTimer += deltaP;
@@ -1560,16 +1599,6 @@ public class MainGame extends GameElements implements Screen{
         else{
             isMissile = false;
             missileTimer = MISSILE_TIMER;
-        }
-    }
-
-    public void runRapidFireTimer(){
-        if(rapidFireTimer < 0) {
-            rapidFireTimer += deltaP;
-        }
-        else{
-            isRapidFire = false;
-            rapidFireTimer = RAPID_FIRE_TIMER;
         }
     }
 

@@ -24,6 +24,8 @@ public class Bullet extends GameElements {
     float stateTime = 0f;
 
     private boolean isMissile = false;
+    private boolean isRapidFire = false;
+
     Collision rect;
 
     public Bullet(){
@@ -80,10 +82,14 @@ public class Bullet extends GameElements {
     public boolean isMissile(){
         return isMissile;
     }
+    public boolean isRapidFire() {
+        return isRapidFire;
+    }
     public void create(float BULLET_X, boolean isMissile, boolean isRapidFire, Assets assets){
         this.BULLET_X = BULLET_X;
         this.BULLET_Y = SHIP_Y + SHIP_HEIGHT - BULLET_HEIGHT/2f;
         this.isMissile = isMissile;
+        this.isRapidFire = isRapidFire;
 
         if(isMissile) {
             this.rect = new Collision(BULLET_X - MISSILE_WIDTH, BULLET_Y, MISSILE_WIDTH, MISSILE_HEIGHT);

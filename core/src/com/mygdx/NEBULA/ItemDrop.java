@@ -22,7 +22,7 @@ public class ItemDrop {
     public static final float MAX_ITEM_SPAWN_TIME = 25f;
 
     public static float MISSILE_TIMER = -9f;
-    public static float RAPID_FIRE_TIMER = -9f;
+    public static float RAPID_FIRE_TIMER = -12f;
     public static float HOURGLASS_TIMER = -4.5f;
     public static float HOURGLASS_SPEED_MULTIPLIER = 0.25f;
 
