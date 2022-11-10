@@ -25,7 +25,7 @@ public class Enemy extends GameElements implements Pool.Poolable{
     public static final int LASER_TRAP_ID = 2;
 
     Animation<TextureRegion> enemyAnimation;
-    ShaderProgram shader = new ShaderProgram(Gdx.files.internal("shaders/hit_blink.vsh"), Gdx.files.internal("shaders/hit_blink.fsh"));
+    ShaderProgram shader = new ShaderProgram(Gdx.files.internal("shaders/enemy_blink.vsh"), Gdx.files.internal("shaders/enemy_blink.fsh"));
 
     private Sprite enemySheet;
     public static final float SPEED = SCREEN_HEIGHT/1.56f;

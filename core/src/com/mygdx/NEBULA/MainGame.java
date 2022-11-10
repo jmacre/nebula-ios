@@ -9,8 +9,10 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
@@ -83,7 +85,8 @@ public class MainGame extends GameElements implements Screen{
 
     float moveSpeed = 20f;
 
-    float shipHitTimer = -2.2f;
+    float shipHitTimer = -2f;
+    float shipBlinkingTimer = -0.2f;
 
     float hurtTimer = -0.15f;
     float hurtDelayTimer = -.03f;
@@ -259,10 +262,8 @@ public class MainGame extends GameElements implements Screen{
         whiteFlash.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
 
         shipSS = new Sprite(assets.assetManager.get(Assets.ship_ss, Texture.class));
-        shipBlinkingSS = new Sprite(assets.assetManager.get(Assets.ship_blinking_ss, Texture.class));
 
         shipAnimation = Anim.createAnimation(shipSS, 4, DEFAULT_FRAME_DURATION*1.5f);
-        shipBlinkingAnimation = Anim.createAnimation(shipBlinkingSS, 4, (DEFAULT_FRAME_DURATION*1.5f));
 
         textParameter.size = SCREEN_WIDTH/40;
         menuScoreFont = generator.generateFont(textParameter);
@@ -882,7 +883,7 @@ public class MainGame extends GameElements implements Screen{
         }
 
         else if(!isTransitioningOut){
-            shipAnim.drawAnim(shipBlinkingAnimation, stateTime, SHIP_X, SHIP_START_Y, SHIP_WIDTH, SHIP_HEIGHT,   true, game.batch,true);
+            runShipBlinking();
         }
 
         if(isTransitionedIn) {
@@ -898,6 +899,19 @@ public class MainGame extends GameElements implements Screen{
                 Main.scoreFont.draw(game.batch, gl, SCORE_X, SCREEN_HEIGHT - gl.height);
             }
             updatingScore = false;
+        }
+    }
+    public void runShipBlinking(){
+        shipBlinkingTimer += deltaP;
+
+        if(shipBlinkingTimer < 0){
+            shipAnim.drawAnim(shipAnimation, stateTime, SHIP_X, SHIP_START_Y, SHIP_WIDTH, SHIP_HEIGHT, true, game.batch, true);
+        }
+        else if (shipBlinkingTimer < 0.2){
+            shipAnim.drawAnim(shipAnimation, stateTime, SHIP_X, SHIP_START_Y, SHIP_WIDTH, SHIP_HEIGHT, true, game.batch);
+        }
+        else{
+            shipBlinkingTimer = -0.2f;
         }
     }
 
@@ -1631,7 +1645,7 @@ public class MainGame extends GameElements implements Screen{
         else{
             justHit = false;
             playerHitSoundPlayed = false;
-            shipHitTimer = -2.2f;
+            shipHitTimer = -2f;
         }
     }
 
