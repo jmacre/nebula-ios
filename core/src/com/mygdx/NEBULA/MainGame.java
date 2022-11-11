@@ -159,7 +159,7 @@ public class MainGame extends GameElements implements Screen{
     Main game;
 
     int score, prevScore;
-    int randomDrop, randomColor, randomSpawnLocation;
+    int randomDrop, randomSpawnLocation;
     int lastItemDrop;
     int playButtonTapVal, yesButtonTapVal = 0, transitionInTapVal = 0;
 
@@ -449,7 +449,7 @@ public class MainGame extends GameElements implements Screen{
             }
 
             //Enables ship movement
-            if (!isShipLeaving && isAlive && inputProcessor.getTapCount() != playButtonTapVal && (inputProcessor.getTapCount() != yesButtonTapVal)) {
+            if (!isShipLeaving && isAlive && inputProcessor.getTapCount() != playButtonTapVal && (inputProcessor.getTapCount() != yesButtonTapVal) && (inputProcessor.getTapCount() > transitionInTapVal || Gdx.input.isTouched())) {
                 movePlayer();
             }
         }
@@ -1061,7 +1061,7 @@ public class MainGame extends GameElements implements Screen{
                 eyebatSpawnTimer = random.nextFloat() * (1.45f*maxEyebatSpawnTime - 1.45f*minEyebatSpawnTime) + 1.45f*minEyebatSpawnTime;
             }
             else{
-                enemy.create(EYEBAT_ID, WHITE_ID, 4, randomSpawnLocation, WHITE_EYEBAT_WIDTH, WHITE_EYEBAT_HEIGHT, 0.4f + speedIncrease / 1.75f, 0.2f + speedIncrease / 1.75f, (float)(DEFAULT_FRAME_DURATION * (2.0 - speedIncrease / 2)), false, hurtTimer, assets);
+                enemy.create(EYEBAT_ID, WHITE_ID, 4, randomSpawnLocation, WHITE_EYEBAT_WIDTH, WHITE_EYEBAT_HEIGHT, 0.3f + speedIncrease / 1.75f, 0.2f + speedIncrease / 1.75f, (float)(DEFAULT_FRAME_DURATION * (2.0 - speedIncrease / 2)), false, hurtTimer, assets);
                 eyebatSpawnTimer = random.nextFloat() * (1.65f*maxEyebatSpawnTime - 1.65f*minEyebatSpawnTime) + 1.65f*minEyebatSpawnTime;
             }
             enemies.add(enemy);
@@ -1156,9 +1156,7 @@ public class MainGame extends GameElements implements Screen{
         enemiesToRemove.clear();
 
         for (Enemy enemy : enemies) {
-
             if(isAlive) {
-
                 enemy.update(deltaP, enemy, isHourglass);
 
                 switch (enemy.getId()) {
@@ -1250,13 +1248,21 @@ public class MainGame extends GameElements implements Screen{
 //            sr.end();
 //            game.batch.begin();
 
-
                 if (enemy.getEnemyY() < SCREEN_HEIGHT) {
+                    if (enemy.getEnemyY() + enemy.getHeight() < 0) {
+                        if (!enemiesToRemove.contains(enemy, true)) {
+                            enemiesToRemove.add(enemy);
+                        }
+                    }
+
                     if ((Collision.isNearby(bullet.getCollision(), enemy.getCollision())
                     && Collision.isColliding(bullet.getCollision(), enemy.getCollision())) || bombUsed) {
 
-                        if(bombUsed){
+                        if(bombUsed && enemy.getId() != LASER_TRAP_ID){
                             enemy.HP = 0;
+                        }
+                        else if (bombUsed && enemy.getId() == LASER_TRAP_ID && !enemiesToRemove.contains(enemy, true)){
+                            enemiesToRemove.add(enemy);
                         }
 
                         if (!bullet.isMissile() && enemy.getId() != LASER_TRAP_ID && !bulletsToRemove.contains(bullet, true)) {
@@ -1279,14 +1285,12 @@ public class MainGame extends GameElements implements Screen{
                             }
                             if (soundEnabled && enemy.getHP() <= 0) {
                                 playHitSound = true;
-
                             }
                             if(enemy.HP > 0){
                                 isEnemyHurt = true;
                                 hurtEnemies.add(enemy);
                             }
                         }
-
 
                         if (enemy.HP <= 0 && enemy.getId() != LASER_TRAP_ID) {
 
@@ -1311,6 +1315,7 @@ public class MainGame extends GameElements implements Screen{
                                     case GREEN_ID:
                                         score += 10;
                                         break;
+
                                     case PURPLE_ID:
                                     case WHITE_ID:
                                         score += 15;
