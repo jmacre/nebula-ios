@@ -7,25 +7,17 @@ import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.FloatArray;
 
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.viewport.FillViewport;
-import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Random;
 
 import static com.mygdx.NEBULA.EnemyBullet.ENEMY_BULLET_HEIGHT;
@@ -346,7 +338,7 @@ public class MainGame extends GameElements implements Screen{
                 }
 
                 if (isAlive) {
-                    enemyBulletCollision();
+                    enemyDamaged();
                     runBulletTimers(); //Adds bullets/bullet sounds
                 }
             }
@@ -1165,10 +1157,6 @@ public class MainGame extends GameElements implements Screen{
 
         for (Enemy enemy : enemies) {
 
-            if((enemy.getEnemyY() + enemy.getHeight() < 0 || enemy.HP <= 0 && enemy.getId() != LASER_TRAP_ID) && !enemiesToRemove.contains(enemy, true)){
-                enemiesToRemove.add(enemy);
-            }
-
             if(isAlive) {
 
                 enemy.update(deltaP, enemy, isHourglass);
@@ -1250,9 +1238,11 @@ public class MainGame extends GameElements implements Screen{
         }
     }
 
-    public void enemyBulletCollision(){
-        boolean pointsEarned = false;
-        for(Bullet bullet : bullets) {
+    public void enemyDamaged(){
+        for (Enemy enemy : enemies) {
+            boolean pointsEarned = false;
+
+            for(Bullet bullet : bullets) {
 
 //            game.batch.end();
 //            sr.begin((ShapeRenderer.ShapeType.Line));
@@ -1260,15 +1250,17 @@ public class MainGame extends GameElements implements Screen{
 //            sr.end();
 //            game.batch.begin();
 
-            for (Enemy enemy : enemies) {
 
                 if (enemy.getEnemyY() < SCREEN_HEIGHT) {
                     if ((Collision.isNearby(bullet.getCollision(), enemy.getCollision())
-                    && Collision.isColliding(bullet.getCollision(), enemy.getCollision()))) {
+                    && Collision.isColliding(bullet.getCollision(), enemy.getCollision())) || bombUsed) {
+
+                        if(bombUsed){
+                            enemy.HP = 0;
+                        }
 
                         if (!bullet.isMissile() && enemy.getId() != LASER_TRAP_ID && !bulletsToRemove.contains(bullet, true)) {
                             bulletsToRemove.add(bullet);
-
                         }
 
                         if (bullet.isMissile() && bullet.getBulletY() + Bullet.MISSILE_HEIGHT < SCREEN_HEIGHT && enemy.getId() != LASER_TRAP_ID) {
@@ -1447,7 +1439,7 @@ public class MainGame extends GameElements implements Screen{
 
                 switch (itemDrop.getItemId()) {
                     case HEART_ID:
-                        score += 50;
+                        score += 25;
 
                         if (soundEnabled)
                             heartSound.play(0.15f);
@@ -1465,9 +1457,6 @@ public class MainGame extends GameElements implements Screen{
                         Gdx.input.vibrate(200);
 
                         for(Enemy enemy : enemies) {
-                            if (!enemiesToRemove.contains(enemy, true)) {
-                                enemiesToRemove.add(enemy);
-                            }
 
                             Explosion explosion = exp.obtain();
                             if (enemy.getId() != ENEMY_SHIP_ID) {

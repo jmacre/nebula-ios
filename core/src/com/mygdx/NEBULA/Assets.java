@@ -59,7 +59,6 @@ public class Assets implements Disposable {
 
     public static final String bullet_yellow = "weapons/bullet_yellow.png";
     public static final String bullet_red = "weapons/bullet_red.png";
-    public static final String bullet_purple = "weapons/bullet_purple.png";
     public static final String bullet_blue = "weapons/bullet_blue.png";
     public static final String missile_ss = "weapons/missile_ss.png";
 
@@ -79,8 +78,7 @@ public class Assets implements Disposable {
     public static final String enemy_ship_purple_ss = "char/enemy_ship_purple_ss.png";
     public static final String enemy_ship_white_ss = "char/enemy_ship_white_ss.png";
 
-    public static final String ship_ss = "char/main_ship_ss.png";
-    public static final String ship_blinking_ss = "char/ship_blinking_ss.png";
+    public static final String ship_ss = "char/main_ship_black_ss.png";
     public static final String explosion = "misc/explosion_ss.png";
     public static final String pause_menu_back = "ui/menu_back.png";
 
@@ -138,7 +136,6 @@ public class Assets implements Disposable {
 
         assetManager.load(bullet_yellow, Texture.class);
         assetManager.load(bullet_red, Texture.class);
-        assetManager.load(bullet_purple, Texture.class);
         assetManager.load(bullet_blue, Texture.class);
         assetManager.load(missile_ss, Texture.class);
 
@@ -167,7 +164,6 @@ public class Assets implements Disposable {
 
         assetManager.load(laser_trap_h_ss, Texture.class);
         assetManager.load(ship_ss, Texture.class);
-        assetManager.load(ship_blinking_ss, Texture.class);
         assetManager.load(explosion, Texture.class);
 
         assetManager.load(heart_item_ss, Texture.class);
@@ -227,7 +223,6 @@ public class Assets implements Disposable {
 
         assetManager.unload(bullet_yellow);
         assetManager.unload(bullet_red);
-        assetManager.unload(bullet_purple);
         assetManager.unload(bullet_blue);
         assetManager.unload(missile_ss);
 
@@ -251,7 +246,6 @@ public class Assets implements Disposable {
         assetManager.unload(enemy_ship_green_ss);
         assetManager.unload(laser_trap_h_ss);
         assetManager.unload(ship_ss);
-        assetManager.unload(ship_blinking_ss);
         assetManager.unload(explosion);
         assetManager.unload(heart_item_ss);
         assetManager.unload(bomb_ss);
