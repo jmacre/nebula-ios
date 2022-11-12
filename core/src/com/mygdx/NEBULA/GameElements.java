@@ -140,6 +140,16 @@ public class GameElements {
     public static float SHOP_BUTTON_Y = .3f * (.75f*START_BUTTON_Y) - START_BUTTON_HEIGHT + SCREEN_HEIGHT;
     public static float SHOP_BUTTON_Y_TRANSITIONED = .3f* (.7f*START_BUTTON_Y) - START_BUTTON_HEIGHT;
 
+    public static final float LEFT_ARROW_WIDTH = SHOP_BACK_WIDTH / 4.5f;
+    public static final float LEFT_ARROW_HEIGHT = LEFT_ARROW_WIDTH * (64f/88);
+    public static final float LEFT_ARROW_Y = SHOP_BACK_Y * 1.05f;
+    public static final float LEFT_ARROW_X = SHOP_BACK_X + SHOP_BACK_Y * .05f;
+
+    public static final float RIGHT_ARROW_WIDTH = LEFT_ARROW_WIDTH;
+    public static final float RIGHT_ARROW_HEIGHT = LEFT_ARROW_HEIGHT;
+    public static final float RIGHT_ARROW_Y = SHOP_BACK_Y * 1.05f;
+    public static final float RIGHT_ARROW_X = SHOP_BACK_X + SHOP_BACK_WIDTH - SHOP_BACK_Y * .05f - RIGHT_ARROW_WIDTH;
+
     public static final float TS_SOUND_BUTTON_WIDTH = SCREEN_WIDTH / 10f;
     public static final float TS_SOUND_BUTTON_HEIGHT = TS_SOUND_BUTTON_WIDTH;
     public static final float TS_SOUND_BUTTON_X = SCREEN_WIDTH - SCREEN_WIDTH / 8f;

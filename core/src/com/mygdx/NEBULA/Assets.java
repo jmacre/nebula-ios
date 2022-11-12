@@ -32,7 +32,6 @@ public class Assets implements Disposable {
     public static final String start_button_active = "ui/start_button_active.png";
     public static final String start_button_active_clear = "ui/start_button_active_clear.png";
 
-
     public static final String shop_button_inactive = "ui/shop_button_inactive.png";
     public static final String shop_button_inactive_clear = "ui/shop_button_inactive_clear.png";
     public static final String shop_button_active = "ui/shop_button_active.png";
@@ -56,6 +55,11 @@ public class Assets implements Disposable {
     public static final String sound_on_button_active = "ui/sound_on_button_active.png";
     public static final String sound_off_button_ts = "ui/sound_off_button_ts.png";
     public static final String sound_on_button_ts = "ui/sound_on_button_ts.png";
+
+    public static final String right_arrow_active = "ui/right_arrow_active.png";
+    public static final String left_arrow_active = "ui/left_arrow_active.png";
+    public static final String right_arrow_inactive = "ui/right_arrow_inactive.png";
+    public static final String left_arrow_inactive = "ui/left_arrow_inactive.png";
 
     public static final String bullet_yellow = "weapons/bullet_yellow.png";
     public static final String bullet_red = "weapons/bullet_red.png";
@@ -179,6 +183,11 @@ public class Assets implements Disposable {
         assetManager.load(no_button_active, Texture.class);
         assetManager.load(yes_button_inactive, Texture.class);
         assetManager.load(no_button_inactive, Texture.class);
+
+        assetManager.load(right_arrow_active, Texture.class);
+        assetManager.load(right_arrow_inactive, Texture.class);
+        assetManager.load(left_arrow_active, Texture.class);
+        assetManager.load(left_arrow_inactive, Texture.class);
 //        assetManager.load(upgrade_button, Texture.class);
 
         assetManager.load(hit_sound, Sound.class);
@@ -220,6 +229,11 @@ public class Assets implements Disposable {
         assetManager.unload(play_button_inactive);
         assetManager.unload(replay_button_inactive);
         assetManager.unload(home_button_inactive);
+
+        assetManager.unload(right_arrow_active);
+        assetManager.unload(right_arrow_inactive);
+        assetManager.unload(left_arrow_active);
+        assetManager.unload(left_arrow_inactive);
 
         assetManager.unload(bullet_yellow);
         assetManager.unload(bullet_red);

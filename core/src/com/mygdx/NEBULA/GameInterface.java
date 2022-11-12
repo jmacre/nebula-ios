@@ -2,7 +2,6 @@ package com.mygdx.NEBULA;
 
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -10,6 +9,9 @@ import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.utils.Align;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class GameInterface extends GameElements{
     Assets assets;
@@ -20,7 +22,8 @@ public class GameInterface extends GameElements{
     Button startButton;
 
     Button shopButton;
-    Button upgradeButton;
+    Button leftArrow;
+    Button rightArrow;
 
     Sprite titleTexture;
     Button tsSoundButton;
@@ -52,10 +55,12 @@ public class GameInterface extends GameElements{
         shopButton = new Button(assets.assetManager.get(Assets.shop_button_inactive_clear, Texture.class), SHOP_BUTTON_X, SHOP_BUTTON_Y_TRANSITIONED, SHOP_BUTTON_WIDTH, SHOP_BUTTON_HEIGHT);
         soundButton = new Button(assets.assetManager.get(Assets.sound_on_button_active, Texture.class), SOUND_BUTTON_X, SOUND_BUTTON_Y, SOUND_BUTTON_WIDTH, SOUND_BUTTON_HEIGHT);
 
+        leftArrow = new Button(assets.assetManager.get(Assets.left_arrow_inactive, Texture.class), LEFT_ARROW_X, LEFT_ARROW_Y, LEFT_ARROW_WIDTH, LEFT_ARROW_HEIGHT);
+        rightArrow = new Button(assets.assetManager.get(Assets.right_arrow_inactive, Texture.class), RIGHT_ARROW_X, RIGHT_ARROW_Y, RIGHT_ARROW_WIDTH, RIGHT_ARROW_HEIGHT);
+
         xButton = new Button(assets.assetManager.get(Assets.x_button, Texture.class), X_BUTTON_X, X_BUTTON_Y, X_BUTTON_WIDTH, X_BUTTON_HEIGHT, X_BUTTON_WIDTH/2, X_BUTTON_HEIGHT/2);
         yesButton = new Button(assets.assetManager.get(Assets.yes_button_inactive, Texture.class), YES_BUTTON_X, YES_BUTTON_Y, YES_BUTTON_WIDTH, YES_BUTTON_HEIGHT);
         noButton = new Button(assets.assetManager.get(Assets.no_button_inactive, Texture.class), NO_BUTTON_X, NO_BUTTON_Y, NO_BUTTON_WIDTH, NO_BUTTON_HEIGHT);
-//        upgradeButton = new Button(assets.assetManager.get(Assets.upgrade_button, Texture.class), 0,0,0,0);
 
         textParameter.size = SCREEN_WIDTH/14;
         storeFont = generator.generateFont(textParameter);
@@ -284,30 +289,37 @@ public class GameInterface extends GameElements{
         }
         return homeButton.getReleased();
     }
+    public void checkForLeftArrowTap(Main game, boolean soundEnabled){
+        if(leftArrow.getTappedBefore()){
+            leftArrow.setTexture(assets.assetManager.get(Assets.left_arrow_active, Texture.class));
+        }
+        else{
+            leftArrow.setTexture(assets.assetManager.get(Assets.left_arrow_inactive, Texture.class));
+        }
+        if(soundEnabled && leftArrow.getReleased())
+            game.playSound.play(0.2f);
+    }
+
+    public void checkForRightArrowTap(Main game, boolean soundEnabled){
+        if(rightArrow.getTappedBefore()){
+            rightArrow.setTexture(assets.assetManager.get(Assets.right_arrow_active, Texture.class));
+        }
+        else{
+            rightArrow.setTexture(assets.assetManager.get(Assets.right_arrow_inactive, Texture.class));
+        }
+        if(soundEnabled && rightArrow.getReleased())
+            game.playSound.play(0.2f);
+    }
 
     public void drawShopScreen(Main game, boolean soundEnabled){
-//        List<Cell> cellList = new Array<>();
-
-//        cellList.add(new Cell(upgradeButton, UPGRADE_DIM_WIDTH/UPGRADE_DIM_HEIGHT));
-
-
-//        cellList.add(new Cell(shopButton.getTexture()));
-//        cellList.add(new Cell(shopButton.getTexture()));
-//        cellList.add(new Cell(shopButton.getTexture()));
-//        cellList.add(new Cell(shopButton.getTexture()));
-//        cellList.add(new Cell(shopButton.getTexture()));
-//        cellList.add(new Cell(shopButton.getTexture()));
-//        cellList.add(new Cell(shopButton.getTexture()));
-//        cellList.add(new Cell(shopButton.getTexture()));
-//        cellList.add(new Cell(shopButton.getTexture()));
-//        cellList.add(new Cell(shopButton.getTexture()));
-
-
         game.batch.draw(shopBack, SHOP_BACK_X, SHOP_BACK_Y, SHOP_BACK_WIDTH, SHOP_BACK_HEIGHT);
         game.batch.draw(xButton.getTexture(), X_BUTTON_X, X_BUTTON_Y, X_BUTTON_WIDTH, X_BUTTON_HEIGHT);
 
-//        Grid grid = new Grid(assets.assetManager,  soundEnabled);
-//        grid.createGrid(game, 2,1, SHOP_BACK_X + SHOP_BACK_WIDTH * 0.01346f, SHOP_BACK_Y + SHOP_BACK_HEIGHT*0.01346f, SHOP_BACK_WIDTH - SHOP_BACK_WIDTH * (2 * 0.01346f), SHOP_BACK_HEIGHT - SHOP_BACK_HEIGHT * (2* 0.01346f), 200, cellList);
+        game.batch.draw(leftArrow.getTexture(), LEFT_ARROW_X, LEFT_ARROW_Y, LEFT_ARROW_WIDTH, LEFT_ARROW_HEIGHT);
+        game.batch.draw(rightArrow.getTexture(), RIGHT_ARROW_X, RIGHT_ARROW_Y, RIGHT_ARROW_WIDTH, RIGHT_ARROW_HEIGHT);
+
+        checkForLeftArrowTap(game, soundEnabled);
+        checkForRightArrowTap(game, soundEnabled);
 
         gl.setText(storeFont, "COMING SOON", Color.WHITE, SCREEN_WIDTH, Align.center, true);
         storeFont.draw(game.batch, "COMING SOON", (SCREEN_WIDTH - gl.width) / 2, SCREEN_HEIGHT / 2 + gl.height/2);
