@@ -53,18 +53,18 @@ public class Grid {
                 cell.getCellButton().setWidth(cell.width);
                 cell.getCellButton().setX(cell.x);
                 cell.getCellButton().setY(cell.y);
-
-                if (cell.getCellButton().getTappedBefore()) {
-//                    cell.getCellButton().setTexture(assetManager.get(Assets.start_button_active, Texture.class));
-                }
-                else {
-//                    cell.getCellButton().setTexture(assetManager.get(Assets.start_button_inactive, Texture.class));
-                }
-                if(cell.getCellButton().getReleased()){
-                    if(soundEnabled)
-                        game.playSound.play(0.2f);
-
-                }
+//
+//                if (cell.getCellButton().getTappedBefore()) {
+////                    cell.getCellButton().setTexture(assetManager.get(Assets.start_button_active, Texture.class));
+//                }
+//                else {
+////                    cell.getCellButton().setTexture(assetManager.get(Assets.start_button_inactive, Texture.class));
+//                }
+//                if(cell.getCellButton().getReleased()){
+//                    if(soundEnabled)
+//                        game.playSound.play(0.2f);
+//
+//                }
 
             }
             game.batch.draw(cell.getTexture(), cell.x + paddingAll / 2, cell.y + paddingAll / 2, cell.width*cell.dimensionRatio - paddingAll, cell.width/cell.dimensionRatio - paddingAll);

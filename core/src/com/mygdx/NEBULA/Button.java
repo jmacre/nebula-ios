@@ -19,6 +19,7 @@ public class Button {
         this.extendXTapBy = 0;
         this.extendYTapBy = 0;
     }
+
     public Button(Texture texture, float x, float y, float width, float height, float extendXTapBy, float extendYTapBy){
         this.texture = texture;
         this.x = x;
@@ -27,10 +28,12 @@ public class Button {
         this.height = height;
         this.extendXTapBy = extendXTapBy;
         this.extendYTapBy = extendYTapBy;
+
     }
     private boolean checkFocused(int tapX, int tapY, float extendXTapBy, float extendYTapBy){
         this.focused = (Gdx.input.isTouched()) && tapX < this.x + this.width + extendXTapBy && tapX > this.x - extendXTapBy
                 && SCREEN_HEIGHT - tapY < this.y + this.height + extendYTapBy && SCREEN_HEIGHT - tapY > this.y - extendYTapBy;
+
         return this.focused;
     }
 
@@ -60,9 +63,15 @@ public class Button {
     }
 
     public boolean getTappedBefore(){
+
+
         if (Gdx.input.isTouched() && this.checkFocused(Gdx.input.getX(), Gdx.input.getY(), extendXTapBy, extendYTapBy))
             this.focused = true;
-
+//        else
+//            this.focused = false;
+        if(Gdx.input.isTouched(1)){
+            this.focused = false;
+        }
         if(Gdx.input.justTouched() && this.focused && this.checkTapped(Gdx.input.getX(), Gdx.input.getY(),extendXTapBy, extendYTapBy))
             this.tapped = true;
         if(!this.focused)

@@ -296,7 +296,8 @@ public class GameInterface extends GameElements{
         else{
             leftArrow.setTexture(assets.assetManager.get(Assets.left_arrow_inactive, Texture.class));
         }
-        if(soundEnabled && leftArrow.getReleased())
+        leftArrow.getReleased();
+        if(soundEnabled)
             game.playSound.play(0.2f);
     }
 
@@ -307,7 +308,9 @@ public class GameInterface extends GameElements{
         else{
             rightArrow.setTexture(assets.assetManager.get(Assets.right_arrow_inactive, Texture.class));
         }
-        if(soundEnabled && rightArrow.getReleased())
+        rightArrow.getReleased();
+
+        if(soundEnabled)
             game.playSound.play(0.2f);
     }
 
