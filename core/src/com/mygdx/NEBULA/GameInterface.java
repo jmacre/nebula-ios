@@ -278,7 +278,6 @@ public class GameInterface extends GameElements{
             if(soundEnabled)
                 game.pauseSound.play(0.2f);
         }
-        noButton.getReleased();
     }
     public boolean checkForHomeButtonTap(){
         if(homeButton.getTappedBefore()){
@@ -296,9 +295,10 @@ public class GameInterface extends GameElements{
         else{
             leftArrow.setTexture(assets.assetManager.get(Assets.left_arrow_inactive, Texture.class));
         }
-        leftArrow.getReleased();
-        if(soundEnabled)
-            game.playSound.play(0.2f);
+        if(leftArrow.getReleased()) {
+            if (soundEnabled)
+                game.playSound.play(0.2f);
+        }
     }
 
     public void checkForRightArrowTap(Main game, boolean soundEnabled){
@@ -308,10 +308,11 @@ public class GameInterface extends GameElements{
         else{
             rightArrow.setTexture(assets.assetManager.get(Assets.right_arrow_inactive, Texture.class));
         }
-        rightArrow.getReleased();
+        if(rightArrow.getReleased()){
+            if(soundEnabled)
+                game.playSound.play(0.2f);
+        }
 
-        if(soundEnabled)
-            game.playSound.play(0.2f);
     }
 
     public void drawShopScreen(Main game, boolean soundEnabled){
