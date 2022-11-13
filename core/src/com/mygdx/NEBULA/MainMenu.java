@@ -61,6 +61,7 @@ public class MainMenu extends GameElements implements Screen {
         blackTransition = new Sprite(assets.assetManager.get(Assets.black_transition, Texture.class));
         blackTransition.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
         blackTransition.setColor(0, 0, 0, 0);
+        ShopElement.createElements(assets);
     }
 
     @Override
@@ -100,7 +101,7 @@ public class MainMenu extends GameElements implements Screen {
                 if(gameInterface.checkForShopButtonTap(game, isShopOpen, switchScreens, soundEnabled)) {
                     isShopOpen = true;
                 }
-                if(gameInterface.checkForXButtonTap(game, isShopOpen, soundEnabled)){
+                if(isShopOpen && gameInterface.checkForXButtonTap(game, true, soundEnabled)){
                     isShopOpen = false;
                 }
             }
@@ -131,7 +132,7 @@ public class MainMenu extends GameElements implements Screen {
             gameInterface.drawTitleScreen(game, transitionInDone);
         }
         else {
-            gameInterface.drawShopScreen(game, soundEnabled);
+            gameInterface.drawShopScreen(game, soundEnabled, delta, game.batch);
 
         }
 
@@ -144,9 +145,9 @@ public class MainMenu extends GameElements implements Screen {
         }
 
         if(!isFadingOut && !isTransitioningIn){
-            if(transitionInDone  && !switchScreens && !isShopOpen)
+            if(transitionInDone  && !switchScreens && !isShopOpen) {
                 soundEnabled = gameInterface.checkForTSSoundButtonTap(game, soundEnabled);
-
+            }
         }
         game.batch.end();
     }

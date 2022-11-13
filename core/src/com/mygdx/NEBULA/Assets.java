@@ -82,7 +82,10 @@ public class Assets implements Disposable {
     public static final String enemy_ship_purple_ss = "char/enemy_ship_purple_ss.png";
     public static final String enemy_ship_white_ss = "char/enemy_ship_white_ss.png";
 
-    public static final String ship_ss = "char/main_ship_black_ss.png";
+    public static final String ship_ss = "char/main_ship_ss.png";
+    public static final String ship_red_ss = "char/main_ship_red_ss.png";
+    public static final String ship_black_ss = "char/main_ship_black_ss.png";
+
     public static final String explosion = "misc/explosion_ss.png";
     public static final String pause_menu_back = "ui/menu_back.png";
 
@@ -167,7 +170,11 @@ public class Assets implements Disposable {
         assetManager.load(enemy_ship_white_ss, Texture.class);
 
         assetManager.load(laser_trap_h_ss, Texture.class);
+
         assetManager.load(ship_ss, Texture.class);
+        assetManager.load(ship_black_ss, Texture.class);
+        assetManager.load(ship_red_ss, Texture.class);
+
         assetManager.load(explosion, Texture.class);
 
         assetManager.load(heart_item_ss, Texture.class);
@@ -259,7 +266,11 @@ public class Assets implements Disposable {
         assetManager.unload(enemy_ship_white_ss);
         assetManager.unload(enemy_ship_green_ss);
         assetManager.unload(laser_trap_h_ss);
+
         assetManager.unload(ship_ss);
+        assetManager.unload(ship_red_ss);
+        assetManager.unload(ship_black_ss);
+
         assetManager.unload(explosion);
         assetManager.unload(heart_item_ss);
         assetManager.unload(bomb_ss);

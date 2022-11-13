@@ -21,7 +21,6 @@ import static com.mygdx.NEBULA.ItemDrop.HOURGLASS_SPEED_MULTIPLIER;
 public class Enemy extends GameElements implements Pool.Poolable{
     public static final int EYEBAT_ID = 0;
     public static final int ENEMY_SHIP_ID = 1;
-
     public static final int LASER_TRAP_ID = 2;
 
     Animation<TextureRegion> enemyAnimation;
@@ -84,11 +83,10 @@ public class Enemy extends GameElements implements Pool.Poolable{
         purpleShip = new Sprite(assets.assetManager.get(Assets.enemy_ship_purple_ss, Texture.class));
         whiteShip = new Sprite(assets.assetManager.get(Assets.enemy_ship_white_ss, Texture.class));
         laserTrap = new Sprite(assets.assetManager.get(Assets.laser_trap_h_ss, Texture.class));
-
     }
 
     //EYEBAT CONSTRUCTOR
-    public void create(int id, int colorId, float HP, float ENEMY_X, float ENEMY_WIDTH, float ENEMY_HEIGHT, float xSpeedMult, float ySpeedMult, float frameDuration, boolean hurt, float hurtTimer, Assets assets) {
+    public void create(int id, int colorId, float HP, float ENEMY_X, float ENEMY_WIDTH, float ENEMY_HEIGHT, float xSpeedMult, float ySpeedMult, float frameDuration, boolean hurt, float hurtTimer) {
         this.id = id;
         this.colorId = colorId;
         this.HP = HP;
@@ -131,7 +129,7 @@ public class Enemy extends GameElements implements Pool.Poolable{
         enemyAnimation.setPlayMode(Animation.PlayMode.LOOP);
     }
     //SHIP CONSTRUCTOR
-    public void create (int id, int colorId, float HP, float ENEMY_X, float ENEMY_WIDTH, float ENEMY_HEIGHT, float xSpeedMult, float ySpeedMult, float frameDuration, float bulletDelay, float bulletThreshold, boolean hurt, float hurtTimer, int position, Assets assets) {
+    public void create (int id, int colorId, float HP, float ENEMY_X, float ENEMY_WIDTH, float ENEMY_HEIGHT, float xSpeedMult, float ySpeedMult, float frameDuration, float bulletDelay, float bulletThreshold, boolean hurt, float hurtTimer, int position) {
         this.id = id;
         this.colorId = colorId;
         this.HP = HP;
@@ -176,7 +174,7 @@ public class Enemy extends GameElements implements Pool.Poolable{
     }
 
     //LASER TRAP CONSTRUCTOR
-    public void create (int id, float ENEMY_X, float ENEMY_WIDTH, float ENEMY_HEIGHT, float xSpeedMult, float ySpeedMult, float frameDuration, Assets assets) {
+    public void create (int id, float ENEMY_X, float ENEMY_WIDTH, float ENEMY_HEIGHT, float xSpeedMult, float ySpeedMult, float frameDuration) {
         this.id = id;
 
         this.ENEMY_X = ENEMY_X;

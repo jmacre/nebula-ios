@@ -1,5 +1,7 @@
 package com.mygdx.NEBULA;
 
+import static com.mygdx.NEBULA.Anim.DEFAULT_FRAME_DURATION;
+
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
@@ -7,6 +9,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.utils.Align;
 
@@ -43,6 +46,8 @@ public class GameInterface extends GameElements{
     float tsSoundButtonY;
     float scoreY;
     float topElemY;
+    float stateTime = 0f;
+    int selectedElement = 0;
 
     public Prefs prefs = new Prefs();
     public FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
@@ -93,7 +98,9 @@ public class GameInterface extends GameElements{
         pauseMenuBack = new Sprite(assets.assetManager.get(Assets.pause_menu_back, Texture.class));
         shopBack = new Sprite(assets.assetManager.get(Assets.shop_back, Texture.class));
         scoreFont = generator.generateFont(parameter);
-        scoreFont.setColor(Color.valueOf("6a11f6"));
+        scoreFont.setColor(Color.valueOf(PURPLE_COLOR_HEX));
+
+        storeFont.setColor(Color.valueOf(PURPLE_COLOR_HEX));
         gl = new GlyphLayout();
     }
 
@@ -181,6 +188,23 @@ public class GameInterface extends GameElements{
 
         return false;
     }
+    public boolean checkForShopButtonTap(Main game, boolean isShopOpen, boolean switchScreens, boolean soundEnabled){
+        if(!isShopOpen && !switchScreens) {
+            if (shopButton.getTappedBefore()) {
+                shopButton.setTexture(assets.assetManager.get(Assets.shop_button_active, Texture.class));
+            }
+            else {
+                shopButton.setTexture(assets.assetManager.get(Assets.shop_button_inactive, Texture.class));
+            }
+            if(shopButton.getReleased()){
+                if(soundEnabled)
+                    game.playSound.play(0.2f);
+
+                return true;
+            }
+        }
+        return false;
+    }
     public boolean checkForSoundButtonTap(boolean soundEnabled){
         if(soundEnabled){
             if(soundButton.getTappedBefore()){
@@ -227,23 +251,6 @@ public class GameInterface extends GameElements{
         return pauseButton.getTapped();
     }
 
-    public boolean checkForShopButtonTap(Main game, boolean isShopOpen, boolean switchScreens, boolean soundEnabled){
-        if(!isShopOpen && !switchScreens) {
-            if (shopButton.getTappedBefore()) {
-                shopButton.setTexture(assets.assetManager.get(Assets.shop_button_active, Texture.class));
-            }
-            else {
-                shopButton.setTexture(assets.assetManager.get(Assets.shop_button_inactive, Texture.class));
-            }
-            if(shopButton.getReleased()){
-                if(soundEnabled)
-                    game.playSound.play(0.2f);
-
-                return true;
-            }
-        }
-        return false;
-    }
     public boolean checkForXButtonTap(Main game, boolean isShopOpen, boolean soundEnabled){
 
         if(isShopOpen){
@@ -296,6 +303,14 @@ public class GameInterface extends GameElements{
             leftArrow.setTexture(assets.assetManager.get(Assets.left_arrow_inactive, Texture.class));
         }
         if(leftArrow.getReleased()) {
+
+            if(selectedElement == 0){
+                selectedElement = ShopElement.shipCount;
+            }
+            else{
+                selectedElement -= 1;
+            }
+
             if (soundEnabled)
                 game.playSound.play(0.2f);
         }
@@ -309,13 +324,20 @@ public class GameInterface extends GameElements{
             rightArrow.setTexture(assets.assetManager.get(Assets.right_arrow_inactive, Texture.class));
         }
         if(rightArrow.getReleased()){
+            if(selectedElement == ShopElement.shipCount)
+                selectedElement = 0;
+            else{
+                selectedElement += 1;
+            }
+
             if(soundEnabled)
                 game.playSound.play(0.2f);
         }
-
     }
 
-    public void drawShopScreen(Main game, boolean soundEnabled){
+    public void drawShopScreen(Main game, boolean soundEnabled, float delta, SpriteBatch batch){
+        stateTime += delta/6;
+
         game.batch.draw(shopBack, SHOP_BACK_X, SHOP_BACK_Y, SHOP_BACK_WIDTH, SHOP_BACK_HEIGHT);
         game.batch.draw(xButton.getTexture(), X_BUTTON_X, X_BUTTON_Y, X_BUTTON_WIDTH, X_BUTTON_HEIGHT);
 
@@ -325,8 +347,17 @@ public class GameInterface extends GameElements{
         checkForLeftArrowTap(game, soundEnabled);
         checkForRightArrowTap(game, soundEnabled);
 
-        gl.setText(storeFont, "COMING SOON", Color.WHITE, SCREEN_WIDTH, Align.center, true);
-        storeFont.draw(game.batch, "COMING SOON", (SCREEN_WIDTH - gl.width) / 2, SCREEN_HEIGHT / 2 + gl.height/2);
+        ShopElement ship = new ShopElement(ShopElement.SHIP_ID, selectedElement,SHOP_BACK_X + SHOP_BACK_WIDTH/2 - SHIP_WIDTH/2, SHOP_BACK_Y + SHOP_BACK_HEIGHT/2 - SHIP_HEIGHT/2, SHIP_WIDTH, SHIP_HEIGHT);
+        ship.render(stateTime, batch);
+
+//        shipSS = new Sprite(assets.assetManager.get(Assets.ship_ss, Texture.class));
+//
+//        shipAnimation = Anim.createAnimation(shipSS, 4, DEFAULT_FRAME_DURATION*1.5f);
+//
+//        shipAnim.drawAnim(shipAnimation, stateTime, SHOP_BACK_X + SHOP_BACK_WIDTH/2 - SHIP_WIDTH/2, SHOP_BACK_Y + SHOP_BACK_HEIGHT/2 - SHIP_HEIGHT/2, SHIP_WIDTH, SHIP_HEIGHT,   true, game.batch);
+
+        gl.setText(storeFont, ship.getTitle(), Color.valueOf(PURPLE_COLOR_HEX), SCREEN_WIDTH, Align.center, true);
+        storeFont.draw(game.batch, ship.getTitle(), (SCREEN_WIDTH - gl.width) / 2, SHOP_BACK_Y + SHOP_BACK_HEIGHT*.8f + gl.height/2);
 
     }
 
@@ -350,7 +381,7 @@ public class GameInterface extends GameElements{
         game.batch.draw(yesButton.getTexture(), YES_BUTTON_X, YES_BUTTON_Y, YES_BUTTON_WIDTH, YES_BUTTON_HEIGHT);
         game.batch.draw(noButton.getTexture(), NO_BUTTON_X, NO_BUTTON_Y, NO_BUTTON_WIDTH, NO_BUTTON_HEIGHT);
 
-        gl.setText(confirmScreenFont, "ARE YOU SURE YOU \n\n WANT TO LEAVE?", Color.valueOf("6a11f6"), MENU_BACK_WIDTH, Align.left, true);
+        gl.setText(confirmScreenFont, "ARE YOU SURE YOU \n\n WANT TO LEAVE?", Color.valueOf(PURPLE_COLOR_HEX), MENU_BACK_WIDTH, Align.left, true);
         confirmScreenFont.draw(game.batch, "ARE YOU SURE YOU \n\n WANT TO LEAVE?", CONFIRM_LEAVE_FONT_X, CONFIRM_LEAVE_FONT_Y);
 
     }
@@ -364,7 +395,7 @@ public class GameInterface extends GameElements{
     }
 
     public void drawReplayScreen(Main game, BitmapFont scoreFont, BitmapFont gameOverFont, boolean newHighScore) {
-        scoreFont.setColor(Color.valueOf("6a11f6"));
+        scoreFont.setColor(Color.valueOf(PURPLE_COLOR_HEX));
 
         game.batch.draw(pauseMenuBack, MENU_BACK_X, MENU_BACK_Y, MENU_BACK_WIDTH, MENU_BACK_HEIGHT);
         if (!confirmLeaveScreenOpen) {

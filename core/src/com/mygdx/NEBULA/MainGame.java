@@ -259,19 +259,19 @@ public class MainGame extends GameElements implements Screen{
 
         textParameter.size = SCREEN_WIDTH/40;
         menuScoreFont = generator.generateFont(textParameter);
-        menuScoreFont.setColor(Color.valueOf("6a11f6"));
+        menuScoreFont.setColor(Color.valueOf(PURPLE_COLOR_HEX));
 
         textParameter.size = SCREEN_WIDTH/22;
         confirmScreenFont = generator.generateFont(textParameter);
-        confirmScreenFont.setColor(Color.valueOf("6a11f6"));
+        confirmScreenFont.setColor(Color.valueOf(PURPLE_COLOR_HEX));
 
         textParameter.size = SCREEN_WIDTH/10;
         gameOverFont = generator.generateFont(textParameter);
-        gameOverFont.setColor(Color.valueOf("FFFFFF"));
+        gameOverFont.setColor(Color.valueOf(PURPLE_COLOR_HEX));
 
         textParameter.size = SCREEN_WIDTH/6;
         countdownFont = generator.generateFont(textParameter);
-        countdownFont.setColor(Color.valueOf("FFFFFF"));
+        countdownFont.setColor(Color.valueOf(PURPLE_COLOR_HEX));
 
         gl = new GlyphLayout();
         Gdx.input.setInputProcessor(inputProcessor);
@@ -1044,24 +1044,24 @@ public class MainGame extends GameElements implements Screen{
             randomSpawnLocation = random.nextInt((int) ((int) SCREEN_WIDTH- BLUE_EYEBAT_WIDTH));
 
             if(score <= 1000){
-                enemy.create(EYEBAT_ID, BLUE_ID, 1, randomSpawnLocation, BLUE_EYEBAT_WIDTH, BLUE_EYEBAT_HEIGHT, 0.35f + speedIncrease / 1.5f, 0.8f + speedIncrease / 1.5f, (float) (DEFAULT_FRAME_DURATION * (1.25 - speedIncrease / 2)), false, hurtTimer, assets);
+                enemy.create(EYEBAT_ID, BLUE_ID, 1, randomSpawnLocation, BLUE_EYEBAT_WIDTH, BLUE_EYEBAT_HEIGHT, 0.35f + speedIncrease / 1.5f, 0.8f + speedIncrease / 1.5f, (float) (DEFAULT_FRAME_DURATION * (1.25 - speedIncrease / 2)), false, hurtTimer);
                 eyebatSpawnTimer = random.nextFloat() * (maxEyebatSpawnTime - minEyebatSpawnTime) + minEyebatSpawnTime;
 
             }
             else if(score <= 2000){
-                enemy.create(EYEBAT_ID, GREEN_ID, 2, randomSpawnLocation, GREEN_EYEBAT_WIDTH,  GREEN_EYEBAT_HEIGHT, 0.8f + speedIncrease / 1.5f, 0.4f + speedIncrease / 1.5f, (float) (DEFAULT_FRAME_DURATION * (1.5 - speedIncrease / 2)), false, hurtTimer, assets);
+                enemy.create(EYEBAT_ID, GREEN_ID, 2, randomSpawnLocation, GREEN_EYEBAT_WIDTH,  GREEN_EYEBAT_HEIGHT, 0.8f + speedIncrease / 1.5f, 0.4f + speedIncrease / 1.5f, (float) (DEFAULT_FRAME_DURATION * (1.5 - speedIncrease / 2)), false, hurtTimer);
                 eyebatSpawnTimer = random.nextFloat() * (maxEyebatSpawnTime - minEyebatSpawnTime) + minEyebatSpawnTime;
             }
             else if(score <= 3000){
-                enemy.create(EYEBAT_ID, RED_ID, 2, randomSpawnLocation, RED_EYEBAT_WIDTH, RED_EYEBAT_HEIGHT, 0.65f + speedIncrease / 1.5f, 0.3f + speedIncrease / 1.5f, (float) (DEFAULT_FRAME_DURATION * (1.5 - speedIncrease / 2)), false, hurtTimer, assets);
+                enemy.create(EYEBAT_ID, RED_ID, 2, randomSpawnLocation, RED_EYEBAT_WIDTH, RED_EYEBAT_HEIGHT, 0.65f + speedIncrease / 1.5f, 0.3f + speedIncrease / 1.5f, (float) (DEFAULT_FRAME_DURATION * (1.5 - speedIncrease / 2)), false, hurtTimer);
                 eyebatSpawnTimer = random.nextFloat() * (1.1f*maxEyebatSpawnTime - 1.1f*minEyebatSpawnTime) + 1.1f*minEyebatSpawnTime;
             }
             else if(score <= 4000){
-                enemy.create(EYEBAT_ID, PURPLE_ID, 3, randomSpawnLocation, PURPLE_EYEBAT_WIDTH, PURPLE_EYEBAT_HEIGHT, 0.5f + speedIncrease / 1.75f, 0.25f + speedIncrease / 1.75f, (float)(DEFAULT_FRAME_DURATION * (1.75 - speedIncrease / 2)), false, hurtTimer, assets);
+                enemy.create(EYEBAT_ID, PURPLE_ID, 3, randomSpawnLocation, PURPLE_EYEBAT_WIDTH, PURPLE_EYEBAT_HEIGHT, 0.5f + speedIncrease / 1.75f, 0.25f + speedIncrease / 1.75f, (float)(DEFAULT_FRAME_DURATION * (1.75 - speedIncrease / 2)), false, hurtTimer);
                 eyebatSpawnTimer = random.nextFloat() * (1.45f*maxEyebatSpawnTime - 1.45f*minEyebatSpawnTime) + 1.45f*minEyebatSpawnTime;
             }
             else{
-                enemy.create(EYEBAT_ID, WHITE_ID, 4, randomSpawnLocation, WHITE_EYEBAT_WIDTH, WHITE_EYEBAT_HEIGHT, 0.3f + speedIncrease / 1.75f, 0.2f + speedIncrease / 1.75f, (float)(DEFAULT_FRAME_DURATION * (2.0 - speedIncrease / 2)), false, hurtTimer, assets);
+                enemy.create(EYEBAT_ID, WHITE_ID, 4, randomSpawnLocation, WHITE_EYEBAT_WIDTH, WHITE_EYEBAT_HEIGHT, 0.3f + speedIncrease / 1.75f, 0.2f + speedIncrease / 1.75f, (float)(DEFAULT_FRAME_DURATION * (2.0 - speedIncrease / 2)), false, hurtTimer);
                 eyebatSpawnTimer = random.nextFloat() * (1.65f*maxEyebatSpawnTime - 1.65f*minEyebatSpawnTime) + 1.65f*minEyebatSpawnTime;
             }
             enemies.add(enemy);
@@ -1104,31 +1104,31 @@ public class MainGame extends GameElements implements Screen{
                 if (score <= 1000) {
                     enemy.create(ENEMY_SHIP_ID, BLUE_ID, 3, random.nextInt(((int) SCREEN_WIDTH - (int) ENEMY_SHIP_WIDTH)), ENEMY_SHIP_WIDTH, ENEMY_SHIP_HEIGHT,
                             1.25f + speedIncrease, 1.15f + speedIncrease, DEFAULT_FRAME_DURATION * 1.5f, enemyBulletDelay, blueShipBulletThreshold,
-                            false, hurtTimer, position, assets);
+                            false, hurtTimer, position);
 
                     enemyShipSpawnTimer = random.nextFloat() * (maxEnemyShipSpawnTime - minEnemyShipSpawnTime) + minEnemyShipSpawnTime;
                 } else if (score <= 2000) {
                     enemy.create(ENEMY_SHIP_ID, GREEN_ID, 4, random.nextInt(((int) SCREEN_WIDTH - (int) ENEMY_SHIP_WIDTH)), ENEMY_SHIP_WIDTH, ENEMY_SHIP_HEIGHT,
                             1.15f + speedIncrease, 1.05f + speedIncrease, DEFAULT_FRAME_DURATION * 1.5f, enemyBulletDelay, greenShipBulletThreshold,
-                            false, hurtTimer, position, assets);
+                            false, hurtTimer, position);
 
                     enemyShipSpawnTimer = random.nextFloat() * (1.2f * maxEnemyShipSpawnTime - 1.2f * minEnemyShipSpawnTime) + 1.2f * minEnemyShipSpawnTime;
                 } else if (score <= 3000) {
                     enemy.create(ENEMY_SHIP_ID, RED_ID, 5, random.nextInt(((int) SCREEN_WIDTH - (int) ENEMY_SHIP_WIDTH)), ENEMY_SHIP_WIDTH, ENEMY_SHIP_HEIGHT,
                             0.95f + speedIncrease, 0.95f + speedIncrease, DEFAULT_FRAME_DURATION * 1.5f, enemyBulletDelay, redShipBulletThreshold,
-                            false, hurtTimer, position, assets);
+                            false, hurtTimer, position);
 
                     enemyShipSpawnTimer = random.nextFloat() * (1.2f * maxEnemyShipSpawnTime - 1.2f * minEnemyShipSpawnTime) + 1.2f * minEnemyShipSpawnTime;
                 } else if (score <= 4000) {
                     enemy.create(ENEMY_SHIP_ID, PURPLE_ID, 5, random.nextInt(((int) SCREEN_WIDTH - (int) ENEMY_SHIP_WIDTH)), ENEMY_SHIP_WIDTH, ENEMY_SHIP_HEIGHT,
                             0.85f + speedIncrease, 0.85f + speedIncrease, DEFAULT_FRAME_DURATION * 1.5f, enemyBulletDelay, purpleShipBulletThreshold,
-                            false, hurtTimer, position, assets);
+                            false, hurtTimer, position);
 
                     enemyShipSpawnTimer = random.nextFloat() * (1.2f * maxEnemyShipSpawnTime - 1.2f * minEnemyShipSpawnTime) + 1.2f * minEnemyShipSpawnTime;
                 } else {
                     enemy.create(ENEMY_SHIP_ID, WHITE_ID, 5, random.nextInt((SCREEN_WIDTH - (int) ENEMY_SHIP_WIDTH)), ENEMY_SHIP_WIDTH, ENEMY_SHIP_HEIGHT,
                             0.75f + speedIncrease, 0.75f + speedIncrease, DEFAULT_FRAME_DURATION * 1.5f, enemyBulletDelay, whiteShipBulletThreshold,
-                            false, hurtTimer, position, assets);
+                            false, hurtTimer, position);
 
                     enemyShipSpawnTimer = random.nextFloat() * (1.4f * maxEnemyShipSpawnTime - 1.4f * minEnemyShipSpawnTime) + 1.4f * minEnemyShipSpawnTime;
                 }
@@ -1144,7 +1144,7 @@ public class MainGame extends GameElements implements Screen{
             laserTrapSpawnTimer = random.nextFloat() * (maxLaserSpawnTime - minLaserSpawnTime) + minLaserSpawnTime;
 
             enemy.create(LASER_TRAP_ID, random.nextInt((SCREEN_WIDTH - (int)LASER_TRAP_H_WIDTH)), LASER_TRAP_H_WIDTH, LASER_TRAP_H_HEIGHT,
-                    0, 0.65f + speedIncrease/1.5f, DEFAULT_FRAME_DURATION*1.5f, assets);
+                    0, 0.65f + speedIncrease/1.5f, DEFAULT_FRAME_DURATION*1.5f);
             enemies.add(enemy);
 
         }

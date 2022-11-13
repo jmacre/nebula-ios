@@ -3,6 +3,7 @@ package com.mygdx.NEBULA;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -22,6 +23,8 @@ public class GameElements {
     public static final int RED_ID = 2;
     public static final int PURPLE_ID = 3;
     public static final int WHITE_ID = 4;
+
+    public static final String PURPLE_COLOR_HEX = "6a11f6";
 
     public static float SCORE_TICKER_TIMER = -.25f;
 
