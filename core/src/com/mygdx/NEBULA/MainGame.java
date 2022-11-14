@@ -265,6 +265,9 @@ public class MainGame extends GameElements implements Screen{
         else if(selectedShip == 2){
             shipSS = new Sprite(assets.assetManager.get(Assets.ship_black_ss, Texture.class));
         }
+        else if(selectedShip == 3){
+            shipSS = new Sprite(assets.assetManager.get(Assets.ship_purple_ss, Texture.class));
+        }
 
         shipAnimation = Anim.createAnimation(shipSS, 4, DEFAULT_FRAME_DURATION*1.5f);
 
@@ -985,7 +988,7 @@ public class MainGame extends GameElements implements Screen{
             bullets.add(bullet1);
 
             bullet2.create(SHIP_X + SHIP_WIDTH - SHIP_WIDTH * (6/27f), false, true, assets);
-            bullets.add(bullet2);;
+            bullets.add(bullet2);
         }
 
         else {
@@ -1251,6 +1254,13 @@ public class MainGame extends GameElements implements Screen{
         for (Enemy enemy : enemies) {
             boolean pointsEarned = false;
 
+            if(bombUsed && enemy.getId() != LASER_TRAP_ID){
+                enemy.HP = 0;
+            }
+            if (bombUsed && !enemiesToRemove.contains(enemy, true)){
+                enemiesToRemove.add(enemy);
+            }
+
             for(Bullet bullet : bullets) {
 
 //            game.batch.end();
@@ -1267,14 +1277,9 @@ public class MainGame extends GameElements implements Screen{
                     }
 
                     if ((Collision.isNearby(bullet.getCollision(), enemy.getCollision())
-                    && Collision.isColliding(bullet.getCollision(), enemy.getCollision())) || bombUsed) {
+                    && Collision.isColliding(bullet.getCollision(), enemy.getCollision()))) {
 
-                        if(bombUsed && enemy.getId() != LASER_TRAP_ID){
-                            enemy.HP = 0;
-                        }
-                        else if (bombUsed && enemy.getId() == LASER_TRAP_ID && !enemiesToRemove.contains(enemy, true)){
-                            enemiesToRemove.add(enemy);
-                        }
+
 
                         if (!bullet.isMissile() && enemy.getId() != LASER_TRAP_ID && !bulletsToRemove.contains(bullet, true)) {
                             bulletsToRemove.add(bullet);
@@ -1468,7 +1473,6 @@ public class MainGame extends GameElements implements Screen{
                         break;
 
                     case BOMB_ID:
-                        score += 25;
                         bombUsed = true;
                         Gdx.input.vibrate(200);
 

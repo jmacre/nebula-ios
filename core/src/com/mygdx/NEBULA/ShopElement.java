@@ -17,12 +17,13 @@ public class ShopElement extends GameElements{
     public static final int MAIN_SHIP_ID = 0;
     public static final int RED_SHIP_ID = 1;
     public static final int BLACK_SHIP_ID = 2;
+    public static final int PURPLE_SHIP_ID = 3;
 
     float x, y, width, height;
 
-    static Sprite mainShip, blackShip, redShip;
+    static Sprite mainShip, blackShip, redShip, purpleShip;
 
-    public static int shipCount = 2; // one less than actual count for cycling between ships
+    public static int shipCount = 3; // one less than actual count for cycling between ships
     private int id, colorId;
 
     private Sprite elementSheet;
@@ -40,21 +41,7 @@ public class ShopElement extends GameElements{
 
         if(id == SHIP_ID) {
 
-            switch (colorId) {
-
-                case MAIN_SHIP_ID:
-                    elementSheet = mainShip;
-                    title = "CLASSIC";
-                    break;
-                case RED_SHIP_ID:
-                    elementSheet = redShip;
-                    title = "CRIMSON";
-                    break;
-                case BLACK_SHIP_ID:
-                    elementSheet = blackShip;
-                    title = "GHOST";
-                    break;
-            }
+            setElementAnimation(colorId);
 
             if(elementSheet != null) {
                 elementAnimation = Anim.createAnimation(elementSheet, 4, DEFAULT_FRAME_DURATION * 1.5f);
@@ -70,6 +57,7 @@ public class ShopElement extends GameElements{
         mainShip = new Sprite(assets.assetManager.get(Assets.ship_ss, Texture.class));
         redShip = new Sprite(assets.assetManager.get(Assets.ship_red_ss, Texture.class));
         blackShip = new Sprite(assets.assetManager.get(Assets.ship_black_ss, Texture.class));
+        purpleShip = new Sprite(assets.assetManager.get(Assets.ship_purple_ss, Texture.class));
     }
     public String getTitle(){
         return title;
@@ -91,6 +79,10 @@ public class ShopElement extends GameElements{
             case BLACK_SHIP_ID:
                 elementSheet = blackShip;
                 title = "GHOST";
+                break;
+            case PURPLE_SHIP_ID:
+                elementSheet = purpleShip;
+                title = "ULTRAVIOLET";
                 break;
         }
 
