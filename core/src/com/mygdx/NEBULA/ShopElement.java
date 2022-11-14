@@ -47,11 +47,11 @@ public class ShopElement extends GameElements{
                     break;
                 case RED_SHIP_ID:
                     elementSheet = redShip;
-                    title = "RED";
+                    title = "CRIMSON";
                     break;
                 case BLACK_SHIP_ID:
                     elementSheet = blackShip;
-                    title = "BLACK";
+                    title = "GHOST";
                     break;
             }
 
