@@ -278,7 +278,7 @@ public class MainGame extends GameElements implements Screen{
 
         textParameter.size = SCREEN_WIDTH/10;
         gameOverFont = generator.generateFont(textParameter);
-        gameOverFont.setColor(Color.valueOf(PURPLE_COLOR_HEX));
+        gameOverFont.setColor(Color.WHITE);
 
         textParameter.size = SCREEN_WIDTH/6;
         countdownFont = generator.generateFont(textParameter);
