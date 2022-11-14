@@ -16,7 +16,7 @@ import com.badlogic.gdx.utils.Align;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GameInterface extends GameElements{
+public class GameInterface extends GameElements {
     Assets assets;
     Button pauseButton;
     Button homeButton;
@@ -27,6 +27,9 @@ public class GameInterface extends GameElements{
     Button shopButton;
     Button leftArrow;
     Button rightArrow;
+    Button selectButton;
+
+    ShopElement ship;
 
     Sprite titleTexture;
     Button tsSoundButton;
@@ -43,18 +46,19 @@ public class GameInterface extends GameElements{
     GlyphLayout gl;
     Boolean confirmLeaveScreenOpen = false;
 
+    public Prefs prefs = new Prefs();
+
     float tsSoundButtonY;
     float scoreY;
     float topElemY;
     float stateTime = 0f;
-    int selectedElement = 0;
+    int selectedElement = prefs.getShip();
 
-    public Prefs prefs = new Prefs();
     public FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
 
-    public GameInterface(Assets assets){
+    public GameInterface(Assets assets) {
         this.assets = assets;
-        parameter.size = SCREEN_WIDTH/40;
+        parameter.size = SCREEN_WIDTH / 40;
         startButton = new Button(assets.assetManager.get(Assets.start_button_inactive_clear, Texture.class), START_BUTTON_X, START_BUTTON_Y_TRANSITIONED, START_BUTTON_WIDTH, START_BUTTON_HEIGHT);
 
         shopButton = new Button(assets.assetManager.get(Assets.shop_button_inactive_clear, Texture.class), SHOP_BUTTON_X, SHOP_BUTTON_Y_TRANSITIONED, SHOP_BUTTON_WIDTH, SHOP_BUTTON_HEIGHT);
@@ -62,26 +66,26 @@ public class GameInterface extends GameElements{
 
         leftArrow = new Button(assets.assetManager.get(Assets.left_arrow_inactive, Texture.class), LEFT_ARROW_X, LEFT_ARROW_Y, LEFT_ARROW_WIDTH, LEFT_ARROW_HEIGHT);
         rightArrow = new Button(assets.assetManager.get(Assets.right_arrow_inactive, Texture.class), RIGHT_ARROW_X, RIGHT_ARROW_Y, RIGHT_ARROW_WIDTH, RIGHT_ARROW_HEIGHT);
+        selectButton = new Button(assets.assetManager.get(Assets.select_button_inactive, Texture.class), SELECT_BUTTON_X, SELECT_BUTTON_Y, SELECT_BUTTON_WIDTH, SELECT_BUTTON_HEIGHT);
 
-        xButton = new Button(assets.assetManager.get(Assets.x_button, Texture.class), X_BUTTON_X, X_BUTTON_Y, X_BUTTON_WIDTH, X_BUTTON_HEIGHT, X_BUTTON_WIDTH/2, X_BUTTON_HEIGHT/2);
+        xButton = new Button(assets.assetManager.get(Assets.x_button, Texture.class), X_BUTTON_X, X_BUTTON_Y, X_BUTTON_WIDTH, X_BUTTON_HEIGHT, X_BUTTON_WIDTH / 2, X_BUTTON_HEIGHT / 2);
         yesButton = new Button(assets.assetManager.get(Assets.yes_button_inactive, Texture.class), YES_BUTTON_X, YES_BUTTON_Y, YES_BUTTON_WIDTH, YES_BUTTON_HEIGHT);
         noButton = new Button(assets.assetManager.get(Assets.no_button_inactive, Texture.class), NO_BUTTON_X, NO_BUTTON_Y, NO_BUTTON_WIDTH, NO_BUTTON_HEIGHT);
 
-        textParameter.size = SCREEN_WIDTH/14;
+        textParameter.size = SCREEN_WIDTH / 14;
         storeFont = generator.generateFont(textParameter);
 
-        if(Gdx.app.getType() == Application.ApplicationType.Android){
+        if (Gdx.app.getType() == Application.ApplicationType.Android) {
             tsSoundButtonY = TS_SOUND_BUTTON_Y_AND;
             scoreY = SCORE_Y_AND;
             topElemY = TOP_ELEM_Y_AND;
-        }
-        else{
+        } else {
             tsSoundButtonY = TS_SOUND_BUTTON_Y_IOS;
             scoreY = SCORE_Y_IOS;
             topElemY = TOP_ELEM_Y_IOS;
         }
 
-        tsSoundButton = new Button(assets.assetManager.get(Assets.sound_off_button_ts, Texture.class), TS_SOUND_BUTTON_X, tsSoundButtonY, TS_SOUND_BUTTON_WIDTH, TS_SOUND_BUTTON_HEIGHT, TS_SOUND_BUTTON_WIDTH/2, TS_SOUND_BUTTON_HEIGHT/2);
+        tsSoundButton = new Button(assets.assetManager.get(Assets.sound_off_button_ts, Texture.class), TS_SOUND_BUTTON_X, tsSoundButtonY, TS_SOUND_BUTTON_WIDTH, TS_SOUND_BUTTON_HEIGHT, TS_SOUND_BUTTON_WIDTH / 2, TS_SOUND_BUTTON_HEIGHT / 2);
         pauseButton = new Button(assets.assetManager.get(Assets.pause_button, Texture.class), PAUSE_BUTTON_X, PAUSE_BUTTON_Y, PAUSE_BUTTON_WIDTH, PAUSE_BUTTON_HEIGHT, PAUSE_BUTTON_WIDTH, PAUSE_BUTTON_HEIGHT);
         homeButton = new Button(assets.assetManager.get(Assets.home_button_inactive, Texture.class), HOME_BUTTON_X, HOME_BUTTON_Y, HOME_BUTTON_WIDTH, HOME_BUTTON_HEIGHT);
         playButton = new Button(assets.assetManager.get(Assets.play_button_inactive, Texture.class), PLAY_BUTTON_X, PLAY_BUTTON_Y, PLAY_BUTTON_WIDTH, PLAY_BUTTON_HEIGHT);
@@ -104,31 +108,32 @@ public class GameInterface extends GameElements{
         gl = new GlyphLayout();
     }
 
-    public void drawTopUI(Main game, boolean isPaused, int health, boolean isAlive, boolean isTransitionedIn){
-        if(!isPaused && isAlive && isTransitionedIn)
+    public void drawTopUI(Main game, boolean isPaused, int health, boolean isAlive, boolean isTransitionedIn) {
+        if (!isPaused && isAlive && isTransitionedIn)
             game.batch.draw(pauseButton.getTexture(), SCREEN_WIDTH - SCREEN_WIDTH / 7.5f, topElemY, HEART_WIDTH * 1.3f, HEART_HEIGHT);
 
-        if(health == 3) {
+        if (health == 3) {
             game.batch.draw(heart1, RIGHT_HEART_X, topElemY, HEART_WIDTH, HEART_HEIGHT);
             game.batch.draw(heart2, MIDDLE_HEART_X, topElemY, HEART_WIDTH, HEART_HEIGHT);
             game.batch.draw(heart3, LEFT_HEART_X, topElemY, HEART_WIDTH, HEART_HEIGHT);
         }
-        if(health == 2) {
+        if (health == 2) {
             game.batch.draw(heartMissing1, RIGHT_HEART_X, topElemY, HEART_WIDTH, HEART_HEIGHT);
             game.batch.draw(heart2, MIDDLE_HEART_X, topElemY, HEART_WIDTH, HEART_HEIGHT);
             game.batch.draw(heart3, LEFT_HEART_X, topElemY, HEART_WIDTH, HEART_HEIGHT);
         }
-        if(health == 1) {
+        if (health == 1) {
             game.batch.draw(heartMissing1, RIGHT_HEART_X, topElemY, HEART_WIDTH, HEART_HEIGHT);
             game.batch.draw(heartMissing2, MIDDLE_HEART_X, topElemY, HEART_WIDTH, HEART_HEIGHT);
             game.batch.draw(heart3, LEFT_HEART_X, topElemY, HEART_WIDTH, HEART_HEIGHT);
         }
-        if(health == 0) {
+        if (health == 0) {
             game.batch.draw(heartMissing1, RIGHT_HEART_X, topElemY, HEART_WIDTH, HEART_HEIGHT);
             game.batch.draw(heartMissing2, MIDDLE_HEART_X, topElemY, HEART_WIDTH, HEART_HEIGHT);
             game.batch.draw(heartMissing3, LEFT_HEART_X, topElemY, HEART_WIDTH, HEART_HEIGHT);
         }
     }
+
     public void drawTitleScreen(Main game, boolean transitionInDone) {
         game.batch.draw(startButton.getTexture(), START_BUTTON_X, START_BUTTON_Y, START_BUTTON_WIDTH, START_BUTTON_HEIGHT);
         game.batch.draw(shopButton.getTexture(), SHOP_BUTTON_X, SHOP_BUTTON_Y, SHOP_BUTTON_WIDTH, SHOP_BUTTON_HEIGHT);
@@ -141,7 +146,8 @@ public class GameInterface extends GameElements{
 
         if (transitionInDone) {
             titleTexture.setTexture(assets.assetManager.get(Assets.title_logo, Texture.class));
-            game.batch.draw(tsSoundButton.getTexture(), TS_SOUND_BUTTON_X, tsSoundButtonY, TS_SOUND_BUTTON_WIDTH, TS_SOUND_BUTTON_HEIGHT);;
+            game.batch.draw(tsSoundButton.getTexture(), TS_SOUND_BUTTON_X, tsSoundButtonY, TS_SOUND_BUTTON_WIDTH, TS_SOUND_BUTTON_HEIGHT);
+            ;
 
             scoreFont.draw(game.batch, "HIGH SCORE: " + prefs.getHighScore(), SCORE_X, scoreY);
 
@@ -149,20 +155,18 @@ public class GameInterface extends GameElements{
     }
 
     public boolean checkForTSSoundButtonTap(Main game, boolean soundEnabled) {
-        if(tsSoundButton.getTappedBefore()) {
+        if (tsSoundButton.getTappedBefore()) {
             if (prefs.hasSound()) {
                 tsSoundButton.setTexture(assets.assetManager.get(Assets.sound_off_button_ts, Texture.class));
-            }
-            else {
+            } else {
                 tsSoundButton.setTexture(assets.assetManager.get(Assets.sound_on_button_ts, Texture.class));
             }
         }
-        if(tsSoundButton.getReleased()){
+        if (tsSoundButton.getReleased()) {
             if (prefs.hasSound()) {
                 prefs.setSound(false);
                 soundEnabled = false;
-            }
-            else {
+            } else {
                 prefs.setSound(true);
                 soundEnabled = true;
                 game.playSound.play(0.2f);
@@ -171,12 +175,11 @@ public class GameInterface extends GameElements{
         return soundEnabled;
     }
 
-    public boolean checkForStartButtonTap(boolean switchScreens){
-        if(!switchScreens) {
+    public boolean checkForStartButtonTap(boolean switchScreens) {
+        if (!switchScreens) {
             if (startButton.getTappedBefore()) {
                 startButton.setTexture(assets.assetManager.get(Assets.start_button_active, Texture.class));
-            }
-            else {
+            } else {
                 startButton.setTexture(assets.assetManager.get(Assets.start_button_inactive, Texture.class));
             }
             return startButton.getReleased();
@@ -188,16 +191,16 @@ public class GameInterface extends GameElements{
 
         return false;
     }
-    public boolean checkForShopButtonTap(Main game, boolean isShopOpen, boolean switchScreens, boolean soundEnabled){
-        if(!isShopOpen && !switchScreens) {
+
+    public boolean checkForShopButtonTap(Main game, boolean isShopOpen, boolean switchScreens, boolean soundEnabled) {
+        if (!isShopOpen && !switchScreens) {
             if (shopButton.getTappedBefore()) {
                 shopButton.setTexture(assets.assetManager.get(Assets.shop_button_active, Texture.class));
-            }
-            else {
+            } else {
                 shopButton.setTexture(assets.assetManager.get(Assets.shop_button_inactive, Texture.class));
             }
-            if(shopButton.getReleased()){
-                if(soundEnabled)
+            if (shopButton.getReleased()) {
+                if (soundEnabled)
                     game.playSound.play(0.2f);
 
                 return true;
@@ -205,20 +208,18 @@ public class GameInterface extends GameElements{
         }
         return false;
     }
-    public boolean checkForSoundButtonTap(boolean soundEnabled){
-        if(soundEnabled){
-            if(soundButton.getTappedBefore()){
+
+    public boolean checkForSoundButtonTap(boolean soundEnabled) {
+        if (soundEnabled) {
+            if (soundButton.getTappedBefore()) {
                 soundButton.setTexture(assets.assetManager.get(Assets.sound_on_button_active, Texture.class));
-            }
-            else{
+            } else {
                 soundButton.setTexture(assets.assetManager.get(Assets.sound_on_button_inactive, Texture.class));
             }
-        }
-        else{
-            if(soundButton.getTappedBefore()){
+        } else {
+            if (soundButton.getTappedBefore()) {
                 soundButton.setTexture(assets.assetManager.get(Assets.sound_off_button_active, Texture.class));
-            }
-            else{
+            } else {
                 soundButton.setTexture(assets.assetManager.get(Assets.sound_off_button_inactive, Texture.class));
             }
         }
@@ -226,139 +227,155 @@ public class GameInterface extends GameElements{
     }
 
 
-    public boolean checkForReplayButtonTap(){
-        if(replayButton.getTappedBefore()){
+    public boolean checkForReplayButtonTap() {
+        if (replayButton.getTappedBefore()) {
             replayButton.setTexture(assets.assetManager.get(Assets.replay_button_active, Texture.class));
-        }
-        else{
+        } else {
             replayButton.setTexture(assets.assetManager.get(Assets.replay_button_inactive, Texture.class));
         }
         return replayButton.getReleased();
     }
 
-    public boolean checkForPlayButtonTap(){
-        if(playButton.getTappedBefore()){
+    public boolean checkForPlayButtonTap() {
+        if (playButton.getTappedBefore()) {
             playButton.setTexture(assets.assetManager.get(Assets.play_button_active, Texture.class));
 
-        }
-        else{
+        } else {
             playButton.setTexture(assets.assetManager.get(Assets.play_button_inactive, Texture.class));
         }
         return playButton.getReleased();
     }
 
-    public boolean checkForPauseButtonTap(){
+    public boolean checkForPauseButtonTap() {
         return pauseButton.getTapped();
     }
 
-    public boolean checkForXButtonTap(Main game, boolean isShopOpen, boolean soundEnabled){
+    public boolean checkForXButtonTap(Main game, boolean isShopOpen, boolean soundEnabled) {
 
-        if(isShopOpen){
-            if(xButton.getTapped()){
+        if (isShopOpen) {
+            if (xButton.getTapped()) {
                 isShopOpen = false;
-                if(soundEnabled)
+
+                if (soundEnabled)
                     game.playSound.play(0.2f);
             }
         }
+
         return !isShopOpen;
     }
 
-    public boolean checkForYesButtonTap(){
+    public boolean checkForYesButtonTap() {
         if (yesButton.getTappedBefore()) {
             yesButton.setTexture(assets.assetManager.get(Assets.yes_button_active, Texture.class));
-        }
-        else {
+        } else {
             yesButton.setTexture(assets.assetManager.get(Assets.yes_button_inactive, Texture.class));
         }
         return yesButton.getReleased();
     }
 
-    public void checkForNoButtonTap(Main game, boolean soundEnabled){
+    public void checkForNoButtonTap(Main game, boolean soundEnabled) {
         if (noButton.getTappedBefore()) {
             noButton.setTexture(assets.assetManager.get(Assets.no_button_active, Texture.class));
-        }
-        else {
+        } else {
             noButton.setTexture(assets.assetManager.get(Assets.no_button_inactive, Texture.class));
         }
-        if(noButton.getReleased()){
+        if (noButton.getReleased()) {
             setConfirmLeaveScreenOpen(false);
-            if(soundEnabled)
+            if (soundEnabled)
                 game.pauseSound.play(0.2f);
         }
     }
-    public boolean checkForHomeButtonTap(){
-        if(homeButton.getTappedBefore()){
+
+    public boolean checkForHomeButtonTap() {
+        if (homeButton.getTappedBefore()) {
             homeButton.setTexture(assets.assetManager.get(Assets.home_button_active, Texture.class));
-        }
-        else{
+        } else {
             homeButton.setTexture(assets.assetManager.get(Assets.home_button_inactive, Texture.class));
         }
         return homeButton.getReleased();
     }
-    public void checkForLeftArrowTap(Main game, boolean soundEnabled){
-        if(leftArrow.getTappedBefore()){
+
+    public void checkForLeftArrowTap(Main game, boolean soundEnabled) {
+        if (leftArrow.getTappedBefore()) {
             leftArrow.setTexture(assets.assetManager.get(Assets.left_arrow_active, Texture.class));
-        }
-        else{
+        } else {
             leftArrow.setTexture(assets.assetManager.get(Assets.left_arrow_inactive, Texture.class));
         }
-        if(leftArrow.getReleased()) {
+        if (leftArrow.getReleased()) {
 
-            if(selectedElement == 0){
+            if (selectedElement == 0) {
                 selectedElement = ShopElement.shipCount;
-            }
-            else{
+            } else {
                 selectedElement -= 1;
             }
+
+            ship.setElementAnimation(selectedElement);
+            if (soundEnabled)
+                game.playSound.play(0.2f);
+        }
+    }
+
+    public void checkForRightArrowTap(Main game, boolean soundEnabled) {
+        if (rightArrow.getTappedBefore()) {
+            rightArrow.setTexture(assets.assetManager.get(Assets.right_arrow_active, Texture.class));
+        } else {
+            rightArrow.setTexture(assets.assetManager.get(Assets.right_arrow_inactive, Texture.class));
+        }
+        if (rightArrow.getReleased()) {
+            if (selectedElement == ShopElement.shipCount)
+                selectedElement = 0;
+            else {
+                selectedElement += 1;
+            }
+            ship.setElementAnimation(selectedElement);
 
             if (soundEnabled)
                 game.playSound.play(0.2f);
         }
     }
 
-    public void checkForRightArrowTap(Main game, boolean soundEnabled){
-        if(rightArrow.getTappedBefore()){
-            rightArrow.setTexture(assets.assetManager.get(Assets.right_arrow_active, Texture.class));
+    public void checkForSelectButtonTap(Main game, boolean soundEnabled) {
+        if (selectButton.getTappedBefore()) {
+            selectButton.setTexture(assets.assetManager.get(Assets.select_button_active, Texture.class));
+        } else {
+            selectButton.setTexture(assets.assetManager.get(Assets.select_button_inactive, Texture.class));
         }
-        else{
-            rightArrow.setTexture(assets.assetManager.get(Assets.right_arrow_inactive, Texture.class));
-        }
-        if(rightArrow.getReleased()){
-            if(selectedElement == ShopElement.shipCount)
-                selectedElement = 0;
-            else{
-                selectedElement += 1;
-            }
+        if (selectButton.getReleased()) {
+            prefs.setShip(selectedElement);
 
-            if(soundEnabled)
+            if (soundEnabled)
                 game.playSound.play(0.2f);
         }
     }
 
-    public void drawShopScreen(Main game, boolean soundEnabled, float delta, SpriteBatch batch){
-        stateTime += delta/6;
+    public void drawShopScreen(Main game, boolean soundEnabled, float delta, SpriteBatch batch) {
+        stateTime += delta / 6;
 
         game.batch.draw(shopBack, SHOP_BACK_X, SHOP_BACK_Y, SHOP_BACK_WIDTH, SHOP_BACK_HEIGHT);
         game.batch.draw(xButton.getTexture(), X_BUTTON_X, X_BUTTON_Y, X_BUTTON_WIDTH, X_BUTTON_HEIGHT);
 
         game.batch.draw(leftArrow.getTexture(), LEFT_ARROW_X, LEFT_ARROW_Y, LEFT_ARROW_WIDTH, LEFT_ARROW_HEIGHT);
         game.batch.draw(rightArrow.getTexture(), RIGHT_ARROW_X, RIGHT_ARROW_Y, RIGHT_ARROW_WIDTH, RIGHT_ARROW_HEIGHT);
+        game.batch.draw(selectButton.getTexture(), SELECT_BUTTON_X, SELECT_BUTTON_Y, SELECT_BUTTON_WIDTH, SELECT_BUTTON_HEIGHT);
 
         checkForLeftArrowTap(game, soundEnabled);
         checkForRightArrowTap(game, soundEnabled);
 
-        ShopElement ship = new ShopElement(ShopElement.SHIP_ID, selectedElement,SHOP_BACK_X + SHOP_BACK_WIDTH/2 - SHIP_WIDTH/2, SHOP_BACK_Y + SHOP_BACK_HEIGHT/2 - SHIP_HEIGHT/2, SHIP_WIDTH, SHIP_HEIGHT);
+        if(prefs.getShip() == selectedElement){
+            selectButton.setTexture(assets.assetManager.get(Assets.active_button, Texture.class));
+        }
+        else {
+            checkForSelectButtonTap(game, soundEnabled);
+        }
+
+        if (ship == null) {
+            ship = new ShopElement(ShopElement.SHIP_ID, selectedElement, SHOP_BACK_X + SHOP_BACK_WIDTH / 2 - SHIP_WIDTH / 2, SHOP_BACK_Y + SHOP_BACK_HEIGHT / 2 - SHIP_HEIGHT / 2, SHIP_WIDTH, SHIP_HEIGHT);
+        }
+
         ship.render(stateTime, batch);
 
-//        shipSS = new Sprite(assets.assetManager.get(Assets.ship_ss, Texture.class));
-//
-//        shipAnimation = Anim.createAnimation(shipSS, 4, DEFAULT_FRAME_DURATION*1.5f);
-//
-//        shipAnim.drawAnim(shipAnimation, stateTime, SHOP_BACK_X + SHOP_BACK_WIDTH/2 - SHIP_WIDTH/2, SHOP_BACK_Y + SHOP_BACK_HEIGHT/2 - SHIP_HEIGHT/2, SHIP_WIDTH, SHIP_HEIGHT,   true, game.batch);
-
         gl.setText(storeFont, ship.getTitle(), Color.valueOf(PURPLE_COLOR_HEX), SCREEN_WIDTH, Align.center, true);
-        storeFont.draw(game.batch, ship.getTitle(), (SCREEN_WIDTH - gl.width) / 2, SHOP_BACK_Y + SHOP_BACK_HEIGHT*.8f + gl.height/2);
-
+        storeFont.draw(game.batch, ship.getTitle(), (SCREEN_WIDTH - gl.width) / 2, SHOP_BACK_Y + SHOP_BACK_HEIGHT * .8f + gl.height / 2);
     }
 
     public void drawPauseScreen(Main game, BitmapFont scoreFont, int score) {
@@ -377,7 +394,7 @@ public class GameInterface extends GameElements{
         }
     }
 
-    public void drawConfirmLeave(Main game, BitmapFont confirmScreenFont){
+    public void drawConfirmLeave(Main game, BitmapFont confirmScreenFont) {
         game.batch.draw(yesButton.getTexture(), YES_BUTTON_X, YES_BUTTON_Y, YES_BUTTON_WIDTH, YES_BUTTON_HEIGHT);
         game.batch.draw(noButton.getTexture(), NO_BUTTON_X, NO_BUTTON_Y, NO_BUTTON_WIDTH, NO_BUTTON_HEIGHT);
 
@@ -386,11 +403,11 @@ public class GameInterface extends GameElements{
 
     }
 
-    public void setConfirmLeaveScreenOpen(boolean isOpen){
+    public void setConfirmLeaveScreenOpen(boolean isOpen) {
         confirmLeaveScreenOpen = isOpen;
     }
 
-    public boolean getConfirmLeaveScreenOpen(){
+    public boolean getConfirmLeaveScreenOpen() {
         return confirmLeaveScreenOpen;
     }
 

@@ -23,10 +23,10 @@ public class ShopElement extends GameElements{
     static Sprite mainShip, blackShip, redShip;
 
     public static int shipCount = 2; // one less than actual count for cycling between ships
+    private int id, colorId;
 
     private Sprite elementSheet;
     private String title;
-    GlyphLayout gl;
 
     Animation<TextureRegion> elementAnimation;
     Anim elementAnim = new Anim();
@@ -36,6 +36,7 @@ public class ShopElement extends GameElements{
         this.y = y;
         this.width = width;
         this.height = height;
+        this.colorId = colorId;
 
         if(id == SHIP_ID) {
 
@@ -63,7 +64,6 @@ public class ShopElement extends GameElements{
     }
     public void render(float stateTime, SpriteBatch batch){
         elementAnim.drawAnim(elementAnimation, stateTime, x, y, width, height, true, batch);
-
     }
 
     public static void createElements(Assets assets){
@@ -73,5 +73,37 @@ public class ShopElement extends GameElements{
     }
     public String getTitle(){
         return title;
+    }
+    public void setId(int id){
+        this.id = id;
+    }
+    public void setElementAnimation(int colorId){
+        switch (colorId) {
+
+            case MAIN_SHIP_ID:
+                elementSheet = mainShip;
+                title = "CLASSIC";
+                break;
+            case RED_SHIP_ID:
+                elementSheet = redShip;
+                title = "CRIMSON";
+                break;
+            case BLACK_SHIP_ID:
+                elementSheet = blackShip;
+                title = "GHOST";
+                break;
+        }
+
+        if(elementSheet != null) {
+            elementAnimation = Anim.createAnimation(elementSheet, 4, DEFAULT_FRAME_DURATION * 1.5f);
+            elementAnimation.setPlayMode(Animation.PlayMode.LOOP);
+        }
+    }
+
+    public void setColorId(int colorId){
+        this.colorId = colorId;
+    }
+    public int getColorId(){
+        return colorId;
     }
 }

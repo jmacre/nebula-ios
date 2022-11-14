@@ -24,6 +24,14 @@ public class Prefs {
         prefs.flush();
     }
 
+    public void setShip(int selectedShip){
+        prefs.putInteger("shipColor", selectedShip);
+        prefs.flush();
+    }
+    public int getShip(){
+        return prefs.getInteger("shipColor", 0);
+    }
+
     public boolean hasSound(){
         return prefs.getBoolean("hasSound", true);
     }

@@ -204,6 +204,7 @@ public class MainGame extends GameElements implements Screen{
 
     Player player;
     int health = 3;
+    int selectedShip = 0;
 
     public MainGame(Main game, Assets assets, Background background) {
         this.game = game;
@@ -253,7 +254,17 @@ public class MainGame extends GameElements implements Screen{
         whiteFlash = new Sprite(assets.assetManager.get(Assets.white_flash, Texture.class));
         whiteFlash.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
 
-        shipSS = new Sprite(assets.assetManager.get(Assets.ship_ss, Texture.class));
+        selectedShip = prefs.getShip();
+
+        if(selectedShip == 0) {
+            shipSS = new Sprite(assets.assetManager.get(Assets.ship_ss, Texture.class));
+        }
+        else if(selectedShip == 1){
+            shipSS = new Sprite(assets.assetManager.get(Assets.ship_red_ss, Texture.class));
+        }
+        else if(selectedShip == 2){
+            shipSS = new Sprite(assets.assetManager.get(Assets.ship_black_ss, Texture.class));
+        }
 
         shipAnimation = Anim.createAnimation(shipSS, 4, DEFAULT_FRAME_DURATION*1.5f);
 
@@ -271,7 +282,7 @@ public class MainGame extends GameElements implements Screen{
 
         textParameter.size = SCREEN_WIDTH/6;
         countdownFont = generator.generateFont(textParameter);
-        countdownFont.setColor(Color.valueOf(PURPLE_COLOR_HEX));
+        countdownFont.setColor(Color.WHITE);
 
         gl = new GlyphLayout();
         Gdx.input.setInputProcessor(inputProcessor);
@@ -735,7 +746,7 @@ public class MainGame extends GameElements implements Screen{
     }
 
     public void movePlayer(){
-        if (!isPaused && isTransitionedIn && !isShipLeaving && !isFadingOut) {
+        if (!isPaused && isTransitionedIn && !isShipLeaving && !isFadingOut && !isTransitioningOut) {
             if (!(Gdx.input.getY() < SCREEN_HEIGHT/5f)) {
 
                 if(Gdx.input.getX() < SHIP_X - SHIP_WIDTH/2) {
