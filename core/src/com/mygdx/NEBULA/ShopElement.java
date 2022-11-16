@@ -18,12 +18,16 @@ public class ShopElement extends GameElements{
     public static final int RED_SHIP_ID = 1;
     public static final int BLACK_SHIP_ID = 2;
     public static final int PURPLE_SHIP_ID = 3;
+    public static final int PURPLE_YELLOW_SHIP_ID = 4;
+    public static final int BLUE_SHIP_ID = 5;
+
+
 
     float x, y, width, height;
 
-    static Sprite mainShip, blackShip, redShip, purpleShip;
+    static Sprite mainShip, blackShip, redShip, purpleShip, purpleYellowShip, blueShip;
 
-    public static int shipCount = 3; // one less than actual count for cycling between ships
+    public static int shipCount = 5; // one less than actual count for cycling between ships
     private int id, colorId;
 
     private Sprite elementSheet;
@@ -58,7 +62,10 @@ public class ShopElement extends GameElements{
         redShip = new Sprite(assets.assetManager.get(Assets.ship_red_ss, Texture.class));
         blackShip = new Sprite(assets.assetManager.get(Assets.ship_black_ss, Texture.class));
         purpleShip = new Sprite(assets.assetManager.get(Assets.ship_purple_ss, Texture.class));
+        purpleYellowShip = new Sprite(assets.assetManager.get(Assets.ship_purple_yellow_ss, Texture.class));
+        blueShip = new Sprite((assets.assetManager.get(Assets.ship_blue_ss, Texture.class)));
     }
+
     public String getTitle(){
         return title;
     }
@@ -83,6 +90,14 @@ public class ShopElement extends GameElements{
             case PURPLE_SHIP_ID:
                 elementSheet = purpleShip;
                 title = "ULTRAVIOLET";
+                break;
+            case PURPLE_YELLOW_SHIP_ID:
+                elementSheet = purpleYellowShip;
+                title = "TROPICAL";
+                break;
+            case BLUE_SHIP_ID:
+                elementSheet = blueShip;
+                title = "FROZEN";
                 break;
         }
 

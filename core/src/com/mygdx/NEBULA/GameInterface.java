@@ -257,7 +257,7 @@ public class GameInterface extends GameElements {
                 isShopOpen = false;
 
                 if (soundEnabled)
-                    game.playSound.play(0.2f);
+                    game.pauseSound.play(0.2f);
             }
         }
 
@@ -311,7 +311,7 @@ public class GameInterface extends GameElements {
 
             ship.setElementAnimation(selectedElement);
             if (soundEnabled)
-                game.playSound.play(0.2f);
+                game.pauseSound.play(0.2f);
         }
     }
 
@@ -330,7 +330,7 @@ public class GameInterface extends GameElements {
             ship.setElementAnimation(selectedElement);
 
             if (soundEnabled)
-                game.playSound.play(0.2f);
+                game.pauseSound.play(0.2f);
         }
     }
 
