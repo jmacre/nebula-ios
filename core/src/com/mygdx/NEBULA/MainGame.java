@@ -42,7 +42,7 @@ import static com.mygdx.NEBULA.ItemDrop.MIN_ITEM_SPAWN_TIME;
 import static com.mygdx.NEBULA.ItemDrop.MISSILE_ID;
 
 
-public class MainGame extends GameElements implements Screen{
+public class MainGame extends GameElements implements Screen {
     public Prefs prefs = new Prefs();
     Assets assets;
     Background background;
@@ -249,47 +249,42 @@ public class MainGame extends GameElements implements Screen{
         soundEnabled = prefs.hasSound();
 
         blackTransition = new Sprite(assets.assetManager.get(Assets.black_transition, Texture.class));
-        blackTransition.setSize(SCREEN_WIDTH*1.5f, SCREEN_HEIGHT*1.5f);
+        blackTransition.setSize(SCREEN_WIDTH * 1.5f, SCREEN_HEIGHT * 1.5f);
 
         whiteFlash = new Sprite(assets.assetManager.get(Assets.white_flash, Texture.class));
         whiteFlash.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
 
         selectedShip = prefs.getShip();
 
-        if(selectedShip == 0) {
+        if (selectedShip == 0) {
             shipSS = new Sprite(assets.assetManager.get(Assets.ship_ss, Texture.class));
-        }
-        else if(selectedShip == 1){
+        } else if (selectedShip == 1) {
             shipSS = new Sprite(assets.assetManager.get(Assets.ship_red_ss, Texture.class));
-        }
-        else if(selectedShip == 2){
+        } else if (selectedShip == 2) {
             shipSS = new Sprite(assets.assetManager.get(Assets.ship_black_ss, Texture.class));
-        }
-        else if(selectedShip == 3){
+        } else if (selectedShip == 3) {
             shipSS = new Sprite(assets.assetManager.get(Assets.ship_purple_ss, Texture.class));
-        }
-        else if(selectedShip == 4){
+        } else if (selectedShip == 4) {
             shipSS = new Sprite(assets.assetManager.get(Assets.ship_purple_yellow_ss, Texture.class));
-        }
-        else if(selectedShip == 5){
+        } else if (selectedShip == 5) {
             shipSS = new Sprite(assets.assetManager.get(Assets.ship_blue_ss, Texture.class));
         }
 
-        shipAnimation = Anim.createAnimation(shipSS, 4, DEFAULT_FRAME_DURATION*1.5f);
+        shipAnimation = Anim.createAnimation(shipSS, 4, DEFAULT_FRAME_DURATION * 1.5f);
 
-        textParameter.size = SCREEN_WIDTH/40;
+        textParameter.size = SCREEN_WIDTH / 40;
         menuScoreFont = generator.generateFont(textParameter);
         menuScoreFont.setColor(Color.valueOf(PURPLE_COLOR_HEX));
 
-        textParameter.size = SCREEN_WIDTH/22;
+        textParameter.size = SCREEN_WIDTH / 22;
         confirmScreenFont = generator.generateFont(textParameter);
         confirmScreenFont.setColor(Color.valueOf(PURPLE_COLOR_HEX));
 
-        textParameter.size = SCREEN_WIDTH/10;
+        textParameter.size = SCREEN_WIDTH / 10;
         gameOverFont = generator.generateFont(textParameter);
         gameOverFont.setColor(Color.WHITE);
 
-        textParameter.size = SCREEN_WIDTH/6;
+        textParameter.size = SCREEN_WIDTH / 6;
         countdownFont = generator.generateFont(textParameter);
         countdownFont.setColor(Color.WHITE);
 
@@ -314,13 +309,13 @@ public class MainGame extends GameElements implements Screen{
 
         deltaList.add(delta);
 
-        if(deltaList.size >= 60) {
+        if (deltaList.size >= 60) {
             for (int i = 0; i < deltaList.size; i++) {
                 deltaSum += deltaList.get(i);
             }
             delta = deltaSum / deltaList.size;
 
-            if(isPaused || isRunningResumeCountdown)
+            if (isPaused || isRunningResumeCountdown)
                 deltaP = 0;
             else
                 deltaP = delta;
@@ -330,26 +325,26 @@ public class MainGame extends GameElements implements Screen{
         }
 
         blackTransition.draw(game.batch);
-        if(!isPaused && !isShipLeaving) {
+        if (!isPaused && !isShipLeaving) {
             updateSpawnRates(score);
         }
 
-        if(!isMainMusicPlaying && soundEnabled)
+        if (!isMainMusicPlaying && soundEnabled)
             playMusic();
 
-        if(!soundEnabled || isPaused || !isAlive || isRunningResumeCountdown){
+        if (!soundEnabled || isPaused || !isAlive || isRunningResumeCountdown) {
             musicVolume = 0;
             isMainMusicPlaying = false;
         }
         isAlive = health > 0;
-        if(!isAlive){
+        if (!isAlive) {
             isResettingScreen = true;
         }
 
         if (fadeInOpacity < 1) {
             musicPosition = mainMusic.getPosition();
             background.updateAndRender(deltaP, isAlive, isHourglass, score, starsAnimFront, starsAnimBack, game.batch, false, isResettingScreen, false, false);
-            if(!isRunningResumeCountdown) {
+            if (!isRunningResumeCountdown) {
                 bulletTimer += deltaP;
                 for (Enemy enemy : enemies) {
                     if (enemy.getId() == ENEMY_SHIP_ID) {
@@ -364,7 +359,7 @@ public class MainGame extends GameElements implements Screen{
             }
         }
 
-        if(!isShipLeaving && isAlive) {
+        if (!isShipLeaving && isAlive) {
             updateBullets(game);
             updateEnemyBullets(game);
             updateEnemies();
@@ -372,20 +367,19 @@ public class MainGame extends GameElements implements Screen{
             updateItems();
         }
 
-        if(!soundLoaded) {
+        if (!soundLoaded) {
             soundLoaded = true;
         }
 
-        if(!isShipLeaving) {
+        if (!isShipLeaving) {
             drawMainElements();
         }
-        if(fadeInOpacity > 0) {
+        if (fadeInOpacity > 0) {
             fadeIn();
-        }
-        else if (fadeInOpacity <= 0) {
+        } else if (fadeInOpacity <= 0) {
             isFadingIn = false;
         }
-        if(!isRunningResumeCountdown) {
+        if (!isRunningResumeCountdown) {
             if (isTransitionedIn && isAlive) {
 
                 runScoreTickerTimer();
@@ -414,10 +408,10 @@ public class MainGame extends GameElements implements Screen{
 
                 shipEnemyCollision();
 
-                if(enemyShipsSpawning && enemyBullets.size > 0)
+                if (enemyShipsSpawning && enemyBullets.size > 0)
                     shipBulletCollision();
 
-                if(!isRunningResumeCountdown)
+                if (!isRunningResumeCountdown)
                     player.update();
             }
 
@@ -437,7 +431,7 @@ public class MainGame extends GameElements implements Screen{
             if (isRapidFire)
                 runRapidFireTimer();
 
-            if(isHourglass)
+            if (isHourglass)
                 runHourglassTimer();
 
             else if (bombUsed)
@@ -448,18 +442,17 @@ public class MainGame extends GameElements implements Screen{
 
             else if (rapidFireUsed) {
                 runRapidFireUsedTimer();
-            }
-            else if(hourglassUsed){
+            } else if (hourglassUsed) {
                 runHourglassUsedTimer();
             }
 
-            if(!hurtEnemies.isEmpty()){
-                for(Enemy enemy : hurtEnemies) {
+            if (!hurtEnemies.isEmpty()) {
+                for (Enemy enemy : hurtEnemies) {
                     runEnemyHurtDelay(enemy);
                 }
             }
-            if(!explosionsToDelay.isEmpty()){
-                for(Explosion explosion : explosionsToDelay) {
+            if (!explosionsToDelay.isEmpty()) {
+                for (Explosion explosion : explosionsToDelay) {
                     runExplosionDelay(explosion);
                 }
             }
@@ -473,12 +466,11 @@ public class MainGame extends GameElements implements Screen{
                 movePlayer();
             }
         }
-        if((!isAlive || isPaused) && gameInterface.checkForSoundButtonTap(soundEnabled) && !gameInterface.getConfirmLeaveScreenOpen()){
-            if(prefs.hasSound()) {
+        if ((!isAlive || isPaused) && gameInterface.checkForSoundButtonTap(soundEnabled) && !gameInterface.getConfirmLeaveScreenOpen()) {
+            if (prefs.hasSound()) {
                 prefs.setSound(false);
                 soundEnabled = false;
-            }
-            else{
+            } else {
                 prefs.setSound(true);
                 soundEnabled = true;
                 pauseSound.play(0.3f);
@@ -486,8 +478,8 @@ public class MainGame extends GameElements implements Screen{
         }
 
         //Pausing (pauses music/freezes delta)
-        if(isTransitionedIn && !isPaused && !isTransitioningOut && !isRunningResumeCountdown && gameInterface.checkForPauseButtonTap()){
-            if(soundEnabled)
+        if (isTransitionedIn && !isPaused && !isTransitioningOut && !isRunningResumeCountdown && gameInterface.checkForPauseButtonTap()) {
+            if (soundEnabled)
                 pauseSound.play(0.3f);
 
             isPaused = true;
@@ -497,24 +489,24 @@ public class MainGame extends GameElements implements Screen{
             songPausePosition = mainMusic.getPosition();
             gameInterface.drawPauseScreen(game, menuScoreFont, score);
 
-            if (gameInterface.checkForPlayButtonTap() && !isTransitioningOut && !isFadingIn && !isTransitioningIn &!gameInterface.getConfirmLeaveScreenOpen()){
+            if (gameInterface.checkForPlayButtonTap() && !isTransitioningOut && !isFadingIn && !isTransitioningIn & !gameInterface.getConfirmLeaveScreenOpen()) {
                 playButtonTapVal = inputProcessor.getTapCount();
                 runResumeCountdown = true;
                 isPaused = false;
 
-                if(soundEnabled){
+                if (soundEnabled) {
                     game.playSound.play(0.3f);
                 }
             }
-            if(gameInterface.checkForHomeButtonTap() || gameInterface.getConfirmLeaveScreenOpen()){
-                if(!gameInterface.getConfirmLeaveScreenOpen()) {
+            if (gameInterface.checkForHomeButtonTap() || gameInterface.getConfirmLeaveScreenOpen()) {
+                if (!gameInterface.getConfirmLeaveScreenOpen()) {
                     gameInterface.setConfirmLeaveScreenOpen(true);
                     if (soundEnabled)
                         pauseSound.play(0.3f);
                 }
                 gameInterface.drawConfirmLeave(game, confirmScreenFont);
 
-                if(gameInterface.checkForYesButtonTap()) {
+                if (gameInterface.checkForYesButtonTap()) {
                     yesButtonTapVal = inputProcessor.getTapCount();
 
                     if (soundEnabled)
@@ -525,34 +517,30 @@ public class MainGame extends GameElements implements Screen{
 
             }
         }
-        if(runResumeCountdown) {
+        if (runResumeCountdown) {
             runResumeCountdown(delta);
             isRunningResumeCountdown = true;
-        }
-
-        else{
+        } else {
             isRunningResumeCountdown = false;
             resumeCountdownTimer = -1.5f;
         }
 
-        if(!isAlive){
+        if (!isAlive) {
             game.batch.setShader(null);
 
-            if(inputProcessor.getTapCount() == 0) {
+            if (inputProcessor.getTapCount() == 0) {
                 transitionOut(SHIP_X);
-            }
-            else {
+            } else {
                 transitionOut(CURRENT_SHIP_X);
             }
-            if(isTransitionedOut && !isFadingOut) {
+            if (isTransitionedOut && !isFadingOut) {
                 gameInterface.drawReplayScreen(game, menuScoreFont, gameOverFont, newHighscore);
             }
 
-            if (gameInterface.checkForReplayButtonTap() && isTransitionedOut){
+            if (gameInterface.checkForReplayButtonTap() && isTransitionedOut) {
                 resetScreen();
-            }
-            else if(isTransitionedOut){
-                if(gameInterface.checkForHomeButtonTap() || gameInterface.getConfirmLeaveScreenOpen()) {
+            } else if (isTransitionedOut) {
+                if (gameInterface.checkForHomeButtonTap() || gameInterface.getConfirmLeaveScreenOpen()) {
                     if (!gameInterface.getConfirmLeaveScreenOpen()) {
 
                         gameInterface.setConfirmLeaveScreenOpen(true);
@@ -579,7 +567,7 @@ public class MainGame extends GameElements implements Screen{
             }
         }
 
-        if(isShipLeaving){
+        if (isShipLeaving) {
             game.batch.setShader(null);
 
             isPaused = false;
@@ -593,7 +581,7 @@ public class MainGame extends GameElements implements Screen{
     public void updateSpawnRates(int score) {
         if (score != prevScore) {
             float scoreMultiplier = score - prevScore;
-            if(score < 3000) {
+            if (score < 3000) {
                 if (eyebatsSpawning) {
                     maxEyebatSpawnTime -= (.0003 * scoreMultiplier) / 5f;
                     minEyebatSpawnTime -= (.00015 * scoreMultiplier) / 5f;
@@ -609,8 +597,7 @@ public class MainGame extends GameElements implements Screen{
                 if (speedIncrease < 1) {
                     speedIncrease += (0.0015 * scoreMultiplier) / 5f;
                 }
-            }
-            else{
+            } else {
                 if (eyebatsSpawning) {
                     maxEyebatSpawnTime -= (.00015 * scoreMultiplier) / 5f;
                     minEyebatSpawnTime -= (.00005 * scoreMultiplier) / 5f;
@@ -630,13 +617,13 @@ public class MainGame extends GameElements implements Screen{
             prevScore = score;
         }
     }
-    public void enemyHurt(){
-        for(Enemy enemy : enemies){
-            if(enemy.isHurt()){
-                if(enemy.getHurtTimer() <= 0){
+
+    public void enemyHurt() {
+        for (Enemy enemy : enemies) {
+            if (enemy.isHurt()) {
+                if (enemy.getHurtTimer() <= 0) {
                     enemy.setHurtTimer(enemy.getHurtTimer() + deltaP);
-                }
-                else{
+                } else {
                     enemy.setEnemyHurt(false);
                     enemy.setHurtTimer(hurtTimer);
                 }
@@ -644,7 +631,7 @@ public class MainGame extends GameElements implements Screen{
         }
     }
 
-    public void resetScreen(){
+    public void resetScreen() {
         game.batch.setShader(null);
         hourglassMultiplier = 1;
 
@@ -691,13 +678,13 @@ public class MainGame extends GameElements implements Screen{
         missileUsed = false;
         rapidFireUsed = false;
 
-        if(explosions.size > 0)
+        if (explosions.size > 0)
             explosions.clear();
 
-        if(enemies.size > 0)
+        if (enemies.size > 0)
             enemies.clear();
 
-        if(enemiesToRemove.size > 0)
+        if (enemiesToRemove.size > 0)
             enemiesToRemove.clear();
 
         bp.clear();
@@ -705,23 +692,23 @@ public class MainGame extends GameElements implements Screen{
         exp.clear();
         ebp.clear();
 
-        if(bullets.size > 0)
+        if (bullets.size > 0)
             bullets.clear();
 
-        if(bulletsToRemove.size > 0)
+        if (bulletsToRemove.size > 0)
             bulletsToRemove.clear();
 
-        if(itemDrops.size > 0)
+        if (itemDrops.size > 0)
             itemDrops.clear();
 
-        if(enemyBullets.size > 0)
+        if (enemyBullets.size > 0)
             enemyBullets.clear();
 
-        if(enemyBulletsToRemove.size > 0){
+        if (enemyBulletsToRemove.size > 0) {
             enemyBulletsToRemove.clear();
         }
 
-        if(shipPositions.size> 0)
+        if (shipPositions.size > 0)
             shipPositions.clear();
 
         SHIP_X = (int) (SCREEN_WIDTH / 2 - SHIP_WIDTH / 2);
@@ -732,21 +719,22 @@ public class MainGame extends GameElements implements Screen{
         newHighscore = false;
     }
 
-    public void playMusic(){
-        if(soundEnabled && !isPaused && isAlive && !isTransitioningOut && !isRunningResumeCountdown) {
+    public void playMusic() {
+        if (soundEnabled && !isPaused && isAlive && !isTransitioningOut && !isRunningResumeCountdown) {
             musicVolume = 0.35f;
             mainMusic.setPosition(songPausePosition);
 
-        }
-        else if(soundEnabled && !isAlive && !isPaused && isTransitioningOut) {
+        } else if (soundEnabled && !isAlive && !isPaused && isTransitioningOut) {
             musicVolume = 0f;
         }
-        mainMusic.setLooping(true);
+        if(!mainMusic.isLooping()) {
+            mainMusic.setLooping(true);
+        }
 
-        if(!isPaused && !isTransitioningOut && !isMainMusicPlaying && !isRunningResumeCountdown){
+        if (!isPaused && !isTransitioningOut && !isMainMusicPlaying && !isRunningResumeCountdown) {
             mainMusic.play();
         }
-        if(musicVolume != musicVolumeTemp){
+        if (musicVolume != musicVolumeTemp) {
             mainMusic.setVolume(musicVolume);
             musicVolumeTemp = musicVolume;
         }
@@ -754,22 +742,22 @@ public class MainGame extends GameElements implements Screen{
         isMainMusicPlaying = true;
     }
 
-    public void movePlayer(){
+    public void movePlayer() {
         if (!isPaused && isTransitionedIn && !isShipLeaving && !isFadingOut && !isTransitioningOut) {
-            if (!(Gdx.input.getY() < SCREEN_HEIGHT/5f)) {
+            if (!(Gdx.input.getY() < SCREEN_HEIGHT / 5f)) {
 
-                if(Gdx.input.getX() < SHIP_X - SHIP_WIDTH/2) {
+                if (Gdx.input.getX() < SHIP_X - SHIP_WIDTH / 2) {
                     playerPosition = (SHIP_X - deltaP * moveSpeed * (SHIP_X - (Gdx.input.getX() - SHIP_WIDTH / 2)));
 
-                    if(playerPosition >= 0 && playerPosition <= SCREEN_WIDTH - SHIP_WIDTH) {
+                    if (playerPosition >= 0 && playerPosition <= SCREEN_WIDTH - SHIP_WIDTH) {
                         SHIP_X -= (deltaP * moveSpeed * (SHIP_X - (Gdx.input.getX() - SHIP_WIDTH / 2)));
                     }
                 }
-                if(Gdx.input.getX() > SHIP_X - SHIP_WIDTH/2) {
-                    playerPosition =  (SHIP_X + deltaP * moveSpeed * (Gdx.input.getX() - SHIP_X - SHIP_WIDTH / 2));
+                if (Gdx.input.getX() > SHIP_X - SHIP_WIDTH / 2) {
+                    playerPosition = (SHIP_X + deltaP * moveSpeed * (Gdx.input.getX() - SHIP_X - SHIP_WIDTH / 2));
 
                     if (playerPosition >= 0 && playerPosition <= SCREEN_WIDTH - SHIP_WIDTH) {
-                        SHIP_X +=  (deltaP * moveSpeed * (Gdx.input.getX() - SHIP_X - SHIP_WIDTH / 2));
+                        SHIP_X += (deltaP * moveSpeed * (Gdx.input.getX() - SHIP_X - SHIP_WIDTH / 2));
                     }
                 }
                 CURRENT_SHIP_X = SHIP_X;
@@ -777,7 +765,7 @@ public class MainGame extends GameElements implements Screen{
         }
     }
 
-    public void runResumeCountdown(float delta){
+    public void runResumeCountdown(float delta) {
         resumeCountdownTimer += delta;
         if (resumeCountdownTimer >= -1) {
             if (resumeCountdownTimer < -0.66f) {
@@ -805,169 +793,154 @@ public class MainGame extends GameElements implements Screen{
         }
     }
 
-    public void transitionIn(){
-        if(SHIP_START_Y <= SHIP_Y) {
+    public void transitionIn() {
+        if (SHIP_START_Y <= SHIP_Y) {
             SHIP_X = (int) (SCREEN_WIDTH / 2 - SHIP_WIDTH / 2);
             SHIP_START_Y += 1.6 * SHIP_Y * deltaP;
             transitionDistTraveled += 1.6 * SHIP_Y * deltaP;
             transitionInTapVal = inputProcessor.getTapCount();
         }
 
-        if (transitionDistTraveled <= totalTransitionDist/3) {
+        if (transitionDistTraveled <= totalTransitionDist / 3) {
             gl.setText(countdownFont, "3", Color.WHITE, SCREEN_WIDTH, Align.center, true);
-            countdownFont.draw(game.batch, "3", (SCREEN_WIDTH - gl.width) / 2, SCREEN_HEIGHT / 2f + gl.height/2);
-        }
-        else if (transitionDistTraveled <= 2*totalTransitionDist/3) {
+            countdownFont.draw(game.batch, "3", (SCREEN_WIDTH - gl.width) / 2, SCREEN_HEIGHT / 2f + gl.height / 2);
+        } else if (transitionDistTraveled <= 2 * totalTransitionDist / 3) {
             gl.setText(countdownFont, "2", Color.WHITE, SCREEN_WIDTH, Align.center, true);
-            countdownFont.draw(game.batch, "2", (SCREEN_WIDTH - gl.width) / 2, SCREEN_HEIGHT / 2f + gl.height/2);
-        }
-        else if (transitionDistTraveled < totalTransitionDist) {
+            countdownFont.draw(game.batch, "2", (SCREEN_WIDTH - gl.width) / 2, SCREEN_HEIGHT / 2f + gl.height / 2);
+        } else if (transitionDistTraveled < totalTransitionDist) {
             gl.setText(countdownFont, "1", Color.WHITE, SCREEN_WIDTH, Align.center, true);
-            countdownFont.draw(game.batch, "1", (SCREEN_WIDTH - gl.width) / 2, SCREEN_HEIGHT / 2f + gl.height/2);
-        }
-        else if (transitionDistTraveled >= totalTransitionDist && SHIP_START_Y >= SHIP_Y) {
-            if(countDownTimer < 0.25f) {
+            countdownFont.draw(game.batch, "1", (SCREEN_WIDTH - gl.width) / 2, SCREEN_HEIGHT / 2f + gl.height / 2);
+        } else if (transitionDistTraveled >= totalTransitionDist && SHIP_START_Y >= SHIP_Y) {
+            if (countDownTimer < 0.25f) {
                 countDownTimer += deltaP;
                 gl.setText(countdownFont, "GO", Color.WHITE, SCREEN_WIDTH, Align.center, true);
-                countdownFont.draw(game.batch, "GO", (SCREEN_WIDTH - gl.width) / 2, SCREEN_HEIGHT / 2f + gl.height/2);
+                countdownFont.draw(game.batch, "GO", (SCREEN_WIDTH - gl.width) / 2, SCREEN_HEIGHT / 2f + gl.height / 2);
             }
             isTransitionedIn = true;
             isTransitioningIn = false;
-        }
-        else{
+        } else {
             isTransitionedIn = true;
             isTransitioningIn = false;
         }
     }
 
-    public void transitionOut(float SHIP_X_TRANSITION_OUT){
+    public void transitionOut(float SHIP_X_TRANSITION_OUT) {
 
-        if(SHIP_START_Y >= -3*SHIP_HEIGHT){
+        if (SHIP_START_Y >= -3 * SHIP_HEIGHT) {
             isTransitionedOut = false;
             isTransitioningOut = true;
         }
-        if(!isTransitionedOut) {
+        if (!isTransitionedOut) {
             SHIP_START_Y -= 1.6 * SHIP_Y * deltaP;
 
         }
 
-        shipAnim.drawAnim(shipAnimation, stateTime, SHIP_X_TRANSITION_OUT, SHIP_START_Y, SHIP_WIDTH, SHIP_HEIGHT,   true, game.batch, true);
+        shipAnim.drawAnim(shipAnimation, stateTime, SHIP_X_TRANSITION_OUT, SHIP_START_Y, SHIP_WIDTH, SHIP_HEIGHT, true, game.batch, true);
 
-        if(SHIP_START_Y <= -3*SHIP_HEIGHT){
+        if (SHIP_START_Y <= -3 * SHIP_HEIGHT) {
             isTransitionedOut = true;
         }
-        if(prefs.getHighScore() < score) {
+        if (prefs.getHighScore() < score) {
             prefs.setHighScore(score);
-            newHighscore  = true;
+            newHighscore = true;
         }
 
     }
 
-    public void fadeOut(){
+    public void fadeOut() {
         isFadingOut = true;
         fadeOutOpacity += 0.8f * deltaP;
-        blackTransition.setColor(0,0,0, fadeOutOpacity);
+        blackTransition.setColor(0, 0, 0, fadeOutOpacity);
 
-        if(fadeOutOpacity >= 1f){
+        if (fadeOutOpacity >= 1f) {
             dispose();
         }
 
         blackTransition.draw(game.batch);
     }
 
-    public void fadeIn(){
+    public void fadeIn() {
         isFadingIn = true;
         fadeInOpacity -= 0.6f * deltaP;
-        blackTransition.setColor(0,0,0, fadeInOpacity);
+        blackTransition.setColor(0, 0, 0, fadeInOpacity);
         blackTransition.draw(game.batch);
     }
 
-    public void drawMainElements(){
-        if(!isRunningResumeCountdown)
+    public void drawMainElements() {
+        if (!isRunningResumeCountdown)
             stateTime += deltaP / 6;
 
-        if(isTransitioningIn) {
+        if (isTransitioningIn) {
             shipAnim.drawAnim(shipAnimation, stateTime, SHIP_X, SHIP_START_Y, SHIP_WIDTH, SHIP_HEIGHT, true, game.batch, true);
-        }
-
-        else if(!justHit && health != 0) {
+        } else if (!justHit && health != 0) {
             shipAnim.drawAnim(shipAnimation, stateTime, SHIP_X, SHIP_START_Y, SHIP_WIDTH, SHIP_HEIGHT, true, game.batch);
-        }
-
-        else if(!isTransitioningOut){
+        } else if (!isTransitioningOut) {
             runShipBlinking();
         }
 
-        if(isTransitionedIn) {
+        if (isTransitionedIn) {
             gameInterface.drawTopUI(game, isPaused || isRunningResumeCountdown, health, isAlive, isTransitionedIn);
 
             gl.setText(Main.scoreFont, String.valueOf(score));
 
-            if(Gdx.app.getType() == Application.ApplicationType.iOS) {
+            if (Gdx.app.getType() == Application.ApplicationType.iOS) {
                 Main.scoreFont.draw(game.batch, gl, SCORE_X, SCREEN_HEIGHT - gl.height * 2f);
-            }
-
-            else{
+            } else {
                 Main.scoreFont.draw(game.batch, gl, SCORE_X, SCREEN_HEIGHT - gl.height);
             }
             updatingScore = false;
         }
     }
-    public void runShipBlinking(){
+
+    public void runShipBlinking() {
         shipBlinkingTimer += deltaP;
 
-        if(shipBlinkingTimer < 0){
+        if (shipBlinkingTimer < 0) {
             shipAnim.drawAnim(shipAnimation, stateTime, SHIP_X, SHIP_START_Y, SHIP_WIDTH, SHIP_HEIGHT, true, game.batch, true);
-        }
-        else if (shipBlinkingTimer < 0.2){
+        } else if (shipBlinkingTimer < 0.2) {
             shipAnim.drawAnim(shipAnimation, stateTime, SHIP_X, SHIP_START_Y, SHIP_WIDTH, SHIP_HEIGHT, true, game.batch);
-        }
-        else{
+        } else {
             shipBlinkingTimer = -0.2f;
         }
     }
 
-    public void runBulletTimers(){
-        if(isMissile) {
-            if(missileUsed){
+    public void runBulletTimers() {
+        if (isMissile) {
+            if (missileUsed) {
                 bulletThreshold = 0.3f;
-            }
-            else {
+            } else {
                 bulletThreshold = 0.55f;
             }
-        }
-        else if(isRapidFire) {
+        } else if (isRapidFire) {
             bulletThreshold = 0.1f;
-        }
-        else if(!bullets.isEmpty()) {
+        } else if (!bullets.isEmpty()) {
             bulletThreshold = 0.4f;
         }
 
         if (bulletTimer > bulletThreshold) {
             if (score < 99999 && !isShipLeaving) {
 
-               if(soundEnabled) {
-                   if (isTransitionedIn) {
-                       if (isMissile) {
-                           missileSound.play(0.1f);
-                       }
-                       else {
-                           bulletSound.stop();
-                           bulletSound.play(0.05f);
-                       }
-                   }
-               }
+                if (soundEnabled) {
+                    if (isTransitionedIn) {
+                        if (isMissile) {
+                            missileSound.play(0.1f);
+                        } else {
+                            bulletSound.stop();
+                            bulletSound.play(0.05f);
+                        }
+                    }
+                }
             }
             if (!isShipLeaving && SHIP_START_Y >= SHIP_Y && isAlive) {
                 addBullets();
             }
-            if(bullets.isEmpty() && !isMissile && !isRapidFire) { // allows bullets to fire immediately after transitioning in
+            if (bullets.isEmpty() && !isMissile && !isRapidFire) { // allows bullets to fire immediately after transitioning in
                 bulletThreshold = 0;
             }
             bulletTimer -= bulletThreshold;
         }
 
-        if(enemyShipsSpawning) {
+        if (enemyShipsSpawning) {
             for (Enemy enemy : enemies) {
                 if (enemy.getId() == (ENEMY_SHIP_ID)) {
                     if (enemy.getEnemyY() < SCREEN_HEIGHT && enemy.getEnemyBulletTimer() > enemy.getEnemyBulletThreshold()) {
@@ -981,27 +954,24 @@ public class MainGame extends GameElements implements Screen{
         }
     }
 
-    public void addBullets(){
+    public void addBullets() {
         Bullet bullet1 = bp.obtain();
         Bullet bullet2 = bp.obtain();
 
-        if(isMissile) {
+        if (isMissile) {
             bullet1.create(SHIP_X, true, false, assets);
             bullets.add(bullet1);
-        }
-        else if(isRapidFire) {
-            bullet1.create(SHIP_X + SHIP_WIDTH * (4/27f), false, true, assets);
+        } else if (isRapidFire) {
+            bullet1.create(SHIP_X + SHIP_WIDTH * (4 / 27f), false, true, assets);
             bullets.add(bullet1);
 
-            bullet2.create(SHIP_X + SHIP_WIDTH - SHIP_WIDTH * (6/27f), false, true, assets);
+            bullet2.create(SHIP_X + SHIP_WIDTH - SHIP_WIDTH * (6 / 27f), false, true, assets);
             bullets.add(bullet2);
-        }
-
-        else {
-            bullet1.create(SHIP_X + SHIP_WIDTH * (4/27f), false, false, assets);
+        } else {
+            bullet1.create(SHIP_X + SHIP_WIDTH * (4 / 27f), false, false, assets);
             bullets.add(bullet1);
 
-            bullet2.create(SHIP_X + SHIP_WIDTH - SHIP_WIDTH * (6/27f), false, false, assets);
+            bullet2.create(SHIP_X + SHIP_WIDTH - SHIP_WIDTH * (6 / 27f), false, false, assets);
             bullets.add(bullet2);
 
             missileTimer = MISSILE_TIMER;
@@ -1016,19 +986,19 @@ public class MainGame extends GameElements implements Screen{
         for (Bullet bullet : bullets) {
             bullet.update(deltaP, isHourglass);
 
-            if(bullet.getBulletY() - Bullet.getBulletHeight() > SCREEN_HEIGHT && !bulletsToRemove.contains(bullet, true)){
+            if (bullet.getBulletY() - Bullet.getBulletHeight() > SCREEN_HEIGHT && !bulletsToRemove.contains(bullet, true)) {
                 bulletsToRemove.add(bullet);
             }
 
-            if(bullet.isMissile())
+            if (bullet.isMissile())
                 bullet.render(missileAnim, deltaP, Bullet.MISSILE_WIDTH, Bullet.MISSILE_HEIGHT, game.batch);
             else
                 bullet.render(game.batch);
         }
     }
 
-    public void addEnemyBullets(Enemy enemy){
-        if(enemy.HP > 0) {
+    public void addEnemyBullets(Enemy enemy) {
+        if (enemy.HP > 0) {
             EnemyBullet enemyBullet1 = ebp.obtain();
             EnemyBullet enemyBullet2 = ebp.obtain();
             if (enemy.getId() == (ENEMY_SHIP_ID) && enemy.getEnemyBulletTimer() > enemy.getEnemyBulletThreshold()) {
@@ -1050,7 +1020,7 @@ public class MainGame extends GameElements implements Screen{
             enemyBullet.update(deltaP * hourglassMultiplier);
             enemyBullet.render(game.batch);
 
-            if(enemyBullet.getY() + ENEMY_BULLET_HEIGHT < 0 && !enemyBulletsToRemove.contains(enemyBullet, true)){
+            if (enemyBullet.getY() + ENEMY_BULLET_HEIGHT < 0 && !enemyBulletsToRemove.contains(enemyBullet, true)) {
                 enemyBulletsToRemove.add(enemyBullet);
             }
         }
@@ -1061,64 +1031,58 @@ public class MainGame extends GameElements implements Screen{
         if (eyebatSpawnTimer <= 0) {
             Enemy enemy = ep.obtain();
 
-            randomSpawnLocation = random.nextInt((int) ((int) SCREEN_WIDTH- BLUE_EYEBAT_WIDTH));
+            randomSpawnLocation = random.nextInt((int) ((int) SCREEN_WIDTH - BLUE_EYEBAT_WIDTH));
 
-            if(score <= 1000){
+            if (score <= 1000) {
                 enemy.create(EYEBAT_ID, BLUE_ID, 1, randomSpawnLocation, BLUE_EYEBAT_WIDTH, BLUE_EYEBAT_HEIGHT, 0.35f + speedIncrease / 1.5f, 0.8f + speedIncrease / 1.5f, (float) (DEFAULT_FRAME_DURATION * (1.25 - speedIncrease / 2)), false, hurtTimer);
                 eyebatSpawnTimer = random.nextFloat() * (maxEyebatSpawnTime - minEyebatSpawnTime) + minEyebatSpawnTime;
 
-            }
-            else if(score <= 2000){
-                enemy.create(EYEBAT_ID, GREEN_ID, 2, randomSpawnLocation, GREEN_EYEBAT_WIDTH,  GREEN_EYEBAT_HEIGHT, 0.8f + speedIncrease / 1.5f, 0.4f + speedIncrease / 1.5f, (float) (DEFAULT_FRAME_DURATION * (1.5 - speedIncrease / 2)), false, hurtTimer);
+            } else if (score <= 2000) {
+                enemy.create(EYEBAT_ID, GREEN_ID, 2, randomSpawnLocation, GREEN_EYEBAT_WIDTH, GREEN_EYEBAT_HEIGHT, 0.8f + speedIncrease / 1.5f, 0.4f + speedIncrease / 1.5f, (float) (DEFAULT_FRAME_DURATION * (1.5 - speedIncrease / 2)), false, hurtTimer);
                 eyebatSpawnTimer = random.nextFloat() * (maxEyebatSpawnTime - minEyebatSpawnTime) + minEyebatSpawnTime;
-            }
-            else if(score <= 3000){
+            } else if (score <= 3000) {
                 enemy.create(EYEBAT_ID, RED_ID, 2, randomSpawnLocation, RED_EYEBAT_WIDTH, RED_EYEBAT_HEIGHT, 0.65f + speedIncrease / 1.5f, 0.3f + speedIncrease / 1.5f, (float) (DEFAULT_FRAME_DURATION * (1.5 - speedIncrease / 2)), false, hurtTimer);
-                eyebatSpawnTimer = random.nextFloat() * (1.1f*maxEyebatSpawnTime - 1.1f*minEyebatSpawnTime) + 1.1f*minEyebatSpawnTime;
-            }
-            else if(score <= 4000){
-                enemy.create(EYEBAT_ID, PURPLE_ID, 3, randomSpawnLocation, PURPLE_EYEBAT_WIDTH, PURPLE_EYEBAT_HEIGHT, 0.5f + speedIncrease / 1.75f, 0.25f + speedIncrease / 1.75f, (float)(DEFAULT_FRAME_DURATION * (1.75 - speedIncrease / 2)), false, hurtTimer);
-                eyebatSpawnTimer = random.nextFloat() * (1.45f*maxEyebatSpawnTime - 1.45f*minEyebatSpawnTime) + 1.45f*minEyebatSpawnTime;
-            }
-            else{
-                enemy.create(EYEBAT_ID, WHITE_ID, 4, randomSpawnLocation, WHITE_EYEBAT_WIDTH, WHITE_EYEBAT_HEIGHT, 0.3f + speedIncrease / 1.75f, 0.2f + speedIncrease / 1.75f, (float)(DEFAULT_FRAME_DURATION * (2.0 - speedIncrease / 2)), false, hurtTimer);
-                eyebatSpawnTimer = random.nextFloat() * (1.65f*maxEyebatSpawnTime - 1.65f*minEyebatSpawnTime) + 1.65f*minEyebatSpawnTime;
+                eyebatSpawnTimer = random.nextFloat() * (1.1f * maxEyebatSpawnTime - 1.1f * minEyebatSpawnTime) + 1.1f * minEyebatSpawnTime;
+            } else if (score <= 4000) {
+                enemy.create(EYEBAT_ID, PURPLE_ID, 3, randomSpawnLocation, PURPLE_EYEBAT_WIDTH, PURPLE_EYEBAT_HEIGHT, 0.5f + speedIncrease / 1.75f, 0.25f + speedIncrease / 1.75f, (float) (DEFAULT_FRAME_DURATION * (1.75 - speedIncrease / 2)), false, hurtTimer);
+                eyebatSpawnTimer = random.nextFloat() * (1.45f * maxEyebatSpawnTime - 1.45f * minEyebatSpawnTime) + 1.45f * minEyebatSpawnTime;
+            } else {
+                enemy.create(EYEBAT_ID, WHITE_ID, 4, randomSpawnLocation, WHITE_EYEBAT_WIDTH, WHITE_EYEBAT_HEIGHT, 0.3f + speedIncrease / 1.75f, 0.2f + speedIncrease / 1.75f, (float) (DEFAULT_FRAME_DURATION * (2.0 - speedIncrease / 2)), false, hurtTimer);
+                eyebatSpawnTimer = random.nextFloat() * (1.65f * maxEyebatSpawnTime - 1.65f * minEyebatSpawnTime) + 1.65f * minEyebatSpawnTime;
             }
             enemies.add(enemy);
         }
     }
 
-    public void addEnemyShips(){
-        enemyShipSpawnTimer -= deltaP * hourglassMultiplier;;
+    public void addEnemyShips() {
+        enemyShipSpawnTimer -= deltaP * hourglassMultiplier;
+        ;
 
         shipPositions.clear();
         int enemyShipCount = 0;
 
-        if(enemyShipSpawnTimer <= 0) {
+        if (enemyShipSpawnTimer <= 0) {
 
             for (Enemy e : enemies) {
-                if(e.getId() == ENEMY_SHIP_ID && e.getEnemyY() < SCREEN_HEIGHT){
+                if (e.getId() == ENEMY_SHIP_ID && e.getEnemyY() < SCREEN_HEIGHT) {
                     enemyShipCount++;
                     shipPositions.add(e.position);
                 }
             }
 
-            if(!shipPositions.contains(3, true)){
+            if (!shipPositions.contains(3, true)) {
                 position = 3;
-            }
-            else if(!shipPositions.contains(2, true)){
+            } else if (!shipPositions.contains(2, true)) {
                 position = 2;
-            }
-            else if(!shipPositions.contains(1, true)){
+            } else if (!shipPositions.contains(1, true)) {
                 position = 1;
-            }
-            else if(!shipPositions.contains(0, true)){
+            } else if (!shipPositions.contains(0, true)) {
                 position = 0;
             }
 
             shipPositions.add(position);
 
-            if(enemyShipCount < 4) {
+            if (enemyShipCount < 4) {
                 Enemy enemy = ep.obtain();
 
                 if (score <= 1000) {
@@ -1157,38 +1121,39 @@ public class MainGame extends GameElements implements Screen{
         }
     }
 
-    public void addLaserTraps(){
-        laserTrapSpawnTimer -= deltaP * hourglassMultiplier;;
-        if(laserTrapSpawnTimer <= 0) {
+    public void addLaserTraps() {
+        laserTrapSpawnTimer -= deltaP * hourglassMultiplier;
+        ;
+        if (laserTrapSpawnTimer <= 0) {
             Enemy enemy = ep.obtain();
             laserTrapSpawnTimer = random.nextFloat() * (maxLaserSpawnTime - minLaserSpawnTime) + minLaserSpawnTime;
 
-            enemy.create(LASER_TRAP_ID, random.nextInt((SCREEN_WIDTH - (int)LASER_TRAP_H_WIDTH)), LASER_TRAP_H_WIDTH, LASER_TRAP_H_HEIGHT,
-                    0, 0.65f + speedIncrease/1.5f, DEFAULT_FRAME_DURATION*1.5f);
+            enemy.create(LASER_TRAP_ID, random.nextInt((SCREEN_WIDTH - (int) LASER_TRAP_H_WIDTH)), LASER_TRAP_H_WIDTH, LASER_TRAP_H_HEIGHT,
+                    0, 0.65f + speedIncrease / 1.5f, DEFAULT_FRAME_DURATION * 1.5f);
             enemies.add(enemy);
 
         }
     }
 
-    public void updateEnemies(){
+    public void updateEnemies() {
         ep.freeAll(enemiesToRemove);
         enemies.removeAll(enemiesToRemove, true);
         enemiesToRemove.clear();
 
         for (Enemy enemy : enemies) {
-            if(isAlive) {
+            if (isAlive) {
                 enemy.update(deltaP, enemy, isHourglass);
 
                 switch (enemy.getId()) {
                     case EYEBAT_ID:
-                        enemy.render(eyebatAnim, enemy, deltaP, isPaused , game.batch);
+                        enemy.render(eyebatAnim, enemy, deltaP, isPaused, game.batch);
                         break;
                     case ENEMY_SHIP_ID:
-                        enemy.render(enemyShipAnim, enemy, deltaP, isPaused , game.batch);
+                        enemy.render(enemyShipAnim, enemy, deltaP, isPaused, game.batch);
                         break;
                     case LASER_TRAP_ID:
-                        enemy.render(laserTrapHAnim, enemy, deltaP, isPaused , game.batch);
-                         break;
+                        enemy.render(laserTrapHAnim, enemy, deltaP, isPaused, game.batch);
+                        break;
                 }
             }
         }
@@ -1200,28 +1165,23 @@ public class MainGame extends GameElements implements Screen{
 
             randomDrop = random.nextInt(5);
 
-            if(randomDrop == lastItemDrop){
+            if (randomDrop == lastItemDrop) {
                 addItemDrops();
-            }
-            else {
-                itemSpawnTimer = random.nextFloat() * (MAX_ITEM_SPAWN_TIME - MIN_ITEM_SPAWN_TIME) + MIN_ITEM_SPAWN_TIME;
+            } else {
+                itemSpawnTimer = (random.nextFloat()) + MIN_ITEM_SPAWN_TIME;
                 if (randomDrop == 0) {
-                    if(health == 3)
+                    if (health == 3)
                         addItemDrops();
                     else
-                        itemDrops.add(new ItemDrop(random.nextInt((int) (SCREEN_WIDTH - ItemDrop.HEART_WIDTH)), ItemDrop.HEART_HEIGHT, ItemDrop.HEART_WIDTH, HEART_ID, assets));
-                }
-                else if (randomDrop == 1) {
+                        itemDrops.add(new ItemDrop(random.nextInt((int) (SCREEN_WIDTH - ItemDrop.HEART_ITEM_WIDTH)), ItemDrop.HEART_ITEM_HEIGHT, ItemDrop.HEART_WIDTH, HEART_ID, assets));
+                } else if (randomDrop == 1) {
                     itemDrops.add(new ItemDrop(random.nextInt((int) (SCREEN_WIDTH - ItemDrop.BOMB_WIDTH)), ItemDrop.BOMB_HEIGHT, ItemDrop.BOMB_WIDTH, BOMB_ID, assets));
-                }
-                else if (randomDrop == 2) {
-                    itemDrops.add(new ItemDrop(random.nextInt((int) (SCREEN_WIDTH - ItemDrop.MISSILE_WIDTH)), ItemDrop.MISSILE_HEIGHT, ItemDrop.MISSILE_WIDTH, MISSILE_ID, assets));
-                }
-                else if( randomDrop ==3){
+                } else if (randomDrop == 2) {
+                    itemDrops.add(new ItemDrop(random.nextInt((int) (SCREEN_WIDTH - ItemDrop.MISSILE_ITEM_WIDTH)), ItemDrop.MISSILE_ITEM_HEIGHT, ItemDrop.MISSILE_ITEM_WIDTH, MISSILE_ID, assets));
+                } else if (randomDrop == 3) {
                     itemDrops.add(new ItemDrop(random.nextInt((int) (SCREEN_WIDTH - ItemDrop.RAPID_FIRE_WIDTH)), ItemDrop.RAPID_FIRE_HEIGHT, ItemDrop.RAPID_FIRE_WIDTH, RAPID_FIRE_ID, assets));
-                }
-                else{
-                    if(score < 1000)
+                } else {
+                    if (score < 1000)
                         addItemDrops();
                     else
                         itemDrops.add(new ItemDrop(random.nextInt((int) (SCREEN_WIDTH - ItemDrop.HOURGLASS_WIDTH)), ItemDrop.HOURGLASS_HEIGHT, ItemDrop.HOURGLASS_WIDTH, HOURGLASS_ID, assets));
@@ -1231,18 +1191,18 @@ public class MainGame extends GameElements implements Screen{
         }
     }
 
-    public void updateItems(){
+    public void updateItems() {
         for (ItemDrop itemDrop : itemDrops) {
-                itemDrop.update(deltaP);
+            itemDrop.update(deltaP);
             switch (itemDrop.getItemId()) {
                 case HEART_ID:
-                    itemDrop.render(ItemDrop.HEART_WIDTH, ItemDrop.HEART_HEIGHT, deltaP, game.batch);
+                    itemDrop.render(ItemDrop.HEART_ITEM_WIDTH, ItemDrop.HEART_ITEM_HEIGHT, deltaP, game.batch);
                     break;
                 case BOMB_ID:
                     itemDrop.render(ItemDrop.BOMB_WIDTH, ItemDrop.BOMB_HEIGHT, deltaP, game.batch);
                     break;
                 case MISSILE_ID:
-                    itemDrop.render(ItemDrop.MISSILE_WIDTH, ItemDrop.MISSILE_HEIGHT, deltaP, game.batch);
+                    itemDrop.render(ItemDrop.MISSILE_ITEM_WIDTH, ItemDrop.MISSILE_ITEM_HEIGHT, deltaP, game.batch);
                     break;
                 case RAPID_FIRE_ID:
                     itemDrop.render(ItemDrop.RAPID_FIRE_WIDTH, ItemDrop.RAPID_FIRE_HEIGHT, deltaP, game.batch);
@@ -1256,18 +1216,21 @@ public class MainGame extends GameElements implements Screen{
         }
     }
 
-    public void enemyDamaged(){
+    public void enemyDamaged() {
         for (Enemy enemy : enemies) {
             boolean pointsEarned = false;
 
-            if(bombUsed && enemy.getId() != LASER_TRAP_ID){
+            if (bombUsed && enemy.getId() != LASER_TRAP_ID) {
                 enemy.HP = 0;
             }
-            if (bombUsed && !enemiesToRemove.contains(enemy, true)){
+            if (bombUsed && !enemiesToRemove.contains(enemy, true) && enemy.getEnemyY() < SCREEN_HEIGHT) {
+                addPointsOnEnemyDeath(enemy);
+                pointsEarned = true;
+
                 enemiesToRemove.add(enemy);
             }
 
-            for(Bullet bullet : bullets) {
+            for (Bullet bullet : bullets) {
 
 //            game.batch.end();
 //            sr.begin((ShapeRenderer.ShapeType.Line));
@@ -1283,8 +1246,7 @@ public class MainGame extends GameElements implements Screen{
                     }
 
                     if ((Collision.isNearby(bullet.getCollision(), enemy.getCollision())
-                    && Collision.isColliding(bullet.getCollision(), enemy.getCollision()))) {
-
+                            && Collision.isColliding(bullet.getCollision(), enemy.getCollision()))) {
 
 
                         if (!bullet.isMissile() && enemy.getId() != LASER_TRAP_ID && !bulletsToRemove.contains(bullet, true)) {
@@ -1299,16 +1261,15 @@ public class MainGame extends GameElements implements Screen{
                         }
 
                         if (!bullet.isMissile() && enemy.getId() != LASER_TRAP_ID) {
-                            if(bullet.isRapidFire()){
+                            if (bullet.isRapidFire()) {
                                 enemy.HP -= 0.5f;
-                            }
-                            else {
+                            } else {
                                 enemy.HP -= 1;
                             }
                             if (soundEnabled && enemy.getHP() <= 0) {
                                 playHitSound = true;
                             }
-                            if(enemy.HP > 0){
+                            if (enemy.HP > 0) {
                                 isEnemyHurt = true;
                                 hurtEnemies.add(enemy);
                             }
@@ -1316,37 +1277,20 @@ public class MainGame extends GameElements implements Screen{
 
                         if (enemy.HP <= 0 && enemy.getId() != LASER_TRAP_ID) {
 
-                            if(!enemiesToRemove.contains(enemy, true)) {
+                            if (!enemiesToRemove.contains(enemy, true)) {
                                 enemiesToRemove.add(enemy);
                             }
 
                             Explosion explosion = exp.obtain();
                             if (enemy.getId() != ENEMY_SHIP_ID) {
                                 explosion.create(enemy.getEnemyX(), enemy.getEnemyY() - enemy.getHeight() / 4f, enemy.getWidth(), assets);
-                            }
-                            else {
+                            } else {
                                 explosion.create(enemy.getEnemyX(), enemy.getEnemyY(), enemy.getWidth() * 1.5f, assets);
                             }
                             explosions.add(explosion);
 
-                            if (enemy.getId() == (EYEBAT_ID) && !pointsEarned) {
-                                switch (enemy.getColorId()) {
-
-                                    case BLUE_ID:
-                                    case RED_ID:
-                                    case GREEN_ID:
-                                        score += 10;
-                                        break;
-
-                                    case PURPLE_ID:
-                                    case WHITE_ID:
-                                        score += 15;
-                                        break;
-                                }
-
-                                pointsEarned = true;
-                            } else if (enemy.getId() == (ENEMY_SHIP_ID) && !pointsEarned && enemy.getEnemyY() < SCREEN_HEIGHT) {
-                                score += 10;
+                            if (!pointsEarned && !bombUsed) {
+                                addPointsOnEnemyDeath(enemy);
                                 pointsEarned = true;
 
                             }
@@ -1354,26 +1298,45 @@ public class MainGame extends GameElements implements Screen{
                     }
                 }
             }
-
-            if (playHitSound) {
-                runEnemyHitSoundTimer();
-            }
         }
+
+        if (playHitSound) {
+            runEnemyHitSoundTimer();
+        }
+    }
 //        explosions.clear();
 //        enemies.clear();
 //        bullets.clear();
 
+    public void addPointsOnEnemyDeath(Enemy enemy) {
+        if (enemy.getId() == (EYEBAT_ID)) {
+            switch (enemy.getColorId()) {
+
+                case BLUE_ID:
+                case RED_ID:
+                case GREEN_ID:
+                    score += 10;
+                    break;
+
+                case PURPLE_ID:
+                case WHITE_ID:
+                    score += 15;
+                    break;
+            }
+        } else if (enemy.getId() == (ENEMY_SHIP_ID) && enemy.getEnemyY() < SCREEN_HEIGHT) {
+            score += 10;
+        }
     }
 
-    public void updateExplosions(){
+    public void updateExplosions() {
         exp.freeAll(explosionsToRemove);
         explosions.removeAll(explosionsToRemove, true);
         explosionsToRemove.clear();
 
         for (Explosion explosion : explosions) {
-            if(explosion.y < SCREEN_HEIGHT && explosion.y > 0) {
-                    explosion.update(deltaP);
-                    explosion.render(explosionAnim,  deltaP, game.batch);
+            if (explosion.y < SCREEN_HEIGHT && explosion.y > 0) {
+                explosion.update(deltaP);
+                explosion.render(explosionAnim, deltaP, game.batch);
             }
 
             if (explosion.explosionAnimation.isAnimationFinished(explosion.getStateTime()) && !explosionsToRemove.contains(explosion, true)) {
@@ -1382,7 +1345,7 @@ public class MainGame extends GameElements implements Screen{
         }
     }
 
-    public void shipEnemyCollision(){
+    public void shipEnemyCollision() {
 //
 //            game.batch.end();
 //            sr.begin((ShapeRenderer.ShapeType.Line));
@@ -1391,17 +1354,17 @@ public class MainGame extends GameElements implements Screen{
 //            sr.end();
 //            game.batch.begin();
 
-        for(Enemy enemy : enemies){
+        for (Enemy enemy : enemies) {
 //            game.batch.end();
 //            sr.begin((ShapeRenderer.ShapeType.Line));
 //            sr.setColor(0,1,0,1);
 //            sr.polygon(enemy.getCollision().getPolygon().getVertices());
 //            sr.end();
 //            game.batch.begin();
-            if(Collision.isNearby(enemy.getCollision(), player.getCollision())
-            &&(Collision.isColliding(enemy.getCollision(), player.getCollision()))){
+            if (Collision.isNearby(enemy.getCollision(), player.getCollision())
+                    && (Collision.isColliding(enemy.getCollision(), player.getCollision()))) {
 
-                if(soundEnabled && !playerHitSoundPlayed){
+                if (soundEnabled && !playerHitSoundPlayed) {
 //                    hitSound.stop();
 //                    bulletSound.stop();
 
@@ -1409,7 +1372,7 @@ public class MainGame extends GameElements implements Screen{
                     playerHitSoundPlayed = true;
                 }
 
-                if(enemy.getId() != LASER_TRAP_ID){
+                if (enemy.getId() != LASER_TRAP_ID) {
                     ep.free(enemy);
                     enemies.removeValue(enemy, true);
 
@@ -1417,41 +1380,41 @@ public class MainGame extends GameElements implements Screen{
                     explosion.create(enemy.getEnemyX(), enemy.getEnemyY() - enemy.getHeight() / 4f, enemy.getWidth(), assets);
                     explosionsToDelay.add(explosion);
                 }
-                if(health > 0 && !justHit){
+                if (health > 0 && !justHit) {
                     justHit = true;
                     health -= 1;
                     Gdx.input.vibrate(50);
                 }
 
-                if(health == 0){
+                if (health == 0) {
                     isAlive = false;
                 }
             }
         }
     }
 
-    public void shipBulletCollision(){
-        for(EnemyBullet enemyBullet : enemyBullets){
-            if(Collision.isNearby(enemyBullet.getCollision(), player.getCollision())
-            && Collision.isColliding(enemyBullet.getCollision(), player.getCollision())){
+    public void shipBulletCollision() {
+        for (EnemyBullet enemyBullet : enemyBullets) {
+            if (Collision.isNearby(enemyBullet.getCollision(), player.getCollision())
+                    && Collision.isColliding(enemyBullet.getCollision(), player.getCollision())) {
 
-                if(soundEnabled){
+                if (soundEnabled) {
 //                    hitSound.stop();
 //                    bulletSound.stop();
 
                     hitSound.play(0.2f);
                 }
-                if(!enemyBulletsToRemove.contains(enemyBullet, true)) {
+                if (!enemyBulletsToRemove.contains(enemyBullet, true)) {
                     enemyBulletsToRemove.add(enemyBullet);
                 }
 
-                if(health > 0 && !justHit){
+                if (health > 0 && !justHit) {
                     justHit = true;
                     health -= 1;
                     Gdx.input.vibrate(50);
 
                 }
-                if(health == 0){
+                if (health == 0) {
                     isAlive = false;
                 }
             }
@@ -1460,8 +1423,8 @@ public class MainGame extends GameElements implements Screen{
 
     public void shipItemCollision() {
         for (ItemDrop itemDrop : itemDrops) {
-            if (Collision.isNearby(itemDrop.getCollision(),player.getCollision())
-            && Collision.isColliding(itemDrop.getCollision(),player.getCollision())) {
+            if (Collision.isNearby(itemDrop.getCollision(), player.getCollision())
+                    && Collision.isColliding(itemDrop.getCollision(), player.getCollision())) {
                 itemsToRemove.add(itemDrop);
 
                 switch (itemDrop.getItemId()) {
@@ -1482,13 +1445,12 @@ public class MainGame extends GameElements implements Screen{
                         bombUsed = true;
                         Gdx.input.vibrate(200);
 
-                        for(Enemy enemy : enemies) {
+                        for (Enemy enemy : enemies) {
 
                             Explosion explosion = exp.obtain();
                             if (enemy.getId() != ENEMY_SHIP_ID) {
                                 explosion.create(enemy.getEnemyX(), enemy.getEnemyY() - enemy.getHeight() / 4f, enemy.getWidth(), assets);
-                            }
-                            else {
+                            } else {
                                 explosion.create(enemy.getEnemyX(), enemy.getEnemyY(), enemy.getWidth() * 1.5f, assets);
                             }
                             explosions.add(explosion);
@@ -1539,110 +1501,102 @@ public class MainGame extends GameElements implements Screen{
         }
     }
 
-    public void runHeartUsedTimer( ){
-        if(heartUsedTimer < 0){
+    public void runHeartUsedTimer() {
+        if (heartUsedTimer < 0) {
             heartUsedTimer += deltaP;
-        }
-        else{
+        } else {
             heartUsed = false;
             heartUsedTimer = -.1f;
         }
     }
 
-    public void runHourglassUsedTimer(){
-        if(hourglassUsedTimer < 0){
+    public void runHourglassUsedTimer() {
+        if (hourglassUsedTimer < 0) {
             hourglassUsedTimer += deltaP;
-        }
-        else{
+        } else {
             hourglassUsed = false;
             hourglassUsedTimer = -.1f;
         }
     }
-    public void runScoreTickerTimer(){
-        if(scoreTickerTimer < 0){
+
+    public void runScoreTickerTimer() {
+        if (scoreTickerTimer < 0) {
             scoreTickerTimer += deltaP;
-        }
-        else{
+        } else {
             score += 1;
             scoreUpdated = false;
             scoreTickerTimer = SCORE_TICKER_TIMER;
         }
     }
-    public void runEnemyHitSoundTimer( ){
-        if(hitSoundTimer < 0){
+
+    public void runEnemyHitSoundTimer() {
+        if (hitSoundTimer < 0) {
             hitSoundTimer += deltaP;
-        }
-        else{
+        } else {
             hitSound.play(0.3f);
             playHitSound = false;
             hitSoundTimer = -.08f;
         }
     }
 
-    public void runBombUsedTimer( ){
-        if(bombUsedTimer < 0){
+    public void runBombUsedTimer() {
+        if (bombUsedTimer < 0) {
             bombUsedTimer += deltaP;
             whiteFlash.draw(game.batch);
-        }
-        else{
+        } else {
             bombUsed = false;
             bombUsedTimer = -.05f;
         }
     }
 
-    public void runRapidFireUsedTimer(){
-        if(rapidFireUsedTimer < 0){
+    public void runRapidFireUsedTimer() {
+        if (rapidFireUsedTimer < 0) {
             rapidFireUsedTimer += deltaP;
-        }
-        else{
+        } else {
             rapidFireUsed = false;
             rapidFireUsedTimer = -.1f;
         }
     }
 
-    public void runRapidFireTimer(){
-        if(rapidFireTimer < 0) {
+    public void runRapidFireTimer() {
+        if (rapidFireTimer < 0) {
             rapidFireTimer += deltaP;
-        }
-        else{
+        } else {
             isRapidFire = false;
             rapidFireTimer = RAPID_FIRE_TIMER;
 
         }
     }
 
-    public void runMissileUsedTimer(){ //missile item drop
-        if(missileUsedTimer < 0){
+    public void runMissileUsedTimer() { //missile item drop
+        if (missileUsedTimer < 0) {
             missileUsedTimer += deltaP;
-        }
-        else{
+        } else {
             missileUsed = false;
             missileUsedTimer = -.1f;
         }
     }
 
-    public void runMissileTimer(){ //missile weapon
-        if(missileTimer < 0) {
+    public void runMissileTimer() { //missile weapon
+        if (missileTimer < 0) {
             missileTimer += deltaP;
-        }
-        else{
+        } else {
             isMissile = false;
             missileTimer = MISSILE_TIMER;
         }
     }
 
-    public void runHourglassTimer(){
-        if(soundEnabled && mainMusic.isPlaying()){
-           mainMusic.pause();
+    public void runHourglassTimer() {
+        if (soundEnabled && mainMusic.isPlaying()) {
+            mainMusic.pause();
         }
         game.batch.setShader(invertedShader);
 
-        if(hourglassTimer < 0) {
+        if (hourglassTimer < 0) {
             hourglassTimer += deltaP;
             hourglassMultiplier = .25f;
-        }
-        else{
-            if(soundEnabled){
+        } else {
+            if (soundEnabled) {
                 mainMusic.play();
             }
 
@@ -1653,11 +1607,10 @@ public class MainGame extends GameElements implements Screen{
         }
     }
 
-    public void runShipHitTimer(){
-        if(shipHitTimer < 0) {
+    public void runShipHitTimer() {
+        if (shipHitTimer < 0) {
             shipHitTimer += deltaP;
-        }
-        else{
+        } else {
             justHit = false;
             playerHitSoundPlayed = false;
             shipHitTimer = -2f;
@@ -1665,22 +1618,20 @@ public class MainGame extends GameElements implements Screen{
     }
 
 
-    public void runEnemyHurtDelay(Enemy enemy){
-        if(hurtDelayTimer < 0) {
+    public void runEnemyHurtDelay(Enemy enemy) {
+        if (hurtDelayTimer < 0) {
             hurtDelayTimer += deltaP;
-        }
-        else{
+        } else {
             enemy.setEnemyHurt(true);
             hurtEnemies.removeValue(enemy, true);
             hurtDelayTimer = -.03f;
         }
     }
 
-    public void runExplosionDelay(Explosion explosion){
-        if(explosionDelayTimer < 0) {
+    public void runExplosionDelay(Explosion explosion) {
+        if (explosionDelayTimer < 0) {
             explosionDelayTimer += deltaP;
-        }
-        else{
+        } else {
             explosions.add(explosion);
             explosionsToDelay.removeValue(explosion, true);
             explosionDelayTimer = -.025f;
@@ -1694,18 +1645,20 @@ public class MainGame extends GameElements implements Screen{
 
     @Override
     public void pause() {
-        if(!isTransitioningIn && !isTransitioningOut && !isFadingIn && !isFadingOut && !isRunningResumeCountdown)
+        if (!isTransitioningIn && !isTransitioningOut && !isFadingIn && !isFadingOut && !isRunningResumeCountdown) {
             isPaused = true;
+        }
 
         songPausePosition = mainMusic.getPosition();
     }
 
     @Override
     public void resume() {
-   }
+    }
 
     @Override
-    public void hide() { }
+    public void hide() {
+    }
 
     @Override
     public void dispose() {
