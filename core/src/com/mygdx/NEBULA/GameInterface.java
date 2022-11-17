@@ -260,7 +260,6 @@ public class GameInterface extends GameElements {
                     game.pauseSound.play(0.2f);
             }
         }
-
         return !isShopOpen;
     }
 
