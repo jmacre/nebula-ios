@@ -3,13 +3,11 @@ package com.mygdx.NEBULA;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
-import com.badlogic.gdx.utils.Array;
 
 public class GameElements {
     Button pauseButton, replayResumeButton, soundButton, homeButton;
@@ -73,8 +71,12 @@ public class GameElements {
 
     public float LASER_TRAP_H_WIDTH =  SHIP_WIDTH * (48/27f);
     public float LASER_TRAP_H_HEIGHT = LASER_TRAP_H_WIDTH / 12;
+
     public static final float HEART_HEIGHT = SCREEN_WIDTH/14f;
     public static final float HEART_WIDTH = HEART_HEIGHT * (13.0f/11.0f);
+
+    public static final float HEART_ITEM_HEIGHT = HEART_HEIGHT * (17/11f);
+    public static final float HEART_ITEM_WIDTH = HEART_WIDTH * (19/13f);
 
     public static float TOP_ELEM_Y_AND = SCREEN_HEIGHT - HEART_HEIGHT * 1.75f;
     public static float TOP_ELEM_Y_IOS = SCREEN_HEIGHT - HEART_HEIGHT * 2.5f;
@@ -83,6 +85,17 @@ public class GameElements {
     public static final float MIDDLE_HEART_X = RIGHT_HEART_X - HEART_WIDTH*1.1f;
     public static final float LEFT_HEART_X = MIDDLE_HEART_X - HEART_WIDTH*1.1f;
 
+    public static final float BOMB_HEIGHT = HEART_HEIGHT * (23/11f);
+    public static final float BOMB_WIDTH = BOMB_HEIGHT * (18/23f);
+
+    public static final float RAPID_FIRE_HEIGHT = BOMB_HEIGHT * (16/23f);
+    public static final float RAPID_FIRE_WIDTH = HEART_WIDTH;
+
+    public static final float HOURGLASS_HEIGHT = RAPID_FIRE_HEIGHT;
+    public static final float HOURGLASS_WIDTH = HOURGLASS_HEIGHT * (15/16f);
+
+    public static final float MISSILE_ITEM_HEIGHT = HOURGLASS_HEIGHT * (21/16f);
+    public static final float MISSILE_ITEM_WIDTH = MISSILE_ITEM_HEIGHT * (15/20f);
 
     public static final float SCORE_Y_AND = SCREEN_HEIGHT - (SCREEN_HEIGHT / 12f) /3f;
     public static final float SCORE_Y_IOS = SCREEN_HEIGHT - MAIN_UI_HEIGHT;
@@ -102,9 +115,6 @@ public class GameElements {
     public static final float X_BUTTON_HEIGHT = X_BUTTON_WIDTH;
     public static final float X_BUTTON_X = SHOP_BACK_X + SHOP_BACK_WIDTH - X_BUTTON_WIDTH/2;
     public static final float X_BUTTON_Y = SHOP_BACK_Y + SHOP_BACK_HEIGHT - X_BUTTON_HEIGHT/2;
-
-    public static final float UPGRADE_DIM_WIDTH = 760;
-    public static final float UPGRADE_DIM_HEIGHT = 725;
 
     public static final float PLAY_BUTTON_WIDTH = MENU_BACK_WIDTH/4f;
     public static final float PLAY_BUTTON_HEIGHT = MENU_BACK_WIDTH/4f;

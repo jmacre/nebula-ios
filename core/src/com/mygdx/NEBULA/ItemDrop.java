@@ -1,5 +1,6 @@
 package com.mygdx.NEBULA;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -9,7 +10,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import static com.mygdx.NEBULA.GameElements.SCREEN_HEIGHT;
 import static com.mygdx.NEBULA.MainGame.MAIN_UI_HEIGHT;
 
-public class ItemDrop {
+public class ItemDrop extends GameElements {
     Assets assets;
     Animation<TextureRegion> itemAnimation;
     public static final int BOMB_ID = 0;
@@ -26,27 +27,11 @@ public class ItemDrop {
     public static float HOURGLASS_TIMER = -4.5f;
     public static float HOURGLASS_SPEED_MULTIPLIER = 0.25f;
 
-    public static final float HEART_HEIGHT = MAIN_UI_HEIGHT/1.75f;
-    public static final float HEART_WIDTH = HEART_HEIGHT * (13.0f/11.0f);
-
-    public static final float BOMB_HEIGHT = MAIN_UI_HEIGHT/1.75f;
-    public static final float BOMB_WIDTH = BOMB_HEIGHT;
-
-    public static final float RAPID_FIRE_HEIGHT = MAIN_UI_HEIGHT/1.75f;
-    public static final float RAPID_FIRE_WIDTH = RAPID_FIRE_HEIGHT * (13/16f);
-
-    public static final float HOURGLASS_HEIGHT = MAIN_UI_HEIGHT/1.75f;
-    public static final float HOURGLASS_WIDTH = RAPID_FIRE_HEIGHT * (15/16f);
-
-    public static final float MISSILE_HEIGHT = MAIN_UI_HEIGHT/1.5f;
-    public static final float MISSILE_WIDTH = MISSILE_HEIGHT * (16/22f);
 
     public Sprite itemSheet;
     Anim itemAnim;
 
-    public static final float SPEED = SCREEN_HEIGHT/1.56f;
-
-    public int lastChangedDirectionTime;
+    public static final float SPEED = SCREEN_HEIGHT / 2f;
 
     float ITEM_X;
     float ITEM_Y;
@@ -65,12 +50,11 @@ public class ItemDrop {
         this.ITEM_Y = 1.2f * SCREEN_HEIGHT;
         ItemDrop.ITEM_HEIGHT = ITEM_HEIGHT;
         ItemDrop.ITEM_WIDTH = ITEM_WIDTH;
+        itemAnim = new Anim();
 
         this.assets = assets;
-
         this.itemId = itemId;
         this.rect = new Collision(ITEM_X, ITEM_Y, ITEM_WIDTH, ITEM_HEIGHT);
-        this.lastChangedDirectionTime = 0;
 
         switch (itemId) {
             case HEART_ID:
@@ -90,29 +74,34 @@ public class ItemDrop {
                 break;
         }
 
-        itemAnimation = Anim.createAnimation(itemSheet, 2, 0.025f);
+        if (itemId == RAPID_FIRE_ID) { //lightning flashes at double speed??
+            itemAnimation = Anim.createAnimation(itemSheet, 2, 0.04f);
+        } else {
+            itemAnimation = Anim.createAnimation(itemSheet, 2, 0.02f);
+        }
     }
-    public void update(float deltaTime){
+
+    public void update(float deltaTime) {
 
         ITEM_Y -= SPEED * deltaTime;
-        if (ITEM_Y < -ITEM_HEIGHT){
+        if (ITEM_Y < -ITEM_HEIGHT) {
             remove = true;
         }
         rect.move(ITEM_X, ITEM_Y);
     }
 
-    public void render (float width, float height, float delta, SpriteBatch batch) {
+    public void render(float width, float height, float delta, SpriteBatch batch) {
         stateTime += delta / 10;
-        itemAnim = new Anim();
-        itemAnim.drawAnim(itemAnimation, stateTime, ITEM_X, ITEM_Y, width, height,   true, batch, false);
+        itemAnim.drawAnim(itemAnimation, stateTime, ITEM_X, ITEM_Y, width, height, true, batch);
 
 
     }
-    public float getItemY(){
+
+    public float getItemY() {
         return ITEM_Y;
     }
 
-    public float getItemX(){
+    public float getItemX() {
         return ITEM_X;
     }
 
@@ -120,7 +109,7 @@ public class ItemDrop {
         return rect;
     }
 
-    public int getItemId(){
+    public int getItemId() {
         return itemId;
     }
 
