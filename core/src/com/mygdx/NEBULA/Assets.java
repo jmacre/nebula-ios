@@ -17,15 +17,15 @@ public class Assets implements Disposable {
     public static final String bomb_sound = "sound/bomb_sound.mp3";
     public static final String missile_sound = "sound/missile_sound.mp3";
 
-    public static final String default_background = "ui/space_background.png";
-    public static final String blue_background = "ui/blue_background.png";
-    public static final String green_background = "ui/green_background.png";
-    public static final String purple_background = "ui/purple_background.png";
-    public static final String red_background = "ui/red_background.png";
-    public static final String black_background = "ui/black_background.png";
+    public static final String default_background = "background/space_background.png";
+    public static final String blue_background = "background/blue_background.png";
+    public static final String green_background = "background/green_background.png";
+    public static final String purple_background = "background/purple_background.png";
+    public static final String red_background = "background/red_background.png";
+    public static final String black_background = "background/black_background.png";
 
-    public static final String stars_back = "ui/stars_back.png";
-    public static final String stars_front = "ui/stars_front.png";
+    public static final String stars_back = "background/stars_back.png";
+    public static final String stars_front = "background/stars_front.png";
 
     public static final String start_button_inactive = "ui/start_button_inactive.png";
     public static final String start_button_inactive_clear = "ui/start_button_inactive_clear.png";
@@ -73,24 +73,24 @@ public class Assets implements Disposable {
     public static final String white_flash = "misc/white_flash.png";
     public static final String laser_trap_h_ss = "misc/trap_h_ss.png";
 
-    public static final String eyebat_blue_ss = "char/eyebat_blue_ss.png";
-    public static final String eyebat_red_ss = "char/eyebat_red_ss.png";
-    public static final String eyebat_purple_ss = "char/eyebat_purple_ss.png";
-    public static final String eyebat_green_ss = "char/eyebat_green_ss.png";
-    public static final String eyebat_white_ss = "char/eyebat_white_ss.png";
+    public static final String eyebat_blue_ss = "enemy/eyebat_blue_ss.png";
+    public static final String eyebat_red_ss = "enemy/eyebat_red_ss.png";
+    public static final String eyebat_purple_ss = "enemy/eyebat_purple_ss.png";
+    public static final String eyebat_green_ss = "enemy/eyebat_green_ss.png";
+    public static final String eyebat_white_ss = "enemy/eyebat_white_ss.png";
 
-    public static final String enemy_ship_blue_ss = "char/enemy_ship_blue_ss.png";
-    public static final String enemy_ship_red_ss = "char/enemy_ship_red_ss.png";
-    public static final String enemy_ship_green_ss = "char/enemy_ship_green_ss.png";
-    public static final String enemy_ship_purple_ss = "char/enemy_ship_purple_ss.png";
-    public static final String enemy_ship_white_ss = "char/enemy_ship_white_ss.png";
+    public static final String enemy_ship_blue_ss = "enemy/enemy_ship_blue_ss.png";
+    public static final String enemy_ship_red_ss = "enemy/enemy_ship_red_ss.png";
+    public static final String enemy_ship_green_ss = "enemy/enemy_ship_green_ss.png";
+    public static final String enemy_ship_purple_ss = "enemy/enemy_ship_purple_ss.png";
+    public static final String enemy_ship_white_ss = "enemy/enemy_ship_white_ss.png";
 
-    public static final String ship_ss = "char/main_ship_ss.png";
-    public static final String ship_red_ss = "char/main_ship_red_ss.png";
-    public static final String ship_black_ss = "char/main_ship_black_ss.png";
-    public static final String ship_purple_ss = "char/main_ship_purple_ss.png";
-    public static final String ship_purple_yellow_ss = "char/main_ship_purple_yellow_ss.png";
-    public static final String ship_blue_ss = "char/main_ship_blue_ss.png";
+    public static final String ship_ss = "player/main_ship_ss.png";
+    public static final String ship_red_ss = "player/main_ship_red_ss.png";
+    public static final String ship_black_ss = "player/main_ship_black_ss.png";
+    public static final String ship_purple_ss = "player/main_ship_purple_ss.png";
+    public static final String ship_blue_ss = "player/main_ship_blue_ss.png";
+    public static final String ship_cyan_ss = "player/main_ship_cyan_ss.png";
 
     public static final String explosion = "misc/explosion_ss.png";
     public static final String pause_menu_back = "ui/menu_back.png";
@@ -181,8 +181,8 @@ public class Assets implements Disposable {
         assetManager.load(ship_black_ss, Texture.class);
         assetManager.load(ship_red_ss, Texture.class);
         assetManager.load(ship_purple_ss, Texture.class);
-        assetManager.load(ship_purple_yellow_ss, Texture.class);
         assetManager.load(ship_blue_ss, Texture.class);
+        assetManager.load(ship_cyan_ss, Texture.class);
 
         assetManager.load(explosion, Texture.class);
 
@@ -285,8 +285,8 @@ public class Assets implements Disposable {
         assetManager.unload(ship_red_ss);
         assetManager.unload(ship_black_ss);
         assetManager.unload(ship_purple_ss);
-        assetManager.unload(ship_purple_yellow_ss);
         assetManager.unload(ship_blue_ss);
+        assetManager.unload(ship_cyan_ss);
 
         assetManager.unload(explosion);
         assetManager.unload(heart_item_ss);

@@ -2,14 +2,11 @@ package com.mygdx.NEBULA;
 
 import static com.mygdx.NEBULA.Anim.DEFAULT_FRAME_DURATION;
 
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
-import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.utils.Align;
 
 public class ShopElement extends GameElements{
     public static final int SHIP_ID = 0;
@@ -18,8 +15,9 @@ public class ShopElement extends GameElements{
     public static final int RED_SHIP_ID = 1;
     public static final int BLACK_SHIP_ID = 2;
     public static final int PURPLE_SHIP_ID = 3;
-    public static final int PURPLE_YELLOW_SHIP_ID = 4;
-    public static final int BLUE_SHIP_ID = 5;
+    public static final int BLUE_SHIP_ID = 4;
+    public static final int CYAN_SHIP_ID = 5;
+
 
 
 
@@ -62,8 +60,8 @@ public class ShopElement extends GameElements{
         redShip = new Sprite(assets.assetManager.get(Assets.ship_red_ss, Texture.class));
         blackShip = new Sprite(assets.assetManager.get(Assets.ship_black_ss, Texture.class));
         purpleShip = new Sprite(assets.assetManager.get(Assets.ship_purple_ss, Texture.class));
-        purpleYellowShip = new Sprite(assets.assetManager.get(Assets.ship_purple_yellow_ss, Texture.class));
-        blueShip = new Sprite((assets.assetManager.get(Assets.ship_blue_ss, Texture.class)));
+        purpleYellowShip = new Sprite(assets.assetManager.get(Assets.ship_blue_ss, Texture.class));
+        blueShip = new Sprite((assets.assetManager.get(Assets.ship_cyan_ss, Texture.class)));
     }
 
     public String getTitle(){
@@ -91,11 +89,11 @@ public class ShopElement extends GameElements{
                 elementSheet = purpleShip;
                 title = "ULTRAVIOLET";
                 break;
-            case PURPLE_YELLOW_SHIP_ID:
-                elementSheet = purpleYellowShip;
-                title = "TROPICAL";
-                break;
             case BLUE_SHIP_ID:
+                elementSheet = purpleYellowShip;
+                title = "FLASH";
+                break;
+            case CYAN_SHIP_ID:
                 elementSheet = blueShip;
                 title = "FROZEN";
                 break;

@@ -265,9 +265,9 @@ public class MainGame extends GameElements implements Screen {
         } else if (selectedShip == 3) {
             shipSS = new Sprite(assets.assetManager.get(Assets.ship_purple_ss, Texture.class));
         } else if (selectedShip == 4) {
-            shipSS = new Sprite(assets.assetManager.get(Assets.ship_purple_yellow_ss, Texture.class));
-        } else if (selectedShip == 5) {
             shipSS = new Sprite(assets.assetManager.get(Assets.ship_blue_ss, Texture.class));
+        } else if (selectedShip == 5) {
+            shipSS = new Sprite(assets.assetManager.get(Assets.ship_cyan_ss, Texture.class));
         }
 
         shipAnimation = Anim.createAnimation(shipSS, 4, DEFAULT_FRAME_DURATION * 1.5f);
