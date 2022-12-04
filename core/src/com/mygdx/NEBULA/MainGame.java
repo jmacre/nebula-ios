@@ -403,13 +403,13 @@ public class MainGame extends GameElements implements Screen {
             if (isAlive) {
                 if (!bombUsed && !heartUsed && !missileUsed && !rapidFireUsed && score >= 100) {
                     addItemDrops();
-                    shipItemCollision();
+                    playerItemCollision();
                 }
 
-                shipEnemyCollision();
+                playerEnemyCollision();
 
                 if (enemyShipsSpawning && enemyBullets.size > 0)
-                    shipBulletCollision();
+                    playerBulletCollision();
 
                 if (!isRunningResumeCountdown)
                     player.update();
@@ -419,30 +419,38 @@ public class MainGame extends GameElements implements Screen {
                 transitionIn();
             }
 
-            if (isMissile)
-                runMissileTimer();
-
-            if (justHit)
+            if (justHit) {
                 runShipHitTimer();
+            }
 
-            if (missileUsed)
+            if (missileUsed) {
                 runMissileUsedTimer();
+            }
 
-            if (isRapidFire)
+            if (isMissile) {
+                runMissileTimer();
+            }
+
+            else if (isRapidFire) {
                 runRapidFireTimer();
+            }
 
-            if (isHourglass)
+            else if (isHourglass) {
                 runHourglassTimer();
+            }
 
-            else if (bombUsed)
+            else if (bombUsed) {
                 runBombUsedTimer();
+            }
 
-            else if (heartUsed)
+            else if (heartUsed) {
                 runHeartUsedTimer();
+            }
 
             else if (rapidFireUsed) {
                 runRapidFireUsedTimer();
-            } else if (hourglassUsed) {
+            }
+            else if (hourglassUsed) {
                 runHourglassUsedTimer();
             }
 
@@ -1253,7 +1261,7 @@ public class MainGame extends GameElements implements Screen {
                             bulletsToRemove.add(bullet);
                         }
 
-                        if (bullet.isMissile() && bullet.getBulletY() + Bullet.MISSILE_HEIGHT < SCREEN_HEIGHT && enemy.getId() != LASER_TRAP_ID) {
+                        if (bullet.isMissile() && bullet.getBulletY() < SCREEN_HEIGHT && enemy.getId() != LASER_TRAP_ID) {
                             enemy.HP = 0;
                             if (soundEnabled) {
                                 playHitSound = true;
@@ -1282,11 +1290,7 @@ public class MainGame extends GameElements implements Screen {
                             }
 
                             Explosion explosion = exp.obtain();
-                            if (enemy.getId() != ENEMY_SHIP_ID) {
-                                explosion.create(enemy.getEnemyX(), enemy.getEnemyY() - enemy.getHeight() / 4f, enemy.getWidth(), assets);
-                            } else {
-                                explosion.create(enemy.getEnemyX(), enemy.getEnemyY(), enemy.getWidth() * 1.5f, assets);
-                            }
+                            explosion.create(enemy.getEnemyX() - (SMALL_EXPLOSION_WIDTH - enemy.getWidth()) / 2, enemy.getEnemyY() - (SMALL_EXPLOSION_HEIGHT - enemy.getHeight()) / 2, SMALL_EXPLOSION_WIDTH);
                             explosions.add(explosion);
 
                             if (!pointsEarned && !bombUsed) {
@@ -1345,7 +1349,7 @@ public class MainGame extends GameElements implements Screen {
         }
     }
 
-    public void shipEnemyCollision() {
+    public void playerEnemyCollision() {
 //
 //            game.batch.end();
 //            sr.begin((ShapeRenderer.ShapeType.Line));
@@ -1377,7 +1381,7 @@ public class MainGame extends GameElements implements Screen {
                     enemies.removeValue(enemy, true);
 
                     Explosion explosion = exp.obtain();
-                    explosion.create(enemy.getEnemyX(), enemy.getEnemyY() - enemy.getHeight() / 4f, enemy.getWidth(), assets);
+                    explosion.create(enemy.getEnemyX() - (SMALL_EXPLOSION_WIDTH - enemy.getWidth()) / 2, enemy.getEnemyY() - (SMALL_EXPLOSION_HEIGHT - enemy.getHeight()) / 2, SMALL_EXPLOSION_WIDTH);
                     explosionsToDelay.add(explosion);
                 }
                 if (health > 0 && !justHit) {
@@ -1393,7 +1397,7 @@ public class MainGame extends GameElements implements Screen {
         }
     }
 
-    public void shipBulletCollision() {
+    public void playerBulletCollision() {
         for (EnemyBullet enemyBullet : enemyBullets) {
             if (Collision.isNearby(enemyBullet.getCollision(), player.getCollision())
                     && Collision.isColliding(enemyBullet.getCollision(), player.getCollision())) {
@@ -1421,7 +1425,7 @@ public class MainGame extends GameElements implements Screen {
         }
     }
 
-    public void shipItemCollision() {
+    public void playerItemCollision() {
         for (ItemDrop itemDrop : itemDrops) {
             if (Collision.isNearby(itemDrop.getCollision(), player.getCollision())
                     && Collision.isColliding(itemDrop.getCollision(), player.getCollision())) {
@@ -1448,11 +1452,8 @@ public class MainGame extends GameElements implements Screen {
                         for (Enemy enemy : enemies) {
 
                             Explosion explosion = exp.obtain();
-                            if (enemy.getId() != ENEMY_SHIP_ID) {
-                                explosion.create(enemy.getEnemyX(), enemy.getEnemyY() - enemy.getHeight() / 4f, enemy.getWidth(), assets);
-                            } else {
-                                explosion.create(enemy.getEnemyX(), enemy.getEnemyY(), enemy.getWidth() * 1.5f, assets);
-                            }
+                            explosion.create(enemy.getEnemyX() - (SMALL_EXPLOSION_WIDTH - enemy.getWidth()) / 2, enemy.getEnemyY() - (SMALL_EXPLOSION_HEIGHT - enemy.getHeight()) / 2, SMALL_EXPLOSION_WIDTH);
+
                             explosions.add(explosion);
                         }
                         if (soundEnabled) {

@@ -91,6 +91,9 @@ public class GameElements {
     public static final float RAPID_FIRE_HEIGHT = BOMB_HEIGHT * (16/23f);
     public static final float RAPID_FIRE_WIDTH = HEART_WIDTH;
 
+    public static final float SMALL_EXPLOSION_WIDTH = 1.5f*BLUE_EYEBAT_WIDTH;
+    public static final float SMALL_EXPLOSION_HEIGHT = SMALL_EXPLOSION_WIDTH;
+
     public static final float HOURGLASS_HEIGHT = RAPID_FIRE_HEIGHT;
     public static final float HOURGLASS_WIDTH = HOURGLASS_HEIGHT * (15/16f);
 

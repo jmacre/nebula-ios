@@ -15,12 +15,10 @@ public class Explosion {
 
     public boolean remove = false;
 
-    public Explosion(){}
-
     public static void createExplosionSprite(Assets assets){
         explosionSheet = new Sprite(assets.assetManager.get(Assets.explosion, Texture.class));
     }
-    public void create(float x, float y, float size, Assets assets){
+    public void create(float x, float y, float size){
         this.x = x;
         this.y = y;
         this.size = size;
@@ -37,10 +35,10 @@ public class Explosion {
     }
 
     public void render (Anim explosionAnim,float delta, SpriteBatch batch) {
-        stateTime += delta;
+        stateTime += 1.5f*delta;
 
         if(y < MainGame.SCREEN_HEIGHT)
-            explosionAnim.drawAnim(explosionAnimation, stateTime, x, y - size/4, size, size, false, batch);
+            explosionAnim.drawAnim(explosionAnimation, stateTime, x, y, size, size, false, batch);
 
     }
     public float getStateTime(){
