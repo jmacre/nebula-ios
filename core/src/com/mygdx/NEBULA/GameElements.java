@@ -104,6 +104,12 @@ public class GameElements {
     public static final float SCORE_Y_IOS = SCREEN_HEIGHT - MAIN_UI_HEIGHT;
     public static final float SCORE_X = SCREEN_WIDTH / 2f - (SCREEN_WIDTH / 1.1f)/2;
 
+    public static final float POWERUP_TIMER_HEIGHT = HEART_HEIGHT * (17/11f);
+    public static final float POWERUP_TIMER_WIDTH = POWERUP_TIMER_HEIGHT;
+    public static final float POWERUP_TIMER_X = SCORE_X;
+    public static final float POWERUP_TIMER_Y_IOS = SCORE_Y_IOS - (POWERUP_TIMER_HEIGHT * 1.8f);
+    public static final float POWERUP_TIMER_Y_AND = SCORE_Y_AND - (POWERUP_TIMER_HEIGHT * 1.8f);
+
     public static final float MENU_BACK_WIDTH = SCREEN_WIDTH*.9f;
     public static final float MENU_BACK_HEIGHT = MENU_BACK_WIDTH/1.733f;
     public static final float MENU_BACK_X = SCREEN_WIDTH/2f - MENU_BACK_WIDTH/2;
@@ -196,12 +202,14 @@ public class GameElements {
     Anim enemyShipAnim = new Anim();
     Anim laserTrapHAnim = new Anim();
     Anim explosionAnim = new Anim();
+    Anim powerupAnim = new Anim();
     Anim starsAnimFront = new Anim();
     Anim starsAnimBack = new Anim();
 
 
     Sprite blackTransition, whiteFlash, shipSS, shipBlinkingSS;
     Animation<TextureRegion> shipAnimation, shipBlinkingAnimation;
+    Animation<TextureRegion> powerupTimerAnimation;
 
     Music mainMusic;
     Sound pauseSound;

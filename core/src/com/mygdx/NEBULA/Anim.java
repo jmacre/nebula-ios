@@ -30,19 +30,6 @@ public class Anim{
         sprite.draw(batch);
     }
 
-    public static Animation<TextureRegion> createAnimation(Texture texture, int frameCount, float frameDuration){
-        TextureRegion[][] tmp = TextureRegion.split(texture, texture.getWidth() / frameCount, texture.getHeight());
-        TextureRegion [] enemyFrames = new TextureRegion[frameCount];
-        int index = 0;
-
-        for (int i = 0; i < 1; i++) {
-            for (int j = 0; j < frameCount; j++) {
-                enemyFrames[index++] = tmp[i][j];
-            }
-        }
-        return new Animation<>(frameDuration, enemyFrames);
-    }
-
     public static Animation<TextureRegion> createAnimation(Sprite sprite, int frameCount, float frameDuration){
         TextureRegion[][] tmp = TextureRegion.split(sprite.getTexture(), sprite.getTexture().getWidth() / frameCount, sprite.getTexture().getHeight());
         TextureRegion [] enemyFrames = new TextureRegion[frameCount];

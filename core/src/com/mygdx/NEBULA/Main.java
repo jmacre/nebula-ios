@@ -26,8 +26,6 @@ public class Main extends Game {
 
 	@Override
 	public void create () {
-
-
 		batch = new SpriteBatch();
 
 		assets = new Assets();
@@ -38,6 +36,8 @@ public class Main extends Game {
 		parameter.size = SCREEN_WIDTH/14;
 
 		scoreFont = generator.generateFont(parameter);
+		scoreFont.setColor(1,1,1, 0.8f);
+
 		playSound = assets.assetManager.get(Assets.play_sound, Sound.class);
 		pauseSound = assets.assetManager.get(Assets.pause_sound, Sound.class);
 

@@ -94,6 +94,7 @@ public class Assets implements Disposable {
 
     public static final String explosion = "misc/explosion_ss.png";
     public static final String pause_menu_back = "ui/menu_back.png";
+    public static final String powerup_timer = "misc/clock_ss.png";
 
     public static final String shop_back = "ui/shop_back.png";
     public static final String x_button = "ui/x_button.png";
@@ -114,6 +115,8 @@ public class Assets implements Disposable {
     public void load() {
         assetManager.load(main_theme, Music.class);
         assetManager.load(bomb_sound, Music.class);
+
+        assetManager.load(powerup_timer, Texture.class);
 
         assetManager.load(default_background, Texture.class);
         assetManager.load(green_background, Texture.class);
@@ -236,6 +239,8 @@ public class Assets implements Disposable {
         assetManager.unload(stars_front);
         assetManager.unload(stars_back);
 
+        assetManager.unload(powerup_timer);
+
         assetManager.unload(start_button_inactive);
         assetManager.unload(start_button_active);
 
@@ -294,6 +299,8 @@ public class Assets implements Disposable {
         assetManager.unload(missile_item_ss);
         assetManager.unload(rapid_fire_ss);
         assetManager.unload(pause_menu_back);
+
+        assetManager.unload(powerup_timer);
     }
 
     @Override

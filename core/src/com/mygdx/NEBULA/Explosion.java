@@ -28,15 +28,12 @@ public class Explosion {
     }
 
     public void update(float delta){
-
-        stateTime += delta;
+        stateTime += 2.5f*delta;
         if (explosionAnimation.isAnimationFinished(stateTime))
             remove = true;
     }
 
-    public void render (Anim explosionAnim,float delta, SpriteBatch batch) {
-        stateTime += 1.5f*delta;
-
+    public void render (Anim explosionAnim, SpriteBatch batch) {
         if(y < MainGame.SCREEN_HEIGHT)
             explosionAnim.drawAnim(explosionAnimation, stateTime, x, y, size, size, false, batch);
 
