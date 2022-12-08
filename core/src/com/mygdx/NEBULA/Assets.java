@@ -71,7 +71,7 @@ public class Assets implements Disposable {
 
     public static final String black_transition = "misc/black_transition.png";
     public static final String white_flash = "misc/white_flash.png";
-    public static final String laser_trap_h_ss = "misc/trap_h_ss.png";
+    public static final String laser_trap_h_ss = "enemy/trap_h_ss.png";
 
     public static final String eyebat_blue_ss = "enemy/eyebat_blue_ss.png";
     public static final String eyebat_red_ss = "enemy/eyebat_red_ss.png";
@@ -94,7 +94,7 @@ public class Assets implements Disposable {
 
     public static final String explosion = "misc/explosion_ss.png";
     public static final String pause_menu_back = "ui/menu_back.png";
-    public static final String powerup_timer = "misc/clock_ss.png";
+    public static final String powerup_timer = "ui/powerup_timer_ss.png";
 
     public static final String shop_back = "ui/shop_back.png";
     public static final String x_button = "ui/x_button.png";

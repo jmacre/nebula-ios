@@ -85,7 +85,7 @@ public class GameElements {
     public static final float MIDDLE_HEART_X = RIGHT_HEART_X - HEART_WIDTH*1.1f;
     public static final float LEFT_HEART_X = MIDDLE_HEART_X - HEART_WIDTH*1.1f;
 
-    public static final float BOMB_HEIGHT = HEART_HEIGHT * (23/11f);
+    public static final float BOMB_HEIGHT = HEART_HEIGHT * (24/11f);
     public static final float BOMB_WIDTH = BOMB_HEIGHT * (18/23f);
 
     public static final float RAPID_FIRE_HEIGHT = BOMB_HEIGHT * (16/23f);
