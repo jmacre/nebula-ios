@@ -21,6 +21,11 @@ import com.badlogic.gdx.utils.Array;
 import java.util.Random;
 
 import static com.mygdx.NEBULA.EnemyBullet.ENEMY_BULLET_HEIGHT;
+import static com.mygdx.NEBULA.EnemyBullet.blueShipBulletSpeed;
+import static com.mygdx.NEBULA.EnemyBullet.greenShipBulletSpeed;
+import static com.mygdx.NEBULA.EnemyBullet.purpleShipBulletSpeed;
+import static com.mygdx.NEBULA.EnemyBullet.redShipBulletSpeed;
+import static com.mygdx.NEBULA.EnemyBullet.whiteShipBulletSpeed;
 import static com.mygdx.NEBULA.ItemDrop.HOURGLASS_TIMER;
 import static com.mygdx.NEBULA.ItemDrop.MISSILE_TIMER;
 import static com.mygdx.NEBULA.ItemDrop.RAPID_FIRE_TIMER;
@@ -594,7 +599,7 @@ public class MainGame extends GameElements implements Screen {
     public void updateSpawnRates(int score) {
         if (score != prevScore) {
             float scoreMultiplier = score - prevScore;
-            if (score < 3000) {
+            if (score < 3000 || score > 5000) {
                 if (eyebatsSpawning) {
                     maxEyebatSpawnTime -= (.0003 * scoreMultiplier) / 5f;
                     minEyebatSpawnTime -= (.00015 * scoreMultiplier) / 5f;
@@ -612,19 +617,19 @@ public class MainGame extends GameElements implements Screen {
                 }
             } else {
                 if (eyebatsSpawning) {
-                    maxEyebatSpawnTime -= (.00015 * scoreMultiplier) / 5f;
-                    minEyebatSpawnTime -= (.00005 * scoreMultiplier) / 5f;
+                    maxEyebatSpawnTime -= (.0002 * scoreMultiplier) / 5f;
+                    minEyebatSpawnTime -= (.0001 * scoreMultiplier) / 5f;
                 }
                 if (enemyShipsSpawning) {
-                    maxEnemyShipSpawnTime -= (.00015 * scoreMultiplier) / 5f;
-                    minEnemyShipSpawnTime -= (.00005 * scoreMultiplier) / 5f;
+                    maxEnemyShipSpawnTime -= (.0002 * scoreMultiplier) / 5f;
+                    minEnemyShipSpawnTime -= (.0001 * scoreMultiplier) / 5f;
                 }
                 if (laserTrapsSpawning) {
-                    maxLaserSpawnTime -= (.0005 * scoreMultiplier) / 5f;
-                    minLaserSpawnTime -= (.00025 * scoreMultiplier) / 5f;
+                    maxLaserSpawnTime -= (.00075 * scoreMultiplier) / 5f;
+                    minLaserSpawnTime -= (.00035 * scoreMultiplier) / 5f;
                 }
                 if (speedIncrease < 1) {
-                    speedIncrease += (0.00075 * scoreMultiplier) / 5f;
+                    speedIncrease += (0.001 * scoreMultiplier) / 5f;
                 }
             }
             prevScore = score;
@@ -1015,10 +1020,10 @@ public class MainGame extends GameElements implements Screen {
             EnemyBullet enemyBullet1 = ebp.obtain();
             EnemyBullet enemyBullet2 = ebp.obtain();
             if (enemy.getId() == (ENEMY_SHIP_ID) && enemy.getEnemyBulletTimer() > enemy.getEnemyBulletThreshold()) {
-                enemyBullet1.create(enemy.ENEMY_X + ENEMY_SHIP_WIDTH * (5 / 31f), enemy.ENEMY_Y + enemy.ENEMY_HEIGHT * (3 / 27f), RED_ID, assets);
+                enemyBullet1.create(enemy.ENEMY_X + ENEMY_SHIP_WIDTH * (5 / 31f), enemy.ENEMY_Y + enemy.ENEMY_HEIGHT * (3 / 27f), enemy.getBulletSpeed(), RED_ID, assets);
                 enemyBullets.add(enemyBullet1);
 
-                enemyBullet2.create(enemy.ENEMY_X + ENEMY_SHIP_WIDTH - ENEMY_SHIP_WIDTH * (7 / 31f), enemy.ENEMY_Y + enemy.ENEMY_HEIGHT * (3 / 27f), RED_ID, assets);
+                enemyBullet2.create(enemy.ENEMY_X + ENEMY_SHIP_WIDTH - ENEMY_SHIP_WIDTH * (7 / 31f), enemy.ENEMY_Y + enemy.ENEMY_HEIGHT * (3 / 27f), enemy.getBulletSpeed(), RED_ID, assets);
                 enemyBullets.add(enemyBullet2);
             }
         }
@@ -1044,24 +1049,28 @@ public class MainGame extends GameElements implements Screen {
         if (eyebatSpawnTimer <= 0) {
             Enemy enemy = ep.obtain();
 
-            randomSpawnLocation = random.nextInt((int) ((int) SCREEN_WIDTH - BLUE_EYEBAT_WIDTH));
+            randomSpawnLocation = random.nextInt((int) (SCREEN_WIDTH - BLUE_EYEBAT_WIDTH));
 
-            if (score <= 1000) {
+            if (score <= 10000) {
                 enemy.create(EYEBAT_ID, BLUE_ID, 1, randomSpawnLocation, BLUE_EYEBAT_WIDTH, BLUE_EYEBAT_HEIGHT, 0.35f + speedIncrease / 1.5f, 0.8f + speedIncrease / 1.5f, (float) (DEFAULT_FRAME_DURATION * (1.25 - speedIncrease / 2)), false, hurtTimer);
                 eyebatSpawnTimer = random.nextFloat() * (maxEyebatSpawnTime - minEyebatSpawnTime) + minEyebatSpawnTime;
 
-            } else if (score <= 2000) {
+            } if (score > 1000 && score <= 2000) {
                 enemy.create(EYEBAT_ID, GREEN_ID, 2, randomSpawnLocation, GREEN_EYEBAT_WIDTH, GREEN_EYEBAT_HEIGHT, 0.8f + speedIncrease / 1.5f, 0.4f + speedIncrease / 1.5f, (float) (DEFAULT_FRAME_DURATION * (1.5 - speedIncrease / 2)), false, hurtTimer);
-                eyebatSpawnTimer = random.nextFloat() * (maxEyebatSpawnTime - minEyebatSpawnTime) + minEyebatSpawnTime;
-            } else if (score <= 3000) {
+                eyebatSpawnTimer = random.nextFloat() * (1.2f * maxEyebatSpawnTime - 1.2f * minEyebatSpawnTime) + 1.2f * minEyebatSpawnTime;
+
+            } if (score > 2000 && score <= 3000) {
                 enemy.create(EYEBAT_ID, RED_ID, 2, randomSpawnLocation, RED_EYEBAT_WIDTH, RED_EYEBAT_HEIGHT, 0.65f + speedIncrease / 1.5f, 0.3f + speedIncrease / 1.5f, (float) (DEFAULT_FRAME_DURATION * (1.5 - speedIncrease / 2)), false, hurtTimer);
-                eyebatSpawnTimer = random.nextFloat() * (1.1f * maxEyebatSpawnTime - 1.1f * minEyebatSpawnTime) + 1.1f * minEyebatSpawnTime;
-            } else if (score <= 4000) {
+                eyebatSpawnTimer = random.nextFloat() * (1.3f * maxEyebatSpawnTime - 1.3f * minEyebatSpawnTime) + 1.3f * minEyebatSpawnTime;
+
+            } if (score > 3000 && score <= 4000) {
                 enemy.create(EYEBAT_ID, PURPLE_ID, 3, randomSpawnLocation, PURPLE_EYEBAT_WIDTH, PURPLE_EYEBAT_HEIGHT, 0.5f + speedIncrease / 1.75f, 0.25f + speedIncrease / 1.75f, (float) (DEFAULT_FRAME_DURATION * (1.75 - speedIncrease / 2)), false, hurtTimer);
-                eyebatSpawnTimer = random.nextFloat() * (1.45f * maxEyebatSpawnTime - 1.45f * minEyebatSpawnTime) + 1.45f * minEyebatSpawnTime;
-            } else {
+                eyebatSpawnTimer = random.nextFloat() * (1.6f * maxEyebatSpawnTime - 1.6f * minEyebatSpawnTime) + 1.6f * minEyebatSpawnTime;
+
+            } if(score > 4000) {
                 enemy.create(EYEBAT_ID, WHITE_ID, 4, randomSpawnLocation, WHITE_EYEBAT_WIDTH, WHITE_EYEBAT_HEIGHT, 0.3f + speedIncrease / 1.75f, 0.2f + speedIncrease / 1.75f, (float) (DEFAULT_FRAME_DURATION * (2.0 - speedIncrease / 2)), false, hurtTimer);
-                eyebatSpawnTimer = random.nextFloat() * (1.65f * maxEyebatSpawnTime - 1.65f * minEyebatSpawnTime) + 1.65f * minEyebatSpawnTime;
+                eyebatSpawnTimer = random.nextFloat() * (1.9f * maxEyebatSpawnTime - 1.9f * minEyebatSpawnTime) + 1.9f * minEyebatSpawnTime;
+
             }
             enemies.add(enemy);
         }
@@ -1084,11 +1093,14 @@ public class MainGame extends GameElements implements Screen {
 
             if (!shipPositions.contains(3, true)) {
                 position = 3;
-            } else if (!shipPositions.contains(2, true)) {
+            }
+            else if (!shipPositions.contains(2, true)) {
                 position = 2;
-            } else if (!shipPositions.contains(1, true)) {
+            }
+            else if (!shipPositions.contains(1, true)) {
                 position = 1;
-            } else if (!shipPositions.contains(0, true)) {
+            }
+            else if (!shipPositions.contains(0, true)) {
                 position = 0;
             }
 
@@ -1098,35 +1110,39 @@ public class MainGame extends GameElements implements Screen {
                 Enemy enemy = ep.obtain();
 
                 if (score <= 1000) {
-                    enemy.create(ENEMY_SHIP_ID, BLUE_ID, 3, random.nextInt(((int) SCREEN_WIDTH - (int) ENEMY_SHIP_WIDTH)), ENEMY_SHIP_WIDTH, ENEMY_SHIP_HEIGHT,
+                    enemy.create(ENEMY_SHIP_ID, BLUE_ID, 2, random.nextInt((SCREEN_WIDTH - (int) ENEMY_SHIP_WIDTH)), ENEMY_SHIP_WIDTH, ENEMY_SHIP_HEIGHT,
                             1.25f + speedIncrease, 1.15f + speedIncrease, DEFAULT_FRAME_DURATION * 1.5f, enemyBulletDelay, blueShipBulletThreshold,
-                            false, hurtTimer, position);
-
+                            false, hurtTimer, position, blueShipBulletSpeed);
                     enemyShipSpawnTimer = random.nextFloat() * (maxEnemyShipSpawnTime - minEnemyShipSpawnTime) + minEnemyShipSpawnTime;
-                } else if (score <= 2000) {
-                    enemy.create(ENEMY_SHIP_ID, GREEN_ID, 4, random.nextInt(((int) SCREEN_WIDTH - (int) ENEMY_SHIP_WIDTH)), ENEMY_SHIP_WIDTH, ENEMY_SHIP_HEIGHT,
+
+                }
+                else if (score <= 2000) {
+                    enemy.create(ENEMY_SHIP_ID, GREEN_ID, 3, random.nextInt((SCREEN_WIDTH - (int) ENEMY_SHIP_WIDTH)), ENEMY_SHIP_WIDTH, ENEMY_SHIP_HEIGHT,
                             1.15f + speedIncrease, 1.05f + speedIncrease, DEFAULT_FRAME_DURATION * 1.5f, enemyBulletDelay, greenShipBulletThreshold,
-                            false, hurtTimer, position);
-
+                            false, hurtTimer, position, greenShipBulletSpeed);
                     enemyShipSpawnTimer = random.nextFloat() * (1.2f * maxEnemyShipSpawnTime - 1.2f * minEnemyShipSpawnTime) + 1.2f * minEnemyShipSpawnTime;
-                } else if (score <= 3000) {
-                    enemy.create(ENEMY_SHIP_ID, RED_ID, 5, random.nextInt(((int) SCREEN_WIDTH - (int) ENEMY_SHIP_WIDTH)), ENEMY_SHIP_WIDTH, ENEMY_SHIP_HEIGHT,
+
+                }
+                else if (score <= 3000) {
+                    enemy.create(ENEMY_SHIP_ID, RED_ID, 3, random.nextInt((SCREEN_WIDTH - (int) ENEMY_SHIP_WIDTH)), ENEMY_SHIP_WIDTH, ENEMY_SHIP_HEIGHT,
                             0.95f + speedIncrease, 0.95f + speedIncrease, DEFAULT_FRAME_DURATION * 1.5f, enemyBulletDelay, redShipBulletThreshold,
-                            false, hurtTimer, position);
-
+                            false, hurtTimer, position, redShipBulletSpeed);
                     enemyShipSpawnTimer = random.nextFloat() * (1.2f * maxEnemyShipSpawnTime - 1.2f * minEnemyShipSpawnTime) + 1.2f * minEnemyShipSpawnTime;
-                } else if (score <= 4000) {
-                    enemy.create(ENEMY_SHIP_ID, PURPLE_ID, 5, random.nextInt(((int) SCREEN_WIDTH - (int) ENEMY_SHIP_WIDTH)), ENEMY_SHIP_WIDTH, ENEMY_SHIP_HEIGHT,
+
+                }
+                else if (score <= 4000) {
+                    enemy.create(ENEMY_SHIP_ID, PURPLE_ID, 4, random.nextInt((SCREEN_WIDTH - (int) ENEMY_SHIP_WIDTH)), ENEMY_SHIP_WIDTH, ENEMY_SHIP_HEIGHT,
                             0.85f + speedIncrease, 0.85f + speedIncrease, DEFAULT_FRAME_DURATION * 1.5f, enemyBulletDelay, purpleShipBulletThreshold,
-                            false, hurtTimer, position);
+                            false, hurtTimer, position, purpleShipBulletSpeed);
+                    enemyShipSpawnTimer = random.nextFloat() * (1.3f * maxEnemyShipSpawnTime - 1.3f * minEnemyShipSpawnTime) + 1.3f * minEnemyShipSpawnTime;
 
-                    enemyShipSpawnTimer = random.nextFloat() * (1.2f * maxEnemyShipSpawnTime - 1.2f * minEnemyShipSpawnTime) + 1.2f * minEnemyShipSpawnTime;
-                } else {
-                    enemy.create(ENEMY_SHIP_ID, WHITE_ID, 5, random.nextInt((SCREEN_WIDTH - (int) ENEMY_SHIP_WIDTH)), ENEMY_SHIP_WIDTH, ENEMY_SHIP_HEIGHT,
+                }
+                else {
+                    enemy.create(ENEMY_SHIP_ID, WHITE_ID, 4, random.nextInt((SCREEN_WIDTH - (int) ENEMY_SHIP_WIDTH)), ENEMY_SHIP_WIDTH, ENEMY_SHIP_HEIGHT,
                             0.75f + speedIncrease, 0.75f + speedIncrease, DEFAULT_FRAME_DURATION * 1.5f, enemyBulletDelay, whiteShipBulletThreshold,
-                            false, hurtTimer, position);
+                            false, hurtTimer, position, whiteShipBulletSpeed);
 
-                    enemyShipSpawnTimer = random.nextFloat() * (1.4f * maxEnemyShipSpawnTime - 1.4f * minEnemyShipSpawnTime) + 1.4f * minEnemyShipSpawnTime;
+                    enemyShipSpawnTimer = random.nextFloat() * (1.5f * maxEnemyShipSpawnTime - 1.5f * minEnemyShipSpawnTime) + 1.5f * minEnemyShipSpawnTime;
                 }
                 enemies.add(enemy);
             }
@@ -1323,16 +1339,16 @@ public class MainGame extends GameElements implements Screen {
                 case BLUE_ID:
                 case RED_ID:
                 case GREEN_ID:
-                    score += 10;
+                    score += 15;
                     break;
 
                 case PURPLE_ID:
                 case WHITE_ID:
-                    score += 15;
+                    score += 20;
                     break;
             }
         } else if (enemy.getId() == (ENEMY_SHIP_ID) && enemy.getEnemyY() < SCREEN_HEIGHT) {
-            score += 10;
+            score += 15;
         }
     }
 

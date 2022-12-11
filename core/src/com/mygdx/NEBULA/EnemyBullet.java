@@ -11,16 +11,23 @@ import static com.mygdx.NEBULA.GameElements.SCREEN_HEIGHT;
 public class EnemyBullet {
     public Sprite enemyBulletSprite;
     Assets assets;
-    public static final float SPEED = SCREEN_HEIGHT/1.56f;
-
+    float speed;
     float ENEMY_BULLET_X, ENEMY_BULLET_Y;
+
     public static float ENEMY_BULLET_WIDTH = ENEMY_SHIP_WIDTH * (2/31f);
     public static float ENEMY_BULLET_HEIGHT = ENEMY_BULLET_WIDTH * 4f;
-    public static float blueShipBulletThreshold = 1.25f;
-    public static float greenShipBulletThreshold = 1.25f;
-    public static float redShipBulletThreshold = 1.25f;
-    public static float purpleShipBulletThreshold = 1.5f;
-    public static float whiteShipBulletThreshold = 1.6f;
+
+    public static float blueShipBulletThreshold = 1.5f;
+    public static float greenShipBulletThreshold = 1.4f;
+    public static float redShipBulletThreshold = 1.35f;
+    public static float purpleShipBulletThreshold = 1.4f;
+    public static float whiteShipBulletThreshold = 1.5f;
+
+    public static float blueShipBulletSpeed = SCREEN_HEIGHT/2.5f;
+    public static float greenShipBulletSpeed = SCREEN_HEIGHT/2.25f;
+    public static float redShipBulletSpeed = SCREEN_HEIGHT/1.85f;
+    public static float purpleShipBulletSpeed = SCREEN_HEIGHT/1.7f;
+    public static float whiteShipBulletSpeed = SCREEN_HEIGHT/1.55f;
 
     public boolean remove = false;
     int bulletColor;
@@ -28,10 +35,11 @@ public class EnemyBullet {
 
     public EnemyBullet(){}
 
-    public void create (float ENEMY_BULLET_X, float ENEMY_BULLET_Y, int bulletColor, Assets assets) {
+    public void create (float ENEMY_BULLET_X, float ENEMY_BULLET_Y, float speed, int bulletColor, Assets assets) {
         this.assets = assets;
         this.ENEMY_BULLET_X = ENEMY_BULLET_X;
         this.ENEMY_BULLET_Y = ENEMY_BULLET_Y;
+        this.speed = speed;
 
         this.bulletColor = bulletColor;
 
@@ -42,7 +50,7 @@ public class EnemyBullet {
     }
 
     public void update(float delta){
-        ENEMY_BULLET_Y -= SPEED * delta;
+        ENEMY_BULLET_Y -= speed * delta;
         if (ENEMY_BULLET_Y < 0){
             remove = true;
         }

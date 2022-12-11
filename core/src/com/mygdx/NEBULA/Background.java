@@ -42,7 +42,7 @@ public class Background {
         purpleBackgroundSprite = new Sprite(assets.assetManager.get(Assets.purple_background, Texture.class));
         blackBackgroundSprite = new Sprite(assets.assetManager.get(Assets.black_background, Texture.class));
 
-        backgroundSprite.setBounds(0,0, SCREEN_WIDTH, SCREEN_WIDTH*12);
+        backgroundSprite.setBounds(0,0, SCREEN_WIDTH, SCREEN_WIDTH*6);
         transitionSprite = backgroundSprite;
 
         defaultBackgroundSprite = backgroundSprite;

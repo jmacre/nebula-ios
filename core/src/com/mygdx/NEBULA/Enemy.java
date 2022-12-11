@@ -41,7 +41,9 @@ public class Enemy extends GameElements implements Pool.Poolable{
     float ENEMY_FRAME_DURATION;
     float ENEMY_BULLET_DELAY;
     float ENEMY_BULLET_THRESHOLD;
+
     Integer position;
+    float bulletSpeed;
 
     float stateTime = 0f;
 
@@ -129,7 +131,7 @@ public class Enemy extends GameElements implements Pool.Poolable{
         enemyAnimation.setPlayMode(Animation.PlayMode.LOOP);
     }
     //SHIP CONSTRUCTOR
-    public void create (int id, int colorId, float HP, float ENEMY_X, float ENEMY_WIDTH, float ENEMY_HEIGHT, float xSpeedMult, float ySpeedMult, float frameDuration, float bulletDelay, float bulletThreshold, boolean hurt, float hurtTimer, int position) {
+    public void create (int id, int colorId, float HP, float ENEMY_X, float ENEMY_WIDTH, float ENEMY_HEIGHT, float xSpeedMult, float ySpeedMult, float frameDuration, float bulletDelay, float bulletThreshold, boolean hurt, float hurtTimer, int position, float bulletSpeed) {
         this.id = id;
         this.colorId = colorId;
         this.HP = HP;
@@ -146,6 +148,7 @@ public class Enemy extends GameElements implements Pool.Poolable{
         this.ENEMY_BULLET_DELAY = bulletDelay;
         this.ENEMY_BULLET_THRESHOLD = bulletThreshold;
         this.position = position;
+        this.bulletSpeed = bulletSpeed;
 
         this.collision = new Collision(ENEMY_X, ENEMY_Y, ENEMY_WIDTH, ENEMY_HEIGHT);
 
@@ -418,6 +421,9 @@ public class Enemy extends GameElements implements Pool.Poolable{
     }
     public int getPosition(){
         return position;
+    }
+    public float getBulletSpeed(){
+        return bulletSpeed;
     }
 
 

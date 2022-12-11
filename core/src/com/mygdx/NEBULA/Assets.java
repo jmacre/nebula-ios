@@ -17,12 +17,12 @@ public class Assets implements Disposable {
     public static final String bomb_sound = "sound/bomb_sound.mp3";
     public static final String missile_sound = "sound/missile_sound.mp3";
 
-    public static final String default_background = "background/space_background.png";
-    public static final String blue_background = "background/blue_background.png";
-    public static final String green_background = "background/green_background.png";
-    public static final String purple_background = "background/purple_background.png";
-    public static final String red_background = "background/red_background.png";
-    public static final String black_background = "background/black_background.png";
+    public static final String default_background = "background/default_bg.png";
+    public static final String blue_background = "background/blue_bg.png";
+    public static final String green_background = "background/green_bg.png";
+    public static final String purple_background = "background/purple_bg.png";
+    public static final String red_background = "background/red_bg.png";
+    public static final String black_background = "background/black_bg.png";
 
     public static final String stars_back = "background/stars_back.png";
     public static final String stars_front = "background/stars_front.png";
