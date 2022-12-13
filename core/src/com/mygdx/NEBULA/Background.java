@@ -20,7 +20,7 @@ public class Background {
     Animation<TextureRegion> starsFrontAnimation, starsBackAnimation;
     Sprite backgroundSprite, defaultBackgroundSprite, blueBackgroundSprite, greenBackgroundSprite;
     Sprite redBackgroundSprite, purpleBackgroundSprite, blackBackgroundSprite, starsFront, starsBack;
-    float background_y1, background_y2, stars_front_y1, stars_front_y2, stars_back_y1, stars_back_y2;
+    int background_y1, background_y2, stars_front_y1, stars_front_y2, stars_back_y1, stars_back_y2;
 
     Sprite transitionSprite;
     float transitionOpacity = 0f;
@@ -47,7 +47,7 @@ public class Background {
 
         defaultBackgroundSprite = backgroundSprite;
         background_y1 = 0;
-        background_y2 = backgroundSprite.getHeight();
+        background_y2 = (int)backgroundSprite.getHeight();
 
         starsFront = new Sprite(assets.assetManager.get(Assets.stars_front, Texture.class));
         starsBack = new Sprite(assets.assetManager.get(Assets.stars_back, Texture.class));
@@ -56,10 +56,10 @@ public class Background {
         starsBack.setBounds(0,0, SCREEN_WIDTH, SCREEN_WIDTH*12);
 
         stars_back_y1 = 0;
-        stars_back_y2 = starsFront.getHeight();
+        stars_back_y2 = (int)starsFront.getHeight();
 
         stars_front_y1 = 0;
-        stars_front_y2 = starsFront.getHeight();
+        stars_front_y2 = (int)starsFront.getHeight();
 
         speed = DEFAULT_SPEED;
 
@@ -106,38 +106,38 @@ public class Background {
             speed = DEFAULT_SPEED;
         }
         if(!stayStill) {
-            background_y1 -= 0.3*speed * delta * titleScreenSpeedModifier * hourglassMultiplier;
-            background_y2 -= 0.3*speed * delta * titleScreenSpeedModifier * hourglassMultiplier;
+            background_y1 -= (int)(0.3*speed * delta * titleScreenSpeedModifier * hourglassMultiplier);
+            background_y2 -= (int)(0.3*speed * delta * titleScreenSpeedModifier * hourglassMultiplier);
 
-            stars_back_y1 -= 0.5f*speed * delta * titleScreenSpeedModifier * hourglassMultiplier;
-            stars_back_y2 -= 0.5f*speed * delta * titleScreenSpeedModifier * hourglassMultiplier;
+            stars_back_y1 -= (int)(0.5*speed * delta * titleScreenSpeedModifier * hourglassMultiplier);
+            stars_back_y2 -= (int)(0.5*speed * delta * titleScreenSpeedModifier * hourglassMultiplier);
 
-            stars_front_y1 -= .8f*speed * delta * titleScreenSpeedModifier * hourglassMultiplier;
-            stars_front_y2 -= .8f*speed * delta * titleScreenSpeedModifier * hourglassMultiplier;
+            stars_front_y1 -= (int)(0.8*speed * delta * titleScreenSpeedModifier * hourglassMultiplier);
+            stars_front_y2 -= (int)(0.8*speed * delta * titleScreenSpeedModifier * hourglassMultiplier);
         }
         if (background_y1 + backgroundSprite.getHeight()  <= 0) {
-            background_y1 = background_y2 + backgroundSprite.getHeight();
+            background_y1 = background_y2 + (int)backgroundSprite.getHeight();
         }
 
         if (background_y2 + backgroundSprite.getHeight()  <= 0) {
-            background_y2 = background_y1 + backgroundSprite.getHeight();
+            background_y2 = background_y1 + (int)backgroundSprite.getHeight();
         }
 
 
         if (stars_front_y1 + starsFront.getHeight()  <= 0) {
-            stars_front_y1 = stars_front_y2 + starsFront.getHeight();
+            stars_front_y1 = stars_front_y2 + (int)starsFront.getHeight();
         }
 
         if (stars_front_y2 + starsFront.getHeight()  <= 0) {
-            stars_front_y2 = stars_front_y1 + starsFront.getHeight();
+            stars_front_y2 = stars_front_y1 + (int)starsFront.getHeight();
         }
 
         if (stars_back_y1 + starsBack.getHeight()  <= 0) {
-            stars_back_y1 = stars_back_y2 + starsBack.getHeight();
+            stars_back_y1 = stars_back_y2 + (int)starsBack.getHeight();
         }
 
         if (stars_back_y2 + starsBack.getHeight()  <= 0) {
-            stars_back_y2 = stars_back_y1 + starsBack.getHeight();
+            stars_back_y2 = stars_back_y1 + (int)starsBack.getHeight();
         }
 
         backgroundSprite.setSize(SCREEN_WIDTH, backgroundSprite.getHeight());

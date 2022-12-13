@@ -34,8 +34,8 @@ public class Enemy extends GameElements implements Pool.Poolable{
     Random random = new Random();
     SpriteBatch hurtBatch = new SpriteBatch();
 
-    float ENEMY_X;
-    float ENEMY_Y;
+    int ENEMY_X;
+    int ENEMY_Y;
     float ENEMY_X_SPEED_MULTIPLIER;
     float ENEMY_Y_SPEED_MULTIPLIER;
     float ENEMY_FRAME_DURATION;
@@ -88,7 +88,7 @@ public class Enemy extends GameElements implements Pool.Poolable{
     }
 
     //EYEBAT CONSTRUCTOR
-    public void create(int id, int colorId, float HP, float ENEMY_X, float ENEMY_WIDTH, float ENEMY_HEIGHT, float xSpeedMult, float ySpeedMult, float frameDuration, boolean hurt, float hurtTimer) {
+    public void create(int id, int colorId, float HP, int ENEMY_X, float ENEMY_WIDTH, float ENEMY_HEIGHT, float xSpeedMult, float ySpeedMult, float frameDuration, boolean hurt, float hurtTimer) {
         this.id = id;
         this.colorId = colorId;
         this.HP = HP;
@@ -96,7 +96,7 @@ public class Enemy extends GameElements implements Pool.Poolable{
         this.hurtTimer = hurtTimer;
 
         this.ENEMY_X = ENEMY_X;
-        this.ENEMY_Y = 1.5f * MainGame.SCREEN_HEIGHT;
+        this.ENEMY_Y = (int)(1.5f * MainGame.SCREEN_HEIGHT);
         this.ENEMY_HEIGHT= ENEMY_HEIGHT;
         this.ENEMY_WIDTH = ENEMY_WIDTH;
         this.ENEMY_X_SPEED_MULTIPLIER = xSpeedMult;
@@ -138,8 +138,8 @@ public class Enemy extends GameElements implements Pool.Poolable{
         this.hurt = hurt;
         this.hurtTimer = hurtTimer;
 
-        this.ENEMY_X = ENEMY_X;
-        this.ENEMY_Y = 1.2f * MainGame.SCREEN_HEIGHT;
+        this.ENEMY_X = (int)ENEMY_X;
+        this.ENEMY_Y = (int)(1.2f * MainGame.SCREEN_HEIGHT);
         this.ENEMY_HEIGHT= ENEMY_HEIGHT;
         this.ENEMY_WIDTH = ENEMY_WIDTH;
         this.ENEMY_X_SPEED_MULTIPLIER = xSpeedMult;
@@ -180,8 +180,8 @@ public class Enemy extends GameElements implements Pool.Poolable{
     public void create (int id, float ENEMY_X, float ENEMY_WIDTH, float ENEMY_HEIGHT, float xSpeedMult, float ySpeedMult, float frameDuration) {
         this.id = id;
 
-        this.ENEMY_X = ENEMY_X;
-        this.ENEMY_Y = 1.2f * MainGame.SCREEN_HEIGHT;
+        this.ENEMY_X = (int)ENEMY_X;
+        this.ENEMY_Y = (int)(1.2f * MainGame.SCREEN_HEIGHT);
         this.ENEMY_HEIGHT= ENEMY_HEIGHT;
         this.ENEMY_WIDTH = ENEMY_WIDTH;
         this.ENEMY_X_SPEED_MULTIPLIER = xSpeedMult;
@@ -209,15 +209,15 @@ public class Enemy extends GameElements implements Pool.Poolable{
 
         if(id == EYEBAT_ID) {
             if(!isHurt())
-                ENEMY_Y -= SPEED * delta * ENEMY_Y_SPEED_MULTIPLIER * hourglassMultiplier;
+                ENEMY_Y -= (int)(SPEED * delta * ENEMY_Y_SPEED_MULTIPLIER * hourglassMultiplier);
         }
 
         else if(id == ENEMY_SHIP_ID && !shipMovingToPos) {
-            ENEMY_Y -= SPEED * .6f * delta * ENEMY_Y_SPEED_MULTIPLIER * hourglassMultiplier;
+            ENEMY_Y -= (int)(SPEED * .6f * delta * ENEMY_Y_SPEED_MULTIPLIER * hourglassMultiplier);
         }
 
         else if(id == LASER_TRAP_ID) {
-            ENEMY_Y -= SPEED * delta * ENEMY_Y_SPEED_MULTIPLIER * hourglassMultiplier;
+            ENEMY_Y -= (int) (SPEED * delta * ENEMY_Y_SPEED_MULTIPLIER * hourglassMultiplier);
         }
 
         if (ENEMY_Y < - ENEMY_HEIGHT){
@@ -267,11 +267,11 @@ public class Enemy extends GameElements implements Pool.Poolable{
             }
 
             if (!isPaused && !movingRight && (movingLeft || (randomNumber == 0))) {
-                ENEMY_X -= (SCREEN_WIDTH / 2f) * delta * ENEMY_X_SPEED_MULTIPLIER * hourglassMultiplier;
+                ENEMY_X -= (int) (SCREEN_WIDTH / 2f) * delta * ENEMY_X_SPEED_MULTIPLIER * hourglassMultiplier;
             }
 
             if (!isPaused && !movingLeft && (movingRight || (randomNumber == 1))) {
-                ENEMY_X += (SCREEN_WIDTH / 2f) * delta * ENEMY_X_SPEED_MULTIPLIER * hourglassMultiplier;
+                ENEMY_X += (int)(SCREEN_WIDTH / 2f) * delta * ENEMY_X_SPEED_MULTIPLIER * hourglassMultiplier;
             }
 
         if(ENEMY_Y <= SCREEN_HEIGHT && enemyAnimation != null) {
@@ -324,9 +324,9 @@ public class Enemy extends GameElements implements Pool.Poolable{
                 shipMovingToPos = true;
 
                 if (!isPaused && !movingRight && (movingLeft || (randomNumber == 0))) {
-                    ENEMY_X -= (SCREEN_WIDTH / 4.5) * delta * ENEMY_X_SPEED_MULTIPLIER * hourglassMultiplier;
+                    ENEMY_X -= (int)(SCREEN_WIDTH / 4.5) * delta * ENEMY_X_SPEED_MULTIPLIER * hourglassMultiplier;
                 } else if (!isPaused && !movingLeft && (movingRight || (randomNumber == 1))) {
-                    ENEMY_X += (SCREEN_WIDTH / 4.5) * delta * ENEMY_X_SPEED_MULTIPLIER * hourglassMultiplier;
+                    ENEMY_X += (int)(SCREEN_WIDTH / 4.5) * delta * ENEMY_X_SPEED_MULTIPLIER * hourglassMultiplier;
                 }
             } else {
                 shipMovingToPos = false;
@@ -347,19 +347,19 @@ public class Enemy extends GameElements implements Pool.Poolable{
         }
     }
 
-    public float getEnemyX(){
+    public int getEnemyX(){
         return ENEMY_X;
     }
 
-    public Float getEnemyY(){
+    public int getEnemyY(){
         return ENEMY_Y;
     }
 
-    public void setX(float ENEMY_X) {
+    public void setX(int ENEMY_X) {
         this.ENEMY_X = ENEMY_X;
     }
 
-    public void setY(float ENEMY_Y) {
+    public void setY(int ENEMY_Y) {
         this.ENEMY_Y = ENEMY_Y;
     }
 

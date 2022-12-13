@@ -16,6 +16,7 @@ public class Assets implements Disposable {
     public static final String heart_sound = "sound/heart_sound.mp3";
     public static final String bomb_sound = "sound/bomb_sound.mp3";
     public static final String missile_sound = "sound/missile_sound.mp3";
+    public static final String gem_sound = "sound/gem.mp3";
 
     public static final String default_background = "background/default_bg.png";
     public static final String blue_background = "background/blue_bg.png";
@@ -85,12 +86,16 @@ public class Assets implements Disposable {
     public static final String enemy_ship_purple_ss = "enemy/enemy_ship_purple_ss.png";
     public static final String enemy_ship_white_ss = "enemy/enemy_ship_white_ss.png";
 
-    public static final String ship_ss = "player/main_ship_ss.png";
-    public static final String ship_red_ss = "player/main_ship_red_ss.png";
-    public static final String ship_black_ss = "player/main_ship_black_ss.png";
-    public static final String ship_purple_ss = "player/main_ship_purple_ss.png";
-    public static final String ship_blue_ss = "player/main_ship_blue_ss.png";
-    public static final String ship_cyan_ss = "player/main_ship_cyan_ss.png";
+    public static final String ship_ss = "player/ship_ss.png";
+    public static final String ship_red_ss = "player/ship_red_ss.png";
+    public static final String ship_black_ss = "player/ship_black_ss.png";
+    public static final String ship_purple_ss = "player/ship_purple_ss.png";
+    public static final String ship_yellow_ss = "player/ship_yellow_ss.png";
+    public static final String ship_cyan_ss = "player/ship_cyan_ss.png";
+    public static final String ship_bred_ss = "player/ship_bred_ss.png";
+    public static final String ship_orange_ss = "player/ship_orange_ss.png";
+    public static final String ship_green_ss = "player/ship_green_ss.png";
+    public static final String ship_blue_ss = "player/ship_blue_ss.png";
 
     public static final String explosion = "misc/explosion_ss.png";
     public static final String pause_menu_back = "ui/menu_back.png";
@@ -123,6 +128,7 @@ public class Assets implements Disposable {
         assetManager.load(play_sound, Sound.class);
         assetManager.load(bullet_sound, Sound.class);
         assetManager.load(heart_sound, Sound.class);
+        assetManager.load(gem_sound, Sound.class);
 
         assetManager.load(powerup_timer, Texture.class);
         assetManager.load(gem_icon, Texture.class);
@@ -193,8 +199,12 @@ public class Assets implements Disposable {
         assetManager.load(ship_black_ss, Texture.class);
         assetManager.load(ship_red_ss, Texture.class);
         assetManager.load(ship_purple_ss, Texture.class);
-        assetManager.load(ship_blue_ss, Texture.class);
+        assetManager.load(ship_yellow_ss, Texture.class);
         assetManager.load(ship_cyan_ss, Texture.class);
+        assetManager.load(ship_bred_ss, Texture.class);
+        assetManager.load(ship_orange_ss, Texture.class);
+        assetManager.load(ship_green_ss, Texture.class);
+        assetManager.load(ship_blue_ss, Texture.class);
 
         assetManager.load(explosion, Texture.class);
 
@@ -231,6 +241,7 @@ public class Assets implements Disposable {
         assetManager.unload(heart_sound);
         assetManager.unload(main_theme);
         assetManager.unload(bomb_sound);
+        assetManager.unload(gem_sound);
 
         assetManager.unload(default_background);
         assetManager.unload(green_background);
@@ -294,8 +305,12 @@ public class Assets implements Disposable {
         assetManager.unload(ship_red_ss);
         assetManager.unload(ship_black_ss);
         assetManager.unload(ship_purple_ss);
-        assetManager.unload(ship_blue_ss);
+        assetManager.unload(ship_yellow_ss);
         assetManager.unload(ship_cyan_ss);
+        assetManager.unload(ship_orange_ss);
+        assetManager.unload(ship_green_ss);
+        assetManager.unload(ship_bred_ss);
+        assetManager.unload(ship_blue_ss);
 
         assetManager.unload(explosion);
         assetManager.unload(heart_item_ss);

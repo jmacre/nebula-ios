@@ -12,7 +12,7 @@ public class EnemyBullet {
     public Sprite enemyBulletSprite;
     Assets assets;
     float speed;
-    float ENEMY_BULLET_X, ENEMY_BULLET_Y;
+    int ENEMY_BULLET_X, ENEMY_BULLET_Y;
 
     public static float ENEMY_BULLET_WIDTH = ENEMY_SHIP_WIDTH * (2/31f);
     public static float ENEMY_BULLET_HEIGHT = ENEMY_BULLET_WIDTH * 4f;
@@ -35,10 +35,10 @@ public class EnemyBullet {
 
     public EnemyBullet(){}
 
-    public void create (float ENEMY_BULLET_X, float ENEMY_BULLET_Y, float speed, int bulletColor, Assets assets) {
+    public void create (int ENEMY_BULLET_X, int ENEMY_BULLET_Y, float speed, int bulletColor, Assets assets) {
         this.assets = assets;
-        this.ENEMY_BULLET_X = ENEMY_BULLET_X;
-        this.ENEMY_BULLET_Y = ENEMY_BULLET_Y;
+        this.ENEMY_BULLET_X = (int)ENEMY_BULLET_X;
+        this.ENEMY_BULLET_Y = (int)ENEMY_BULLET_Y;
         this.speed = speed;
 
         this.bulletColor = bulletColor;
@@ -50,7 +50,7 @@ public class EnemyBullet {
     }
 
     public void update(float delta){
-        ENEMY_BULLET_Y -= speed * delta;
+        ENEMY_BULLET_Y -= (int)(speed * delta);
         if (ENEMY_BULLET_Y < 0){
             remove = true;
         }

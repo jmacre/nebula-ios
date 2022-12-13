@@ -10,22 +10,22 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 public class ShopElement extends GameElements{
     public static final int SHIP_ID = 0;
-
-    public static final int MAIN_SHIP_ID = 0;
     public static final int RED_SHIP_ID = 1;
     public static final int BLACK_SHIP_ID = 2;
     public static final int PURPLE_SHIP_ID = 3;
-    public static final int BLUE_SHIP_ID = 4;
+    public static final int YELLOW_SHIP_ID = 4;
     public static final int CYAN_SHIP_ID = 5;
-
-
-
+    public static final int BLUE_SHIP_ID = 6;
+    public static final int BRED_SHIP_ID = 7;
+    public static final int GREEN_SHIP_ID = 8;
+    public static final int ORANGE_SHIP_ID = 9;
 
     float x, y, width, height;
 
-    static Sprite mainShip, blackShip, redShip, purpleShip, purpleYellowShip, blueShip;
+    static Sprite mainShip, blackShip, redShip, purpleShip, yellowShip, cyanShip;
+    static Sprite bredShip, greenShip, orangeShip, blueShip;
 
-    public static int shipCount = 5; // one less than actual count for cycling between ships
+    public static int shipCount = 9; // one less than actual count for cycling between ships
     private int id, colorId;
 
     private Sprite elementSheet;
@@ -60,8 +60,12 @@ public class ShopElement extends GameElements{
         redShip = new Sprite(assets.assetManager.get(Assets.ship_red_ss, Texture.class));
         blackShip = new Sprite(assets.assetManager.get(Assets.ship_black_ss, Texture.class));
         purpleShip = new Sprite(assets.assetManager.get(Assets.ship_purple_ss, Texture.class));
-        purpleYellowShip = new Sprite(assets.assetManager.get(Assets.ship_blue_ss, Texture.class));
-        blueShip = new Sprite((assets.assetManager.get(Assets.ship_cyan_ss, Texture.class)));
+        yellowShip = new Sprite(assets.assetManager.get(Assets.ship_yellow_ss, Texture.class));
+        cyanShip = new Sprite((assets.assetManager.get(Assets.ship_cyan_ss, Texture.class)));
+        blueShip = new Sprite((assets.assetManager.get(Assets.ship_blue_ss, Texture.class)));
+        bredShip = new Sprite((assets.assetManager.get(Assets.ship_bred_ss, Texture.class)));
+        orangeShip = new Sprite((assets.assetManager.get(Assets.ship_orange_ss, Texture.class)));
+        greenShip = new Sprite((assets.assetManager.get(Assets.ship_green_ss, Texture.class)));
     }
 
     public String getTitle(){
@@ -73,7 +77,7 @@ public class ShopElement extends GameElements{
     public void setElementAnimation(int colorId){
         switch (colorId) {
 
-            case MAIN_SHIP_ID:
+            case SHIP_ID:
                 elementSheet = mainShip;
                 title = "CLASSIC";
                 break;
@@ -87,15 +91,31 @@ public class ShopElement extends GameElements{
                 break;
             case PURPLE_SHIP_ID:
                 elementSheet = purpleShip;
-                title = "ULTRAVIOLET";
+                title = "NEBULA";
                 break;
-            case BLUE_SHIP_ID:
-                elementSheet = purpleYellowShip;
+            case YELLOW_SHIP_ID:
+                elementSheet = yellowShip;
                 title = "FLASH";
                 break;
             case CYAN_SHIP_ID:
-                elementSheet = blueShip;
+                elementSheet = cyanShip;
                 title = "FROZEN";
+                break;
+            case BLUE_SHIP_ID:
+                elementSheet = blueShip;
+                title = "OCEAN";
+                break;
+            case BRED_SHIP_ID:
+                elementSheet = bredShip;
+                title = "VILLAIN";
+                break;
+            case GREEN_SHIP_ID:
+                elementSheet = greenShip;
+                title = "LIME";
+                break;
+            case ORANGE_SHIP_ID:
+                elementSheet = orangeShip;
+                title = "TROPICAL";
                 break;
         }
 

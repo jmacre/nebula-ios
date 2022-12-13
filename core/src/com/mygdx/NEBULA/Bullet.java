@@ -15,12 +15,7 @@ public class Bullet extends GameElements {
 
     public static final float SPEED = SCREEN_HEIGHT/1.56f;
 
-    public static float BULLET_WIDTH = SHIP_WIDTH*(2/27f);
-    public static float BULLET_HEIGHT = BULLET_WIDTH*4f;
-    public static float MISSILE_WIDTH = SHIP_WIDTH;
-    public static float MISSILE_HEIGHT = MISSILE_WIDTH * (50f/27f);
-
-    float BULLET_X, BULLET_Y;
+    int BULLET_X, BULLET_Y;
     float stateTime = 0f;
 
     private boolean isMissile = false;
@@ -50,11 +45,11 @@ public class Bullet extends GameElements {
         }
     }
 
-    public float getBulletY(){
+    public int getBulletY(){
         return BULLET_Y;
     }
 
-    public float getBulletX(){
+    public int getBulletX(){
         return BULLET_X;
     }
 
@@ -85,9 +80,9 @@ public class Bullet extends GameElements {
     public boolean isRapidFire() {
         return isRapidFire;
     }
-    public void create(float BULLET_X, boolean isMissile, boolean isRapidFire, Assets assets){
+    public void create(int BULLET_X, boolean isMissile, boolean isRapidFire, Assets assets){
         this.BULLET_X = BULLET_X;
-        this.BULLET_Y = SHIP_Y + SHIP_HEIGHT - BULLET_HEIGHT/2f;
+        this.BULLET_Y = (int) (SHIP_Y + SHIP_HEIGHT - BULLET_HEIGHT/2f);
         this.isMissile = isMissile;
         this.isRapidFire = isRapidFire;
 

@@ -23,6 +23,9 @@ public class ItemDrop extends GameElements {
     public static final float MIN_ITEM_SPAWN_TIME = 15f;
     public static final float MAX_ITEM_SPAWN_TIME = 25f;
 
+    public static final float MAX_GEM_SPAWN_TIME = 15f;
+    public static final float MIN_GEM_SPAWN_TIME = 10f;
+
     public static float MISSILE_TIMER = -9f;
     public static float RAPID_FIRE_TIMER = -12f;
     public static float HOURGLASS_TIMER = -4.5f;
@@ -34,8 +37,7 @@ public class ItemDrop extends GameElements {
 
     public static final float SPEED = SCREEN_HEIGHT / 2f;
 
-    float ITEM_X;
-    float ITEM_Y;
+    int ITEM_X, ITEM_Y;
 
     public static float ITEM_HEIGHT;
     public static float ITEM_WIDTH;
@@ -46,9 +48,9 @@ public class ItemDrop extends GameElements {
     Collision rect;
     public boolean remove = false;
 
-    public ItemDrop(float ITEM_X, float ITEM_HEIGHT, float ITEM_WIDTH, int itemId, Assets assets) {
+    public ItemDrop(int ITEM_X, int ITEM_HEIGHT, float ITEM_WIDTH, int itemId, Assets assets) {
         this.ITEM_X = ITEM_X;
-        this.ITEM_Y = 1.2f * SCREEN_HEIGHT;
+        this.ITEM_Y = (int) (1.2f * SCREEN_HEIGHT);
         ItemDrop.ITEM_HEIGHT = ITEM_HEIGHT;
         ItemDrop.ITEM_WIDTH = ITEM_WIDTH;
         itemAnim = new Anim();

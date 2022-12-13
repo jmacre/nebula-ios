@@ -10,13 +10,18 @@ public class Prefs {
         prefs = Gdx.app.getPreferences("nebula");
     }
     public int getHighScore(){
-        return prefs.getInteger("highscore", 0);
+        return prefs.getInteger("highScore", 0);
     }
     public void setHighScore(int currentScore){
-        if(currentScore > getHighScore()) {
-            prefs.putInteger("highscore", currentScore);
-            prefs.flush();
-        }
+        prefs.putInteger("highScore", currentScore);
+        prefs.flush();
+    }
+    public int getGemCount(){
+        return prefs.getInteger("gemCount", 0);
+    }
+    public void setGemCount(int gemCount){
+        prefs.putInteger("gemCount", gemCount);
+        prefs.flush();
     }
 
     public void setSound(boolean hasSound){

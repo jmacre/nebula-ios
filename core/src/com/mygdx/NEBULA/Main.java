@@ -42,7 +42,7 @@ public class Main extends Game {
 		pauseSound = assets.assetManager.get(Assets.pause_sound, Sound.class);
 
 		if(assets.assetManager.isFinished()) {
-			this.setScreen(new MainMenu(this, 0, assets));
+			this.setScreen(new MainMenu(this, assets));
 		}
 	}
 	@Override

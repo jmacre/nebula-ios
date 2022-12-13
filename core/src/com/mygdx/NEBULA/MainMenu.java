@@ -26,7 +26,6 @@ public class MainMenu extends GameElements implements Screen {
     float deltaSum;
 
     Main game;
-    int score;
 
     Sprite startButtonInactive, startButtonActive,  blackTransition;
 
@@ -42,13 +41,11 @@ public class MainMenu extends GameElements implements Screen {
     boolean soundEnabled, soundLoaded, playSoundHasPlayed;
     GameInterface gameInterface;
 
-    public MainMenu(Main game, int score, Assets assets) {
+    public MainMenu(Main game, Assets assets) {
         this.game = game;
-        this.score = score;
         this.assets = assets;
         gameInterface = new GameInterface(assets);
         this.background = new Background(assets);
-        prefs.setHighScore(score);
     }
 
     @Override
