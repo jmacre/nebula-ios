@@ -88,6 +88,9 @@ public class GameElements {
     public static final float BOMB_HEIGHT = HEART_HEIGHT * (24/11f);
     public static final float BOMB_WIDTH = BOMB_HEIGHT * (18/24f);
 
+    public static final float GEM_HEIGHT = BOMB_HEIGHT / 2f;
+    public static final float GEM_WIDTH = BOMB_WIDTH * (17/18f);
+
     public static final float RAPID_FIRE_HEIGHT = BOMB_HEIGHT * (16/23f);
     public static final float RAPID_FIRE_WIDTH = HEART_WIDTH;
 
@@ -106,9 +109,19 @@ public class GameElements {
 
     public static final float POWERUP_TIMER_HEIGHT = HEART_HEIGHT * (17/11f);
     public static final float POWERUP_TIMER_WIDTH = POWERUP_TIMER_HEIGHT;
-    public static final float POWERUP_TIMER_X = SCORE_X;
+    public static final float POWERUP_TIMER_X = SCREEN_WIDTH - POWERUP_TIMER_WIDTH - SCORE_X;
     public static final float POWERUP_TIMER_Y_IOS = SCORE_Y_IOS - (POWERUP_TIMER_HEIGHT * 1.8f);
     public static final float POWERUP_TIMER_Y_AND = SCORE_Y_AND - (POWERUP_TIMER_HEIGHT * 1.8f);
+
+    public static final float GEM_ICON_HEIGHT = HEART_HEIGHT * (6 / 11f);
+    public static final float GEM_ICON_WIDTH = HEART_WIDTH * (7 / 13f);
+    public static final float GEM_ICON_X = SCORE_X;
+    public static final float GEM_ICON_Y_AND = SCORE_Y_AND - (GEM_ICON_HEIGHT * 3.5f);
+    public static final float GEM_ICON_Y_IOS = SCORE_Y_IOS - (GEM_ICON_HEIGHT * 3.5f);
+
+    public static final float GEM_COUNT_X = GEM_ICON_X + (GEM_ICON_WIDTH * 1.1f);
+    public static final float GEM_COUNT_Y_AND = GEM_ICON_Y_AND + (GEM_ICON_HEIGHT * .8f);
+    public static final float GEM_COUNT_Y_IOS = GEM_ICON_Y_IOS + (GEM_ICON_HEIGHT * .8f);
 
     public static final float MENU_BACK_WIDTH = SCREEN_WIDTH*.9f;
     public static final float MENU_BACK_HEIGHT = MENU_BACK_WIDTH/1.733f;
@@ -216,9 +229,9 @@ public class GameElements {
     Sound playSound;
     Music bombSound;
     Sound missileSound;
-    Sound bulletSound, heartSound, hitSound;
+    Sound bulletSound, heartSound, hitSound, gemSound;
 
     public FreeTypeFontGenerator.FreeTypeFontParameter textParameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
     public FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("mainfont.ttf"));
-    public BitmapFont menuScoreFont, gameOverFont, countdownFont, confirmScreenFont, storeFont;
+    public BitmapFont menuScoreFont, gameOverFont, countdownFont, confirmScreenFont, storeFont, gemCountFont;
 }

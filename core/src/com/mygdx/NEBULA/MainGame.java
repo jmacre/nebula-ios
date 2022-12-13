@@ -26,6 +26,7 @@ import static com.mygdx.NEBULA.EnemyBullet.greenShipBulletSpeed;
 import static com.mygdx.NEBULA.EnemyBullet.purpleShipBulletSpeed;
 import static com.mygdx.NEBULA.EnemyBullet.redShipBulletSpeed;
 import static com.mygdx.NEBULA.EnemyBullet.whiteShipBulletSpeed;
+import static com.mygdx.NEBULA.ItemDrop.GEM_ID;
 import static com.mygdx.NEBULA.ItemDrop.HOURGLASS_TIMER;
 import static com.mygdx.NEBULA.ItemDrop.MISSILE_TIMER;
 import static com.mygdx.NEBULA.ItemDrop.RAPID_FIRE_TIMER;
@@ -54,6 +55,8 @@ public class MainGame extends GameElements implements Screen {
     GlyphLayout gl;
     Array<Integer> shipPositions;
     int position;
+
+    int gemCount = 0;
 
     BulletPool bp = new BulletPool();
     EnemyBulletPool ebp = new EnemyBulletPool();
@@ -253,6 +256,7 @@ public class MainGame extends GameElements implements Screen {
         bulletSound = assets.assetManager.get(Assets.bullet_sound, Sound.class);
         missileSound = assets.assetManager.get(Assets.missile_sound, Sound.class);
         heartSound = assets.assetManager.get(Assets.heart_sound, Sound.class);
+        gemSound = assets.assetManager.get(Assets.gem_sound, Sound.class);
 
         bombSound = assets.assetManager.get(Assets.bomb_sound, Music.class);
         bombSound.setVolume(0.1f);
@@ -286,6 +290,9 @@ public class MainGame extends GameElements implements Screen {
         textParameter.size = SCREEN_WIDTH / 40;
         menuScoreFont = generator.generateFont(textParameter);
         menuScoreFont.setColor(Color.valueOf(PURPLE_COLOR_HEX));
+
+        gemCountFont = generator.generateFont(textParameter);
+        gemCountFont.setColor(1,1,1, 0.8f);
 
         textParameter.size = SCREEN_WIDTH / 22;
         confirmScreenFont = generator.generateFont(textParameter);
@@ -654,6 +661,8 @@ public class MainGame extends GameElements implements Screen {
         hourglassMultiplier = 1;
 
         health = 3;
+        gemCount = 0;
+
         score = 0;
         songPausePosition = 0f;
         countDownTimer = 0f;
@@ -897,15 +906,18 @@ public class MainGame extends GameElements implements Screen {
         }
 
         if (isTransitionedIn) {
-            gameInterface.drawTopUI(game, isPaused || isRunningResumeCountdown, health, isAlive, isTransitionedIn);
+            gameInterface.drawTopUI(game, isPaused || isRunningResumeCountdown, health, isAlive, true);
 
             gl.setText(Main.scoreFont, String.valueOf(score));
 
             if (Gdx.app.getType() == Application.ApplicationType.iOS) {
                 Main.scoreFont.draw(game.batch, gl, SCORE_X, SCREEN_HEIGHT - gl.height * 2f);
+                gemCountFont.draw(game.batch, " x " + gemCount, GEM_COUNT_X, GEM_COUNT_Y_IOS);
             } else {
                 Main.scoreFont.draw(game.batch, gl, SCORE_X, SCREEN_HEIGHT - gl.height);
+                gemCountFont.draw(game.batch, " x " + gemCount, GEM_COUNT_X, GEM_COUNT_Y_AND);
             }
+
             updatingScore = false;
         }
     }
@@ -1191,7 +1203,7 @@ public class MainGame extends GameElements implements Screen {
         itemSpawnTimer -= deltaP;
         if (itemSpawnTimer <= 0) {
 
-            randomDrop = random.nextInt(5);
+            randomDrop = random.nextInt(6);
 
             if (randomDrop == lastItemDrop) {
                 addItemDrops();
@@ -1202,13 +1214,20 @@ public class MainGame extends GameElements implements Screen {
                         addItemDrops();
                     else
                         itemDrops.add(new ItemDrop(random.nextInt((int) (SCREEN_WIDTH - ItemDrop.HEART_ITEM_WIDTH)), ItemDrop.HEART_ITEM_HEIGHT, ItemDrop.HEART_WIDTH, HEART_ID, assets));
-                } else if (randomDrop == 1) {
+                }
+                else if (randomDrop == 1) {
                     itemDrops.add(new ItemDrop(random.nextInt((int) (SCREEN_WIDTH - ItemDrop.BOMB_WIDTH)), ItemDrop.BOMB_HEIGHT, ItemDrop.BOMB_WIDTH, BOMB_ID, assets));
-                } else if (randomDrop == 2) {
+                }
+                else if (randomDrop == 2) {
                     itemDrops.add(new ItemDrop(random.nextInt((int) (SCREEN_WIDTH - ItemDrop.MISSILE_ITEM_WIDTH)), ItemDrop.MISSILE_ITEM_HEIGHT, ItemDrop.MISSILE_ITEM_WIDTH, MISSILE_ID, assets));
-                } else if (randomDrop == 3) {
+                }
+                else if (randomDrop == 3) {
                     itemDrops.add(new ItemDrop(random.nextInt((int) (SCREEN_WIDTH - ItemDrop.RAPID_FIRE_WIDTH)), ItemDrop.RAPID_FIRE_HEIGHT, ItemDrop.RAPID_FIRE_WIDTH, RAPID_FIRE_ID, assets));
-                } else {
+                }
+                else if (randomDrop == 4){
+                    itemDrops.add(new ItemDrop(random.nextInt((int) (SCREEN_WIDTH - ItemDrop.GEM_WIDTH)), ItemDrop.GEM_HEIGHT, ItemDrop.GEM_WIDTH, GEM_ID, assets));
+                }
+                else {
                     if (score < 1000)
                         addItemDrops();
                     else
@@ -1234,8 +1253,13 @@ public class MainGame extends GameElements implements Screen {
                     break;
                 case RAPID_FIRE_ID:
                     itemDrop.render(ItemDrop.RAPID_FIRE_WIDTH, ItemDrop.RAPID_FIRE_HEIGHT, deltaP, game.batch);
+                    break;
+                case GEM_ID:
+                    itemDrop.render(ItemDrop.GEM_WIDTH, ItemDrop.GEM_HEIGHT, deltaP, game.batch);
+                    break;
                 case HOURGLASS_ID:
                     itemDrop.render(ItemDrop.HOURGLASS_WIDTH, ItemDrop.HOURGLASS_HEIGHT, deltaP, game.batch);
+                    break;
             }
 
             if (itemDrop.remove) {
@@ -1493,6 +1517,13 @@ public class MainGame extends GameElements implements Screen {
                             missileUsed = true;
                             bulletTimer = .2f;
                         }
+                        break;
+
+                    case GEM_ID:
+                        gemCount++;
+
+                        if(soundEnabled)
+                            gemSound.play(0.25f);
                         break;
 
                     case RAPID_FIRE_ID:

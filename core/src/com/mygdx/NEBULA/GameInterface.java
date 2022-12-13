@@ -42,7 +42,7 @@ public class GameInterface extends GameElements {
     Sprite heart1;
     Sprite heart2;
     Sprite heart3;
-    Sprite heartMissing1, heartMissing2, heartMissing3, pauseMenuBack, shopBack;
+    Sprite heartMissing1, heartMissing2, heartMissing3, gemIcon, pauseMenuBack, shopBack;
     GlyphLayout gl;
     Boolean confirmLeaveScreenOpen = false;
 
@@ -50,6 +50,8 @@ public class GameInterface extends GameElements {
 
     float tsSoundButtonY;
     float scoreY;
+    float gemIconY;
+
     float topElemY;
     float stateTime = 0f;
     int selectedElement = prefs.getShip();
@@ -79,10 +81,13 @@ public class GameInterface extends GameElements {
             tsSoundButtonY = TS_SOUND_BUTTON_Y_AND;
             scoreY = SCORE_Y_AND;
             topElemY = TOP_ELEM_Y_AND;
-        } else {
+            gemIconY = GEM_ICON_Y_AND;
+        }
+        else {
             tsSoundButtonY = TS_SOUND_BUTTON_Y_IOS;
             scoreY = SCORE_Y_IOS;
             topElemY = TOP_ELEM_Y_IOS;
+            gemIconY = GEM_ICON_Y_IOS;
         }
 
         tsSoundButton = new Button(assets.assetManager.get(Assets.sound_off_button_ts, Texture.class), TS_SOUND_BUTTON_X, tsSoundButtonY, TS_SOUND_BUTTON_WIDTH, TS_SOUND_BUTTON_HEIGHT, TS_SOUND_BUTTON_WIDTH / 2, TS_SOUND_BUTTON_HEIGHT / 2);
@@ -93,12 +98,17 @@ public class GameInterface extends GameElements {
         soundOffButton = new Sprite(assets.assetManager.get(Assets.sound_off_button_inactive, Texture.class));
         titleTexture = new Sprite(assets.assetManager.get(Assets.title_logo_clear, Texture.class));
         soundOnButton = new Sprite(assets.assetManager.get(Assets.sound_on_button_inactive, Texture.class));
+
         heart1 = new Sprite(assets.assetManager.get(Assets.heart, Texture.class));
-        heart2 = new Sprite(assets.assetManager.get(Assets.heart, Texture.class));
-        heart3 = new Sprite(assets.assetManager.get(Assets.heart, Texture.class));
+        heart2 = heart1;
+        heart3 = heart1;
+
         heartMissing1 = new Sprite(assets.assetManager.get(Assets.heart_missing, Texture.class));
-        heartMissing2 = new Sprite(assets.assetManager.get(Assets.heart_missing, Texture.class));
-        heartMissing3 = new Sprite(assets.assetManager.get(Assets.heart_missing, Texture.class));
+        heartMissing2 = heartMissing1;
+        heartMissing3 = heartMissing1;
+
+        gemIcon = new Sprite(assets.assetManager.get(Assets.gem_icon, Texture.class));
+
         pauseMenuBack = new Sprite(assets.assetManager.get(Assets.pause_menu_back, Texture.class));
         shopBack = new Sprite(assets.assetManager.get(Assets.shop_back, Texture.class));
         scoreFont = generator.generateFont(parameter);
@@ -132,6 +142,7 @@ public class GameInterface extends GameElements {
             game.batch.draw(heartMissing2, MIDDLE_HEART_X, topElemY, HEART_WIDTH, HEART_HEIGHT);
             game.batch.draw(heartMissing3, LEFT_HEART_X, topElemY, HEART_WIDTH, HEART_HEIGHT);
         }
+        game.batch.draw(gemIcon, GEM_ICON_X, gemIconY, GEM_ICON_WIDTH, GEM_ICON_HEIGHT);
     }
 
     public void drawTitleScreen(Main game, boolean transitionInDone) {
@@ -147,10 +158,8 @@ public class GameInterface extends GameElements {
         if (transitionInDone) {
             titleTexture.setTexture(assets.assetManager.get(Assets.title_logo, Texture.class));
             game.batch.draw(tsSoundButton.getTexture(), TS_SOUND_BUTTON_X, tsSoundButtonY, TS_SOUND_BUTTON_WIDTH, TS_SOUND_BUTTON_HEIGHT);
-            ;
 
             scoreFont.draw(game.batch, "HIGH SCORE: " + prefs.getHighScore(), SCORE_X, scoreY);
-
         }
     }
 

@@ -23,8 +23,8 @@ public class EnemyBullet {
     public static float purpleShipBulletThreshold = 1.4f;
     public static float whiteShipBulletThreshold = 1.5f;
 
-    public static float blueShipBulletSpeed = SCREEN_HEIGHT/2.5f;
-    public static float greenShipBulletSpeed = SCREEN_HEIGHT/2.25f;
+    public static float blueShipBulletSpeed = SCREEN_HEIGHT/2.25f;
+    public static float greenShipBulletSpeed = SCREEN_HEIGHT/2.05f;
     public static float redShipBulletSpeed = SCREEN_HEIGHT/1.85f;
     public static float purpleShipBulletSpeed = SCREEN_HEIGHT/1.7f;
     public static float whiteShipBulletSpeed = SCREEN_HEIGHT/1.55f;

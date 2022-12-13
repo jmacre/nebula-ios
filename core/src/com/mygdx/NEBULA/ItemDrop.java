@@ -17,7 +17,8 @@ public class ItemDrop extends GameElements {
     public static final int MISSILE_ID = 1;
     public static final int HEART_ID = 2;
     public static final int RAPID_FIRE_ID = 3;
-    public static final int HOURGLASS_ID = 4;
+    public static final int GEM_ID = 4;
+    public static final int HOURGLASS_ID = 5;
 
     public static final float MIN_ITEM_SPAWN_TIME = 15f;
     public static final float MAX_ITEM_SPAWN_TIME = 25f;
@@ -68,6 +69,9 @@ public class ItemDrop extends GameElements {
                 break;
             case RAPID_FIRE_ID:
                 itemSheet = new Sprite(assets.assetManager.get(Assets.rapid_fire_ss, Texture.class));
+                break;
+            case GEM_ID:
+                itemSheet = new Sprite(assets.assetManager.get(Assets.gem_ss, Texture.class));
                 break;
             case HOURGLASS_ID:
                 itemSheet = new Sprite(assets.assetManager.get(Assets.hourglass_ss, Texture.class));

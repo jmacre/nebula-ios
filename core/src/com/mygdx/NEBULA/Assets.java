@@ -16,6 +16,7 @@ public class Assets implements Disposable {
     public static final String heart_sound = "sound/heart_sound.mp3";
     public static final String bomb_sound = "sound/bomb_sound.mp3";
     public static final String missile_sound = "sound/missile_sound.mp3";
+    public static final String gem_sound = "sound/gem.mp3";
 
     public static final String default_background = "background/default_bg.png";
     public static final String blue_background = "background/blue_bg.png";
@@ -103,20 +104,30 @@ public class Assets implements Disposable {
     public static final String no_button_active = "ui/no_button_active.png";
     public static final String no_button_inactive = "ui/no_button_inactive.png";
 
-//    public static final String upgrade_button = "ui/upgrade_button.png";
-
     public static final String heart_item_ss = "items/heart_ss.png";
     public static final String missile_item_ss = "items/missile_ss.png";
     public static final String bomb_ss = "items/bomb_ss.png";
     public static final String rapid_fire_ss = "items/rapid_fire_ss.png";
     public static final String hourglass_ss = "items/hourglass_ss.png";
+    public static final String gem_ss = "items/gem_ss.png";
+
+    public static final String gem_icon = "ui/gem.png";
 
 
     public void load() {
         assetManager.load(main_theme, Music.class);
         assetManager.load(bomb_sound, Music.class);
 
+        assetManager.load(hit_sound, Sound.class);
+        assetManager.load(missile_sound, Sound.class);
+        assetManager.load(pause_sound, Sound.class);
+        assetManager.load(play_sound, Sound.class);
+        assetManager.load(bullet_sound, Sound.class);
+        assetManager.load(heart_sound, Sound.class);
+        assetManager.load(gem_sound, Sound.class);
+
         assetManager.load(powerup_timer, Texture.class);
+        assetManager.load(gem_icon, Texture.class);
 
         assetManager.load(default_background, Texture.class);
         assetManager.load(green_background, Texture.class);
@@ -194,6 +205,7 @@ public class Assets implements Disposable {
         assetManager.load(missile_item_ss, Texture.class);
         assetManager.load(rapid_fire_ss, Texture.class);
         assetManager.load(hourglass_ss, Texture.class);
+        assetManager.load(gem_ss, Texture.class);
 
         assetManager.load(pause_menu_back, Texture.class);
         assetManager.load(shop_back, Texture.class);
@@ -210,13 +222,6 @@ public class Assets implements Disposable {
         assetManager.load(select_button_active, Texture.class);
         assetManager.load(select_button_inactive, Texture.class);
         assetManager.load(active_button, Texture.class);
-
-        assetManager.load(hit_sound, Sound.class);
-        assetManager.load(missile_sound, Sound.class);
-        assetManager.load(pause_sound, Sound.class);
-        assetManager.load(play_sound, Sound.class);
-        assetManager.load(bullet_sound, Sound.class);
-        assetManager.load(heart_sound, Sound.class);
     }
 
     public void unloadAll() {
@@ -228,6 +233,7 @@ public class Assets implements Disposable {
         assetManager.unload(heart_sound);
         assetManager.unload(main_theme);
         assetManager.unload(bomb_sound);
+        assetManager.unload(gem_sound);
 
         assetManager.unload(default_background);
         assetManager.unload(green_background);
@@ -240,6 +246,7 @@ public class Assets implements Disposable {
         assetManager.unload(stars_back);
 
         assetManager.unload(powerup_timer);
+        assetManager.unload(gem_icon);
 
         assetManager.unload(start_button_inactive);
         assetManager.unload(start_button_active);
@@ -298,6 +305,8 @@ public class Assets implements Disposable {
         assetManager.unload(bomb_ss);
         assetManager.unload(missile_item_ss);
         assetManager.unload(rapid_fire_ss);
+        assetManager.unload(gem_ss);
+
         assetManager.unload(pause_menu_back);
 
         assetManager.unload(powerup_timer);
