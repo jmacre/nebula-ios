@@ -572,7 +572,7 @@ public class MainGame extends GameElements implements Screen {
                 if(gemCount > 0){
                     runGemCountReplayScreenUpdateTimer();
                 }
-                gameInterface.drawReplayScreen(game, menuScoreFont, gameOverFont, gemCountFont, newHighscore, replayScreenGemCount, gemCount == 0, soundEnabled);
+                gameInterface.drawReplayScreen(game, menuScoreFont, gameOverFont, gemCountFont, newHighscore, replayScreenGemCount, gemCount, soundEnabled);
             }
 
             if (gameInterface.checkForReplayButtonTap(gemCount) && isTransitionedOut) {

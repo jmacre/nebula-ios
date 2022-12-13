@@ -213,7 +213,7 @@ public class GameInterface extends GameElements {
     }
 
     public boolean checkForSoundButtonTap(boolean soundEnabled, int gemCount, boolean isAlive) {
-        if (gemCount == 0 | isAlive) {
+        if (gemCount < 3 || isAlive) {
             if (soundEnabled) {
                 if (soundButton.getTappedBefore()) {
                     soundButton.setTexture(assets.assetManager.get(Assets.sound_on_button_active, Texture.class));
@@ -233,7 +233,7 @@ public class GameInterface extends GameElements {
 
 
     public boolean checkForReplayButtonTap(int gemCount) {
-        if (gemCount == 0) {
+        if (gemCount < 3) {
             if (replayButton.getTappedBefore()) {
                 replayButton.setTexture(assets.assetManager.get(Assets.replay_button_active, Texture.class));
             } else {
@@ -293,7 +293,7 @@ public class GameInterface extends GameElements {
     }
 
     public boolean checkForHomeButtonTap(int gemCount, boolean isAlive) {
-        if (isAlive || gemCount == 0) {
+        if (isAlive || gemCount < 3) {
             if (homeButton.getTappedBefore()) {
                 homeButton.setTexture(assets.assetManager.get(Assets.home_button_active, Texture.class));
             } else {
@@ -417,12 +417,12 @@ public class GameInterface extends GameElements {
         return confirmLeaveScreenOpen;
     }
 
-    public void drawReplayScreen(Main game, BitmapFont scoreFont, BitmapFont gameOverFont, BitmapFont gemCountFont, boolean newHighScore, int gemCount, boolean gemUpdateComplete, boolean soundEnabled) {
+    public void drawReplayScreen(Main game, BitmapFont scoreFont, BitmapFont gameOverFont, BitmapFont gemCountFont, boolean newHighScore, int replayScreengemCount, int gemCount, boolean soundEnabled) {
         scoreFont.setColor(Color.valueOf(PURPLE_COLOR_HEX));
 
         game.batch.draw(pauseMenuBack, MENU_BACK_X, MENU_BACK_Y, MENU_BACK_WIDTH, MENU_BACK_HEIGHT);
         if (!confirmLeaveScreenOpen) {
-            if (gemUpdateComplete) {
+            if (gemCount < 3) {
                 replayButton.setTexture(assets.assetManager.get(Assets.replay_button_inactive, Texture.class));
                 homeButton.setTexture(assets.assetManager.get(Assets.home_button_inactive, Texture.class));
 
@@ -457,7 +457,7 @@ public class GameInterface extends GameElements {
 
             }
             game.batch.draw(gemIcon, GEM_ICON_MENU_X, GEM_ICON_MENU_Y, GEM_ICON_WIDTH, GEM_ICON_HEIGHT);
-            gemCountFont.draw(game.batch, " x " + gemCount, GEM_COUNT_MENU_X, GEM_COUNT_MENU_Y);
+            gemCountFont.draw(game.batch, " x " + replayScreengemCount, GEM_COUNT_MENU_X, GEM_COUNT_MENU_Y);
         }
     }
 }
