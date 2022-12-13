@@ -255,8 +255,7 @@ public class MainGame extends GameElements implements Screen {
         hitSound = assets.assetManager.get(Assets.hit_sound, Sound.class);
         bulletSound = assets.assetManager.get(Assets.bullet_sound, Sound.class);
         missileSound = assets.assetManager.get(Assets.missile_sound, Sound.class);
-        heartSound = assets.assetManager.get(Assets.heart_sound, Sound.class);
-        gemSound = assets.assetManager.get(Assets.gem_sound, Sound.class);
+        itemSound = assets.assetManager.get(Assets.heart_sound, Sound.class);
 
         bombSound = assets.assetManager.get(Assets.bomb_sound, Music.class);
         bombSound.setVolume(0.1f);
@@ -1480,7 +1479,7 @@ public class MainGame extends GameElements implements Screen {
                         score += 25;
 
                         if (soundEnabled)
-                            heartSound.play(0.15f);
+                            itemSound.play(0.15f);
 
 
                         if (health > 0 && health < 3 && !heartUsed) {
@@ -1511,7 +1510,7 @@ public class MainGame extends GameElements implements Screen {
                         isMissile = true;
 
                         if (soundEnabled)
-                            heartSound.play(0.15f);
+                            itemSound.play(0.25f);
 
                         if (!missileUsed) {
                             missileUsed = true;
@@ -1523,14 +1522,14 @@ public class MainGame extends GameElements implements Screen {
                         gemCount++;
 
                         if(soundEnabled)
-                            gemSound.play(0.25f);
+                            itemSound.play(0.25f);
                         break;
 
                     case RAPID_FIRE_ID:
                         isRapidFire = true;
 
                         if (soundEnabled)
-                            heartSound.play(0.15f);
+                            itemSound.play(0.25f);
 
                         if (!rapidFireUsed) {
                             bulletTimer = .05f;
@@ -1541,7 +1540,7 @@ public class MainGame extends GameElements implements Screen {
                     case HOURGLASS_ID:
                         isHourglass = true;
                         if (soundEnabled)
-                            heartSound.play(0.15f);
+                            itemSound.play(0.25f);
 
                         if (!hourglassUsed) {
                             hourglassUsed = true;

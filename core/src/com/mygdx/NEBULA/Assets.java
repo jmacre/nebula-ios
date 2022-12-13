@@ -16,7 +16,6 @@ public class Assets implements Disposable {
     public static final String heart_sound = "sound/heart_sound.mp3";
     public static final String bomb_sound = "sound/bomb_sound.mp3";
     public static final String missile_sound = "sound/missile_sound.mp3";
-    public static final String gem_sound = "sound/gem.mp3";
 
     public static final String default_background = "background/default_bg.png";
     public static final String blue_background = "background/blue_bg.png";
@@ -124,7 +123,6 @@ public class Assets implements Disposable {
         assetManager.load(play_sound, Sound.class);
         assetManager.load(bullet_sound, Sound.class);
         assetManager.load(heart_sound, Sound.class);
-        assetManager.load(gem_sound, Sound.class);
 
         assetManager.load(powerup_timer, Texture.class);
         assetManager.load(gem_icon, Texture.class);
@@ -233,7 +231,6 @@ public class Assets implements Disposable {
         assetManager.unload(heart_sound);
         assetManager.unload(main_theme);
         assetManager.unload(bomb_sound);
-        assetManager.unload(gem_sound);
 
         assetManager.unload(default_background);
         assetManager.unload(green_background);
