@@ -577,6 +577,7 @@ public class MainGame extends GameElements implements Screen {
 
             if (gameInterface.checkForReplayButtonTap(gemCount) && isTransitionedOut) {
                 resetScreen();
+
             } else if (isTransitionedOut) {
                 if (gameInterface.checkForHomeButtonTap(gemCount, isAlive) || gameInterface.getConfirmLeaveScreenOpen()) {
                     if (!gameInterface.getConfirmLeaveScreenOpen()) {
@@ -703,6 +704,9 @@ public class MainGame extends GameElements implements Screen {
 
         minLaserSpawnTime = MIN_LASER_TRAP_SPAWN_TIME;
         maxLaserSpawnTime = MAX_LASER_TRAP_SPAWN_TIME;
+
+        minGemSpawnTime = MIN_GEM_SPAWN_TIME;
+        maxGemSpawnTime = MAX_GEM_SPAWN_TIME;
 
         prevScore = 0;
 
