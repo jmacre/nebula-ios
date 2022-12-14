@@ -213,7 +213,7 @@ public class GameInterface extends GameElements {
     }
 
     public boolean checkForSoundButtonTap(boolean soundEnabled, int gemCount, boolean isAlive) {
-        if (gemCount < 3 || isAlive) {
+        if (gemCount == 0 || isAlive) {
             if (soundEnabled) {
                 if (soundButton.getTappedBefore()) {
                     soundButton.setTexture(assets.assetManager.get(Assets.sound_on_button_active, Texture.class));
@@ -233,7 +233,7 @@ public class GameInterface extends GameElements {
 
 
     public boolean checkForReplayButtonTap(int gemCount) {
-        if (gemCount < 3) {
+        if (gemCount == 0) {
             if (replayButton.getTappedBefore()) {
                 replayButton.setTexture(assets.assetManager.get(Assets.replay_button_active, Texture.class));
             } else {
@@ -293,7 +293,7 @@ public class GameInterface extends GameElements {
     }
 
     public boolean checkForHomeButtonTap(int gemCount, boolean isAlive) {
-        if (isAlive || gemCount < 3) {
+        if (isAlive || gemCount == 0) {
             if (homeButton.getTappedBefore()) {
                 homeButton.setTexture(assets.assetManager.get(Assets.home_button_active, Texture.class));
             } else {
@@ -422,7 +422,7 @@ public class GameInterface extends GameElements {
 
         game.batch.draw(pauseMenuBack, MENU_BACK_X, MENU_BACK_Y, MENU_BACK_WIDTH, MENU_BACK_HEIGHT);
         if (!confirmLeaveScreenOpen) {
-            if (gemCount < 3) {
+            if (gemCount == 0) {
                 replayButton.setTexture(assets.assetManager.get(Assets.replay_button_inactive, Texture.class));
                 homeButton.setTexture(assets.assetManager.get(Assets.home_button_inactive, Texture.class));
 

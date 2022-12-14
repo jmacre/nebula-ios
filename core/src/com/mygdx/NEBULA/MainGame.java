@@ -72,6 +72,7 @@ public class MainGame extends GameElements implements Screen {
     float minGemSpawnTime = MIN_GEM_SPAWN_TIME;
 
     int gemCount = 0;
+    int finalGemCount = 0;
     int replayScreenGemCount = prefs.getGemCount();
     boolean gemCountUpdated;
 
@@ -570,7 +571,16 @@ public class MainGame extends GameElements implements Screen {
             }
             if (isTransitionedOut && !isFadingOut) {
                 if(gemCount > 0){
-                    runGemCountReplayScreenUpdateTimer();
+                    if(Gdx.input.justTouched() || finalGemCount < 10){
+                        replayScreenGemCount += gemCount;
+                        gemCount = 0;
+
+                        if(soundEnabled)
+                            itemSound.play(0.1f);
+                    }
+                    else {
+                        runGemCountReplayScreenUpdateTimer();
+                    }
                 }
                 gameInterface.drawReplayScreen(game, menuScoreFont, gameOverFont, gemCountFont, newHighscore, replayScreenGemCount, gemCount, soundEnabled);
             }
@@ -683,6 +693,7 @@ public class MainGame extends GameElements implements Screen {
 
         health = 3;
 
+        finalGemCount = 0;
         gemCount = 0;
         replayScreenGemCount = prefs.getGemCount();
         gemCountUpdated = false;
@@ -745,6 +756,9 @@ public class MainGame extends GameElements implements Screen {
         ep.clear();
         exp.clear();
         ebp.clear();
+
+        if(powerupTimers.size > 0)
+            powerupTimers.clear();
 
         if (bullets.size > 0)
             bullets.clear();
@@ -1488,6 +1502,7 @@ public class MainGame extends GameElements implements Screen {
                 }
 
                 if (health == 0) {
+                    finalGemCount = gemCount;
                     isAlive = false;
                 }
             }
