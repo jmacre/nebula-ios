@@ -3,6 +3,8 @@ package com.mygdx.NEBULA;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
 
+import java.util.List;
+
 public class Prefs {
     private final Preferences prefs ;
 
@@ -36,8 +38,15 @@ public class Prefs {
     public int getShip(){
         return prefs.getInteger("shipColor", 0);
     }
-
     public boolean hasSound(){
         return prefs.getBoolean("hasSound", true);
+    }
+    public String getUnlockedShips(){
+        return prefs.getString("unlockedShips");
+    }
+    public void setUnlockedShips(String unlockedShips){
+        prefs.putString("unlockedShips", unlockedShips + ' ');
+        //blank char is to ensure that 10 isn't confused with 1 and 0
+        prefs.flush();
     }
 }

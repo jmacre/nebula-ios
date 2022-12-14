@@ -1,7 +1,10 @@
 package com.mygdx.NEBULA;
 
+import static com.mygdx.NEBULA.ShopElement.SHIP_ID;
+
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -71,13 +74,19 @@ public class GameInterface extends GameElements {
 
         textParameter.size = SCREEN_WIDTH / 14;
         storeFont = generator.generateFont(textParameter);
+        gemSound = assets.assetManager.get(Assets.gem_sound, Sound.class);
+        errorSound = assets.assetManager.get(Assets.error_sound, Sound.class);
+
+        textParameter.size = (int) SELECT_BUTTON_WIDTH/8;
+        buyFont = generator.generateFont(textParameter);
 
         if (Gdx.app.getType() == Application.ApplicationType.Android) {
             tsSoundButtonY = TS_SOUND_BUTTON_Y_AND;
             scoreY = SCORE_Y_AND;
             topElemY = TOP_ELEM_Y_AND;
             gemIconY = GEM_ICON_Y_AND;
-        } else {
+        }
+        else {
             tsSoundButtonY = TS_SOUND_BUTTON_Y_IOS;
             scoreY = SCORE_Y_IOS;
             topElemY = TOP_ELEM_Y_IOS;
@@ -233,7 +242,7 @@ public class GameInterface extends GameElements {
 
 
     public boolean checkForReplayButtonTap(int gemCount) {
-        if (gemCount == 0) {
+        if (gemCount == 0 && !getConfirmLeaveScreenOpen()) {
             if (replayButton.getTappedBefore()) {
                 replayButton.setTexture(assets.assetManager.get(Assets.replay_button_active, Texture.class));
             } else {
@@ -355,8 +364,33 @@ public class GameInterface extends GameElements {
                 game.playSound.play(0.2f);
         }
     }
+    public void checkForBuyButtonTap(Main game, boolean soundEnabled, int itemPrice){
+        if (selectButton.getTappedBefore()) {
+            selectButton.setTexture(assets.assetManager.get(Assets.buy_active, Texture.class));
 
-    public void drawShopScreen(Main game, boolean soundEnabled, float delta, SpriteBatch batch) {
+        } else {
+            selectButton.setTexture(assets.assetManager.get(Assets.buy_inactive, Texture.class));
+        }
+        if (selectButton.getReleased()) {
+            if(prefs.getGemCount() >= itemPrice) {
+                selectButton.setTexture(assets.assetManager.get(Assets.select_button_inactive, Texture.class));
+                prefs.setUnlockedShips(prefs.getUnlockedShips() + selectedElement);
+                prefs.setGemCount(prefs.getGemCount() - itemPrice);
+
+                if (soundEnabled)
+                    gemSound.play(0.2f);
+            }
+            else{
+                if(soundEnabled){
+                    errorSound.play(0.2f);
+                }
+            }
+
+
+        }
+    }
+
+    public void drawShopScreen(Main game, boolean soundEnabled, float delta, SpriteBatch batch, BitmapFont gemCountFont) {
         stateTime += delta / 6;
 
         game.batch.draw(shopBack, SHOP_BACK_X, SHOP_BACK_Y, SHOP_BACK_WIDTH, SHOP_BACK_HEIGHT);
@@ -366,17 +400,31 @@ public class GameInterface extends GameElements {
         game.batch.draw(rightArrow.getTexture(), RIGHT_ARROW_X, RIGHT_ARROW_Y, RIGHT_ARROW_WIDTH, RIGHT_ARROW_HEIGHT);
         game.batch.draw(selectButton.getTexture(), SELECT_BUTTON_X, SELECT_BUTTON_Y, SELECT_BUTTON_WIDTH, SELECT_BUTTON_HEIGHT);
 
+        game.batch.draw(gemIcon, GEM_ICON_SHOP_X, GEM_ICON_SHOP_Y, GEM_ICON_WIDTH, GEM_ICON_HEIGHT);
+        gemCountFont.draw(game.batch, " x " + prefs.getGemCount(), GEM_COUNT_SHOP_X, GEM_COUNT_SHOP_Y);
+
         checkForLeftArrowTap(game, soundEnabled);
         checkForRightArrowTap(game, soundEnabled);
 
-        if (prefs.getShip() == selectedElement) {
-            selectButton.setTexture(assets.assetManager.get(Assets.active_button, Texture.class));
-        } else {
-            checkForSelectButtonTap(game, soundEnabled);
+        if (!prefs.getUnlockedShips().contains(Integer.toString(selectedElement)) && selectedElement != SHIP_ID) {
+            selectButton.setTexture(assets.assetManager.get(Assets.buy_inactive, Texture.class));
+
+            gl.setText(buyFont, Integer.toString(ShopElement.getPriceByShipId(selectedElement)), Color.valueOf(PURPLE_COLOR_HEX), SCREEN_WIDTH, Align.center, true);
+            buyFont.draw(game.batch, Integer.toString(ShopElement.getPriceByShipId(selectedElement)), (SCREEN_WIDTH - gl.width) / 2, SELECT_BUTTON_Y + gl.height / 2 + SELECT_BUTTON_HEIGHT/2);
+            game.batch.draw(gemIcon, (SCREEN_WIDTH + gl.width) / 2 + GEM_ICON_WIDTH/2, SELECT_BUTTON_Y + SELECT_BUTTON_HEIGHT/2 - GEM_ICON_HEIGHT/2, GEM_ICON_WIDTH, GEM_ICON_HEIGHT);
+
+            checkForBuyButtonTap(game, soundEnabled, ShopElement.getPriceByShipId(selectedElement));
+        }
+        else {
+            if (prefs.getShip() == selectedElement) {
+                selectButton.setTexture(assets.assetManager.get(Assets.active_button, Texture.class));
+            } else {
+                checkForSelectButtonTap(game, soundEnabled);
+            }
         }
 
         if (ship == null) {
-            ship = new ShopElement(ShopElement.SHIP_ID, selectedElement, SHOP_BACK_X + SHOP_BACK_WIDTH / 2 - SHIP_WIDTH / 2, SHOP_BACK_Y + SHOP_BACK_HEIGHT / 2 - SHIP_HEIGHT / 2, SHIP_WIDTH, SHIP_HEIGHT);
+            ship = new ShopElement(SHIP_ID, selectedElement, SHOP_BACK_X + SHOP_BACK_WIDTH / 2 - SHIP_WIDTH / 2, SHOP_BACK_Y + SHOP_BACK_HEIGHT / 2 - SHIP_HEIGHT / 2, SHIP_WIDTH, SHIP_HEIGHT);
         }
 
         ship.render(stateTime, batch);
@@ -392,7 +440,6 @@ public class GameInterface extends GameElements {
             game.batch.draw(soundButton.getTexture(), SOUND_BUTTON_X, SOUND_BUTTON_Y, SOUND_BUTTON_WIDTH, SOUND_BUTTON_HEIGHT);
             game.batch.draw(playButton.getTexture(), PLAY_BUTTON_X, PLAY_BUTTON_Y, PLAY_BUTTON_WIDTH, PLAY_BUTTON_HEIGHT);
             game.batch.draw(homeButton.getTexture(), HOME_BUTTON_X, HOME_BUTTON_Y, HOME_BUTTON_WIDTH, HOME_BUTTON_HEIGHT);
-
 
             scoreFont.draw(game.batch, "HIGH SCORE: " + prefs.getHighScore(), MENU_SCORE_X, MENU_SCORE_Y);
 
@@ -417,20 +464,13 @@ public class GameInterface extends GameElements {
         return confirmLeaveScreenOpen;
     }
 
-    public void drawReplayScreen(Main game, BitmapFont scoreFont, BitmapFont gameOverFont, BitmapFont gemCountFont, boolean newHighScore, int replayScreengemCount, int gemCount, boolean soundEnabled) {
+    public void drawReplayScreen(Main game, BitmapFont scoreFont, BitmapFont gameOverFont, BitmapFont gemCountFont, boolean newHighScore, int replayScreengemCount, int gemCount, int score, boolean soundEnabled) {
         scoreFont.setColor(Color.valueOf(PURPLE_COLOR_HEX));
 
         game.batch.draw(pauseMenuBack, MENU_BACK_X, MENU_BACK_Y, MENU_BACK_WIDTH, MENU_BACK_HEIGHT);
         if (!confirmLeaveScreenOpen) {
-            if (gemCount == 0) {
-                replayButton.setTexture(assets.assetManager.get(Assets.replay_button_inactive, Texture.class));
-                homeButton.setTexture(assets.assetManager.get(Assets.home_button_inactive, Texture.class));
+            if (gemCount != 0 || score != 0) {
 
-                if (!soundEnabled)
-                    soundButton.setTexture(assets.assetManager.get(Assets.sound_off_button_inactive, Texture.class));
-                else
-                    soundButton.setTexture(assets.assetManager.get(Assets.sound_on_button_inactive, Texture.class));
-            } else {
                 replayButton.setTexture(assets.assetManager.get(Assets.replay_button_active, Texture.class));
                 homeButton.setTexture(assets.assetManager.get(Assets.home_button_active, Texture.class));
 

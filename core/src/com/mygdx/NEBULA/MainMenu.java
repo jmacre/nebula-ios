@@ -2,6 +2,7 @@ package com.mygdx.NEBULA;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -58,6 +59,12 @@ public class MainMenu extends GameElements implements Screen {
         blackTransition = new Sprite(assets.assetManager.get(Assets.black_transition, Texture.class));
         blackTransition.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
         blackTransition.setColor(0, 0, 0, 0);
+
+        textParameter.size = SCREEN_WIDTH / 40;
+
+        gemCountFont = generator.generateFont(textParameter);
+        gemCountFont.setColor(1,1,1, 0.8f);
+
         ShopElement.createElements(assets);
     }
 
@@ -129,7 +136,7 @@ public class MainMenu extends GameElements implements Screen {
             gameInterface.drawTitleScreen(game, transitionInDone);
         }
         else {
-            gameInterface.drawShopScreen(game, soundEnabled, delta, game.batch);
+            gameInterface.drawShopScreen(game, soundEnabled, delta, game.batch, gemCountFont);
 
         }
 

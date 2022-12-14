@@ -9,16 +9,27 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 public class ShopElement extends GameElements{
-    public static final int SHIP_ID = 0;
-    public static final int RED_SHIP_ID = 1;
-    public static final int BLACK_SHIP_ID = 2;
-    public static final int PURPLE_SHIP_ID = 3;
+    public static final int SHIP_ID = 0; //this determines the order in the shop
+    public static final int BLUE_SHIP_ID = 1;
+    public static final int RED_SHIP_ID = 2;
+    public static final int CYAN_SHIP_ID = 3;
     public static final int YELLOW_SHIP_ID = 4;
-    public static final int CYAN_SHIP_ID = 5;
-    public static final int BLUE_SHIP_ID = 6;
-    public static final int BRED_SHIP_ID = 7;
-    public static final int GREEN_SHIP_ID = 8;
-    public static final int ORANGE_SHIP_ID = 9;
+    public static final int BLACK_SHIP_ID = 5;
+    public static final int GREEN_SHIP_ID = 6;
+    public static final int ORANGE_SHIP_ID = 7;
+    public static final int BRED_SHIP_ID = 8;
+    public static final int PURPLE_SHIP_ID = 9;
+
+    public static final int BLUE_SHIP_PRICE = 50;
+    public static final int RED_SHIP_PRICE = 100;
+    public static final int CYAN_SHIP_PRICE = 250;
+    public static final int YELLOW_SHIP_PRICE = 500;
+    public static final int BLACK_SHIP_PRICE = 1000;
+    public static final int GREEN_SHIP_PRICE = 2000;
+    public static final int ORANGE_SHIP_PRICE = 3000;
+    public static final int BRED_SHIP_PRICE = 5000;
+    public static final int PURPLE_SHIP_PRICE = 9999;
+
 
     float x, y, width, height;
 
@@ -26,7 +37,7 @@ public class ShopElement extends GameElements{
     static Sprite bredShip, greenShip, orangeShip, blueShip;
 
     public static int shipCount = 9; // one less than actual count for cycling between ships
-    private int id, colorId;
+    private int colorId, price;
 
     private Sprite elementSheet;
     private String title;
@@ -71,9 +82,7 @@ public class ShopElement extends GameElements{
     public String getTitle(){
         return title;
     }
-    public void setId(int id){
-        this.id = id;
-    }
+
     public void setElementAnimation(int colorId){
         switch (colorId) {
 
@@ -87,7 +96,7 @@ public class ShopElement extends GameElements{
                 break;
             case BLACK_SHIP_ID:
                 elementSheet = blackShip;
-                title = "GHOST";
+                title = "PHANTOM";
                 break;
             case PURPLE_SHIP_ID:
                 elementSheet = purpleShip;
@@ -103,11 +112,11 @@ public class ShopElement extends GameElements{
                 break;
             case BLUE_SHIP_ID:
                 elementSheet = blueShip;
-                title = "OCEAN";
+                title = "NEPTUNE";
                 break;
             case BRED_SHIP_ID:
                 elementSheet = bredShip;
-                title = "VILLAIN";
+                    title = "NEMESIS";
                 break;
             case GREEN_SHIP_ID:
                 elementSheet = greenShip;
@@ -123,6 +132,36 @@ public class ShopElement extends GameElements{
             elementAnimation = Anim.createAnimation(elementSheet, 4, DEFAULT_FRAME_DURATION * 1.5f);
             elementAnimation.setPlayMode(Animation.PlayMode.LOOP);
         }
+    }
+    public static int getPriceByShipId(int shipId){
+        if(shipId == RED_SHIP_ID){
+            return RED_SHIP_PRICE;
+        }
+        else if(shipId == BLACK_SHIP_ID){
+            return BLACK_SHIP_PRICE;
+        }
+        else if(shipId == PURPLE_SHIP_ID){
+            return PURPLE_SHIP_PRICE;
+        }
+        else if(shipId == YELLOW_SHIP_ID){
+            return YELLOW_SHIP_PRICE;
+        }
+        else if(shipId == CYAN_SHIP_ID){
+            return CYAN_SHIP_PRICE;
+        }
+        else if(shipId == BLUE_SHIP_ID){
+            return BLUE_SHIP_PRICE;
+        }
+        else if(shipId == BRED_SHIP_ID){
+            return BRED_SHIP_PRICE;
+        }
+        else if(shipId == ORANGE_SHIP_ID){
+            return ORANGE_SHIP_PRICE;
+        }
+        else if(shipId == GREEN_SHIP_ID){
+            return GREEN_SHIP_PRICE;
+        }
+        return 0;
     }
 
     public void setColorId(int colorId){

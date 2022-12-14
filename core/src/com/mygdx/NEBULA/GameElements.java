@@ -25,7 +25,7 @@ public class GameElements {
     public static final String PURPLE_COLOR_HEX = "6a11f6";
 
     public static float SCORE_TICKER_TIMER = -.25f;
-    public static float GEM_COUNT_UPDATE_TIMER = -.05f;
+    public static float GEM_COUNT_UPDATE_TIMER = -.065f;
 
     public static final float MAIN_UI_HEIGHT = SCREEN_HEIGHT/12f;
 
@@ -207,6 +207,13 @@ public class GameElements {
     public static final float GEM_COUNT_MENU_X = GEM_ICON_MENU_X + (GEM_ICON_WIDTH * 1.1f);
     public static final float GEM_COUNT_MENU_Y = GEM_ICON_MENU_Y + (GEM_ICON_HEIGHT * .8f);
 
+    public static final float GEM_ICON_SHOP_X = LEFT_ARROW_X;
+    public static final float GEM_ICON_SHOP_Y = SHOP_BACK_Y + (SHOP_BACK_HEIGHT* .9f);
+
+    public static final float GEM_COUNT_SHOP_X = LEFT_ARROW_X + (GEM_ICON_WIDTH * 1.1f);
+    public static final float GEM_COUNT_SHOP_Y = GEM_ICON_SHOP_Y + (GEM_ICON_HEIGHT * .8f);
+
+
     public static final float GEM_COUNT_X = GEM_ICON_X + (GEM_ICON_WIDTH * 1.1f);
     public static final float GEM_COUNT_Y_AND = GEM_ICON_Y_AND + (GEM_ICON_HEIGHT * .8f);
     public static final float GEM_COUNT_Y_IOS = GEM_ICON_Y_IOS + (GEM_ICON_HEIGHT * .8f);
@@ -242,9 +249,9 @@ public class GameElements {
     Sound playSound;
     Music bombSound;
     Sound missileSound;
-    Sound bulletSound, itemSound, hitSound, gemSound;
+    Sound bulletSound, itemSound, hitSound, gemSound, errorSound;
 
     public FreeTypeFontGenerator.FreeTypeFontParameter textParameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
     public FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("mainfont.ttf"));
-    public BitmapFont menuScoreFont, gameOverFont, countdownFont, confirmScreenFont, storeFont, gemCountFont;
+    public BitmapFont menuScoreFont, gameOverFont, countdownFont, confirmScreenFont, storeFont, gemCountFont, buyFont;
 }

@@ -71,6 +71,8 @@ public class MainGame extends GameElements implements Screen {
     float maxGemSpawnTime = MAX_GEM_SPAWN_TIME;
     float minGemSpawnTime = MIN_GEM_SPAWN_TIME;
 
+    float gemCountTimerDelay = 0f;
+
     int gemCount = 0;
     int finalGemCount = 0;
     int replayScreenGemCount = prefs.getGemCount();
@@ -301,7 +303,7 @@ public class MainGame extends GameElements implements Screen {
         menuScoreFont.setColor(Color.valueOf(PURPLE_COLOR_HEX));
 
         gemCountFont = generator.generateFont(textParameter);
-        gemCountFont.setColor(1,1,1, 0.8f);
+        gemCountFont.setColor(1, 1, 1, 0.8f);
 
         textParameter.size = SCREEN_WIDTH / 22;
         confirmScreenFont = generator.generateFont(textParameter);
@@ -342,12 +344,11 @@ public class MainGame extends GameElements implements Screen {
 
             if (isPaused || isRunningResumeCountdown) {
                 deltaP = 0;
-            }
-            else {
+            } else {
                 deltaP = delta;
             }
 
-            if(!deltaList.isEmpty())
+            if (!deltaList.isEmpty())
                 deltaList.removeIndex(0);
 
             deltaSum = 0;
@@ -368,6 +369,14 @@ public class MainGame extends GameElements implements Screen {
         isAlive = health > 0;
         if (!isAlive) {
             isResettingScreen = true;
+            finalGemCount = gemCount;
+            if (score >= 100) {
+                finalGemCount = gemCount + (score / 100);
+            }
+            if (!gemCountUpdated) {
+                prefs.setGemCount(prefs.getGemCount() + finalGemCount);
+                gemCountUpdated = true;
+            }
         }
 
         if (fadeInOpacity < 1) {
@@ -570,19 +579,24 @@ public class MainGame extends GameElements implements Screen {
                 transitionOut(CURRENT_SHIP_X);
             }
             if (isTransitionedOut && !isFadingOut) {
-                if(gemCount > 0){
-                    if(Gdx.input.justTouched() || finalGemCount < 10){
-                        replayScreenGemCount += gemCount;
-                        gemCount = 0;
+                if(score < 100)
+                    score = 0;
 
-                        if(soundEnabled)
+                if (finalGemCount > 0) {
+
+                    if (Gdx.input.justTouched()) {
+                        replayScreenGemCount += finalGemCount;
+                        gemCount = 0;
+                        finalGemCount = 0;
+                        score = 0;
+
+                        if (soundEnabled)
                             itemSound.play(0.1f);
-                    }
-                    else {
-                        runGemCountReplayScreenUpdateTimer();
+                    } else {
+                        runGemCountUpdateTimer();
                     }
                 }
-                gameInterface.drawReplayScreen(game, menuScoreFont, gameOverFont, gemCountFont, newHighscore, replayScreenGemCount, gemCount, soundEnabled);
+                gameInterface.drawReplayScreen(game, menuScoreFont, gameOverFont, gemCountFont, newHighscore, replayScreenGemCount, gemCount, score, soundEnabled);
             }
 
             if (gameInterface.checkForReplayButtonTap(gemCount) && isTransitionedOut) {
@@ -623,7 +637,7 @@ public class MainGame extends GameElements implements Screen {
             transitionOut(CURRENT_SHIP_X);
             fadeOut();
         }
-        if(isMissile || isRapidFire || isHourglass){
+        if (isMissile || isRapidFire || isHourglass) {
             updatePowerupTimer();
         }
 
@@ -686,7 +700,7 @@ public class MainGame extends GameElements implements Screen {
     }
 
     public void resetScreen() {
-        if(game.batch.getShader() != null)
+        if (game.batch.getShader() != null)
             game.batch.setShader(null);
 
         hourglassMultiplier = 1;
@@ -757,7 +771,7 @@ public class MainGame extends GameElements implements Screen {
         exp.clear();
         ebp.clear();
 
-        if(powerupTimers.size > 0)
+        if (powerupTimers.size > 0)
             powerupTimers.clear();
 
         if (bullets.size > 0)
@@ -815,17 +829,17 @@ public class MainGame extends GameElements implements Screen {
             if (!(Gdx.input.getY() < (int) (SCREEN_HEIGHT / 5f)) && SHIP_START_Y > SHIP_Y) {
 
                 if (Gdx.input.getX() < SHIP_X - SHIP_WIDTH / 2) {
-                    playerPosition = (int)(SHIP_X - deltaP * moveSpeed * (SHIP_X - (Gdx.input.getX() - SHIP_WIDTH / 2)));
+                    playerPosition = (int) (SHIP_X - deltaP * moveSpeed * (SHIP_X - (Gdx.input.getX() - SHIP_WIDTH / 2)));
 
                     if (playerPosition >= 0 && playerPosition <= SCREEN_WIDTH - SHIP_WIDTH) {
-                        SHIP_X -= (int)(deltaP * moveSpeed * (SHIP_X - (Gdx.input.getX() - SHIP_WIDTH / 2)));
+                        SHIP_X -= (int) (deltaP * moveSpeed * (SHIP_X - (Gdx.input.getX() - SHIP_WIDTH / 2)));
                     }
                 }
                 if (Gdx.input.getX() > SHIP_X - SHIP_WIDTH / 2) {
-                    playerPosition = (int)(SHIP_X + deltaP * moveSpeed * (Gdx.input.getX() - SHIP_X - SHIP_WIDTH / 2));
+                    playerPosition = (int) (SHIP_X + deltaP * moveSpeed * (Gdx.input.getX() - SHIP_X - SHIP_WIDTH / 2));
 
                     if (playerPosition >= 0 && playerPosition <= SCREEN_WIDTH - SHIP_WIDTH) {
-                        SHIP_X += (int)(deltaP * moveSpeed * (Gdx.input.getX() - SHIP_X - SHIP_WIDTH / 2));
+                        SHIP_X += (int) (deltaP * moveSpeed * (Gdx.input.getX() - SHIP_X - SHIP_WIDTH / 2));
                     }
                 }
                 CURRENT_SHIP_X = (int) SHIP_X;
@@ -864,7 +878,7 @@ public class MainGame extends GameElements implements Screen {
     public void transitionIn() {
         if (SHIP_START_Y <= SHIP_Y) {
             SHIP_X = (int) (SCREEN_WIDTH / 2 - SHIP_WIDTH / 2);
-            SHIP_START_Y += (int)(1.6 * SHIP_Y * deltaP);
+            SHIP_START_Y += (int) (1.6 * SHIP_Y * deltaP);
             transitionDistTraveled += 1.6 * SHIP_Y * deltaP;
             transitionInTapVal = inputProcessor.getTapCount();
         }
@@ -911,10 +925,6 @@ public class MainGame extends GameElements implements Screen {
         if (prefs.getHighScore() < score) {
             prefs.setHighScore(score);
             newHighscore = true;
-        }
-        if(!gemCountUpdated){
-            prefs.setGemCount(prefs.getGemCount() + gemCount);
-            gemCountUpdated = true;
         }
     }
 
@@ -1033,19 +1043,19 @@ public class MainGame extends GameElements implements Screen {
         Bullet bullet2 = bp.obtain();
 
         if (isMissile) {
-            bullet1.create((int)SHIP_X, true, false, assets);
+            bullet1.create((int) SHIP_X, true, false, assets);
             bullets.add(bullet1);
         } else if (isRapidFire) {
-            bullet1.create((int)(SHIP_X + SHIP_WIDTH * (4 / 27f)), false, true, assets);
+            bullet1.create((int) (SHIP_X + SHIP_WIDTH * (4 / 27f)), false, true, assets);
             bullets.add(bullet1);
 
-            bullet2.create((int)(SHIP_X + SHIP_WIDTH - SHIP_WIDTH * (6 / 27f)), false, true, assets);
+            bullet2.create((int) (SHIP_X + SHIP_WIDTH - SHIP_WIDTH * (6 / 27f)), false, true, assets);
             bullets.add(bullet2);
         } else {
-            bullet1.create((int)(SHIP_X + SHIP_WIDTH * (4 / 27f)), false, false, assets);
+            bullet1.create((int) (SHIP_X + SHIP_WIDTH * (4 / 27f)), false, false, assets);
             bullets.add(bullet1);
 
-            bullet2.create((int)(SHIP_X + SHIP_WIDTH - SHIP_WIDTH * (6 / 27f)), false, false, assets);
+            bullet2.create((int) (SHIP_X + SHIP_WIDTH - SHIP_WIDTH * (6 / 27f)), false, false, assets);
             bullets.add(bullet2);
 
             missileTimer = MISSILE_TIMER;
@@ -1076,10 +1086,10 @@ public class MainGame extends GameElements implements Screen {
             EnemyBullet enemyBullet1 = ebp.obtain();
             EnemyBullet enemyBullet2 = ebp.obtain();
             if (enemy.getId() == (ENEMY_SHIP_ID) && enemy.getEnemyBulletTimer() > enemy.getEnemyBulletThreshold()) {
-                enemyBullet1.create((int) (enemy.ENEMY_X + ENEMY_SHIP_WIDTH * (5 / 31f)), (int)(enemy.ENEMY_Y + enemy.ENEMY_HEIGHT * (3 / 27f)), enemy.getBulletSpeed(), RED_ID, assets);
+                enemyBullet1.create((int) (enemy.ENEMY_X + ENEMY_SHIP_WIDTH * (5 / 31f)), (int) (enemy.ENEMY_Y + enemy.ENEMY_HEIGHT * (3 / 27f)), enemy.getBulletSpeed(), RED_ID, assets);
                 enemyBullets.add(enemyBullet1);
 
-                enemyBullet2.create((int)(enemy.ENEMY_X + ENEMY_SHIP_WIDTH - ENEMY_SHIP_WIDTH * (7 / 31f)), (int)(enemy.ENEMY_Y + enemy.ENEMY_HEIGHT * (3 / 27f)), enemy.getBulletSpeed(), RED_ID, assets);
+                enemyBullet2.create((int) (enemy.ENEMY_X + ENEMY_SHIP_WIDTH - ENEMY_SHIP_WIDTH * (7 / 31f)), (int) (enemy.ENEMY_Y + enemy.ENEMY_HEIGHT * (3 / 27f)), enemy.getBulletSpeed(), RED_ID, assets);
                 enemyBullets.add(enemyBullet2);
             }
         }
@@ -1111,19 +1121,23 @@ public class MainGame extends GameElements implements Screen {
                 enemy.create(EYEBAT_ID, BLUE_ID, 1, randomSpawnLocation, BLUE_EYEBAT_WIDTH, BLUE_EYEBAT_HEIGHT, 0.35f + speedIncrease / 1.5f, 0.8f + speedIncrease / 1.5f, (float) (DEFAULT_FRAME_DURATION * (1.25 - speedIncrease / 2)), false, hurtTimer);
                 eyebatSpawnTimer = random.nextFloat() * (maxEyebatSpawnTime - minEyebatSpawnTime) + minEyebatSpawnTime;
 
-            } if (score > 1000 && score <= 2000) {
+            }
+            if (score > 1000 && score <= 2000) {
                 enemy.create(EYEBAT_ID, GREEN_ID, 2, randomSpawnLocation, GREEN_EYEBAT_WIDTH, GREEN_EYEBAT_HEIGHT, 0.8f + speedIncrease / 1.5f, 0.4f + speedIncrease / 1.5f, (float) (DEFAULT_FRAME_DURATION * (1.5 - speedIncrease / 2)), false, hurtTimer);
                 eyebatSpawnTimer = random.nextFloat() * (1.2f * maxEyebatSpawnTime - 1.2f * minEyebatSpawnTime) + 1.2f * minEyebatSpawnTime;
 
-            } if (score > 2000 && score <= 3000) {
+            }
+            if (score > 2000 && score <= 3000) {
                 enemy.create(EYEBAT_ID, RED_ID, 2, randomSpawnLocation, RED_EYEBAT_WIDTH, RED_EYEBAT_HEIGHT, 0.65f + speedIncrease / 1.5f, 0.3f + speedIncrease / 1.5f, (float) (DEFAULT_FRAME_DURATION * (1.5 - speedIncrease / 2)), false, hurtTimer);
                 eyebatSpawnTimer = random.nextFloat() * (1.3f * maxEyebatSpawnTime - 1.3f * minEyebatSpawnTime) + 1.3f * minEyebatSpawnTime;
 
-            } if (score > 3000 && score <= 4000) {
+            }
+            if (score > 3000 && score <= 4000) {
                 enemy.create(EYEBAT_ID, PURPLE_ID, 3, randomSpawnLocation, PURPLE_EYEBAT_WIDTH, PURPLE_EYEBAT_HEIGHT, 0.5f + speedIncrease / 1.75f, 0.25f + speedIncrease / 1.75f, (float) (DEFAULT_FRAME_DURATION * (1.75 - speedIncrease / 2)), false, hurtTimer);
                 eyebatSpawnTimer = random.nextFloat() * (1.6f * maxEyebatSpawnTime - 1.6f * minEyebatSpawnTime) + 1.6f * minEyebatSpawnTime;
 
-            } if(score > 4000) {
+            }
+            if (score > 4000) {
                 enemy.create(EYEBAT_ID, WHITE_ID, 4, randomSpawnLocation, WHITE_EYEBAT_WIDTH, WHITE_EYEBAT_HEIGHT, 0.3f + speedIncrease / 1.75f, 0.2f + speedIncrease / 1.75f, (float) (DEFAULT_FRAME_DURATION * (2.0 - speedIncrease / 2)), false, hurtTimer);
                 eyebatSpawnTimer = random.nextFloat() * (1.9f * maxEyebatSpawnTime - 1.9f * minEyebatSpawnTime) + 1.9f * minEyebatSpawnTime;
 
@@ -1149,14 +1163,11 @@ public class MainGame extends GameElements implements Screen {
 
             if (!shipPositions.contains(3, true)) {
                 position = 3;
-            }
-            else if (!shipPositions.contains(2, true)) {
+            } else if (!shipPositions.contains(2, true)) {
                 position = 2;
-            }
-            else if (!shipPositions.contains(1, true)) {
+            } else if (!shipPositions.contains(1, true)) {
                 position = 1;
-            }
-            else if (!shipPositions.contains(0, true)) {
+            } else if (!shipPositions.contains(0, true)) {
                 position = 0;
             }
 
@@ -1171,29 +1182,25 @@ public class MainGame extends GameElements implements Screen {
                             false, hurtTimer, position, blueShipBulletSpeed);
                     enemyShipSpawnTimer = random.nextFloat() * (maxEnemyShipSpawnTime - minEnemyShipSpawnTime) + minEnemyShipSpawnTime;
 
-                }
-                else if (score <= 2000) {
+                } else if (score <= 2000) {
                     enemy.create(ENEMY_SHIP_ID, GREEN_ID, 3, random.nextInt((SCREEN_WIDTH - (int) ENEMY_SHIP_WIDTH)), ENEMY_SHIP_WIDTH, ENEMY_SHIP_HEIGHT,
                             1.15f + speedIncrease, 1f + speedIncrease, DEFAULT_FRAME_DURATION * 1.5f, enemyBulletDelay, greenShipBulletThreshold,
                             false, hurtTimer, position, greenShipBulletSpeed);
                     enemyShipSpawnTimer = random.nextFloat() * (1.2f * maxEnemyShipSpawnTime - 1.2f * minEnemyShipSpawnTime) + 1.2f * minEnemyShipSpawnTime;
 
-                }
-                else if (score <= 3000) {
+                } else if (score <= 3000) {
                     enemy.create(ENEMY_SHIP_ID, RED_ID, 3, random.nextInt((SCREEN_WIDTH - (int) ENEMY_SHIP_WIDTH)), ENEMY_SHIP_WIDTH, ENEMY_SHIP_HEIGHT,
                             0.95f + speedIncrease, 0.95f + speedIncrease, DEFAULT_FRAME_DURATION * 1.5f, enemyBulletDelay, redShipBulletThreshold,
                             false, hurtTimer, position, redShipBulletSpeed);
                     enemyShipSpawnTimer = random.nextFloat() * (1.2f * maxEnemyShipSpawnTime - 1.2f * minEnemyShipSpawnTime) + 1.2f * minEnemyShipSpawnTime;
 
-                }
-                else if (score <= 4000) {
+                } else if (score <= 4000) {
                     enemy.create(ENEMY_SHIP_ID, PURPLE_ID, 4, random.nextInt((SCREEN_WIDTH - (int) ENEMY_SHIP_WIDTH)), ENEMY_SHIP_WIDTH, ENEMY_SHIP_HEIGHT,
                             0.85f + speedIncrease, 0.85f + speedIncrease, DEFAULT_FRAME_DURATION * 1.5f, enemyBulletDelay, purpleShipBulletThreshold,
                             false, hurtTimer, position, purpleShipBulletSpeed);
                     enemyShipSpawnTimer = random.nextFloat() * (1.3f * maxEnemyShipSpawnTime - 1.3f * minEnemyShipSpawnTime) + 1.3f * minEnemyShipSpawnTime;
 
-                }
-                else {
+                } else {
                     enemy.create(ENEMY_SHIP_ID, WHITE_ID, 4, random.nextInt((SCREEN_WIDTH - (int) ENEMY_SHIP_WIDTH)), ENEMY_SHIP_WIDTH, ENEMY_SHIP_HEIGHT,
                             0.75f + speedIncrease, 0.75f + speedIncrease, DEFAULT_FRAME_DURATION * 1.5f, enemyBulletDelay, whiteShipBulletThreshold,
                             false, hurtTimer, position, whiteShipBulletSpeed);
@@ -1242,27 +1249,26 @@ public class MainGame extends GameElements implements Screen {
             }
         }
     }
-    public void addGemDrops(){
+
+    public void addGemDrops() {
         gemSpawnTimer -= deltaP;
         if (gemSpawnTimer <= 0) {
             itemDrops.add(new ItemDrop(random.nextInt((int) (SCREEN_WIDTH - ItemDrop.GEM_WIDTH)), (int) ItemDrop.GEM_HEIGHT, ItemDrop.GEM_WIDTH, GEM_ID, assets));
             gemSpawnTimer = random.nextFloat() * (maxGemSpawnTime - minGemSpawnTime) + minGemSpawnTime;
         }
     }
-    public void updateGemSpawnTimes(){
-        if(score > 1000 && score < 2000 && maxGemSpawnTime != MAX_GEM_SPAWN_TIME - 3f){
+
+    public void updateGemSpawnTimes() {
+        if (score > 1000 && score < 2000 && maxGemSpawnTime != MAX_GEM_SPAWN_TIME - 3f) {
             maxGemSpawnTime -= 3f;
             minGemSpawnTime -= 2f;
-        }
-        else if(score >= 2000 && score < 3000 && maxGemSpawnTime != MAX_GEM_SPAWN_TIME - 6f){
+        } else if (score >= 2000 && score < 3000 && maxGemSpawnTime != MAX_GEM_SPAWN_TIME - 6f) {
             maxGemSpawnTime -= 3f;
             minGemSpawnTime -= 2f;
-        }
-        else if(score >= 3000 && score < 4000 && maxGemSpawnTime != MAX_GEM_SPAWN_TIME - 9f){
+        } else if (score >= 3000 && score < 4000 && maxGemSpawnTime != MAX_GEM_SPAWN_TIME - 9f) {
             maxGemSpawnTime -= 3f;
             minGemSpawnTime -= 2f;
-        }
-       else if(score >= 4000 && maxGemSpawnTime != MAX_GEM_SPAWN_TIME - 12f){
+        } else if (score >= 4000 && maxGemSpawnTime != MAX_GEM_SPAWN_TIME - 12f) {
             maxGemSpawnTime -= 3f;
             minGemSpawnTime -= 2f;
         }
@@ -1282,23 +1288,18 @@ public class MainGame extends GameElements implements Screen {
                     if (health == 3)
                         addItemDrops();
                     else
-                        itemDrops.add(new ItemDrop(random.nextInt((int) (SCREEN_WIDTH - ItemDrop.HEART_ITEM_WIDTH)), (int)ItemDrop.HEART_ITEM_HEIGHT, ItemDrop.HEART_WIDTH, HEART_ID, assets));
-                }
-                else if (randomDrop == 1) {
-                    itemDrops.add(new ItemDrop(random.nextInt((int) (SCREEN_WIDTH - ItemDrop.BOMB_WIDTH)), (int)ItemDrop.BOMB_HEIGHT, ItemDrop.BOMB_WIDTH, BOMB_ID, assets));
-                }
-                else if (randomDrop == 2) {
-                    itemDrops.add(new ItemDrop(random.nextInt((int) (SCREEN_WIDTH - ItemDrop.MISSILE_ITEM_WIDTH)), (int)ItemDrop.MISSILE_ITEM_HEIGHT, ItemDrop.MISSILE_ITEM_WIDTH, MISSILE_ID, assets));
-                }
-                else if (randomDrop == 3) {
-                    itemDrops.add(new ItemDrop(random.nextInt((int) (SCREEN_WIDTH - ItemDrop.RAPID_FIRE_WIDTH)), (int)ItemDrop.RAPID_FIRE_HEIGHT, ItemDrop.RAPID_FIRE_WIDTH, RAPID_FIRE_ID, assets));
-                }
-
-                else {
+                        itemDrops.add(new ItemDrop(random.nextInt((int) (SCREEN_WIDTH - ItemDrop.HEART_ITEM_WIDTH)), (int) ItemDrop.HEART_ITEM_HEIGHT, ItemDrop.HEART_WIDTH, HEART_ID, assets));
+                } else if (randomDrop == 1) {
+                    itemDrops.add(new ItemDrop(random.nextInt((int) (SCREEN_WIDTH - ItemDrop.BOMB_WIDTH)), (int) ItemDrop.BOMB_HEIGHT, ItemDrop.BOMB_WIDTH, BOMB_ID, assets));
+                } else if (randomDrop == 2) {
+                    itemDrops.add(new ItemDrop(random.nextInt((int) (SCREEN_WIDTH - ItemDrop.MISSILE_ITEM_WIDTH)), (int) ItemDrop.MISSILE_ITEM_HEIGHT, ItemDrop.MISSILE_ITEM_WIDTH, MISSILE_ID, assets));
+                } else if (randomDrop == 3) {
+                    itemDrops.add(new ItemDrop(random.nextInt((int) (SCREEN_WIDTH - ItemDrop.RAPID_FIRE_WIDTH)), (int) ItemDrop.RAPID_FIRE_HEIGHT, ItemDrop.RAPID_FIRE_WIDTH, RAPID_FIRE_ID, assets));
+                } else {
                     if (score < 1000)
                         addItemDrops();
                     else
-                        itemDrops.add(new ItemDrop(random.nextInt((int) (SCREEN_WIDTH - ItemDrop.HOURGLASS_WIDTH)), (int)ItemDrop.HOURGLASS_HEIGHT, ItemDrop.HOURGLASS_WIDTH, HOURGLASS_ID, assets));
+                        itemDrops.add(new ItemDrop(random.nextInt((int) (SCREEN_WIDTH - ItemDrop.HOURGLASS_WIDTH)), (int) ItemDrop.HOURGLASS_HEIGHT, ItemDrop.HOURGLASS_WIDTH, HOURGLASS_ID, assets));
                 }
             }
             lastItemDrop = randomDrop;
@@ -1310,22 +1311,22 @@ public class MainGame extends GameElements implements Screen {
             itemDrop.update(deltaP * hourglassMultiplier);
             switch (itemDrop.getItemId()) {
                 case HEART_ID:
-                    itemDrop.render(ItemDrop.HEART_ITEM_WIDTH, ItemDrop.HEART_ITEM_HEIGHT, deltaP, game.batch);
+                    itemDrop.render(ItemDrop.HEART_ITEM_WIDTH, ItemDrop.HEART_ITEM_HEIGHT, deltaP * hourglassMultiplier, game.batch);
                     break;
                 case BOMB_ID:
-                    itemDrop.render(ItemDrop.BOMB_WIDTH, ItemDrop.BOMB_HEIGHT, deltaP, game.batch);
+                    itemDrop.render(ItemDrop.BOMB_WIDTH, ItemDrop.BOMB_HEIGHT, deltaP * hourglassMultiplier, game.batch);
                     break;
                 case MISSILE_ID:
-                    itemDrop.render(ItemDrop.MISSILE_ITEM_WIDTH, ItemDrop.MISSILE_ITEM_HEIGHT, deltaP, game.batch);
+                    itemDrop.render(ItemDrop.MISSILE_ITEM_WIDTH, ItemDrop.MISSILE_ITEM_HEIGHT, deltaP * hourglassMultiplier, game.batch);
                     break;
                 case RAPID_FIRE_ID:
-                    itemDrop.render(ItemDrop.RAPID_FIRE_WIDTH, ItemDrop.RAPID_FIRE_HEIGHT, deltaP, game.batch);
+                    itemDrop.render(ItemDrop.RAPID_FIRE_WIDTH, ItemDrop.RAPID_FIRE_HEIGHT, deltaP * hourglassMultiplier, game.batch);
                     break;
                 case GEM_ID:
-                    itemDrop.render(ItemDrop.GEM_WIDTH, ItemDrop.GEM_HEIGHT, deltaP, game.batch);
+                    itemDrop.render(ItemDrop.GEM_WIDTH, ItemDrop.GEM_HEIGHT, deltaP * hourglassMultiplier, game.batch);
                     break;
                 case HOURGLASS_ID:
-                    itemDrop.render(ItemDrop.HOURGLASS_WIDTH, ItemDrop.HOURGLASS_HEIGHT, deltaP, game.batch);
+                    itemDrop.render(ItemDrop.HOURGLASS_WIDTH, ItemDrop.HOURGLASS_HEIGHT, deltaP * hourglassMultiplier, game.batch);
                     break;
             }
 
@@ -1401,7 +1402,7 @@ public class MainGame extends GameElements implements Screen {
                             }
 
                             Explosion explosion = exp.obtain();
-                            explosion.create((int)(enemy.getEnemyX() - (SMALL_EXPLOSION_WIDTH - enemy.getWidth()) / 2), (int)(enemy.getEnemyY() - (SMALL_EXPLOSION_HEIGHT - enemy.getHeight()) / 2), SMALL_EXPLOSION_WIDTH);
+                            explosion.create((int) (enemy.getEnemyX() - (SMALL_EXPLOSION_WIDTH - enemy.getWidth()) / 2), (int) (enemy.getEnemyY() - (SMALL_EXPLOSION_HEIGHT - enemy.getHeight()) / 2), SMALL_EXPLOSION_WIDTH);
                             explosions.add(explosion);
 
                             if (!pointsEarned && !bombUsed) {
@@ -1492,7 +1493,7 @@ public class MainGame extends GameElements implements Screen {
                     enemies.removeValue(enemy, true);
 
                     Explosion explosion = exp.obtain();
-                    explosion.create((int)(enemy.getEnemyX() - (SMALL_EXPLOSION_WIDTH - enemy.getWidth()) / 2), (int)(enemy.getEnemyY() - (SMALL_EXPLOSION_HEIGHT - enemy.getHeight()) / 2), SMALL_EXPLOSION_WIDTH);
+                    explosion.create((int) (enemy.getEnemyX() - (SMALL_EXPLOSION_WIDTH - enemy.getWidth()) / 2), (int) (enemy.getEnemyY() - (SMALL_EXPLOSION_HEIGHT - enemy.getHeight()) / 2), SMALL_EXPLOSION_WIDTH);
                     explosionsToDelay.add(explosion);
                 }
                 if (health > 0 && !justHit) {
@@ -1502,7 +1503,6 @@ public class MainGame extends GameElements implements Screen {
                 }
 
                 if (health == 0) {
-                    finalGemCount = gemCount;
                     isAlive = false;
                 }
             }
@@ -1564,7 +1564,7 @@ public class MainGame extends GameElements implements Screen {
                         for (Enemy enemy : enemies) {
 
                             Explosion explosion = exp.obtain();
-                            explosion.create((int)(enemy.getEnemyX() - (SMALL_EXPLOSION_WIDTH - enemy.getWidth()) / 2), (int)(enemy.getEnemyY() - (SMALL_EXPLOSION_HEIGHT - enemy.getHeight()) / 2), SMALL_EXPLOSION_WIDTH);
+                            explosion.create((int) (enemy.getEnemyX() - (SMALL_EXPLOSION_WIDTH - enemy.getWidth()) / 2), (int) (enemy.getEnemyY() - (SMALL_EXPLOSION_HEIGHT - enemy.getHeight()) / 2), SMALL_EXPLOSION_WIDTH);
 
                             explosions.add(explosion);
                         }
@@ -1590,7 +1590,7 @@ public class MainGame extends GameElements implements Screen {
                     case GEM_ID:
                         gemCount++;
 
-                        if(soundEnabled)
+                        if (soundEnabled)
                             gemSound.play(0.15f);
                         break;
 
@@ -1621,7 +1621,7 @@ public class MainGame extends GameElements implements Screen {
         }
     }
 
-    public void getSelectedShip(){
+    public void getSelectedShip() {
         if (selectedShip == SHIP_ID) {
             shipSS = new Sprite(assets.assetManager.get(Assets.ship_ss, Texture.class));
         } else if (selectedShip == RED_SHIP_ID) {
@@ -1670,17 +1670,37 @@ public class MainGame extends GameElements implements Screen {
         }
     }
 
-    public void runGemCountReplayScreenUpdateTimer(){
-        if(gemCountUpdateTimer < 0){
+    public void runGemCountUpdateTimer() {
+        if (gemCountUpdateTimer < 0) {
             gemCountUpdateTimer += deltaP;
-        }
-        else{
-            gemCount--;
-            replayScreenGemCount++;
-            gemCountUpdateTimer = GEM_COUNT_UPDATE_TIMER;
+            gemCountTimerDelay = 0f;
 
-            if(soundEnabled)
-                itemSound.play(0.1f);
+        } else {
+            if (score >= 100) {
+                score -= 100;
+                gemCount++;
+
+                if(soundEnabled)
+                    itemSound.play(0.1f);
+
+            }
+
+            if(score > 0 && score < 100){
+                score = 0;
+                gemCountTimerDelay = -0.5f;
+            }
+
+            if (gemCount > 0 && score == 0 && gemCountTimerDelay == 0) {
+                if (soundEnabled)
+                    itemSound.play(0.1f);
+
+                gemCount--;
+                finalGemCount--;
+                replayScreenGemCount++;
+            }
+
+
+            gemCountUpdateTimer = GEM_COUNT_UPDATE_TIMER + gemCountTimerDelay;
         }
     }
 

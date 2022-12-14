@@ -64,6 +64,8 @@ public class Assets implements Disposable {
     public static final String select_button_inactive = "ui/select_button_inactive.png";
     public static final String select_button_active = "ui/select_button_active.png";
     public static final String active_button = "ui/active_button.png";
+    public static final String buy_active = "ui/buy_active.png";
+    public static final String buy_inactive = "ui/buy_inactive.png";
 
     public static final String bullet_yellow = "weapons/bullet_yellow.png";
     public static final String bullet_red = "weapons/bullet_red.png";
@@ -114,6 +116,7 @@ public class Assets implements Disposable {
     public static final String rapid_fire_ss = "items/rapid_fire_ss.png";
     public static final String hourglass_ss = "items/hourglass_ss.png";
     public static final String gem_ss = "items/gem_ss.png";
+    public static final String error_sound = "sound/error_sound.mp3";
 
     public static final String gem_icon = "ui/gem.png";
 
@@ -129,6 +132,7 @@ public class Assets implements Disposable {
         assetManager.load(bullet_sound, Sound.class);
         assetManager.load(heart_sound, Sound.class);
         assetManager.load(gem_sound, Sound.class);
+        assetManager.load(error_sound, Sound.class);
 
         assetManager.load(powerup_timer, Texture.class);
         assetManager.load(gem_icon, Texture.class);
@@ -230,6 +234,9 @@ public class Assets implements Disposable {
         assetManager.load(select_button_active, Texture.class);
         assetManager.load(select_button_inactive, Texture.class);
         assetManager.load(active_button, Texture.class);
+
+        assetManager.load(buy_active, Texture.class);
+        assetManager.load(buy_inactive, Texture.class);
     }
 
     public void unloadAll() {
@@ -242,6 +249,7 @@ public class Assets implements Disposable {
         assetManager.unload(main_theme);
         assetManager.unload(bomb_sound);
         assetManager.unload(gem_sound);
+        assetManager.unload(error_sound);
 
         assetManager.unload(default_background);
         assetManager.unload(green_background);
@@ -322,6 +330,8 @@ public class Assets implements Disposable {
         assetManager.unload(pause_menu_back);
 
         assetManager.unload(powerup_timer);
+        assetManager.unload(buy_inactive);
+        assetManager.unload(buy_active);
     }
 
     @Override
