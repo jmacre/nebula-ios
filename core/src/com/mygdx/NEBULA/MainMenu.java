@@ -76,19 +76,18 @@ public class MainMenu extends GameElements implements Screen {
         game.batch.enableBlending();
 
         game.batch.begin();
-        deltaList.add(delta);
+        if(delta >= 0.9f/Gdx.graphics.getFramesPerSecond() && delta <= 1.1f/Gdx.graphics.getFramesPerSecond())
+            deltaList.add(delta);
 
-        if(deltaList.size > 100) {
+        if(deltaList.size >= 10) {
             for(int i = 0; i < deltaList.size; i++){
                 deltaSum += deltaList.get(i);
             }
 
             delta = deltaSum / deltaList.size;
-            deltaList.removeIndex(0);
             deltaSum = 0;
         }
 
-        if(deltaList.size >= 100 || canRenderBackground) {
             if (START_BUTTON_Y >= START_BUTTON_Y_TRANSITIONED && !switchScreens) {
                 isTransitioningIn = true;
                 transitionIn(delta);
@@ -109,7 +108,7 @@ public class MainMenu extends GameElements implements Screen {
                     isShopOpen = false;
                 }
             }
-        }
+
 
         if(beganFading || (START_BUTTON_Y <= START_BUTTON_Y_TRANSITIONED))
             canRenderBackground = true;
@@ -159,9 +158,9 @@ public class MainMenu extends GameElements implements Screen {
         transitionOutReady = true;
 
         if (START_BUTTON_Y < SCREEN_HEIGHT * 1.2f) {
-            START_BUTTON_Y += transitionSpeed * delta;
-            TITLE_LOGO_Y += transitionSpeed * delta;
-            SHOP_BUTTON_Y += transitionSpeed * delta;
+            START_BUTTON_Y += (int)(transitionSpeed * delta);
+            TITLE_LOGO_Y += (int)(transitionSpeed * delta);
+            SHOP_BUTTON_Y += (int)(transitionSpeed * delta);
         }
         if (START_BUTTON_Y > SCREEN_HEIGHT * 1.2f) {
             dispose();
@@ -169,9 +168,9 @@ public class MainMenu extends GameElements implements Screen {
     }
 
     public void transitionIn(float delta){
-        START_BUTTON_Y -= transitionSpeed * delta;
-        SHOP_BUTTON_Y -= transitionSpeed * delta;
-        TITLE_LOGO_Y -= transitionSpeed * delta;
+        START_BUTTON_Y -= (int)(transitionSpeed * delta);
+        SHOP_BUTTON_Y -= (int)(transitionSpeed * delta);
+        TITLE_LOGO_Y -= (int)(transitionSpeed * delta);
     }
 
     @Override
@@ -196,7 +195,9 @@ public class MainMenu extends GameElements implements Screen {
     }
 
     @Override
-    public void pause() {}
+    public void pause() {
+        deltaList.clear();
+    }
 
     @Override
     public void resume() {}

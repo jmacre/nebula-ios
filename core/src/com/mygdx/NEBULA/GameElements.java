@@ -30,7 +30,7 @@ public class GameElements {
     public static final float MAIN_UI_HEIGHT = SCREEN_HEIGHT/12f;
 
     public static final float TITLE_LOGO_WIDTH = SCREEN_WIDTH / 1.1f;
-    public static final float TITLE_LOGO_HEIGHT = TITLE_LOGO_WIDTH*.2197f;
+    public static final int TITLE_LOGO_HEIGHT = (int) (TITLE_LOGO_WIDTH*.2197f);
     public static int TITLE_LOGO_Y = (int)(SCREEN_HEIGHT * .75f + SCREEN_HEIGHT);
     public static final float TITLE_LOGO_X = SCREEN_WIDTH / 2f - TITLE_LOGO_WIDTH/2;
 

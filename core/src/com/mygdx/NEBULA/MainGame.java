@@ -334,9 +334,10 @@ public class MainGame extends GameElements implements Screen {
 
         game.batch.begin();
 
-        deltaList.add(delta);
+        if(delta >= 0.8f/Gdx.graphics.getFramesPerSecond() && delta <= 1.2f/Gdx.graphics.getFramesPerSecond())
+            deltaList.add(delta);
 
-        if (deltaList.size >= 60) {
+        if (deltaList.size >= 10) {
             for (int i = 0; i < deltaList.size; i++) {
                 deltaSum += deltaList.get(i);
             }
@@ -348,9 +349,6 @@ public class MainGame extends GameElements implements Screen {
                 deltaP = delta;
             }
 
-            if (!deltaList.isEmpty())
-                deltaList.removeIndex(0);
-
             deltaSum = 0;
         }
 
@@ -359,7 +357,7 @@ public class MainGame extends GameElements implements Screen {
             updateSpawnRates(score);
         }
 
-        if (!isMainMusicPlaying && soundEnabled)
+        if (!isMainMusicPlaying && soundEnabled && fadeInOpacity < 1)
             playMusic();
 
         if (!soundEnabled || isPaused || !isAlive || isRunningResumeCountdown) {
@@ -530,8 +528,6 @@ public class MainGame extends GameElements implements Screen {
             gameInterface.drawPauseScreen(game, menuScoreFont, gemCountFont);
 
             if (gameInterface.checkForPlayButtonTap() && !isTransitioningOut && !isFadingIn && !isTransitioningIn & !gameInterface.getConfirmLeaveScreenOpen()) {
-                deltaList.clear();
-
                 playButtonTapVal = inputProcessor.getTapCount();
                 runResumeCountdown = true;
                 isPaused = false;
@@ -883,26 +879,28 @@ public class MainGame extends GameElements implements Screen {
             transitionInTapVal = inputProcessor.getTapCount();
         }
 
-        if (transitionDistTraveled <= totalTransitionDist / 3) {
-            gl.setText(countdownFont, "3", Color.WHITE, SCREEN_WIDTH, Align.center, true);
-            countdownFont.draw(game.batch, "3", (SCREEN_WIDTH - gl.width) / 2, SCREEN_HEIGHT / 2f + gl.height / 2);
-        } else if (transitionDistTraveled <= 2 * totalTransitionDist / 3) {
-            gl.setText(countdownFont, "2", Color.WHITE, SCREEN_WIDTH, Align.center, true);
-            countdownFont.draw(game.batch, "2", (SCREEN_WIDTH - gl.width) / 2, SCREEN_HEIGHT / 2f + gl.height / 2);
-        } else if (transitionDistTraveled < totalTransitionDist) {
-            gl.setText(countdownFont, "1", Color.WHITE, SCREEN_WIDTH, Align.center, true);
-            countdownFont.draw(game.batch, "1", (SCREEN_WIDTH - gl.width) / 2, SCREEN_HEIGHT / 2f + gl.height / 2);
-        } else if (transitionDistTraveled >= totalTransitionDist && SHIP_START_Y >= SHIP_Y) {
-            if (countDownTimer < 0.25f) {
-                countDownTimer += deltaP;
-                gl.setText(countdownFont, "GO", Color.WHITE, SCREEN_WIDTH, Align.center, true);
-                countdownFont.draw(game.batch, "GO", (SCREEN_WIDTH - gl.width) / 2, SCREEN_HEIGHT / 2f + gl.height / 2);
+        if(fadeInOpacity < 1) {
+            if (transitionDistTraveled <= totalTransitionDist / 3) {
+                gl.setText(countdownFont, "3", Color.WHITE, SCREEN_WIDTH, Align.center, true);
+                countdownFont.draw(game.batch, "3", (SCREEN_WIDTH - gl.width) / 2, SCREEN_HEIGHT / 2f + gl.height / 2);
+            } else if (transitionDistTraveled <= 2 * totalTransitionDist / 3) {
+                gl.setText(countdownFont, "2", Color.WHITE, SCREEN_WIDTH, Align.center, true);
+                countdownFont.draw(game.batch, "2", (SCREEN_WIDTH - gl.width) / 2, SCREEN_HEIGHT / 2f + gl.height / 2);
+            } else if (transitionDistTraveled < totalTransitionDist) {
+                gl.setText(countdownFont, "1", Color.WHITE, SCREEN_WIDTH, Align.center, true);
+                countdownFont.draw(game.batch, "1", (SCREEN_WIDTH - gl.width) / 2, SCREEN_HEIGHT / 2f + gl.height / 2);
+            } else if (transitionDistTraveled >= totalTransitionDist && SHIP_START_Y >= SHIP_Y) {
+                if (countDownTimer < 0.25f) {
+                    countDownTimer += deltaP;
+                    gl.setText(countdownFont, "GO", Color.WHITE, SCREEN_WIDTH, Align.center, true);
+                    countdownFont.draw(game.batch, "GO", (SCREEN_WIDTH - gl.width) / 2, SCREEN_HEIGHT / 2f + gl.height / 2);
+                }
+                isTransitionedIn = true;
+                isTransitioningIn = false;
+            } else {
+                isTransitionedIn = true;
+                isTransitioningIn = false;
             }
-            isTransitionedIn = true;
-            isTransitioningIn = false;
-        } else {
-            isTransitionedIn = true;
-            isTransitioningIn = false;
         }
     }
 
@@ -1855,6 +1853,9 @@ public class MainGame extends GameElements implements Screen {
 
     @Override
     public void pause() {
+        deltaList.clear();
+        deltaP = 0;
+
         if (!isTransitioningIn && !isTransitioningOut && !isFadingIn && !isFadingOut && !isRunningResumeCountdown) {
             isPaused = true;
         }
