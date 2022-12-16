@@ -1860,7 +1860,7 @@ public class MainGame extends GameElements implements Screen {
             deltaList.clear();
             deltaP = 0;
 
-            if (!isFadingIn && !isFadingOut && !isRunningResumeCountdown) {
+            if (!isTransitioningIn && !isTransitioningOut && !isFadingIn && !isFadingOut && !isRunningResumeCountdown) {
                 isPaused = true;
             }
         }
