@@ -183,8 +183,7 @@ public class GameElements {
     public static final float TS_SOUND_BUTTON_WIDTH = SCREEN_WIDTH / 10f;
     public static final float TS_SOUND_BUTTON_HEIGHT = TS_SOUND_BUTTON_WIDTH;
     public static final float TS_SOUND_BUTTON_X = SCORE_X;
-    public static final float TS_SOUND_BUTTON_Y_AND = TS_SOUND_BUTTON_HEIGHT * 1.05f;
-    public static final float TS_SOUND_BUTTON_Y_IOS = SCREEN_HEIGHT - MAIN_UI_HEIGHT - TS_SOUND_BUTTON_HEIGHT/1.5f;
+    public static final float TS_SOUND_BUTTON_Y = TS_SOUND_BUTTON_HEIGHT * 1.05f;
 
     public static final float PAUSE_BUTTON_X = SCREEN_WIDTH - SCREEN_WIDTH / 7.5f;
     public static final float PAUSE_BUTTON_Y = SCREEN_HEIGHT - MAIN_UI_HEIGHT / 2.1f - (MAIN_UI_HEIGHT / 2.5f) / 2;

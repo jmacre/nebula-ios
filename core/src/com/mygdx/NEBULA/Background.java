@@ -96,7 +96,7 @@ public class Background {
         }
 
         if (speed < goalSpeed && !constantSpeed && !isResettingScreen) {
-            speed += 7.5 * delta * hourglassMultiplier;
+            speed += 7.5 * delta * hourglassMultiplier; // CHANGE SPEED TO UPDATE BASED ON SCREEN HEIGHT (NOT 1000 OR 7.5)
         }
         else if(isResettingScreen && speed > DEFAULT_SPEED){
             speed -= 1000 * delta * hourglassMultiplier;

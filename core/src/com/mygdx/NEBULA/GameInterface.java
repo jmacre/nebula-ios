@@ -46,7 +46,6 @@ public class GameInterface extends GameElements {
 
     public Prefs prefs = new Prefs();
 
-    float tsSoundButtonY;
     float scoreY;
     float gemIconY;
 
@@ -81,19 +80,17 @@ public class GameInterface extends GameElements {
         buyFont = generator.generateFont(textParameter);
 
         if (Gdx.app.getType() == Application.ApplicationType.Android) {
-            tsSoundButtonY = TS_SOUND_BUTTON_Y_AND;
             scoreY = SCORE_Y_AND;
             topElemY = TOP_ELEM_Y_AND;
             gemIconY = GEM_ICON_Y_AND;
         }
         else {
-            tsSoundButtonY = TS_SOUND_BUTTON_Y_IOS;
             scoreY = SCORE_Y_IOS;
             topElemY = TOP_ELEM_Y_IOS;
             gemIconY = GEM_ICON_Y_IOS;
         }
 
-        tsSoundButton = new Button(assets.assetManager.get(Assets.sound_off_button_ts, Texture.class), TS_SOUND_BUTTON_X, tsSoundButtonY, TS_SOUND_BUTTON_WIDTH, TS_SOUND_BUTTON_HEIGHT, TS_SOUND_BUTTON_WIDTH / 2, TS_SOUND_BUTTON_HEIGHT / 2);
+        tsSoundButton = new Button(assets.assetManager.get(Assets.sound_off_button_ts, Texture.class), TS_SOUND_BUTTON_X, TS_SOUND_BUTTON_Y, TS_SOUND_BUTTON_WIDTH, TS_SOUND_BUTTON_HEIGHT, TS_SOUND_BUTTON_WIDTH / 2, TS_SOUND_BUTTON_HEIGHT / 2);
         pauseButton = new Button(assets.assetManager.get(Assets.pause_button, Texture.class), PAUSE_BUTTON_X, PAUSE_BUTTON_Y, PAUSE_BUTTON_WIDTH, PAUSE_BUTTON_HEIGHT, PAUSE_BUTTON_WIDTH, PAUSE_BUTTON_HEIGHT);
         homeButton = new Button(assets.assetManager.get(Assets.home_button_inactive, Texture.class), HOME_BUTTON_X, HOME_BUTTON_Y, HOME_BUTTON_WIDTH, HOME_BUTTON_HEIGHT);
         playButton = new Button(assets.assetManager.get(Assets.play_button_inactive, Texture.class), PLAY_BUTTON_X, PLAY_BUTTON_Y, PLAY_BUTTON_WIDTH, PLAY_BUTTON_HEIGHT);
@@ -161,7 +158,7 @@ public class GameInterface extends GameElements {
 
         if (transitionInDone) {
             titleTexture.setTexture(assets.assetManager.get(Assets.title_logo, Texture.class));
-            game.batch.draw(tsSoundButton.getTexture(), TS_SOUND_BUTTON_X, tsSoundButtonY, TS_SOUND_BUTTON_WIDTH, TS_SOUND_BUTTON_HEIGHT);
+            game.batch.draw(tsSoundButton.getTexture(), TS_SOUND_BUTTON_X, TS_SOUND_BUTTON_Y, TS_SOUND_BUTTON_WIDTH, TS_SOUND_BUTTON_HEIGHT);
 
             scoreFont.draw(game.batch, "HIGH SCORE: " + prefs.getHighScore(), SCORE_X, scoreY);
             game.batch.draw(gemIcon, TS_GEM_ICON_MENU_X, scoreY - GEM_ICON_HEIGHT * .8f, GEM_ICON_WIDTH, GEM_ICON_HEIGHT);
