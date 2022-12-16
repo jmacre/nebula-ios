@@ -198,8 +198,8 @@ public class GameElements {
     public static final float GEM_ICON_WIDTH = HEART_WIDTH * (7 / 13f);
     public static final float GEM_ICON_X = SCORE_X;
 
-    public static final float GEM_ICON_Y_AND = SCORE_Y_AND - (SCREEN_HEIGHT * 0.03f);
-    public static final float GEM_ICON_Y_IOS = SCORE_Y_IOS - (SCREEN_HEIGHT * 0.03f);
+    public static final float GEM_ICON_Y_AND = TOP_ELEM_Y_AND - GEM_ICON_HEIGHT*1.75f;
+    public static final float GEM_ICON_Y_IOS = TOP_ELEM_Y_AND - GEM_ICON_HEIGHT*1.75f;
 
     public static final float GEM_ICON_MENU_X = PLAY_BUTTON_X + PLAY_BUTTON_WIDTH;
     public static final float GEM_ICON_MENU_Y = MENU_SCORE_Y - GEM_ICON_HEIGHT * 0.8f;
