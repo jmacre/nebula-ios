@@ -586,8 +586,6 @@ public class MainGame extends GameElements implements Screen {
                         finalGemCount = 0;
                         score = 0;
 
-                        if (soundEnabled)
-                            itemSound.play(0.1f);
                     } else {
                         runGemCountUpdateTimer();
                     }
@@ -1005,6 +1003,7 @@ public class MainGame extends GameElements implements Screen {
                 if (soundEnabled) {
                     if (isTransitionedIn) {
                         if (isMissile) {
+                            missileSound.stop();
                             missileSound.play(0.1f);
                         } else {
                             bulletSound.stop();
@@ -1116,27 +1115,27 @@ public class MainGame extends GameElements implements Screen {
             randomSpawnLocation = random.nextInt((int) (SCREEN_WIDTH - BLUE_EYEBAT_WIDTH));
 
             if (score <= 10000) {
-                enemy.create(EYEBAT_ID, BLUE_ID, 1, randomSpawnLocation, BLUE_EYEBAT_WIDTH, BLUE_EYEBAT_HEIGHT, 0.35f + speedIncrease / 1.5f, 0.8f + speedIncrease / 1.5f, (float) (DEFAULT_FRAME_DURATION * (1.25 - speedIncrease / 2)), false, hurtTimer);
+                enemy.create(EYEBAT_ID, BLUE_ID, 1, randomSpawnLocation, BLUE_EYEBAT_WIDTH, BLUE_EYEBAT_HEIGHT, 0.3f + speedIncrease / 1.5f, 0.75f + speedIncrease / 1.5f, (float) (DEFAULT_FRAME_DURATION * (1.25 - speedIncrease / 2)), false, hurtTimer);
                 eyebatSpawnTimer = random.nextFloat() * (maxEyebatSpawnTime - minEyebatSpawnTime) + minEyebatSpawnTime;
 
             }
             if (score > 1000 && score <= 2000) {
-                enemy.create(EYEBAT_ID, GREEN_ID, 2, randomSpawnLocation, GREEN_EYEBAT_WIDTH, GREEN_EYEBAT_HEIGHT, 0.8f + speedIncrease / 1.5f, 0.4f + speedIncrease / 1.5f, (float) (DEFAULT_FRAME_DURATION * (1.5 - speedIncrease / 2)), false, hurtTimer);
+                enemy.create(EYEBAT_ID, GREEN_ID, 2, randomSpawnLocation, GREEN_EYEBAT_WIDTH, GREEN_EYEBAT_HEIGHT, 0.75f + speedIncrease / 1.5f, 0.35f + speedIncrease / 1.5f, (float) (DEFAULT_FRAME_DURATION * (1.5 - speedIncrease / 2)), false, hurtTimer);
                 eyebatSpawnTimer = random.nextFloat() * (1.2f * maxEyebatSpawnTime - 1.2f * minEyebatSpawnTime) + 1.2f * minEyebatSpawnTime;
 
             }
             if (score > 2000 && score <= 3000) {
-                enemy.create(EYEBAT_ID, RED_ID, 2, randomSpawnLocation, RED_EYEBAT_WIDTH, RED_EYEBAT_HEIGHT, 0.65f + speedIncrease / 1.5f, 0.3f + speedIncrease / 1.5f, (float) (DEFAULT_FRAME_DURATION * (1.5 - speedIncrease / 2)), false, hurtTimer);
+                enemy.create(EYEBAT_ID, RED_ID, 2, randomSpawnLocation, RED_EYEBAT_WIDTH, RED_EYEBAT_HEIGHT, 0.60f + speedIncrease / 1.5f, 0.25f + speedIncrease / 1.5f, (float) (DEFAULT_FRAME_DURATION * (1.5 - speedIncrease / 2)), false, hurtTimer);
                 eyebatSpawnTimer = random.nextFloat() * (1.3f * maxEyebatSpawnTime - 1.3f * minEyebatSpawnTime) + 1.3f * minEyebatSpawnTime;
 
             }
             if (score > 3000 && score <= 4000) {
-                enemy.create(EYEBAT_ID, PURPLE_ID, 3, randomSpawnLocation, PURPLE_EYEBAT_WIDTH, PURPLE_EYEBAT_HEIGHT, 0.5f + speedIncrease / 1.75f, 0.25f + speedIncrease / 1.75f, (float) (DEFAULT_FRAME_DURATION * (1.75 - speedIncrease / 2)), false, hurtTimer);
+                enemy.create(EYEBAT_ID, PURPLE_ID, 3, randomSpawnLocation, PURPLE_EYEBAT_WIDTH, PURPLE_EYEBAT_HEIGHT, 0.45f + speedIncrease / 1.75f, 0.20f + speedIncrease / 1.75f, (float) (DEFAULT_FRAME_DURATION * (1.75 - speedIncrease / 2)), false, hurtTimer);
                 eyebatSpawnTimer = random.nextFloat() * (1.6f * maxEyebatSpawnTime - 1.6f * minEyebatSpawnTime) + 1.6f * minEyebatSpawnTime;
 
             }
             if (score > 4000) {
-                enemy.create(EYEBAT_ID, WHITE_ID, 4, randomSpawnLocation, WHITE_EYEBAT_WIDTH, WHITE_EYEBAT_HEIGHT, 0.3f + speedIncrease / 1.75f, 0.2f + speedIncrease / 1.75f, (float) (DEFAULT_FRAME_DURATION * (2.0 - speedIncrease / 2)), false, hurtTimer);
+                enemy.create(EYEBAT_ID, WHITE_ID, 4, randomSpawnLocation, WHITE_EYEBAT_WIDTH, WHITE_EYEBAT_HEIGHT, 0.25f + speedIncrease / 1.75f, 0.15f + speedIncrease / 1.75f, (float) (DEFAULT_FRAME_DURATION * (2.0 - speedIncrease / 2)), false, hurtTimer);
                 eyebatSpawnTimer = random.nextFloat() * (1.9f * maxEyebatSpawnTime - 1.9f * minEyebatSpawnTime) + 1.9f * minEyebatSpawnTime;
 
             }
@@ -1550,7 +1549,7 @@ public class MainGame extends GameElements implements Screen {
                         score += 25;
 
                         if (soundEnabled)
-                            itemSound.play(0.1f);
+                            itemSound.play(0.075f);
 
 
                         if (health > 0 && health < 3 && !heartUsed) {
@@ -1581,7 +1580,7 @@ public class MainGame extends GameElements implements Screen {
                         isMissile = true;
 
                         if (soundEnabled)
-                            itemSound.play(0.1f);
+                            itemSound.play(0.075f);
 
                         if (!missileUsed) {
                             missileUsed = true;
@@ -1593,14 +1592,14 @@ public class MainGame extends GameElements implements Screen {
                         gemCount++;
 
                         if (soundEnabled)
-                            gemSound.play(0.15f);
+                            gemSound.play(0.1f);
                         break;
 
                     case RAPID_FIRE_ID:
                         isRapidFire = true;
 
                         if (soundEnabled)
-                            itemSound.play(0.1f);
+                            itemSound.play(0.075f);
 
                         if (!rapidFireUsed) {
                             bulletTimer = .05f;
@@ -1611,7 +1610,7 @@ public class MainGame extends GameElements implements Screen {
                     case HOURGLASS_ID:
                         isHourglass = true;
                         if (soundEnabled)
-                            itemSound.play(0.1f);
+                            itemSound.play(0.075f);
 
                         if (!hourglassUsed) {
                             hourglassUsed = true;
@@ -1683,7 +1682,7 @@ public class MainGame extends GameElements implements Screen {
                 gemCount++;
 
                 if(soundEnabled)
-                    itemSound.play(0.1f);
+                    itemSound.play(0.075f);
 
             }
 
@@ -1694,7 +1693,7 @@ public class MainGame extends GameElements implements Screen {
 
             if (gemCount > 0 && score == 0 && gemCountTimerDelay == 0) {
                 if (soundEnabled)
-                    itemSound.play(0.1f);
+                    itemSound.play(0.075f);
 
                 gemCount--;
                 finalGemCount--;

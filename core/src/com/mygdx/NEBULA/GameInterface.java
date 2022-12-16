@@ -68,7 +68,7 @@ public class GameInterface extends GameElements {
         rightArrow = new Button(assets.assetManager.get(Assets.right_arrow_inactive, Texture.class), RIGHT_ARROW_X, RIGHT_ARROW_Y, RIGHT_ARROW_WIDTH, RIGHT_ARROW_HEIGHT);
         selectButton = new Button(assets.assetManager.get(Assets.select_button_inactive, Texture.class), SELECT_BUTTON_X, SELECT_BUTTON_Y, SELECT_BUTTON_WIDTH, SELECT_BUTTON_HEIGHT);
 
-        xButton = new Button(assets.assetManager.get(Assets.x_button, Texture.class), X_BUTTON_X, X_BUTTON_Y, X_BUTTON_WIDTH, X_BUTTON_HEIGHT, X_BUTTON_WIDTH / 2, X_BUTTON_HEIGHT / 2);
+        xButton = new Button(assets.assetManager.get(Assets.x_button, Texture.class), X_BUTTON_X, X_BUTTON_Y, X_BUTTON_WIDTH, X_BUTTON_HEIGHT, X_BUTTON_WIDTH / 1.75f, X_BUTTON_HEIGHT / 1.75f);
         yesButton = new Button(assets.assetManager.get(Assets.yes_button_inactive, Texture.class), YES_BUTTON_X, YES_BUTTON_Y, YES_BUTTON_WIDTH, YES_BUTTON_HEIGHT);
         noButton = new Button(assets.assetManager.get(Assets.no_button_inactive, Texture.class), NO_BUTTON_X, NO_BUTTON_Y, NO_BUTTON_WIDTH, NO_BUTTON_HEIGHT);
 
@@ -118,6 +118,7 @@ public class GameInterface extends GameElements {
         scoreFont.setColor(Color.valueOf(PURPLE_COLOR_HEX));
 
         storeFont.setColor(Color.valueOf(PURPLE_COLOR_HEX));
+        gemCountFont = generator.generateFont(parameter);
         gl = new GlyphLayout();
     }
 
@@ -163,6 +164,9 @@ public class GameInterface extends GameElements {
             game.batch.draw(tsSoundButton.getTexture(), TS_SOUND_BUTTON_X, tsSoundButtonY, TS_SOUND_BUTTON_WIDTH, TS_SOUND_BUTTON_HEIGHT);
 
             scoreFont.draw(game.batch, "HIGH SCORE: " + prefs.getHighScore(), SCORE_X, scoreY);
+            game.batch.draw(gemIcon, TS_GEM_ICON_MENU_X, scoreY - GEM_ICON_HEIGHT * .8f, GEM_ICON_WIDTH, GEM_ICON_HEIGHT);
+            gemCountFont.draw(game.batch, " x " + prefs.getGemCount(), TS_GEM_COUNT_MENU_X, scoreY);
+
         }
     }
 
@@ -382,6 +386,7 @@ public class GameInterface extends GameElements {
             }
             else{
                 if(soundEnabled){
+                    errorSound.stop(); // stops static sound from playing when spam-tapping
                     errorSound.play(0.2f);
                 }
             }

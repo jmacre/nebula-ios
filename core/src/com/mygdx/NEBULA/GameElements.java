@@ -123,7 +123,7 @@ public class GameElements {
     public static final float SHOP_BACK_WIDTH = SHOP_BACK_HEIGHT;
     public static final float SHOP_BACK_Y = SCREEN_HEIGHT/2f - SHOP_BACK_HEIGHT/2;
 
-    public static final float X_BUTTON_WIDTH = SHOP_BACK_WIDTH / 12;
+    public static final float X_BUTTON_WIDTH = SHOP_BACK_WIDTH / 10;
     public static final float X_BUTTON_HEIGHT = X_BUTTON_WIDTH;
     public static final float X_BUTTON_X = SHOP_BACK_X + SHOP_BACK_WIDTH - X_BUTTON_WIDTH/2;
     public static final float X_BUTTON_Y = SHOP_BACK_Y + SHOP_BACK_HEIGHT - X_BUTTON_HEIGHT/2;
@@ -182,8 +182,8 @@ public class GameElements {
 
     public static final float TS_SOUND_BUTTON_WIDTH = SCREEN_WIDTH / 10f;
     public static final float TS_SOUND_BUTTON_HEIGHT = TS_SOUND_BUTTON_WIDTH;
-    public static final float TS_SOUND_BUTTON_X = SCREEN_WIDTH - SCREEN_WIDTH / 8f;
-    public static final float TS_SOUND_BUTTON_Y_AND = SCREEN_HEIGHT - MAIN_UI_HEIGHT/3f - TS_SOUND_BUTTON_HEIGHT/1.5f;
+    public static final float TS_SOUND_BUTTON_X = SCORE_X;
+    public static final float TS_SOUND_BUTTON_Y_AND = TS_SOUND_BUTTON_HEIGHT * 1.05f;
     public static final float TS_SOUND_BUTTON_Y_IOS = SCREEN_HEIGHT - MAIN_UI_HEIGHT - TS_SOUND_BUTTON_HEIGHT/1.5f;
 
     public static final float PAUSE_BUTTON_X = SCREEN_WIDTH - SCREEN_WIDTH / 7.5f;
@@ -204,6 +204,9 @@ public class GameElements {
     public static final float GEM_ICON_MENU_X = PLAY_BUTTON_X + PLAY_BUTTON_WIDTH;
     public static final float GEM_ICON_MENU_Y = MENU_SCORE_Y - GEM_ICON_HEIGHT * 0.8f;
 
+    public static final float TS_GEM_ICON_MENU_X = SCREEN_WIDTH * .7f;
+    public static final float TS_GEM_COUNT_MENU_X = TS_GEM_ICON_MENU_X + (GEM_ICON_WIDTH * 1.1f);
+
     public static final float GEM_COUNT_MENU_X = GEM_ICON_MENU_X + (GEM_ICON_WIDTH * 1.1f);
     public static final float GEM_COUNT_MENU_Y = GEM_ICON_MENU_Y + (GEM_ICON_HEIGHT * .8f);
 
@@ -212,7 +215,6 @@ public class GameElements {
 
     public static final float GEM_COUNT_SHOP_X = LEFT_ARROW_X + (GEM_ICON_WIDTH * 1.1f);
     public static final float GEM_COUNT_SHOP_Y = GEM_ICON_SHOP_Y + (GEM_ICON_HEIGHT * .8f);
-
 
     public static final float GEM_COUNT_X = GEM_ICON_X + (GEM_ICON_WIDTH * 1.1f);
     public static final float GEM_COUNT_Y_AND = GEM_ICON_Y_AND + (GEM_ICON_HEIGHT * .8f);
