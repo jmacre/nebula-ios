@@ -337,7 +337,7 @@ public class MainGame extends GameElements implements Screen {
         if(delta >= 0.8f/Gdx.graphics.getFramesPerSecond() && delta <= 1.2f/Gdx.graphics.getFramesPerSecond())
             deltaList.add(delta);
 
-        if (deltaList.size >= 10) {
+        if (deltaList.size >= 30) {
             for (int i = 0; i < deltaList.size; i++) {
                 deltaSum += deltaList.get(i);
             }
@@ -1494,10 +1494,12 @@ public class MainGame extends GameElements implements Screen {
                     explosion.create((int) (enemy.getEnemyX() - (SMALL_EXPLOSION_WIDTH - enemy.getWidth()) / 2), (int) (enemy.getEnemyY() - (SMALL_EXPLOSION_HEIGHT - enemy.getHeight()) / 2), SMALL_EXPLOSION_WIDTH);
                     explosionsToDelay.add(explosion);
                 }
-                if (health > 0 && !justHit) {
+                if (!justHit) {
                     justHit = true;
-                    health -= 1;
                     Gdx.input.vibrate(50);
+                }
+                if(health > 0){
+                    health--;
                 }
 
                 if (health == 0) {
@@ -1522,12 +1524,14 @@ public class MainGame extends GameElements implements Screen {
                     enemyBulletsToRemove.add(enemyBullet);
                 }
 
-                if (health > 0 && !justHit) {
+                if (!justHit) {
                     justHit = true;
-                    health -= 1;
                     Gdx.input.vibrate(50);
-
                 }
+                if(health > 0){
+                    health--;
+                }
+
                 if (health == 0) {
                     isAlive = false;
                 }
@@ -1853,11 +1857,13 @@ public class MainGame extends GameElements implements Screen {
 
     @Override
     public void pause() {
-        deltaList.clear();
-        deltaP = 0;
+        if(!isTransitionedOut) {
+            deltaList.clear();
+            deltaP = 0;
 
-        if (!isTransitioningIn && !isTransitioningOut && !isFadingIn && !isFadingOut && !isRunningResumeCountdown) {
-            isPaused = true;
+            if (!isFadingIn && !isFadingOut && !isRunningResumeCountdown) {
+                isPaused = true;
+            }
         }
         songPausePosition = mainMusic.getPosition();
     }
@@ -1872,6 +1878,7 @@ public class MainGame extends GameElements implements Screen {
 
     @Override
     public void dispose() {
+        mainMusic.stop();
         game.setScreen(new MainMenu(game, assets));
     }
 }
