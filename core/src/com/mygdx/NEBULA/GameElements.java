@@ -155,15 +155,15 @@ public class GameElements {
 
     public static final float START_BUTTON_WIDTH = SCREEN_WIDTH/2f;
     public static final float START_BUTTON_HEIGHT = START_BUTTON_WIDTH / 2;
-    public static final int START_BUTTON_X = (int)(SCREEN_WIDTH / 2f - START_BUTTON_WIDTH*.5f);
-    public static int START_BUTTON_Y = (int) (.3f*SCREEN_HEIGHT + SCREEN_HEIGHT);
-    public static int START_BUTTON_Y_TRANSITIONED = (int) (SCREEN_HEIGHT * .3f);
+    public static final float START_BUTTON_X = SCREEN_WIDTH / 2f - START_BUTTON_WIDTH*.5f;
+    public static int START_BUTTON_Y = (int)(.3f*SCREEN_HEIGHT + SCREEN_HEIGHT);
+    public static int START_BUTTON_Y_TRANSITIONED = (int)(SCREEN_HEIGHT * .3f);
 
     public static final float SHOP_BUTTON_WIDTH = SCREEN_WIDTH/3f;
     public static final float SHOP_BUTTON_HEIGHT = SHOP_BUTTON_WIDTH/2;
-    public static final float SHOP_BUTTON_X = (int)(SCREEN_WIDTH / 2f - SHOP_BUTTON_WIDTH*.5f);
-    public static int SHOP_BUTTON_Y = (int) (.3f * (.75f*START_BUTTON_Y) - START_BUTTON_HEIGHT + SCREEN_HEIGHT);
-    public static int SHOP_BUTTON_Y_TRANSITIONED = (int) (.3f* (.7f*START_BUTTON_Y) - START_BUTTON_HEIGHT);
+    public static final float SHOP_BUTTON_X = SCREEN_WIDTH / 2f - SHOP_BUTTON_WIDTH*.5f;
+    public static int SHOP_BUTTON_Y = (int)(.3f * (.75f*START_BUTTON_Y) - START_BUTTON_HEIGHT + SCREEN_HEIGHT);
+    public static int SHOP_BUTTON_Y_TRANSITIONED = (int)(.3f* (.7f*START_BUTTON_Y) - START_BUTTON_HEIGHT);
 
     public static final float LEFT_ARROW_WIDTH = SHOP_BACK_WIDTH / 4.5f;
     public static final float LEFT_ARROW_HEIGHT = LEFT_ARROW_WIDTH * (64f/88);
@@ -198,8 +198,8 @@ public class GameElements {
     public static final float GEM_ICON_WIDTH = HEART_WIDTH * (7 / 13f);
     public static final float GEM_ICON_X = SCORE_X;
 
-    public static final float GEM_ICON_Y_AND = SCORE_Y_AND - (GEM_ICON_HEIGHT * 3.5f);
-    public static final float GEM_ICON_Y_IOS = SCORE_Y_IOS - (GEM_ICON_HEIGHT * 3.5f);
+    public static final float GEM_ICON_Y_AND = SCORE_Y_AND - (SCREEN_HEIGHT * 0.03f);
+    public static final float GEM_ICON_Y_IOS = SCORE_Y_IOS - (SCREEN_HEIGHT * 0.03f);
 
     public static final float GEM_ICON_MENU_X = PLAY_BUTTON_X + PLAY_BUTTON_WIDTH;
     public static final float GEM_ICON_MENU_Y = MENU_SCORE_Y - GEM_ICON_HEIGHT * 0.8f;

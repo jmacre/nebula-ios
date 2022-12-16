@@ -76,17 +76,19 @@ public class MainMenu extends GameElements implements Screen {
         game.batch.enableBlending();
 
         game.batch.begin();
-        if(delta >= 0.9f/Gdx.graphics.getFramesPerSecond() && delta <= 1.1f/Gdx.graphics.getFramesPerSecond())
-            deltaList.add(delta);
+        deltaList.add(delta);
 
-        if(deltaList.size >= 10) {
+        if(deltaList.size > 100) {
             for(int i = 0; i < deltaList.size; i++){
                 deltaSum += deltaList.get(i);
             }
 
             delta = deltaSum / deltaList.size;
+            deltaList.removeIndex(0);
             deltaSum = 0;
         }
+
+        if(deltaList.size >= 100 || canRenderBackground) {
 
             if (START_BUTTON_Y >= START_BUTTON_Y_TRANSITIONED && !switchScreens) {
                 isTransitioningIn = true;
@@ -108,6 +110,7 @@ public class MainMenu extends GameElements implements Screen {
                     isShopOpen = false;
                 }
             }
+        }
 
 
         if(beganFading || (START_BUTTON_Y <= START_BUTTON_Y_TRANSITIONED))
