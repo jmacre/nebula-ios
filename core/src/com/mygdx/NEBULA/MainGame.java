@@ -525,7 +525,7 @@ public class MainGame extends GameElements implements Screen {
                 game.batch.setShader(null);
             }
 
-            gameInterface.drawPauseScreen(game, menuScoreFont, gemCountFont);
+            gameInterface.drawPauseScreen(game, menuScoreFont, gemCountFont, prefs);
 
             if (gameInterface.checkForPlayButtonTap() && !isTransitioningOut && !isFadingIn && !isTransitioningIn & !gameInterface.getConfirmLeaveScreenOpen()) {
                 playButtonTapVal = inputProcessor.getTapCount();
@@ -590,7 +590,7 @@ public class MainGame extends GameElements implements Screen {
                         runGemCountUpdateTimer();
                     }
                 }
-                gameInterface.drawReplayScreen(game, menuScoreFont, gameOverFont, gemCountFont, newHighscore, replayScreenGemCount, gemCount, score, soundEnabled);
+                gameInterface.drawReplayScreen(game, menuScoreFont, gameOverFont, gemCountFont, newHighscore, replayScreenGemCount, gemCount, score, prefs.getHighScore(), soundEnabled);
             }
 
             if (gameInterface.checkForReplayButtonTap(gemCount) && isTransitionedOut) {

@@ -4,6 +4,7 @@ import static com.mygdx.NEBULA.ShopElement.SHIP_ID;
 
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
@@ -44,14 +45,12 @@ public class GameInterface extends GameElements {
     GlyphLayout gl;
     Boolean confirmLeaveScreenOpen = false;
 
-    public Prefs prefs = new Prefs();
-
     float scoreY;
     float gemIconY;
 
     float topElemY;
     float stateTime = 0f;
-    int selectedElement = prefs.getShip();
+    int selectedElement = 0;
 
     public FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
 
@@ -146,7 +145,7 @@ public class GameInterface extends GameElements {
         game.batch.draw(gemIcon, GEM_ICON_X, gemIconY, GEM_ICON_WIDTH, GEM_ICON_HEIGHT);
     }
 
-    public void drawTitleScreen(Main game, boolean transitionInDone) {
+    public void drawTitleScreen(Main game, boolean transitionInDone, Prefs prefs) {
         game.batch.draw(startButton.getTexture(), START_BUTTON_X, START_BUTTON_Y, START_BUTTON_WIDTH, START_BUTTON_HEIGHT);
         game.batch.draw(shopButton.getTexture(), SHOP_BUTTON_X, SHOP_BUTTON_Y, SHOP_BUTTON_WIDTH, SHOP_BUTTON_HEIGHT);
         game.batch.draw(titleTexture, TITLE_LOGO_X, TITLE_LOGO_Y - TITLE_LOGO_HEIGHT, TITLE_LOGO_WIDTH, TITLE_LOGO_HEIGHT);
@@ -167,7 +166,7 @@ public class GameInterface extends GameElements {
         }
     }
 
-    public boolean checkForTSSoundButtonTap(Main game, boolean soundEnabled) {
+    public boolean checkForTSSoundButtonTap(Main game, boolean soundEnabled, Prefs prefs) {
         if (tsSoundButton.getTappedBefore()) {
             if (prefs.hasSound()) {
                 tsSoundButton.setTexture(assets.assetManager.get(Assets.sound_off_button_ts, Texture.class));
@@ -352,7 +351,7 @@ public class GameInterface extends GameElements {
         }
     }
 
-    public void checkForSelectButtonTap(Main game, boolean soundEnabled) {
+    public void checkForSelectButtonTap(Main game, boolean soundEnabled, Prefs prefs) {
         if (selectButton.getTappedBefore()) {
             selectButton.setTexture(assets.assetManager.get(Assets.select_button_active, Texture.class));
         } else {
@@ -365,7 +364,7 @@ public class GameInterface extends GameElements {
                 game.playSound.play(0.2f);
         }
     }
-    public void checkForBuyButtonTap(Main game, boolean soundEnabled, int itemPrice){
+    public void checkForBuyButtonTap(Main game, boolean soundEnabled, int itemPrice, Prefs prefs){
         if (selectButton.getTappedBefore()) {
             selectButton.setTexture(assets.assetManager.get(Assets.buy_active, Texture.class));
 
@@ -392,7 +391,7 @@ public class GameInterface extends GameElements {
         }
     }
 
-    public void drawShopScreen(Main game, boolean soundEnabled, float delta, SpriteBatch batch, BitmapFont gemCountFont) {
+    public void drawShopScreen(Main game, boolean soundEnabled, float delta, SpriteBatch batch, BitmapFont gemCountFont, Prefs prefs) {
         stateTime += delta / 6;
 
         game.batch.draw(shopBack, SHOP_BACK_X, SHOP_BACK_Y, SHOP_BACK_WIDTH, SHOP_BACK_HEIGHT);
@@ -415,13 +414,13 @@ public class GameInterface extends GameElements {
             buyFont.draw(game.batch, Integer.toString(ShopElement.getPriceByShipId(selectedElement)), (SCREEN_WIDTH - gl.width) / 2, SELECT_BUTTON_Y + gl.height / 2 + SELECT_BUTTON_HEIGHT/2);
             game.batch.draw(gemIcon, (SCREEN_WIDTH + gl.width) / 2 + GEM_ICON_WIDTH/2, SELECT_BUTTON_Y + SELECT_BUTTON_HEIGHT/2 - GEM_ICON_HEIGHT/2, GEM_ICON_WIDTH, GEM_ICON_HEIGHT);
 
-            checkForBuyButtonTap(game, soundEnabled, ShopElement.getPriceByShipId(selectedElement));
+            checkForBuyButtonTap(game, soundEnabled, ShopElement.getPriceByShipId(selectedElement), prefs);
         }
         else {
             if (prefs.getShip() == selectedElement) {
                 selectButton.setTexture(assets.assetManager.get(Assets.active_button, Texture.class));
             } else {
-                checkForSelectButtonTap(game, soundEnabled);
+                checkForSelectButtonTap(game, soundEnabled, prefs);
             }
         }
 
@@ -435,7 +434,7 @@ public class GameInterface extends GameElements {
         storeFont.draw(game.batch, ship.getTitle(), (SCREEN_WIDTH - gl.width) / 2, SHOP_BACK_Y + SHOP_BACK_HEIGHT * .8f + gl.height / 2);
     }
 
-    public void drawPauseScreen(Main game, BitmapFont scoreFont, BitmapFont gemCountFont) {
+    public void drawPauseScreen(Main game, BitmapFont scoreFont, BitmapFont gemCountFont, Prefs prefs) {
         game.batch.draw(pauseMenuBack, MENU_BACK_X, MENU_BACK_Y, MENU_BACK_WIDTH, MENU_BACK_HEIGHT);
 
         if (!confirmLeaveScreenOpen) {
@@ -466,7 +465,7 @@ public class GameInterface extends GameElements {
         return confirmLeaveScreenOpen;
     }
 
-    public void drawReplayScreen(Main game, BitmapFont scoreFont, BitmapFont gameOverFont, BitmapFont gemCountFont, boolean newHighScore, int replayScreengemCount, int gemCount, int score, boolean soundEnabled) {
+    public void drawReplayScreen(Main game, BitmapFont scoreFont, BitmapFont gameOverFont, BitmapFont gemCountFont, boolean newHighScore, int replayScreengemCount, int gemCount, int score, int highScore, boolean soundEnabled) {
         scoreFont.setColor(Color.valueOf(PURPLE_COLOR_HEX));
 
         game.batch.draw(pauseMenuBack, MENU_BACK_X, MENU_BACK_Y, MENU_BACK_WIDTH, MENU_BACK_HEIGHT);
@@ -488,12 +487,12 @@ public class GameInterface extends GameElements {
 
 
             if (newHighScore) {
-                scoreFont.draw(game.batch, "HIGH SCORE: " + prefs.getHighScore(), MENU_SCORE_X, MENU_SCORE_Y);
+                scoreFont.draw(game.batch, "HIGH SCORE: " + highScore, MENU_SCORE_X, MENU_SCORE_Y);
                 gl.setText(gameOverFont, "HIGH SCORE", Color.WHITE, SCREEN_WIDTH, Align.center, true);
                 gameOverFont.draw(game.batch, "HIGH SCORE", (SCREEN_WIDTH - gl.width) / 2, GAME_OVER_TEXT_Y);
 
             } else {
-                scoreFont.draw(game.batch, "HIGH SCORE: " + prefs.getHighScore(), MENU_SCORE_X, MENU_SCORE_Y);
+                scoreFont.draw(game.batch, "HIGH SCORE: " + highScore, MENU_SCORE_X, MENU_SCORE_Y);
                 gl.setText(gameOverFont, "GAME OVER", Color.WHITE, SCREEN_WIDTH, Align.center, true);
                 gameOverFont.draw(game.batch, "GAME OVER", (SCREEN_WIDTH - gl.width) / 2, GAME_OVER_TEXT_Y);
 

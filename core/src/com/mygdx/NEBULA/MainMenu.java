@@ -139,10 +139,10 @@ public class MainMenu extends GameElements implements Screen {
         }
 
         if(!isShopOpen) {
-            gameInterface.drawTitleScreen(game, transitionInDone);
+            gameInterface.drawTitleScreen(game, transitionInDone, prefs);
         }
         else {
-            gameInterface.drawShopScreen(game, soundEnabled, delta, game.batch, gemCountFont);
+            gameInterface.drawShopScreen(game, soundEnabled, delta, game.batch, gemCountFont, prefs);
 
         }
 
@@ -156,7 +156,7 @@ public class MainMenu extends GameElements implements Screen {
 
         if(!isFadingOut && !isTransitioningIn){
             if(transitionInDone  && !switchScreens && !isShopOpen) {
-                soundEnabled = gameInterface.checkForTSSoundButtonTap(game, soundEnabled);
+                soundEnabled = gameInterface.checkForTSSoundButtonTap(game, soundEnabled, prefs);
             }
         }
         game.batch.end();

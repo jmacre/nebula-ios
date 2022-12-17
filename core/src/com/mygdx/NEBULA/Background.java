@@ -96,7 +96,6 @@ public class Background {
         }
 
         if (speed < goalSpeed && !constantSpeed && !isResettingScreen) {
-            System.out.println(SCREEN_HEIGHT);
             speed += (SCREEN_HEIGHT/416f) * delta * hourglassMultiplier; // CHANGE SPEED TO UPDATE BASED ON SCREEN HEIGHT (NOT 1000 OR 7.5)
         }
         else if(isResettingScreen && speed > DEFAULT_SPEED){
