@@ -1493,12 +1493,10 @@ public class MainGame extends GameElements implements Screen {
                     explosion.create((int) (enemy.getEnemyX() - (SMALL_EXPLOSION_WIDTH - enemy.getWidth()) / 2), (int) (enemy.getEnemyY() - (SMALL_EXPLOSION_HEIGHT - enemy.getHeight()) / 2), SMALL_EXPLOSION_WIDTH);
                     explosionsToDelay.add(explosion);
                 }
-                if (!justHit) {
+                if (health > 0 && !justHit) {
                     justHit = true;
+                    health -= 1;
                     Gdx.input.vibrate(50);
-                }
-                if(health > 0){
-                    health--;
                 }
 
                 if (health == 0) {
@@ -1523,12 +1521,10 @@ public class MainGame extends GameElements implements Screen {
                     enemyBulletsToRemove.add(enemyBullet);
                 }
 
-                if (!justHit) {
+                if (health > 0 && !justHit) {
                     justHit = true;
+                    health -= 1;
                     Gdx.input.vibrate(50);
-                }
-                if(health > 0){
-                    health--;
                 }
 
                 if (health == 0) {
