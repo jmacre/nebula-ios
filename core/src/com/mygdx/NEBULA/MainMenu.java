@@ -2,6 +2,7 @@ package com.mygdx.NEBULA;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -9,7 +10,9 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.FillViewport;
+import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 public class MainMenu extends GameElements implements Screen {
@@ -41,6 +44,10 @@ public class MainMenu extends GameElements implements Screen {
     boolean isShopOpen = false;
     boolean soundEnabled, soundLoaded, playSoundHasPlayed;
     GameInterface gameInterface;
+    OrthographicCamera camera, textCamera;
+    FitViewport viewport;
+    ScreenViewport screenViewport;
+    static Vector3 newPoints = new Vector3();
 
     public MainMenu(Main game, Assets assets) {
         this.game = game;
@@ -53,11 +60,20 @@ public class MainMenu extends GameElements implements Screen {
     public void show() {
         soundEnabled = prefs.hasSound();
 
+        camera = new OrthographicCamera();
+
+        viewport = new FitViewport(SCREEN_WIDTH,SCREEN_HEIGHT, camera);
+        viewport.apply();
+
+        camera.position.set(camera.viewportWidth/2,camera.viewportHeight/2,0);
+
         startButtonInactive = new Sprite(assets.assetManager.get(Assets.start_button_inactive, Texture.class));
         startButtonActive = new Sprite(assets.assetManager.get(Assets.start_button_active, Texture.class));
 
         blackTransition = new Sprite(assets.assetManager.get(Assets.black_transition, Texture.class));
         blackTransition.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
+        camera.position.set(camera.viewportWidth/2,camera.viewportHeight/2,0);
+
         blackTransition.setColor(0, 0, 0, 0);
 
         textParameter.size = SCREEN_WIDTH / 40;
@@ -70,10 +86,13 @@ public class MainMenu extends GameElements implements Screen {
 
     @Override
     public void render(float delta) {
+        camera.update();
         Gdx.gl.glClearColor(0f, 0f, 0f, 1f);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        newPoints = viewport.unproject(new Vector3 (Gdx.input.getX(),Gdx.graphics.getHeight()- Gdx.input.getY(), 0));
 
         game.batch.enableBlending();
+        game.batch.setProjectionMatrix(camera.combined);
 
         game.batch.begin();
         deltaList.add(delta);
@@ -210,5 +229,7 @@ public class MainMenu extends GameElements implements Screen {
 
     @Override
     public void resize(int width, int height) {
+        viewport.update(width, height);
+        camera.position.set(camera.viewportWidth/2,camera.viewportHeight/2,0);
     }
 }
