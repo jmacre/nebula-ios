@@ -153,7 +153,7 @@ public class GameElements {
     public static final float NO_BUTTON_X = SCREEN_WIDTH - YES_BUTTON_X-NO_BUTTON_WIDTH;
     public static final float NO_BUTTON_Y = SOUND_BUTTON_Y*.9f;
 
-    public static final float START_BUTTON_WIDTH = SCREEN_WIDTH/2f;
+    public static final float START_BUTTON_WIDTH = (float)(SCREEN_WIDTH/4f) * (float)(SCREEN_HEIGHT/SCREEN_WIDTH);
     public static final float START_BUTTON_HEIGHT = START_BUTTON_WIDTH / 2;
     public static final float START_BUTTON_X = SCREEN_WIDTH / 2f - START_BUTTON_WIDTH*.5f;
     public static int START_BUTTON_Y = (int)(.3f*SCREEN_HEIGHT + SCREEN_HEIGHT);
