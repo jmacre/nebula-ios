@@ -6,11 +6,10 @@ import com.badlogic.gdx.Preferences;
 import java.util.List;
 
 public class Prefs {
-    private final Preferences prefs;
-    int highScore;
+    private final Preferences prefs ;
+
     public Prefs(){
         prefs = Gdx.app.getPreferences("nebula");
-        highScore = prefs.getInteger("highScore",0);
     }
     public int getHighScore(){
         return prefs.getInteger("highScore", 0);
