@@ -209,15 +209,15 @@ public class Enemy extends GameElements implements Pool.Poolable{
 
         if(id == EYEBAT_ID) {
             if(!isHurt())
-                ENEMY_Y -= Math.ceil((int)(SPEED * delta * ENEMY_Y_SPEED_MULTIPLIER * hourglassMultiplier));
+                ENEMY_Y -= Math.ceil((int)(SPEED * delta * ENEMY_Y_SPEED_MULTIPLIER)) * hourglassMultiplier;
         }
 
         else if(id == ENEMY_SHIP_ID && !shipMovingToPos) {
-            ENEMY_Y -= Math.ceil((int)(SPEED * .6f * delta * ENEMY_Y_SPEED_MULTIPLIER * hourglassMultiplier));
+            ENEMY_Y -= Math.ceil((int)(SPEED * .6f * delta * ENEMY_Y_SPEED_MULTIPLIER)) * hourglassMultiplier;
         }
 
         else if(id == LASER_TRAP_ID) {
-            ENEMY_Y -= Math.ceil((int) (SPEED * delta * ENEMY_Y_SPEED_MULTIPLIER * hourglassMultiplier));
+            ENEMY_Y -= Math.ceil((int) (SPEED * delta * ENEMY_Y_SPEED_MULTIPLIER)) * hourglassMultiplier;
         }
 
         if (ENEMY_Y < - ENEMY_HEIGHT){
@@ -267,11 +267,11 @@ public class Enemy extends GameElements implements Pool.Poolable{
             }
 
             if (!isPaused && !movingRight && (movingLeft || (randomNumber == 0))) {
-                ENEMY_X -= Math.ceil((int) (SCREEN_WIDTH / 2f) * delta * ENEMY_X_SPEED_MULTIPLIER * hourglassMultiplier);
+                ENEMY_X -= Math.ceil((int) (SCREEN_WIDTH / 2f) * delta * ENEMY_X_SPEED_MULTIPLIER) * hourglassMultiplier;
             }
 
             if (!isPaused && !movingLeft && (movingRight || (randomNumber == 1))) {
-                ENEMY_X += Math.ceil((int)(SCREEN_WIDTH / 2f) * delta * ENEMY_X_SPEED_MULTIPLIER * hourglassMultiplier);
+                ENEMY_X += Math.ceil((int)(SCREEN_WIDTH / 2f) * delta * ENEMY_X_SPEED_MULTIPLIER) * hourglassMultiplier;
             }
 
         if(ENEMY_Y <= SCREEN_HEIGHT && enemyAnimation != null) {
@@ -324,9 +324,9 @@ public class Enemy extends GameElements implements Pool.Poolable{
                 shipMovingToPos = true;
 
                 if (!isPaused && !movingRight && (movingLeft || (randomNumber == 0))) {
-                    ENEMY_X -= Math.ceil((int)(SCREEN_WIDTH / 4.5) * delta * ENEMY_X_SPEED_MULTIPLIER * hourglassMultiplier);
+                    ENEMY_X -= Math.ceil((int)(SCREEN_WIDTH / 4.5) * delta * ENEMY_X_SPEED_MULTIPLIER) * hourglassMultiplier;
                 } else if (!isPaused && !movingLeft && (movingRight || (randomNumber == 1))) {
-                    ENEMY_X += Math.ceil((int)(SCREEN_WIDTH / 4.5) * delta * ENEMY_X_SPEED_MULTIPLIER * hourglassMultiplier);
+                    ENEMY_X += Math.ceil((int)(SCREEN_WIDTH / 4.5) * delta * ENEMY_X_SPEED_MULTIPLIER) * hourglassMultiplier;
                 }
             } else {
                 shipMovingToPos = false;
