@@ -15,8 +15,7 @@ public class IOSLauncher extends IOSApplication.Delegate {
     @Override
     protected IOSApplication createApplication() {
         IOSApplicationConfiguration config = new IOSApplicationConfiguration();
-        float refreshRate =  UIScreen.getMainScreen().getMaximumFramesPerSecond();
-        return new IOSApplication(new Main(refreshRate), config);
+        return new IOSApplication(new Main(), config);
     }
 
     public static void main(String[] argv) {

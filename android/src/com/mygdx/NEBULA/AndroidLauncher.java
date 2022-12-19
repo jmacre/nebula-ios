@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.Display;
 import android.view.WindowManager;
 
+import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
 import com.badlogic.gdx.backends.android.AndroidAudio;
@@ -16,9 +17,8 @@ public class AndroidLauncher extends AndroidApplication {
 		super.onCreate(savedInstanceState);
 		AndroidApplicationConfiguration config = new AndroidApplicationConfiguration();
 		config.useImmersiveMode = true;
-		Display display = ((WindowManager) getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
-		float refreshRate = display.getRefreshRate();
-		initialize(new Main(refreshRate), config);
+
+		initialize(new Main(), config);
 	}
 
 	@Override

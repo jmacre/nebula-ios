@@ -27,9 +27,6 @@ public class MainMenu extends GameElements implements Screen {
 
     float transitionSpeed = SCREEN_HEIGHT / 2.496f;
 
-    Array<Float> deltaList = new Array<>();
-    float deltaSum;
-
     Main game;
 
     Sprite startButtonInactive, startButtonActive,  blackTransition;
@@ -45,11 +42,9 @@ public class MainMenu extends GameElements implements Screen {
     boolean isShopOpen = false;
     boolean soundEnabled, soundLoaded, playSoundHasPlayed;
     GameInterface gameInterface;
-    float refreshRate;
-    boolean usingRefreshRate = true;
 
-    public MainMenu(Main game, Assets assets, float refreshRate) {
-        this.refreshRate = refreshRate;
+
+    public MainMenu(Main game, Assets assets) {
         this.game = game;
         this.assets = assets;
         gameInterface = new GameInterface(assets);
@@ -67,7 +62,6 @@ public class MainMenu extends GameElements implements Screen {
         blackTransition.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
 
         blackTransition.setColor(0, 0, 0, 0);
-
         textParameter.size = SCREEN_WIDTH / 40;
 
         gemCountFont = generator.generateFont(textParameter);
@@ -83,29 +77,10 @@ public class MainMenu extends GameElements implements Screen {
         game.batch.enableBlending();
 
         game.batch.begin();
-        deltaList.add(delta);
 
+        delta = 1f/Gdx.graphics.getDisplayMode().refreshRate;
+        System.out.println(Gdx.graphics.getDisplayMode().refreshRate);
 
-        if ((delta < (1.1f * (1 / refreshRate)) && delta > (.9f * (1 / refreshRate)))) {
-            delta = 1 / refreshRate;
-            usingRefreshRate = true;
-        }
-        else{
-            usingRefreshRate = false;
-
-            if(deltaList.size > 100) {
-                for(int i = 0; i < deltaList.size; i++){
-                    deltaSum += deltaList.get(i);
-                }
-
-                delta = deltaSum / deltaList.size;
-                deltaList.removeIndex(0);
-                deltaSum = 0;
-            }
-
-        }
-
-        if(deltaList.size >= 100 || canRenderBackground) {
 
             if (START_BUTTON_Y >= START_BUTTON_Y_TRANSITIONED && !switchScreens) {
                 isTransitioningIn = true;
@@ -127,7 +102,7 @@ public class MainMenu extends GameElements implements Screen {
                     isShopOpen = false;
                 }
             }
-        }
+
 
 
         if(beganFading || (START_BUTTON_Y <= START_BUTTON_Y_TRANSITIONED))
@@ -194,7 +169,7 @@ public class MainMenu extends GameElements implements Screen {
 
     @Override
     public void dispose() {
-        game.setScreen(new MainGame(game, assets, background, refreshRate));
+        game.setScreen(new MainGame(game, assets, background));
     }
 
     public void fadeOut(float delta){

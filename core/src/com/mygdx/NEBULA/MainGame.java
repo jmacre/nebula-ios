@@ -2,6 +2,7 @@ package com.mygdx.NEBULA;
 
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Graphics;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
@@ -229,8 +230,6 @@ public class MainGame extends GameElements implements Screen {
     Array<ItemDrop> itemDrops = new Array<>();
     Array<ItemDrop> itemsToRemove = new Array<>();
 
-    Array<Float> deltaList = new Array<>();
-    float deltaSum;
     float speedIncrease;
 
     float hourglassMultiplier = 1;
@@ -239,15 +238,12 @@ public class MainGame extends GameElements implements Screen {
     Player player;
     int health = 3;
     int selectedShip = 0;
-    float refreshRate;
-    boolean usingRefreshRate;
 
-    public MainGame(Main game, Assets assets, Background background, float refreshRate) {
+    public MainGame(Main game, Assets assets, Background background) {
         this.game = game;
         this.assets = assets;
         gameInterface = new GameInterface(assets);
         this.background = background;
-        this.refreshRate = refreshRate;
     }
 
     @Override
@@ -336,30 +332,10 @@ public class MainGame extends GameElements implements Screen {
         game.batch.enableBlending();
 
         game.batch.begin();
-        deltaList.add(delta);
 
 
-        if ((delta < (1.1f * (1 / refreshRate)) && delta > (.9f * (1 / refreshRate)))) {
-            delta = 1 / refreshRate;
-            deltaP = delta;
-            usingRefreshRate = true;
-        }
-        else{
-            usingRefreshRate = false;
-
-            if(deltaList.size > 10) {
-                for(int i = 0; i < deltaList.size; i++){
-                    deltaSum += deltaList.get(i);
-                }
-
-                delta = deltaSum / deltaList.size;
-                deltaP = delta;
-
-                deltaList.removeIndex(0);
-                deltaSum = 0;
-            }
-        }
-
+        delta = 1f/Gdx.graphics.getDisplayMode().refreshRate;
+        deltaP = delta;
         if (isPaused || isRunningResumeCountdown) {
             deltaP = 0;
         }
@@ -1877,6 +1853,7 @@ public class MainGame extends GameElements implements Screen {
 
     @Override
     public void resume() {
+
     }
 
     @Override
@@ -1886,6 +1863,6 @@ public class MainGame extends GameElements implements Screen {
     @Override
     public void dispose() {
         mainMusic.stop();
-        game.setScreen(new MainMenu(game, assets, game.refreshRate));
+        game.setScreen(new MainMenu(game, assets));
     }
 }
