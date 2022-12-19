@@ -86,7 +86,7 @@ public class MainMenu extends GameElements implements Screen {
         deltaList.add(delta);
 
 
-        if ((delta < (1.05f * (1 / refreshRate)) && delta > (.95f * (1 / refreshRate)))) {
+        if ((delta < (1.1f * (1 / refreshRate)) && delta > (.9f * (1 / refreshRate)))) {
             delta = 1 / refreshRate;
             usingRefreshRate = true;
         }
@@ -102,10 +102,8 @@ public class MainMenu extends GameElements implements Screen {
                 deltaList.removeIndex(0);
                 deltaSum = 0;
             }
+
         }
-        System.out.println(usingRefreshRate);
-
-
 
         if(deltaList.size >= 100 || canRenderBackground) {
 
@@ -134,7 +132,6 @@ public class MainMenu extends GameElements implements Screen {
 
         if(beganFading || (START_BUTTON_Y <= START_BUTTON_Y_TRANSITIONED))
             canRenderBackground = true;
-
 
         if(canRenderBackground)
             background.updateAndRender(delta, false, false, 0, starsAnimFront, starsAnimBack, game.batch, true, false, false, true);
@@ -222,7 +219,6 @@ public class MainMenu extends GameElements implements Screen {
 
     @Override
     public void resume() {
-        deltaList.clear();
     }
 
     @Override

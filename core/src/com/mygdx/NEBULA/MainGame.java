@@ -338,7 +338,8 @@ public class MainGame extends GameElements implements Screen {
         game.batch.begin();
         deltaList.add(delta);
 
-        if ((delta < (1.05f * (1 / refreshRate)) && delta > (.95f * (1 / refreshRate)))) {
+
+        if ((delta < (1.1f * (1 / refreshRate)) && delta > (.9f * (1 / refreshRate)))) {
             delta = 1 / refreshRate;
             deltaP = delta;
             usingRefreshRate = true;
@@ -538,9 +539,13 @@ public class MainGame extends GameElements implements Screen {
 
             gameInterface.drawPauseScreen(game, menuScoreFont, gemCountFont, prefs);
 
-            if (gameInterface.checkForPlayButtonTap() && !isTransitioningOut && !isFadingIn && !isTransitioningIn & !gameInterface.getConfirmLeaveScreenOpen()) {
+            if (gameInterface.checkForPlayButtonTap() && !isTransitioningOut && !gameInterface.getConfirmLeaveScreenOpen()) {
                 playButtonTapVal = inputProcessor.getTapCount();
-                runResumeCountdown = true;
+
+                if(!isFadingIn && !isTransitioningIn) {
+                    runResumeCountdown = true;
+                }
+
                 isPaused = false;
 
                 if (soundEnabled) {
@@ -1861,16 +1866,17 @@ public class MainGame extends GameElements implements Screen {
     @Override
     public void pause() {
         deltaP = 0;
+        runResumeCountdown = false;
 
-        if (!isTransitioningIn && !isTransitioningOut && !isFadingIn && !isFadingOut && !isRunningResumeCountdown) {
+        if (!isTransitioningOut && !isFadingOut) {
             isPaused = true;
         }
+
         songPausePosition = mainMusic.getPosition();
     }
 
     @Override
     public void resume() {
-        deltaList.clear();
     }
 
     @Override
