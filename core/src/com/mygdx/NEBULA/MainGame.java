@@ -240,6 +240,7 @@ public class MainGame extends GameElements implements Screen {
     int health = 3;
     int selectedShip = 0;
     float refreshRate;
+    boolean usingRefreshRate;
 
     public MainGame(Main game, Assets assets, Background background, float refreshRate) {
         this.game = game;
@@ -335,26 +336,32 @@ public class MainGame extends GameElements implements Screen {
         game.batch.enableBlending();
 
         game.batch.begin();
+        deltaList.add(delta);
 
-//        if(delta >= 0.8f/Gdx.graphics.getFramesPerSecond() && delta <= 1.2f/Gdx.graphics.getFramesPerSecond())
-//            deltaList.add(delta);
-//
-//        if (deltaList.size >= 30) {
-//            for (int i = 0; i < deltaList.size; i++) {
-//                deltaSum += deltaList.get(i);
-//            }
-//            delta = deltaSum / deltaList.size;
+        if ((delta < (1.05f * (1 / refreshRate)) && delta > (.95f * (1 / refreshRate)))) {
+            delta = 1 / refreshRate;
+            deltaP = delta;
+            usingRefreshRate = true;
+        }
+        else{
+            usingRefreshRate = false;
 
-        delta = 1f/refreshRate;
+            if(deltaList.size > 10) {
+                for(int i = 0; i < deltaList.size; i++){
+                    deltaSum += deltaList.get(i);
+                }
+
+                delta = deltaSum / deltaList.size;
                 deltaP = delta;
-            if (isPaused || isRunningResumeCountdown)
-                deltaP = 0;
-//            } else {
-//                deltaP = delta;
-//            }
-//
-//            deltaSum = 0;
-//        }
+
+                deltaList.removeIndex(0);
+                deltaSum = 0;
+            }
+        }
+
+        if (isPaused || isRunningResumeCountdown) {
+            deltaP = 0;
+        }
 
         blackTransition.draw(game.batch);
         if (!isPaused && !isShipLeaving) {
@@ -1853,19 +1860,17 @@ public class MainGame extends GameElements implements Screen {
 
     @Override
     public void pause() {
-//        if(!isTransitionedOut) {
-//            deltaList.clear();
-            deltaP = 0;
+        deltaP = 0;
 
-            if (!isTransitioningIn && !isTransitioningOut && !isFadingIn && !isFadingOut && !isRunningResumeCountdown) {
-                isPaused = true;
-            }
-//        }
+        if (!isTransitioningIn && !isTransitioningOut && !isFadingIn && !isFadingOut && !isRunningResumeCountdown) {
+            isPaused = true;
+        }
         songPausePosition = mainMusic.getPosition();
     }
 
     @Override
     public void resume() {
+        deltaList.clear();
     }
 
     @Override

@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
@@ -45,6 +46,7 @@ public class MainMenu extends GameElements implements Screen {
     boolean soundEnabled, soundLoaded, playSoundHasPlayed;
     GameInterface gameInterface;
     float refreshRate;
+    boolean usingRefreshRate = true;
 
     public MainMenu(Main game, Assets assets, float refreshRate) {
         this.refreshRate = refreshRate;
@@ -70,7 +72,6 @@ public class MainMenu extends GameElements implements Screen {
 
         gemCountFont = generator.generateFont(textParameter);
         gemCountFont.setColor(1,1,1, 0.8f);
-
         ShopElement.createElements(assets);
     }
 
@@ -82,11 +83,31 @@ public class MainMenu extends GameElements implements Screen {
         game.batch.enableBlending();
 
         game.batch.begin();
+        deltaList.add(delta);
 
-        delta = 1/refreshRate;
-        System.out.println(delta);
 
-//        if(canRenderBackground) {
+        if ((delta < (1.05f * (1 / refreshRate)) && delta > (.95f * (1 / refreshRate)))) {
+            delta = 1 / refreshRate;
+            usingRefreshRate = true;
+        }
+        else{
+            usingRefreshRate = false;
+
+            if(deltaList.size > 100) {
+                for(int i = 0; i < deltaList.size; i++){
+                    deltaSum += deltaList.get(i);
+                }
+
+                delta = deltaSum / deltaList.size;
+                deltaList.removeIndex(0);
+                deltaSum = 0;
+            }
+        }
+        System.out.println(usingRefreshRate);
+
+
+
+        if(deltaList.size >= 100 || canRenderBackground) {
 
             if (START_BUTTON_Y >= START_BUTTON_Y_TRANSITIONED && !switchScreens) {
                 isTransitioningIn = true;
@@ -108,7 +129,7 @@ public class MainMenu extends GameElements implements Screen {
                     isShopOpen = false;
                 }
             }
-//        }
+        }
 
 
         if(beganFading || (START_BUTTON_Y <= START_BUTTON_Y_TRANSITIONED))
@@ -197,11 +218,12 @@ public class MainMenu extends GameElements implements Screen {
 
     @Override
     public void pause() {
-        deltaList.clear();
     }
 
     @Override
-    public void resume() {}
+    public void resume() {
+        deltaList.clear();
+    }
 
     @Override
     public void hide() {}
