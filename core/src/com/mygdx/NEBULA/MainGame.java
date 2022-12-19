@@ -230,6 +230,8 @@ public class MainGame extends GameElements implements Screen {
     Array<ItemDrop> itemDrops = new Array<>();
     Array<ItemDrop> itemsToRemove = new Array<>();
 
+    Array<Float> deltaList = new Array<>();
+    float deltaSum;
     float speedIncrease;
 
     float hourglassMultiplier = 1;
@@ -238,6 +240,7 @@ public class MainGame extends GameElements implements Screen {
     Player player;
     int health = 3;
     int selectedShip = 0;
+    float refreshRate;
 
     public MainGame(Main game, Assets assets, Background background) {
         this.game = game;
@@ -330,15 +333,34 @@ public class MainGame extends GameElements implements Screen {
         Gdx.gl.glClearColor(0f, 0f, 0f, 1f);
 
         game.batch.enableBlending();
-
         game.batch.begin();
 
+        refreshRate = Gdx.graphics.getDisplayMode().refreshRate;
+        deltaList.add(delta);
 
-        delta = 1f/Gdx.graphics.getDisplayMode().refreshRate;
+
         deltaP = delta;
         if (isPaused || isRunningResumeCountdown) {
             deltaP = 0;
         }
+
+        if (deltaList.size >= 30) {
+            for (int i = 0; i < deltaList.size; i++) {
+                deltaSum += deltaList.get(i);
+            }
+            delta = deltaSum / deltaList.size;
+
+            if (isPaused || isRunningResumeCountdown) {
+                deltaP = 0;
+            } else {
+                deltaP = delta;
+            }
+            if(!deltaList.isEmpty())
+                deltaList.removeIndex(0);
+
+            deltaSum = 0;
+        }
+
 
         blackTransition.draw(game.batch);
         if (!isPaused && !isShipLeaving) {
@@ -1853,7 +1875,10 @@ public class MainGame extends GameElements implements Screen {
 
     @Override
     public void resume() {
-
+        if(Gdx.graphics.getDisplayMode().refreshRate != refreshRate){
+            refreshRate = Gdx.graphics.getDisplayMode().refreshRate;
+            deltaList.clear();
+        }
     }
 
     @Override

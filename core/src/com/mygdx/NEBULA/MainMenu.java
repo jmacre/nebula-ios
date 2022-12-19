@@ -42,7 +42,9 @@ public class MainMenu extends GameElements implements Screen {
     boolean isShopOpen = false;
     boolean soundEnabled, soundLoaded, playSoundHasPlayed;
     GameInterface gameInterface;
-
+    float refreshRate;
+    Array<Float> deltaList = new Array<>();
+    float deltaSum;
 
     public MainMenu(Main game, Assets assets) {
         this.game = game;
@@ -78,11 +80,24 @@ public class MainMenu extends GameElements implements Screen {
 
         game.batch.begin();
 
-        delta = 1f/Gdx.graphics.getDisplayMode().refreshRate;
-        System.out.println(Gdx.graphics.getDisplayMode().refreshRate);
+        refreshRate = Gdx.graphics.getDisplayMode().refreshRate;
+        deltaList.add(delta);
+
+        if (deltaList.size >= 30) {
+            for (int i = 0; i < deltaList.size; i++) {
+                deltaSum += deltaList.get(i);
+            }
+            delta = deltaSum / deltaList.size;
+
+            if(!deltaList.isEmpty())
+                deltaList.removeIndex(0);
+
+            deltaSum = 0;
+        }
 
 
-            if (START_BUTTON_Y >= START_BUTTON_Y_TRANSITIONED && !switchScreens) {
+
+        if (START_BUTTON_Y >= START_BUTTON_Y_TRANSITIONED && !switchScreens) {
                 isTransitioningIn = true;
                 transitionIn(delta);
             }
@@ -152,9 +167,9 @@ public class MainMenu extends GameElements implements Screen {
         transitionOutReady = true;
 
         if (START_BUTTON_Y < SCREEN_HEIGHT * 1.2f) {
-            START_BUTTON_Y += (int)(transitionSpeed * delta);
-            TITLE_LOGO_Y += (int)(transitionSpeed * delta);
-            SHOP_BUTTON_Y += (int)(transitionSpeed * delta);
+            START_BUTTON_Y += (transitionSpeed * delta);
+            TITLE_LOGO_Y += (transitionSpeed * delta);
+            SHOP_BUTTON_Y += (transitionSpeed * delta);
         }
         if (START_BUTTON_Y > SCREEN_HEIGHT * 1.2f) {
             dispose();
@@ -162,9 +177,9 @@ public class MainMenu extends GameElements implements Screen {
     }
 
     public void transitionIn(float delta){
-        START_BUTTON_Y -= (int)(transitionSpeed * delta);
-        SHOP_BUTTON_Y -= (int)(transitionSpeed * delta);
-        TITLE_LOGO_Y -= (int)(transitionSpeed * delta);
+        START_BUTTON_Y -= (transitionSpeed * delta);
+        SHOP_BUTTON_Y -= (transitionSpeed * delta);
+        TITLE_LOGO_Y -= (transitionSpeed * delta);
     }
 
     @Override
@@ -194,6 +209,10 @@ public class MainMenu extends GameElements implements Screen {
 
     @Override
     public void resume() {
+        if(Gdx.graphics.getDisplayMode().refreshRate != refreshRate){
+            refreshRate = Gdx.graphics.getDisplayMode().refreshRate;
+            deltaList.clear();
+        }
     }
 
     @Override
