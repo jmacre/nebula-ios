@@ -21,8 +21,14 @@ public class Main extends Game {
 	public FreeTypeFontGenerator generator;
 	public FreeTypeFontGenerator.FreeTypeFontParameter parameter;
 	Assets assets;
+	float refreshRate;
 
 	public Sound playSound, pauseSound;
+	public Main(){};
+
+	public Main(float refreshRate){
+		this.refreshRate = refreshRate;
+	}
 
 	@Override
 	public void create () {
@@ -42,8 +48,11 @@ public class Main extends Game {
 		pauseSound = assets.assetManager.get(Assets.pause_sound, Sound.class);
 
 		if(assets.assetManager.isFinished()) {
-			this.setScreen(new MainMenu(this, assets));
+			this.setScreen(new MainMenu(this, assets, refreshRate));
 		}
+	}
+	public float getRefreshRate(){
+		return refreshRate;
 	}
 	@Override
 	public void dispose() {

@@ -239,12 +239,15 @@ public class MainGame extends GameElements implements Screen {
     Player player;
     int health = 3;
     int selectedShip = 0;
+    float refreshRate;
+    boolean usingRefreshRate;
 
-    public MainGame(Main game, Assets assets, Background background) {
+    public MainGame(Main game, Assets assets, Background background, float refreshRate) {
         this.game = game;
         this.assets = assets;
         gameInterface = new GameInterface(assets);
         this.background = background;
+        this.refreshRate = refreshRate;
     }
 
     @Override
@@ -333,23 +336,31 @@ public class MainGame extends GameElements implements Screen {
         game.batch.enableBlending();
 
         game.batch.begin();
+        deltaList.add(delta);
 
-        if(delta >= 0.8f/Gdx.graphics.getFramesPerSecond() && delta <= 1.2f/Gdx.graphics.getFramesPerSecond())
-            deltaList.add(delta);
+        if ((delta < (1.05f * (1 / refreshRate)) && delta > (.95f * (1 / refreshRate)))) {
+            delta = 1 / refreshRate;
+            deltaP = delta;
+            usingRefreshRate = true;
+        }
+        else{
+            usingRefreshRate = false;
 
-        if (deltaList.size >= 30) {
-            for (int i = 0; i < deltaList.size; i++) {
-                deltaSum += deltaList.get(i);
-            }
-            delta = deltaSum / deltaList.size;
+            if(deltaList.size > 10) {
+                for(int i = 0; i < deltaList.size; i++){
+                    deltaSum += deltaList.get(i);
+                }
 
-            if (isPaused || isRunningResumeCountdown) {
-                deltaP = 0;
-            } else {
+                delta = deltaSum / deltaList.size;
                 deltaP = delta;
-            }
 
-            deltaSum = 0;
+                deltaList.removeIndex(0);
+                deltaSum = 0;
+            }
+        }
+
+        if (isPaused || isRunningResumeCountdown) {
+            deltaP = 0;
         }
 
         blackTransition.draw(game.batch);
@@ -1175,31 +1186,31 @@ public class MainGame extends GameElements implements Screen {
 
                 if (score <= 1000) {
                     enemy.create(ENEMY_SHIP_ID, BLUE_ID, 2, random.nextInt((SCREEN_WIDTH - (int) ENEMY_SHIP_WIDTH)), ENEMY_SHIP_WIDTH, ENEMY_SHIP_HEIGHT,
-                            1.2f + speedIncrease, 1.05f + speedIncrease, DEFAULT_FRAME_DURATION * 1.5f, enemyBulletDelay, blueShipBulletThreshold,
+                            1.3f + speedIncrease, 1.05f + speedIncrease, DEFAULT_FRAME_DURATION * 1.5f, enemyBulletDelay, blueShipBulletThreshold,
                             false, hurtTimer, position, blueShipBulletSpeed);
                     enemyShipSpawnTimer = random.nextFloat() * (maxEnemyShipSpawnTime - minEnemyShipSpawnTime) + minEnemyShipSpawnTime;
 
                 } else if (score <= 2000) {
                     enemy.create(ENEMY_SHIP_ID, GREEN_ID, 3, random.nextInt((SCREEN_WIDTH - (int) ENEMY_SHIP_WIDTH)), ENEMY_SHIP_WIDTH, ENEMY_SHIP_HEIGHT,
-                            1.1f + speedIncrease, 1f + speedIncrease, DEFAULT_FRAME_DURATION * 1.5f, enemyBulletDelay, greenShipBulletThreshold,
+                            1.2f + speedIncrease, 1f + speedIncrease, DEFAULT_FRAME_DURATION * 1.5f, enemyBulletDelay, greenShipBulletThreshold,
                             false, hurtTimer, position, greenShipBulletSpeed);
                     enemyShipSpawnTimer = random.nextFloat() * (1.2f * maxEnemyShipSpawnTime - 1.2f * minEnemyShipSpawnTime) + 1.2f * minEnemyShipSpawnTime;
 
                 } else if (score <= 3000) {
                     enemy.create(ENEMY_SHIP_ID, RED_ID, 3, random.nextInt((SCREEN_WIDTH - (int) ENEMY_SHIP_WIDTH)), ENEMY_SHIP_WIDTH, ENEMY_SHIP_HEIGHT,
-                            0.9f + speedIncrease, 0.95f + speedIncrease, DEFAULT_FRAME_DURATION * 1.5f, enemyBulletDelay, redShipBulletThreshold,
+                            1f + speedIncrease, 0.95f + speedIncrease, DEFAULT_FRAME_DURATION * 1.5f, enemyBulletDelay, redShipBulletThreshold,
                             false, hurtTimer, position, redShipBulletSpeed);
                     enemyShipSpawnTimer = random.nextFloat() * (1.2f * maxEnemyShipSpawnTime - 1.2f * minEnemyShipSpawnTime) + 1.2f * minEnemyShipSpawnTime;
 
                 } else if (score <= 4000) {
                     enemy.create(ENEMY_SHIP_ID, PURPLE_ID, 4, random.nextInt((SCREEN_WIDTH - (int) ENEMY_SHIP_WIDTH)), ENEMY_SHIP_WIDTH, ENEMY_SHIP_HEIGHT,
-                            0.8f + speedIncrease, 0.85f + speedIncrease, DEFAULT_FRAME_DURATION * 1.5f, enemyBulletDelay, purpleShipBulletThreshold,
+                            0.9f + speedIncrease, 0.85f + speedIncrease, DEFAULT_FRAME_DURATION * 1.5f, enemyBulletDelay, purpleShipBulletThreshold,
                             false, hurtTimer, position, purpleShipBulletSpeed);
                     enemyShipSpawnTimer = random.nextFloat() * (1.3f * maxEnemyShipSpawnTime - 1.3f * minEnemyShipSpawnTime) + 1.3f * minEnemyShipSpawnTime;
 
                 } else {
                     enemy.create(ENEMY_SHIP_ID, WHITE_ID, 4, random.nextInt((SCREEN_WIDTH - (int) ENEMY_SHIP_WIDTH)), ENEMY_SHIP_WIDTH, ENEMY_SHIP_HEIGHT,
-                            0.7f + speedIncrease, 0.75f + speedIncrease, DEFAULT_FRAME_DURATION * 1.5f, enemyBulletDelay, whiteShipBulletThreshold,
+                            0.8f + speedIncrease, 0.75f + speedIncrease, DEFAULT_FRAME_DURATION * 1.5f, enemyBulletDelay, whiteShipBulletThreshold,
                             false, hurtTimer, position, whiteShipBulletSpeed);
 
                     enemyShipSpawnTimer = random.nextFloat() * (1.5f * maxEnemyShipSpawnTime - 1.5f * minEnemyShipSpawnTime) + 1.5f * minEnemyShipSpawnTime;
@@ -1293,10 +1304,7 @@ public class MainGame extends GameElements implements Screen {
                 } else if (randomDrop == 3) {
                     itemDrops.add(new ItemDrop(random.nextInt((int) (SCREEN_WIDTH - ItemDrop.RAPID_FIRE_WIDTH)), (int) ItemDrop.RAPID_FIRE_HEIGHT, ItemDrop.RAPID_FIRE_WIDTH, RAPID_FIRE_ID, assets));
                 } else {
-                    if (score < 1000)
-                        addItemDrops();
-                    else
-                        itemDrops.add(new ItemDrop(random.nextInt((int) (SCREEN_WIDTH - ItemDrop.HOURGLASS_WIDTH)), (int) ItemDrop.HOURGLASS_HEIGHT, ItemDrop.HOURGLASS_WIDTH, HOURGLASS_ID, assets));
+                    itemDrops.add(new ItemDrop(random.nextInt((int) (SCREEN_WIDTH - ItemDrop.HOURGLASS_WIDTH)), (int) ItemDrop.HOURGLASS_HEIGHT, ItemDrop.HOURGLASS_WIDTH, HOURGLASS_ID, assets));
                 }
             }
             lastItemDrop = randomDrop;
@@ -1852,19 +1860,17 @@ public class MainGame extends GameElements implements Screen {
 
     @Override
     public void pause() {
-        if(!isTransitionedOut) {
-            deltaList.clear();
-            deltaP = 0;
+        deltaP = 0;
 
-            if (!isTransitioningIn && !isTransitioningOut && !isFadingIn && !isFadingOut && !isRunningResumeCountdown) {
-                isPaused = true;
-            }
+        if (!isTransitioningIn && !isTransitioningOut && !isFadingIn && !isFadingOut && !isRunningResumeCountdown) {
+            isPaused = true;
         }
         songPausePosition = mainMusic.getPosition();
     }
 
     @Override
     public void resume() {
+        deltaList.clear();
     }
 
     @Override
@@ -1874,6 +1880,6 @@ public class MainGame extends GameElements implements Screen {
     @Override
     public void dispose() {
         mainMusic.stop();
-        game.setScreen(new MainMenu(game, assets));
+        game.setScreen(new MainMenu(game, assets, game.refreshRate));
     }
 }

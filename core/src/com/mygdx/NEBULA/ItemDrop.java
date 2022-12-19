@@ -87,9 +87,14 @@ public class ItemDrop extends GameElements {
         }
     }
 
-    public void update(float deltaTime) {
 
-        ITEM_Y -= SPEED * deltaTime;
+    public void update(float deltaTime) {
+        if(getItemId() == GEM_ID){
+            ITEM_Y -= (1.25f *SPEED) * deltaTime;
+        }
+        else{
+            ITEM_Y -= SPEED * deltaTime;
+        }
         if (ITEM_Y < -ITEM_HEIGHT) {
             remove = true;
         }

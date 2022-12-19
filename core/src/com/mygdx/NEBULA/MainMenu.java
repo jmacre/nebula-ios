@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
@@ -44,8 +45,11 @@ public class MainMenu extends GameElements implements Screen {
     boolean isShopOpen = false;
     boolean soundEnabled, soundLoaded, playSoundHasPlayed;
     GameInterface gameInterface;
+    float refreshRate;
+    boolean usingRefreshRate = true;
 
-    public MainMenu(Main game, Assets assets) {
+    public MainMenu(Main game, Assets assets, float refreshRate) {
+        this.refreshRate = refreshRate;
         this.game = game;
         this.assets = assets;
         gameInterface = new GameInterface(assets);
@@ -68,7 +72,6 @@ public class MainMenu extends GameElements implements Screen {
 
         gemCountFont = generator.generateFont(textParameter);
         gemCountFont.setColor(1,1,1, 0.8f);
-
         ShopElement.createElements(assets);
     }
 
@@ -82,15 +85,27 @@ public class MainMenu extends GameElements implements Screen {
         game.batch.begin();
         deltaList.add(delta);
 
-        if(deltaList.size > 100) {
-            for(int i = 0; i < deltaList.size; i++){
-                deltaSum += deltaList.get(i);
-            }
 
-            delta = deltaSum / deltaList.size;
-            deltaList.removeIndex(0);
-            deltaSum = 0;
+        if ((delta < (1.05f * (1 / refreshRate)) && delta > (.95f * (1 / refreshRate)))) {
+            delta = 1 / refreshRate;
+            usingRefreshRate = true;
         }
+        else{
+            usingRefreshRate = false;
+
+            if(deltaList.size > 100) {
+                for(int i = 0; i < deltaList.size; i++){
+                    deltaSum += deltaList.get(i);
+                }
+
+                delta = deltaSum / deltaList.size;
+                deltaList.removeIndex(0);
+                deltaSum = 0;
+            }
+        }
+        System.out.println(usingRefreshRate);
+
+
 
         if(deltaList.size >= 100 || canRenderBackground) {
 
@@ -182,7 +197,7 @@ public class MainMenu extends GameElements implements Screen {
 
     @Override
     public void dispose() {
-        game.setScreen(new MainGame(game, assets, background));
+        game.setScreen(new MainGame(game, assets, background, refreshRate));
     }
 
     public void fadeOut(float delta){
@@ -203,11 +218,12 @@ public class MainMenu extends GameElements implements Screen {
 
     @Override
     public void pause() {
-        deltaList.clear();
     }
 
     @Override
-    public void resume() {}
+    public void resume() {
+        deltaList.clear();
+    }
 
     @Override
     public void hide() {}
