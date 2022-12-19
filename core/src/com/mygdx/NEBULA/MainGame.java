@@ -239,12 +239,14 @@ public class MainGame extends GameElements implements Screen {
     Player player;
     int health = 3;
     int selectedShip = 0;
+    float refreshRate;
 
-    public MainGame(Main game, Assets assets, Background background) {
+    public MainGame(Main game, Assets assets, Background background, float refreshRate) {
         this.game = game;
         this.assets = assets;
         gameInterface = new GameInterface(assets);
         this.background = background;
+        this.refreshRate = refreshRate;
     }
 
     @Override
@@ -334,23 +336,25 @@ public class MainGame extends GameElements implements Screen {
 
         game.batch.begin();
 
-        if(delta >= 0.8f/Gdx.graphics.getFramesPerSecond() && delta <= 1.2f/Gdx.graphics.getFramesPerSecond())
-            deltaList.add(delta);
+//        if(delta >= 0.8f/Gdx.graphics.getFramesPerSecond() && delta <= 1.2f/Gdx.graphics.getFramesPerSecond())
+//            deltaList.add(delta);
+//
+//        if (deltaList.size >= 30) {
+//            for (int i = 0; i < deltaList.size; i++) {
+//                deltaSum += deltaList.get(i);
+//            }
+//            delta = deltaSum / deltaList.size;
 
-        if (deltaList.size >= 30) {
-            for (int i = 0; i < deltaList.size; i++) {
-                deltaSum += deltaList.get(i);
-            }
-            delta = deltaSum / deltaList.size;
-
-            if (isPaused || isRunningResumeCountdown) {
-                deltaP = 0;
-            } else {
+        delta = 1f/refreshRate;
                 deltaP = delta;
-            }
-
-            deltaSum = 0;
-        }
+            if (isPaused || isRunningResumeCountdown)
+                deltaP = 0;
+//            } else {
+//                deltaP = delta;
+//            }
+//
+//            deltaSum = 0;
+//        }
 
         blackTransition.draw(game.batch);
         if (!isPaused && !isShipLeaving) {
@@ -1849,14 +1853,14 @@ public class MainGame extends GameElements implements Screen {
 
     @Override
     public void pause() {
-        if(!isTransitionedOut) {
-            deltaList.clear();
+//        if(!isTransitionedOut) {
+//            deltaList.clear();
             deltaP = 0;
 
             if (!isTransitioningIn && !isTransitioningOut && !isFadingIn && !isFadingOut && !isRunningResumeCountdown) {
                 isPaused = true;
             }
-        }
+//        }
         songPausePosition = mainMusic.getPosition();
     }
 
@@ -1871,6 +1875,6 @@ public class MainGame extends GameElements implements Screen {
     @Override
     public void dispose() {
         mainMusic.stop();
-        game.setScreen(new MainMenu(game, assets));
+        game.setScreen(new MainMenu(game, assets, game.refreshRate));
     }
 }

@@ -87,6 +87,7 @@ public class ItemDrop extends GameElements {
         }
     }
 
+
     public void update(float deltaTime) {
         if(getItemId() == GEM_ID){
             ITEM_Y -= (1.25f *SPEED) * deltaTime;

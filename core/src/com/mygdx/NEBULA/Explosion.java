@@ -6,6 +6,8 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
+import javax.naming.Context;
+
 public class Explosion {
     Animation<TextureRegion> explosionAnimation;
     public static Sprite explosionSheet;
@@ -19,6 +21,7 @@ public class Explosion {
         explosionSheet = new Sprite(assets.assetManager.get(Assets.explosion, Texture.class));
     }
     public void create(int x, int y, float size){
+
         this.x = x;
         this.y = y;
         this.size = size;

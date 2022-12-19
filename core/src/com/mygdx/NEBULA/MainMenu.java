@@ -44,8 +44,10 @@ public class MainMenu extends GameElements implements Screen {
     boolean isShopOpen = false;
     boolean soundEnabled, soundLoaded, playSoundHasPlayed;
     GameInterface gameInterface;
+    float refreshRate;
 
-    public MainMenu(Main game, Assets assets) {
+    public MainMenu(Main game, Assets assets, float refreshRate) {
+        this.refreshRate = refreshRate;
         this.game = game;
         this.assets = assets;
         gameInterface = new GameInterface(assets);
@@ -80,19 +82,11 @@ public class MainMenu extends GameElements implements Screen {
         game.batch.enableBlending();
 
         game.batch.begin();
-        deltaList.add(delta);
 
-        if(deltaList.size > 100) {
-            for(int i = 0; i < deltaList.size; i++){
-                deltaSum += deltaList.get(i);
-            }
+        delta = 1/refreshRate;
+        System.out.println(delta);
 
-            delta = deltaSum / deltaList.size;
-            deltaList.removeIndex(0);
-            deltaSum = 0;
-        }
-
-        if(deltaList.size >= 100 || canRenderBackground) {
+//        if(canRenderBackground) {
 
             if (START_BUTTON_Y >= START_BUTTON_Y_TRANSITIONED && !switchScreens) {
                 isTransitioningIn = true;
@@ -114,7 +108,7 @@ public class MainMenu extends GameElements implements Screen {
                     isShopOpen = false;
                 }
             }
-        }
+//        }
 
 
         if(beganFading || (START_BUTTON_Y <= START_BUTTON_Y_TRANSITIONED))
@@ -182,7 +176,7 @@ public class MainMenu extends GameElements implements Screen {
 
     @Override
     public void dispose() {
-        game.setScreen(new MainGame(game, assets, background));
+        game.setScreen(new MainGame(game, assets, background, refreshRate));
     }
 
     public void fadeOut(float delta){
