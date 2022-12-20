@@ -73,6 +73,8 @@ public class MainGame extends GameElements implements Screen {
 
     float gemCountTimerDelay = 0f;
 
+    float shipMovementVal;
+
     int gemCount = 0;
     int finalGemCount = 0;
     int replayScreenGemCount = prefs.getGemCount();
@@ -116,7 +118,6 @@ public class MainGame extends GameElements implements Screen {
 
     float countDownTimer = 0f;
     float resumeCountdownTimer = -1.5f;
-    float playerPosition = SHIP_X;
 
     PowerupTimer powerupTimer = new PowerupTimer();
 
@@ -220,8 +221,6 @@ public class MainGame extends GameElements implements Screen {
     Array<Enemy> enemiesToRemove = new Array<>();
     Array<PowerupTimer> powerupTimers = new Array<>();
 
-    Array<Enemy> enemyShips = new Array<>();
-
     Array<Explosion> explosions = new Array<>();
     Array<Explosion> explosionsToDelay = new Array<>();
     Array<Explosion> explosionsToRemove = new Array<>();
@@ -245,7 +244,7 @@ public class MainGame extends GameElements implements Screen {
         this.game = game;
         this.gameInterface = gameInterface;
         this.background = background;
-        this.assets= assets;
+        this.assets = assets;
     }
 
     @Override
@@ -358,7 +357,7 @@ public class MainGame extends GameElements implements Screen {
         }
 
 
-        if(fadeOutOpacity > 0 || fadeInOpacity > 0)
+        if (fadeOutOpacity > 0 || fadeInOpacity > 0)
             blackTransition.draw(game.batch);
         if (!isPaused && !isShipLeaving) {
             updateSpawnRates(score);
@@ -538,7 +537,7 @@ public class MainGame extends GameElements implements Screen {
             if (gameInterface.checkForPlayButtonTap() && !isTransitioningOut && !gameInterface.getConfirmLeaveScreenOpen()) {
                 playButtonTapVal = inputProcessor.getTapCount();
 
-                if(!isFadingIn && !isTransitioningIn) {
+                if (!isFadingIn && !isTransitioningIn) {
                     runResumeCountdown = true;
                 }
 
@@ -552,7 +551,7 @@ public class MainGame extends GameElements implements Screen {
             if (gameInterface.checkForHomeButtonTap(gemCount, isAlive) || gameInterface.getConfirmLeaveScreenOpen()) {
                 if (!gameInterface.getConfirmLeaveScreenOpen()) {
                     gameInterface.setConfirmLeaveScreenOpen(true);
-                    if (soundEnabled){
+                    if (soundEnabled) {
                         pauseSound.play(0.3f);
                     }
                 }
@@ -561,7 +560,7 @@ public class MainGame extends GameElements implements Screen {
                 if (gameInterface.checkForYesButtonTap()) {
                     yesButtonTapVal = inputProcessor.getTapCount();
 
-                    if (soundEnabled){
+                    if (soundEnabled) {
                         game.playSound.play(0.3f);
 
                     }
@@ -591,7 +590,7 @@ public class MainGame extends GameElements implements Screen {
                 transitionOut(CURRENT_SHIP_X);
             }
             if (isTransitionedOut && !isFadingOut) {
-                if(score < 100)
+                if (score < 100)
                     score = 0;
 
                 if (finalGemCount > 0) {
@@ -840,22 +839,19 @@ public class MainGame extends GameElements implements Screen {
 
     public void movePlayer() {
         if (!isPaused && isTransitionedIn && !isShipLeaving && !isFadingOut && !isTransitioningOut) {
-            if (!(Gdx.input.getY() < (SCREEN_HEIGHT / 5f)) && SHIP_START_Y > SHIP_Y) {
-
-                if (Gdx.input.getX() < SHIP_X - SHIP_WIDTH / 2) {
-                    playerPosition = (SHIP_X - deltaP * moveSpeed * (SHIP_X - (Gdx.input.getX() - SHIP_WIDTH / 2)));
-
-                    if (playerPosition >= 0 && playerPosition <= SCREEN_WIDTH - SHIP_WIDTH) {
-                        SHIP_X -= (deltaP * moveSpeed * (SHIP_X - (Gdx.input.getX() - SHIP_WIDTH / 2)));
+            if (!(Gdx.input.getY() < (int) (SCREEN_HEIGHT / 5f)) && SHIP_START_Y > SHIP_Y) {
+                    shipMovementVal = (deltaP * moveSpeed * (Gdx.input.getX() - SHIP_X - SHIP_WIDTH / 2f));
+                    if (SHIP_X + shipMovementVal > SCREEN_WIDTH - SHIP_WIDTH) {
+                        SHIP_X = SCREEN_WIDTH - SHIP_WIDTH;
                     }
-                }
-                if (Gdx.input.getX() > SHIP_X - SHIP_WIDTH / 2) {
-                    playerPosition = (SHIP_X + deltaP * moveSpeed * (Gdx.input.getX() - SHIP_X - SHIP_WIDTH / 2));
 
-                    if (playerPosition >= 0 && playerPosition <= SCREEN_WIDTH - SHIP_WIDTH) {
-                        SHIP_X += (deltaP * moveSpeed * (Gdx.input.getX() - SHIP_X - SHIP_WIDTH / 2));
+                    else if (SHIP_X + shipMovementVal < 0) {
+                        SHIP_X = 0;
                     }
-                }
+                    else {
+                        SHIP_X += shipMovementVal;
+                    }
+
                 CURRENT_SHIP_X = SHIP_X;
             }
         }
@@ -897,7 +893,7 @@ public class MainGame extends GameElements implements Screen {
             transitionInTapVal = inputProcessor.getTapCount();
         }
 
-        if(fadeInOpacity < 1) {
+        if (fadeInOpacity < 1) {
             if (transitionDistTraveled <= totalTransitionDist / 3) {
                 gl.setText(countdownFont, "3", Color.WHITE, SCREEN_WIDTH, Align.center, true);
                 countdownFont.draw(game.batch, "3", (SCREEN_WIDTH - gl.width) / 2, SCREEN_HEIGHT / 2f + gl.height / 2);
@@ -1718,13 +1714,13 @@ public class MainGame extends GameElements implements Screen {
                 score -= 100;
                 gemCount++;
 
-                if(soundEnabled) {
+                if (soundEnabled) {
                     itemSound.play(0.075f);
 
                 }
             }
 
-            if(score > 0 && score < 100){
+            if (score > 0 && score < 100) {
                 score = 0;
                 gemCountTimerDelay = -0.5f;
             }
@@ -1890,6 +1886,7 @@ public class MainGame extends GameElements implements Screen {
 
     @Override
     public void resize(int width, int height) {
+
     }
 
     @Override
@@ -1906,7 +1903,7 @@ public class MainGame extends GameElements implements Screen {
 
     @Override
     public void resume() {
-        if(Gdx.graphics.getDisplayMode().refreshRate != refreshRate){
+        if (Gdx.graphics.getDisplayMode().refreshRate != refreshRate) {
             refreshRate = Gdx.graphics.getDisplayMode().refreshRate;
             deltaList.clear();
         }
