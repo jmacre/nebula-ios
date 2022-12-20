@@ -840,23 +840,23 @@ public class MainGame extends GameElements implements Screen {
 
     public void movePlayer() {
         if (!isPaused && isTransitionedIn && !isShipLeaving && !isFadingOut && !isTransitioningOut) {
-            if (!(Gdx.input.getY() < (int) (SCREEN_HEIGHT / 5f)) && SHIP_START_Y > SHIP_Y) {
+            if (!(Gdx.input.getY() < (SCREEN_HEIGHT / 5f)) && SHIP_START_Y > SHIP_Y) {
 
                 if (Gdx.input.getX() < SHIP_X - SHIP_WIDTH / 2) {
-                    playerPosition = (int) (SHIP_X - deltaP * moveSpeed * (SHIP_X - (Gdx.input.getX() - SHIP_WIDTH / 2)));
+                    playerPosition = (SHIP_X - deltaP * moveSpeed * (SHIP_X - (Gdx.input.getX() - SHIP_WIDTH / 2)));
 
                     if (playerPosition >= 0 && playerPosition <= SCREEN_WIDTH - SHIP_WIDTH) {
-                        SHIP_X -= (int) (deltaP * moveSpeed * (SHIP_X - (Gdx.input.getX() - SHIP_WIDTH / 2)));
+                        SHIP_X -= (deltaP * moveSpeed * (SHIP_X - (Gdx.input.getX() - SHIP_WIDTH / 2)));
                     }
                 }
                 if (Gdx.input.getX() > SHIP_X - SHIP_WIDTH / 2) {
-                    playerPosition = (int) (SHIP_X + deltaP * moveSpeed * (Gdx.input.getX() - SHIP_X - SHIP_WIDTH / 2));
+                    playerPosition = (SHIP_X + deltaP * moveSpeed * (Gdx.input.getX() - SHIP_X - SHIP_WIDTH / 2));
 
                     if (playerPosition >= 0 && playerPosition <= SCREEN_WIDTH - SHIP_WIDTH) {
-                        SHIP_X += (int) (deltaP * moveSpeed * (Gdx.input.getX() - SHIP_X - SHIP_WIDTH / 2));
+                        SHIP_X += (deltaP * moveSpeed * (Gdx.input.getX() - SHIP_X - SHIP_WIDTH / 2));
                     }
                 }
-                CURRENT_SHIP_X = (int) SHIP_X;
+                CURRENT_SHIP_X = SHIP_X;
             }
         }
     }

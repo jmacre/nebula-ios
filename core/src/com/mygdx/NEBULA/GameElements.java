@@ -33,8 +33,8 @@ public class GameElements {
     public static int TITLE_LOGO_Y = (int)(SCREEN_HEIGHT * .75f + SCREEN_HEIGHT);
     public static final float TITLE_LOGO_X = SCREEN_WIDTH / 2f - TITLE_LOGO_WIDTH/2;
 
-    public static final float SHIP_WIDTH = SCREEN_WIDTH/6f;
-    public static final float SHIP_HEIGHT = SHIP_WIDTH * (31f/27f);
+    public static final int SHIP_WIDTH = (int)(SCREEN_WIDTH/6f);
+    public static final int SHIP_HEIGHT = (int)(SHIP_WIDTH * (31f/27f));
 
     public static float SHIP_X = (SCREEN_WIDTH/2f - SHIP_WIDTH/2);
     public static float CURRENT_SHIP_X =  (SCREEN_WIDTH/2f - SHIP_WIDTH/2);;
