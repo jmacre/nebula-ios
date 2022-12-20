@@ -9,6 +9,8 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 
+import games.rednblack.miniaudio.MASound;
+
 public class GameElements {
     Button pauseButton, replayResumeButton, soundButton, homeButton;
 
@@ -244,12 +246,12 @@ public class GameElements {
     Animation<TextureRegion> shipAnimation, shipBlinkingAnimation;
     Animation<TextureRegion> powerupTimerAnimation;
 
-    Music mainMusic;
-    Sound pauseSound;
-    Sound playSound;
-    Sound bombSound;
-    Sound missileSound;
-    Sound bulletSound, itemSound, hitSound, gemSound, errorSound;
+    MASound mainMusic;
+    MASound pauseSound;
+    MASound playSound;
+    MASound bombSound;
+    MASound missileSound;
+    MASound bulletSound, itemSound, hitSound, gemSound, errorSound;
 
     public FreeTypeFontGenerator.FreeTypeFontParameter textParameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
     public FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("mainfont.ttf"));

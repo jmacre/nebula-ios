@@ -1,5 +1,9 @@
 package com.mygdx.NEBULA;
 
+import static com.mygdx.NEBULA.Assets.gem_sound;
+import static com.mygdx.NEBULA.Assets.pause_sound;
+import static com.mygdx.NEBULA.Assets.play_sound;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Camera;
@@ -49,13 +53,18 @@ public class MainMenu extends GameElements implements Screen {
     public MainMenu(Main game, Assets assets) {
         this.game = game;
         this.assets = assets;
-        gameInterface = new GameInterface(assets);
+        gameInterface = new GameInterface(assets, game);
         this.background = new Background(assets);
     }
 
     @Override
     public void show() {
         soundEnabled = prefs.hasSound();
+        playSound = game.miniAudio.createSound(play_sound);
+        playSound.setVolume(0.3f);
+
+        pauseSound = game.miniAudio.createSound(pause_sound);
+        pauseSound.setVolume(0.2f);
 
         startButtonInactive = new Sprite(assets.assetManager.get(Assets.start_button_inactive, Texture.class));
         startButtonActive = new Sprite(assets.assetManager.get(Assets.start_button_active, Texture.class));
@@ -131,7 +140,7 @@ public class MainMenu extends GameElements implements Screen {
 
         if(switchScreens){
             if(soundEnabled && !playSoundHasPlayed) {
-                game.playSound.play(0.2f);
+                game.miniAudio.playSound(play_sound);
                 playSoundHasPlayed = true;
             }
                 transitionOut(delta);

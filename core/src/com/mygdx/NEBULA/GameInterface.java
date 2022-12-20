@@ -1,10 +1,15 @@
 package com.mygdx.NEBULA;
 
+import static com.mygdx.NEBULA.Assets.error_sound;
+import static com.mygdx.NEBULA.Assets.gem_sound;
+import static com.mygdx.NEBULA.Assets.pause_sound;
+import static com.mygdx.NEBULA.Assets.play_sound;
 import static com.mygdx.NEBULA.ShopElement.SHIP_ID;
 
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
+import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
@@ -14,6 +19,9 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.utils.Align;
+
+import games.rednblack.miniaudio.MASound;
+import games.rednblack.miniaudio.loader.MASoundLoader;
 
 public class GameInterface extends GameElements {
     Assets assets;
@@ -54,7 +62,7 @@ public class GameInterface extends GameElements {
 
     public FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
 
-    public GameInterface(Assets assets) {
+    public GameInterface(Assets assets, Main game) {
         this.assets = assets;
         parameter.size = SCREEN_WIDTH / 40;
         startButton = new Button(assets.assetManager.get(Assets.start_button_inactive_clear, Texture.class), START_BUTTON_X, START_BUTTON_Y_TRANSITIONED, START_BUTTON_WIDTH, START_BUTTON_HEIGHT);
@@ -72,8 +80,20 @@ public class GameInterface extends GameElements {
 
         textParameter.size = SCREEN_WIDTH / 14;
         storeFont = generator.generateFont(textParameter);
-        gemSound = assets.assetManager.get(Assets.gem_sound, Sound.class);
-        errorSound = assets.assetManager.get(Assets.error_sound, Sound.class);
+
+        assets.assetManager.setLoader(MASound.class, new MASoundLoader(game.miniAudio, assets.assetManager.getFileHandleResolver()));
+
+        gemSound = game.miniAudio.createSound(gem_sound);
+        gemSound.setVolume(0.2f);
+
+        errorSound = game.miniAudio.createSound(error_sound);
+        errorSound.setVolume(0.2f);
+
+        playSound = game.miniAudio.createSound(play_sound);
+        playSound.setVolume(0.3f);
+
+        pauseSound = game.miniAudio.createSound(pause_sound);
+        pauseSound.setVolume(0.2f);
 
         textParameter.size = (int) SELECT_BUTTON_WIDTH/8;
         buyFont = generator.generateFont(textParameter);
@@ -186,7 +206,7 @@ public class GameInterface extends GameElements {
             } else {
                 prefs.setSound(true);
                 soundEnabled = true;
-                game.playSound.play(0.2f);
+                playSound.play();
             }
         }
         return soundEnabled;
@@ -218,7 +238,7 @@ public class GameInterface extends GameElements {
             }
             if (shopButton.getReleased()) {
                 if (soundEnabled)
-                    game.playSound.play(0.2f);
+                    playSound.play();
 
                 return true;
             }
@@ -278,7 +298,7 @@ public class GameInterface extends GameElements {
                 isShopOpen = false;
 
                 if (soundEnabled)
-                    game.pauseSound.play(0.2f);
+                    pauseSound.play();
             }
         }
         return !isShopOpen;
@@ -302,7 +322,7 @@ public class GameInterface extends GameElements {
         if (noButton.getReleased()) {
             setConfirmLeaveScreenOpen(false);
             if (soundEnabled)
-                game.pauseSound.play(0.2f);
+                pauseSound.play();
         }
     }
 
@@ -333,7 +353,7 @@ public class GameInterface extends GameElements {
 
             ship.setElementAnimation(selectedElement);
             if (soundEnabled)
-                game.pauseSound.play(0.2f);
+                pauseSound.play();
         }
     }
 
@@ -352,7 +372,7 @@ public class GameInterface extends GameElements {
             ship.setElementAnimation(selectedElement);
 
             if (soundEnabled)
-                game.pauseSound.play(0.2f);
+                pauseSound.play();
         }
     }
 
@@ -366,7 +386,7 @@ public class GameInterface extends GameElements {
             prefs.setShip(selectedElement);
 
             if (soundEnabled)
-                game.playSound.play(0.2f);
+                playSound.play();
         }
     }
     public void checkForBuyButtonTap(Main game, boolean soundEnabled, int itemPrice, Prefs prefs){
@@ -383,12 +403,12 @@ public class GameInterface extends GameElements {
                 prefs.setGemCount(prefs.getGemCount() - itemPrice);
 
                 if (soundEnabled)
-                    gemSound.play(0.2f);
+                    gemSound.play();
             }
             else{
                 if(soundEnabled){
                     errorSound.stop(); // stops static sound from playing when spam-tapping
-                    errorSound.play(0.2f);
+                    errorSound.play();
                 }
             }
 

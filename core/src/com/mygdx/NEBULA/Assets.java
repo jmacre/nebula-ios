@@ -6,8 +6,13 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.utils.Disposable;
 
+import games.rednblack.miniaudio.MASound;
+import games.rednblack.miniaudio.MiniAudio;
+import games.rednblack.miniaudio.loader.MASoundLoader;
+
 public class Assets implements Disposable {
     public AssetManager assetManager = new AssetManager();
+
     public static final String bullet_sound = "sound/bullet_sound.mp3";
     public static final String hit_sound = "sound/hit_sound.mp3";
     public static final String main_theme = "sound/organ.mp3";
@@ -122,18 +127,6 @@ public class Assets implements Disposable {
 
 
     public void load() {
-        assetManager.load(main_theme, Music.class);
-        assetManager.load(bomb_sound, Sound.class);
-
-        assetManager.load(hit_sound, Sound.class);
-        assetManager.load(missile_sound, Sound.class);
-        assetManager.load(pause_sound, Sound.class);
-        assetManager.load(play_sound, Sound.class);
-        assetManager.load(bullet_sound, Sound.class);
-        assetManager.load(heart_sound, Sound.class);
-        assetManager.load(gem_sound, Sound.class);
-        assetManager.load(error_sound, Sound.class);
-
         assetManager.load(powerup_timer, Texture.class);
         assetManager.load(gem_icon, Texture.class);
 
