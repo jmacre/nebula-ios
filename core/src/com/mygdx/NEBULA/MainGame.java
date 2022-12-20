@@ -207,7 +207,7 @@ public class MainGame extends GameElements implements Screen {
     int lastItemDrop;
     int playButtonTapVal, yesButtonTapVal = 0, transitionInTapVal = 0;
 
-    float songPausePosition, musicPosition;
+    float musicPosition;
 
     GameInterface gameInterface;
 
@@ -302,6 +302,7 @@ public class MainGame extends GameElements implements Screen {
         itemSound.setVolume(0.075f);
 
         gemSound = game.miniAudio.createSound(gem_sound);
+        gemSound.setVolume(0.1f);
 
         bombSound = game.miniAudio.createSound(bomb_sound);
         bombSound.setVolume(0.1f);
@@ -551,7 +552,7 @@ public class MainGame extends GameElements implements Screen {
         }
 
         if (isPaused && !isRunningResumeCountdown) {
-            songPausePosition = mainMusic.getCursorPosition();
+//            songPausePosition = mainMusic.getCursorPosition();
             if (game.batch.getShader() != null) {
                 game.batch.setShader(null);
             }
@@ -748,7 +749,6 @@ public class MainGame extends GameElements implements Screen {
         gemCountUpdated = false;
 
         score = 0;
-        songPausePosition = 0f;
         countDownTimer = 0f;
 
         bulletTimer = -2f;
@@ -841,7 +841,7 @@ public class MainGame extends GameElements implements Screen {
     public void playMusic() {
         if (soundEnabled && !isPaused && isAlive && !isTransitioningOut && !isRunningResumeCountdown) {
             musicVolume = 0.35f;
-            mainMusic.seekTo(songPausePosition);
+            mainMusic.play();
 
         } else if (soundEnabled && !isAlive && !isPaused && isTransitioningOut) {
             musicVolume = 0f;
@@ -1043,6 +1043,7 @@ public class MainGame extends GameElements implements Screen {
                 if (soundEnabled) {
                     if (isTransitionedIn) {
                         if (isMissile) {
+                            missileSound.stop();
                             missileSound.play();
                         } else {
                             bulletSound.stop();
@@ -1534,8 +1535,6 @@ public class MainGame extends GameElements implements Screen {
                     && (Collision.isColliding(enemy.getCollision(), player.getCollision()))) {
 
                 if (soundEnabled && !playerHitSoundPlayed) {
-//                    hitSound.stop();
-//                    bulletSound.stop();
 
                     hitSound.play();
                     playerHitSoundPlayed = true;
@@ -1567,9 +1566,7 @@ public class MainGame extends GameElements implements Screen {
             if (Collision.isNearby(enemyBullet.getCollision(), player.getCollision())
                     && Collision.isColliding(enemyBullet.getCollision(), player.getCollision())) {
 
-                if (soundEnabled) {
-//                    hitSound.stop();
-//                    bulletSound.stop();
+                if (soundEnabled) {;
 
                     hitSound.play();
                 }
@@ -1856,7 +1853,8 @@ public class MainGame extends GameElements implements Screen {
 
     public void runHourglassTimer() {
         if (soundEnabled && mainMusic.isPlaying()) {
-            mainMusic.pause();
+            mainMusic.setPitch(0.5f);
+            bulletSound.setPitch(0.5f);
         }
         game.batch.setShader(invertedShader);
 
@@ -1867,7 +1865,11 @@ public class MainGame extends GameElements implements Screen {
             hourglassMultiplier = .25f;
         } else {
             if (soundEnabled) {
+                mainMusic.setPitch(1);
+                bulletSound.setPitch(1);
+
                 mainMusic.play();
+
             }
 
             isHourglass = false;
@@ -1922,7 +1924,7 @@ public class MainGame extends GameElements implements Screen {
             isPaused = true;
         }
 
-        songPausePosition = mainMusic.getCursorPosition();
+//        songPausePosition = mainMusic.getCursorPosition();
     }
 
     @Override

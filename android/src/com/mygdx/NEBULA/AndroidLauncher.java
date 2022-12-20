@@ -17,14 +17,12 @@ import com.badlogic.gdx.backends.android.AsynchronousAndroidAudio;
 import games.rednblack.miniaudio.MiniAudio;
 
 public class AndroidLauncher extends AndroidApplication {
-	MiniAudio miniAudio = new MiniAudio();
 	@Override
 	protected void onCreate (Bundle savedInstanceState) {
 
 		super.onCreate(savedInstanceState);
 		AndroidApplicationConfiguration config = new AndroidApplicationConfiguration();
 		config.useImmersiveMode = true;
-		miniAudio.setupAndroid(getContext().getAssets());
-		initialize(new Main(miniAudio), config);
+		initialize(new Main(getContext().getAssets()), config);
 	}
 }

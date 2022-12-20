@@ -126,7 +126,20 @@ public class Assets implements Disposable {
     public static final String gem_icon = "ui/gem.png";
 
 
-    public void load() {
+    public void load(MiniAudio miniAudio) {
+        assetManager.setLoader(MASound.class, new MASoundLoader(miniAudio, assetManager.getFileHandleResolver()));
+
+        assetManager.load(main_theme, MASound.class);
+        assetManager.load(bomb_sound, MASound.class);
+        assetManager.load(hit_sound, MASound.class);
+        assetManager.load(missile_sound, MASound.class);
+        assetManager.load(pause_sound, MASound.class);
+        assetManager.load(play_sound, MASound.class);
+        assetManager.load(bullet_sound, MASound.class);
+        assetManager.load(heart_sound, MASound.class);
+        assetManager.load(error_sound, MASound.class);
+        assetManager.load(gem_sound, MASound.class);
+
         assetManager.load(powerup_timer, Texture.class);
         assetManager.load(gem_icon, Texture.class);
 

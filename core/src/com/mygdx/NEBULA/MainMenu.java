@@ -20,6 +20,8 @@ import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
+import games.rednblack.miniaudio.MiniAudio;
+
 public class MainMenu extends GameElements implements Screen {
     public Prefs prefs = new Prefs();
     Assets assets;
@@ -60,10 +62,10 @@ public class MainMenu extends GameElements implements Screen {
     @Override
     public void show() {
         soundEnabled = prefs.hasSound();
-        playSound = game.miniAudio.createSound(play_sound);
-        playSound.setVolume(0.3f);
+        playSound = assets.assetManager.get(play_sound);
+        playSound.setVolume(0.2f);
 
-        pauseSound = game.miniAudio.createSound(pause_sound);
+        pauseSound = assets.assetManager.get(pause_sound);
         pauseSound.setVolume(0.2f);
 
         startButtonInactive = new Sprite(assets.assetManager.get(Assets.start_button_inactive, Texture.class));
@@ -223,7 +225,6 @@ public class MainMenu extends GameElements implements Screen {
     public void resume() {
         if(Gdx.graphics.getDisplayMode().refreshRate != refreshRate){
             refreshRate = Gdx.graphics.getDisplayMode().refreshRate;
-            System.out.println("test");
             deltaList.clear();
         }
     }

@@ -16,6 +16,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
+import games.rednblack.miniaudio.MAGroup;
 import games.rednblack.miniaudio.MASound;
 import games.rednblack.miniaudio.MiniAudio;
 import games.rednblack.miniaudio.loader.MASoundLoader;
@@ -29,10 +30,11 @@ public class Main extends Game implements ApplicationListener {
 	public FreeTypeFontGenerator generator;
 	public FreeTypeFontGenerator.FreeTypeFontParameter parameter;
 	Assets assets;
-	public MiniAudio miniAudio;
+	public Object miniAudioContextAssets;
+	MiniAudio miniAudio;
 
-	public Main(MiniAudio miniAudio){
-		this.miniAudio = miniAudio;
+	public Main(Object miniAudioContextAssets){
+		this.miniAudioContextAssets = miniAudioContextAssets;
 	}
 	public Main(){}
 
@@ -40,12 +42,14 @@ public class Main extends Game implements ApplicationListener {
 	public void create () {
 		batch = new SpriteBatch();
 		miniAudio = new MiniAudio();
+		miniAudio.setupAndroid(miniAudioContextAssets);
 
 		generator = new FreeTypeFontGenerator(Gdx.files.internal("mainfont.ttf"));
 		parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
 		parameter.size = SCREEN_WIDTH/14;
 		assets = new Assets();
-		assets.load();
+
+		assets.load(miniAudio);
 		assets.assetManager.finishLoading();
 
 		if(assets.assetManager.isFinished()) {
@@ -59,15 +63,17 @@ public class Main extends Game implements ApplicationListener {
 	public void dispose() {
 		assets.unloadAll();
 		assets.assetManager.dispose();
-//		miniAudio.dispose();
+		miniAudio.dispose();
 	}
 
 	@Override
 	public void pause(){
 		miniAudio.stopEngine();
+		super.pause();
 	}
 	@Override
 	public void resume(){
 		miniAudio.startEngine();
+		super.resume();
 	}
 }

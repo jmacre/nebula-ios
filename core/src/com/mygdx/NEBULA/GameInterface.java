@@ -21,7 +21,6 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.utils.Align;
 
 import games.rednblack.miniaudio.MASound;
-import games.rednblack.miniaudio.loader.MASoundLoader;
 
 public class GameInterface extends GameElements {
     Assets assets;
@@ -81,18 +80,17 @@ public class GameInterface extends GameElements {
         textParameter.size = SCREEN_WIDTH / 14;
         storeFont = generator.generateFont(textParameter);
 
-        assets.assetManager.setLoader(MASound.class, new MASoundLoader(game.miniAudio, assets.assetManager.getFileHandleResolver()));
 
-        gemSound = game.miniAudio.createSound(gem_sound);
+        gemSound = assets.assetManager.get(Assets.gem_sound, MASound.class);
         gemSound.setVolume(0.2f);
 
-        errorSound = game.miniAudio.createSound(error_sound);
+        errorSound = assets.assetManager.get(Assets.error_sound, MASound.class);
         errorSound.setVolume(0.2f);
 
-        playSound = game.miniAudio.createSound(play_sound);
+        playSound = assets.assetManager.get(play_sound, MASound.class);
         playSound.setVolume(0.3f);
 
-        pauseSound = game.miniAudio.createSound(pause_sound);
+        pauseSound = assets.assetManager.get(pause_sound, MASound.class);
         pauseSound.setVolume(0.2f);
 
         textParameter.size = (int) SELECT_BUTTON_WIDTH/8;
@@ -206,6 +204,7 @@ public class GameInterface extends GameElements {
             } else {
                 prefs.setSound(true);
                 soundEnabled = true;
+                playSound.stop();
                 playSound.play();
             }
         }
@@ -237,8 +236,10 @@ public class GameInterface extends GameElements {
                 shopButton.setTexture(assets.assetManager.get(Assets.shop_button_inactive, Texture.class));
             }
             if (shopButton.getReleased()) {
-                if (soundEnabled)
+                if (soundEnabled){
+                    playSound.stop();
                     playSound.play();
+                }
 
                 return true;
             }
@@ -297,8 +298,10 @@ public class GameInterface extends GameElements {
             if (xButton.getTapped()) {
                 isShopOpen = false;
 
-                if (soundEnabled)
+                if (soundEnabled) {
+                    pauseSound.stop();
                     pauseSound.play();
+                }
             }
         }
         return !isShopOpen;
@@ -352,8 +355,10 @@ public class GameInterface extends GameElements {
             }
 
             ship.setElementAnimation(selectedElement);
-            if (soundEnabled)
+            if (soundEnabled) {
+                pauseSound.stop();
                 pauseSound.play();
+            }
         }
     }
 
@@ -371,8 +376,10 @@ public class GameInterface extends GameElements {
             }
             ship.setElementAnimation(selectedElement);
 
-            if (soundEnabled)
+            if (soundEnabled) {
+                pauseSound.stop();
                 pauseSound.play();
+            }
         }
     }
 
