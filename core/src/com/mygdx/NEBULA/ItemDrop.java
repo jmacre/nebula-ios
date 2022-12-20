@@ -39,8 +39,8 @@ public class ItemDrop extends GameElements {
 
     int ITEM_X, ITEM_Y;
 
-    public static float ITEM_HEIGHT;
-    public static float ITEM_WIDTH;
+    public float ITEM_HEIGHT;
+    public float ITEM_WIDTH;
 
     float stateTime = 0f;
     int itemId;
@@ -48,11 +48,11 @@ public class ItemDrop extends GameElements {
     Collision rect;
     public boolean remove = false;
 
-    public ItemDrop(int ITEM_X, int ITEM_HEIGHT, float ITEM_WIDTH, int itemId, Assets assets) {
+    public void create(int ITEM_X, int ITEM_HEIGHT, float ITEM_WIDTH, int itemId, Assets assets) {
         this.ITEM_X = ITEM_X;
         this.ITEM_Y = (int) (1.2f * SCREEN_HEIGHT);
-        ItemDrop.ITEM_HEIGHT = ITEM_HEIGHT;
-        ItemDrop.ITEM_WIDTH = ITEM_WIDTH;
+        this.ITEM_HEIGHT = ITEM_HEIGHT;
+        this.ITEM_WIDTH = ITEM_WIDTH;
         itemAnim = new Anim();
 
         this.assets = assets;
@@ -95,24 +95,26 @@ public class ItemDrop extends GameElements {
         else{
             ITEM_Y -= SPEED * deltaTime;
         }
-        if (ITEM_Y < -ITEM_HEIGHT) {
-            remove = true;
-        }
+
         rect.move(ITEM_X, ITEM_Y);
     }
 
     public void render(float width, float height, float delta, SpriteBatch batch) {
         stateTime += delta / 10;
-        itemAnim.drawAnim(itemAnimation, stateTime, ITEM_X, ITEM_Y, width, height, true, batch);
 
-
+        if(ITEM_Y < SCREEN_HEIGHT)
+            itemAnim.drawAnim(itemAnimation, stateTime, ITEM_X, ITEM_Y, width, height, true, batch);
     }
 
-    public float getItemY() {
+    public float getHeight(){
+        return ITEM_HEIGHT;
+    }
+
+    public float getY() {
         return ITEM_Y;
     }
 
-    public float getItemX() {
+    public float getX() {
         return ITEM_X;
     }
 

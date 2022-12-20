@@ -247,7 +247,7 @@ public class GameElements {
     Music mainMusic;
     Sound pauseSound;
     Sound playSound;
-    Music bombSound;
+    Sound bombSound;
     Sound missileSound;
     Sound bulletSound, itemSound, hitSound, gemSound, errorSound;
 

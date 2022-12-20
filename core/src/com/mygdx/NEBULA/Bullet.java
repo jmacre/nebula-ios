@@ -62,12 +62,14 @@ public class Bullet extends GameElements {
     }
 
     public void render (SpriteBatch batch) {
-        bulletSprite.draw(batch);
+        if(BULLET_Y < SCREEN_HEIGHT)
+            bulletSprite.draw(batch);
     }
 
     public void render (Anim missileAnim, float delta, float width, float height, SpriteBatch batch) {
         stateTime += delta / 6;
-        missileAnim.drawAnim(missileAnimation, stateTime, BULLET_X, BULLET_Y, width, height, true, batch);
+        if(BULLET_Y < SCREEN_HEIGHT)
+            missileAnim.drawAnim(missileAnimation, stateTime, BULLET_X, BULLET_Y, width, height, true, batch);
     }
 
     public Collision getCollision() {

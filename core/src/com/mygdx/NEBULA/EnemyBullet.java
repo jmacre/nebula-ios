@@ -33,8 +33,6 @@ public class EnemyBullet {
     int bulletColor;
     Collision rect;
 
-    public EnemyBullet(){}
-
     public void create (int ENEMY_BULLET_X, int ENEMY_BULLET_Y, float speed, int bulletColor, Assets assets) {
         this.assets = assets;
         this.ENEMY_BULLET_X = (int)ENEMY_BULLET_X;
@@ -69,7 +67,9 @@ public class EnemyBullet {
     }
 
     public void render (SpriteBatch batch) {
-        enemyBulletSprite.draw(batch);
+        if (ENEMY_BULLET_Y + ENEMY_BULLET_HEIGHT> 0) {
+            enemyBulletSprite.draw(batch);
+        }
     }
 
     public Collision getCollision() {

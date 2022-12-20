@@ -79,46 +79,49 @@ public class MainMenu extends GameElements implements Screen {
         game.batch.enableBlending();
 
         game.batch.begin();
-
-        refreshRate = Gdx.graphics.getDisplayMode().refreshRate;
         deltaList.add(delta);
 
-        if (deltaList.size >= 30) {
-            for (int i = 0; i < deltaList.size; i++) {
-                deltaSum += deltaList.get(i);
+        refreshRate = Gdx.graphics.getDisplayMode().refreshRate;
+        if (!(delta < (1.1f * (1 / refreshRate)) && delta > (.9f * (1 / refreshRate)))) {
+            delta = 1f/refreshRate;
+        }
+        else {
+            if (deltaList.size > 100) {
+                for (int i = 0; i < deltaList.size; i++) {
+                    deltaSum += deltaList.get(i);
+                }
+                delta = deltaSum / deltaList.size;
+
+                if (!deltaList.isEmpty())
+                    deltaList.removeIndex(0);
+
+                deltaSum = 0;
             }
-            delta = deltaSum / deltaList.size;
-
-            if(!deltaList.isEmpty())
-                deltaList.removeIndex(0);
-
-            deltaSum = 0;
         }
 
 
-
-        if (START_BUTTON_Y >= START_BUTTON_Y_TRANSITIONED && !switchScreens) {
+        if(deltaList.size >= 100 || canRenderBackground) {
+            if (START_BUTTON_Y >= START_BUTTON_Y_TRANSITIONED && !switchScreens) {
                 isTransitioningIn = true;
                 transitionIn(delta);
-            }
-            else {
+            } else {
                 isTransitioningIn = false;
                 transitionInDone = true;
-                if(!isShopOpen) {
+                if (!isShopOpen) {
                     if (gameInterface.checkForStartButtonTap(switchScreens)) {
                         switchScreens = true;
                     }
                 }
 
-                if(gameInterface.checkForShopButtonTap(game, isShopOpen, switchScreens, soundEnabled)) {
+                if (gameInterface.checkForShopButtonTap(game, isShopOpen, switchScreens, soundEnabled)) {
                     isShopOpen = true;
                 }
-                if(isShopOpen && gameInterface.checkForXButtonTap(game, true, soundEnabled)){
+                if (isShopOpen && gameInterface.checkForXButtonTap(game, true, soundEnabled)) {
                     isShopOpen = false;
                 }
             }
 
-
+        }
 
         if(beganFading || (START_BUTTON_Y <= START_BUTTON_Y_TRANSITIONED))
             canRenderBackground = true;
@@ -167,9 +170,9 @@ public class MainMenu extends GameElements implements Screen {
         transitionOutReady = true;
 
         if (START_BUTTON_Y < SCREEN_HEIGHT * 1.2f) {
-            START_BUTTON_Y += (transitionSpeed * delta);
-            TITLE_LOGO_Y += (transitionSpeed * delta);
-            SHOP_BUTTON_Y += (transitionSpeed * delta);
+            START_BUTTON_Y += (int)(transitionSpeed * delta);
+            TITLE_LOGO_Y += (int)(transitionSpeed * delta);
+            SHOP_BUTTON_Y += (int)(transitionSpeed * delta);
         }
         if (START_BUTTON_Y > SCREEN_HEIGHT * 1.2f) {
             dispose();
@@ -177,14 +180,14 @@ public class MainMenu extends GameElements implements Screen {
     }
 
     public void transitionIn(float delta){
-        START_BUTTON_Y -= (transitionSpeed * delta);
-        SHOP_BUTTON_Y -= (transitionSpeed * delta);
-        TITLE_LOGO_Y -= (transitionSpeed * delta);
+        START_BUTTON_Y -= (int)(transitionSpeed * delta);
+        SHOP_BUTTON_Y -= (int)(transitionSpeed * delta);
+        TITLE_LOGO_Y -= (int)(transitionSpeed * delta);
     }
 
     @Override
     public void dispose() {
-        game.setScreen(new MainGame(game, assets, background));
+        game.setScreen(new MainGame(game, gameInterface, assets, background));
     }
 
     public void fadeOut(float delta){
@@ -211,6 +214,7 @@ public class MainMenu extends GameElements implements Screen {
     public void resume() {
         if(Gdx.graphics.getDisplayMode().refreshRate != refreshRate){
             refreshRate = Gdx.graphics.getDisplayMode().refreshRate;
+            System.out.println("test");
             deltaList.clear();
         }
     }

@@ -2,7 +2,6 @@ package com.mygdx.NEBULA;
 
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Graphics;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
@@ -83,6 +82,7 @@ public class MainGame extends GameElements implements Screen {
     EnemyBulletPool ebp = new EnemyBulletPool();
     EnemyPool ep = new EnemyPool();
     ExplosionPool exp = new ExplosionPool();
+    ItemDropPool idp = new ItemDropPool();
 
     Vector2 center;
     FloatArray vertices;
@@ -118,7 +118,7 @@ public class MainGame extends GameElements implements Screen {
     float resumeCountdownTimer = -1.5f;
     float playerPosition = SHIP_X;
 
-    PowerupTimer powerupTimer;
+    PowerupTimer powerupTimer = new PowerupTimer();
 
     float bulletThreshold = 0f;
     float musicVolume = 0.35f;
@@ -226,7 +226,6 @@ public class MainGame extends GameElements implements Screen {
     Array<Explosion> explosionsToDelay = new Array<>();
     Array<Explosion> explosionsToRemove = new Array<>();
 
-
     Array<ItemDrop> itemDrops = new Array<>();
     Array<ItemDrop> itemsToRemove = new Array<>();
 
@@ -242,11 +241,11 @@ public class MainGame extends GameElements implements Screen {
     int selectedShip = 0;
     float refreshRate;
 
-    public MainGame(Main game, Assets assets, Background background) {
+    public MainGame(Main game, GameInterface gameInterface, Assets assets, Background background) {
         this.game = game;
-        this.assets = assets;
-        gameInterface = new GameInterface(assets);
+        this.gameInterface = gameInterface;
         this.background = background;
+        this.assets= assets;
     }
 
     @Override
@@ -283,8 +282,7 @@ public class MainGame extends GameElements implements Screen {
         itemSound = assets.assetManager.get(Assets.heart_sound, Sound.class);
         gemSound = assets.assetManager.get(Assets.gem_sound, Sound.class);
 
-        bombSound = assets.assetManager.get(Assets.bomb_sound, Music.class);
-        bombSound.setVolume(0.1f);
+        bombSound = assets.assetManager.get(Assets.bomb_sound, Sound.class);
         soundEnabled = prefs.hasSound();
 
         blackTransition = new Sprite(assets.assetManager.get(Assets.black_transition, Texture.class));
@@ -323,6 +321,8 @@ public class MainGame extends GameElements implements Screen {
         Gdx.input.setInputProcessor(inputProcessor);
         player = new Player();
 
+        refreshRate = Gdx.graphics.getDisplayMode().refreshRate;
+
         ShaderProgram.pedantic = false;
         invertedShader = new ShaderProgram(Gdx.files.internal("shaders/invert.vsh"), Gdx.files.internal("shaders/invert.fsh"));
     }
@@ -335,16 +335,14 @@ public class MainGame extends GameElements implements Screen {
         game.batch.enableBlending();
         game.batch.begin();
 
-        refreshRate = Gdx.graphics.getDisplayMode().refreshRate;
         deltaList.add(delta);
 
 
-        deltaP = delta;
         if (isPaused || isRunningResumeCountdown) {
             deltaP = 0;
         }
 
-        if (deltaList.size >= 30) {
+        if (deltaList.size >= 60) {
             for (int i = 0; i < deltaList.size; i++) {
                 deltaSum += deltaList.get(i);
             }
@@ -355,14 +353,13 @@ public class MainGame extends GameElements implements Screen {
             } else {
                 deltaP = delta;
             }
-            if(!deltaList.isEmpty())
-                deltaList.removeIndex(0);
-
+            deltaList.removeIndex(0);
             deltaSum = 0;
         }
 
 
-        blackTransition.draw(game.batch);
+        if(fadeOutOpacity > 0 || fadeInOpacity > 0)
+            blackTransition.draw(game.batch);
         if (!isPaused && !isShipLeaving) {
             updateSpawnRates(score);
         }
@@ -523,8 +520,9 @@ public class MainGame extends GameElements implements Screen {
 
         //Pausing (pauses music/freezes delta)
         if (isTransitionedIn && !isPaused && !isTransitioningOut && !isRunningResumeCountdown && gameInterface.checkForPauseButtonTap()) {
-            if (soundEnabled)
+            if (soundEnabled) {
                 pauseSound.play(0.3f);
+            }
 
             isPaused = true;
         }
@@ -548,21 +546,25 @@ public class MainGame extends GameElements implements Screen {
 
                 if (soundEnabled) {
                     game.playSound.play(0.3f);
+
                 }
             }
             if (gameInterface.checkForHomeButtonTap(gemCount, isAlive) || gameInterface.getConfirmLeaveScreenOpen()) {
                 if (!gameInterface.getConfirmLeaveScreenOpen()) {
                     gameInterface.setConfirmLeaveScreenOpen(true);
-                    if (soundEnabled)
+                    if (soundEnabled){
                         pauseSound.play(0.3f);
+                    }
                 }
                 gameInterface.drawConfirmLeave(game, confirmScreenFont);
 
                 if (gameInterface.checkForYesButtonTap()) {
                     yesButtonTapVal = inputProcessor.getTapCount();
 
-                    if (soundEnabled)
+                    if (soundEnabled){
                         game.playSound.play(0.3f);
+
+                    }
                     isShipLeaving = true;
                 }
                 gameInterface.checkForNoButtonTap(game, soundEnabled);
@@ -615,8 +617,9 @@ public class MainGame extends GameElements implements Screen {
                     if (!gameInterface.getConfirmLeaveScreenOpen()) {
 
                         gameInterface.setConfirmLeaveScreenOpen(true);
-                        if (soundEnabled)
+                        if (soundEnabled) {
                             pauseSound.play(0.3f);
+                        }
                     }
 
 
@@ -626,8 +629,9 @@ public class MainGame extends GameElements implements Screen {
                         if (gameInterface.checkForYesButtonTap()) {
                             yesButtonTapVal = inputProcessor.getTapCount();
 
-                            if (soundEnabled)
+                            if (soundEnabled) {
                                 game.playSound.play(0.3f);
+                            }
                             isShipLeaving = true;
                         }
                         gameInterface.checkForNoButtonTap(game, soundEnabled);
@@ -774,10 +778,12 @@ public class MainGame extends GameElements implements Screen {
         if (enemiesToRemove.size > 0)
             enemiesToRemove.clear();
 
+
         bp.clear();
         ep.clear();
         exp.clear();
         ebp.clear();
+        idp.clear();
 
         if (powerupTimers.size > 0)
             powerupTimers.clear();
@@ -1017,7 +1023,6 @@ public class MainGame extends GameElements implements Screen {
                 if (soundEnabled) {
                     if (isTransitionedIn) {
                         if (isMissile) {
-                            missileSound.stop();
                             missileSound.play(0.1f);
                         } else {
                             bulletSound.stop();
@@ -1264,7 +1269,9 @@ public class MainGame extends GameElements implements Screen {
     public void addGemDrops() {
         gemSpawnTimer -= deltaP;
         if (gemSpawnTimer <= 0) {
-            itemDrops.add(new ItemDrop(random.nextInt((int) (SCREEN_WIDTH - ItemDrop.GEM_WIDTH)), (int) ItemDrop.GEM_HEIGHT, ItemDrop.GEM_WIDTH, GEM_ID, assets));
+            ItemDrop itemDrop = idp.obtain();
+            itemDrop.create(random.nextInt((int) (SCREEN_WIDTH - ItemDrop.GEM_WIDTH)), (int) ItemDrop.GEM_HEIGHT, ItemDrop.GEM_WIDTH, GEM_ID, assets);
+            itemDrops.add(itemDrop);
             gemSpawnTimer = random.nextFloat() * (maxGemSpawnTime - minGemSpawnTime) + minGemSpawnTime;
         }
     }
@@ -1298,16 +1305,30 @@ public class MainGame extends GameElements implements Screen {
                 if (randomDrop == 0) {
                     if (health == 3)
                         addItemDrops();
-                    else
-                        itemDrops.add(new ItemDrop(random.nextInt((int) (SCREEN_WIDTH - ItemDrop.HEART_ITEM_WIDTH)), (int) ItemDrop.HEART_ITEM_HEIGHT, ItemDrop.HEART_WIDTH, HEART_ID, assets));
+                    else {
+                        ItemDrop itemDrop = idp.obtain();
+                        itemDrop.create(random.nextInt((int) (SCREEN_WIDTH - ItemDrop.HEART_ITEM_WIDTH)), (int) ItemDrop.HEART_ITEM_HEIGHT, ItemDrop.HEART_WIDTH, HEART_ID, assets);
+                        itemDrops.add(itemDrop);
+                    }
                 } else if (randomDrop == 1) {
-                    itemDrops.add(new ItemDrop(random.nextInt((int) (SCREEN_WIDTH - ItemDrop.BOMB_WIDTH)), (int) ItemDrop.BOMB_HEIGHT, ItemDrop.BOMB_WIDTH, BOMB_ID, assets));
+                    ItemDrop itemDrop = idp.obtain();
+                    itemDrop.create(random.nextInt((int) (SCREEN_WIDTH - ItemDrop.BOMB_WIDTH)), (int) ItemDrop.BOMB_HEIGHT, ItemDrop.BOMB_WIDTH, BOMB_ID, assets);
+                    itemDrops.add(itemDrop);
                 } else if (randomDrop == 2) {
-                    itemDrops.add(new ItemDrop(random.nextInt((int) (SCREEN_WIDTH - ItemDrop.MISSILE_ITEM_WIDTH)), (int) ItemDrop.MISSILE_ITEM_HEIGHT, ItemDrop.MISSILE_ITEM_WIDTH, MISSILE_ID, assets));
+                    ItemDrop itemDrop = idp.obtain();
+                    itemDrop.create(random.nextInt((int) (SCREEN_WIDTH - ItemDrop.MISSILE_ITEM_WIDTH)), (int) ItemDrop.MISSILE_ITEM_HEIGHT, ItemDrop.MISSILE_ITEM_WIDTH, MISSILE_ID, assets);
+                    itemDrops.add(itemDrop);
+
                 } else if (randomDrop == 3) {
-                    itemDrops.add(new ItemDrop(random.nextInt((int) (SCREEN_WIDTH - ItemDrop.RAPID_FIRE_WIDTH)), (int) ItemDrop.RAPID_FIRE_HEIGHT, ItemDrop.RAPID_FIRE_WIDTH, RAPID_FIRE_ID, assets));
+                    ItemDrop itemDrop = idp.obtain();
+                    itemDrop.create(random.nextInt((int) (SCREEN_WIDTH - ItemDrop.RAPID_FIRE_WIDTH)), (int) ItemDrop.RAPID_FIRE_HEIGHT, ItemDrop.RAPID_FIRE_WIDTH, RAPID_FIRE_ID, assets);
+                    itemDrops.add(itemDrop);
+
                 } else {
-                    itemDrops.add(new ItemDrop(random.nextInt((int) (SCREEN_WIDTH - ItemDrop.HOURGLASS_WIDTH)), (int) ItemDrop.HOURGLASS_HEIGHT, ItemDrop.HOURGLASS_WIDTH, HOURGLASS_ID, assets));
+                    ItemDrop itemDrop = idp.obtain();
+                    itemDrop.create(random.nextInt((int) (SCREEN_WIDTH - ItemDrop.HOURGLASS_WIDTH)), (int) ItemDrop.HOURGLASS_HEIGHT, ItemDrop.HOURGLASS_WIDTH, HOURGLASS_ID, assets);
+                    itemDrops.add(itemDrop);
+
                 }
             }
             lastItemDrop = randomDrop;
@@ -1315,6 +1336,9 @@ public class MainGame extends GameElements implements Screen {
     }
 
     public void updateItems() {
+        idp.freeAll(itemsToRemove);
+        itemDrops.removeAll(itemsToRemove, true);
+        itemsToRemove.clear();
         for (ItemDrop itemDrop : itemDrops) {
             itemDrop.update(deltaP * hourglassMultiplier);
             switch (itemDrop.getItemId()) {
@@ -1338,7 +1362,8 @@ public class MainGame extends GameElements implements Screen {
                     break;
             }
 
-            if (itemDrop.remove) {
+
+            if (itemDrop.getY() + itemDrop.getHeight() < 0) {
                 itemsToRemove.add(itemDrop);
             }
         }
@@ -1555,9 +1580,9 @@ public class MainGame extends GameElements implements Screen {
                     case HEART_ID:
                         score += 25;
 
-                        if (soundEnabled)
+                        if (soundEnabled) {
                             itemSound.play(0.075f);
-
+                        }
 
                         if (health > 0 && health < 3 && !heartUsed) {
                             health += 1;
@@ -1577,7 +1602,7 @@ public class MainGame extends GameElements implements Screen {
                             explosions.add(explosion);
                         }
                         if (soundEnabled) {
-                            bombSound.play();
+                            bombSound.play(0.1f);
                         }
                         enemyBullets.clear();
 
@@ -1586,8 +1611,9 @@ public class MainGame extends GameElements implements Screen {
                     case MISSILE_ID:
                         isMissile = true;
 
-                        if (soundEnabled)
+                        if (soundEnabled) {
                             itemSound.play(0.075f);
+                        }
 
                         if (!missileUsed) {
                             missileUsed = true;
@@ -1598,15 +1624,18 @@ public class MainGame extends GameElements implements Screen {
                     case GEM_ID:
                         gemCount++;
 
-                        if (soundEnabled)
+                        if (soundEnabled) {
                             gemSound.play(0.1f);
+
+                        }
                         break;
 
                     case RAPID_FIRE_ID:
                         isRapidFire = true;
 
-                        if (soundEnabled)
+                        if (soundEnabled) {
                             itemSound.play(0.075f);
+                        }
 
                         if (!rapidFireUsed) {
                             bulletTimer = .05f;
@@ -1616,8 +1645,9 @@ public class MainGame extends GameElements implements Screen {
 
                     case HOURGLASS_ID:
                         isHourglass = true;
-                        if (soundEnabled)
+                        if (soundEnabled) {
                             itemSound.play(0.075f);
+                        }
 
                         if (!hourglassUsed) {
                             hourglassUsed = true;
@@ -1688,9 +1718,10 @@ public class MainGame extends GameElements implements Screen {
                 score -= 100;
                 gemCount++;
 
-                if(soundEnabled)
+                if(soundEnabled) {
                     itemSound.play(0.075f);
 
+                }
             }
 
             if(score > 0 && score < 100){
@@ -1699,8 +1730,9 @@ public class MainGame extends GameElements implements Screen {
             }
 
             if (gemCount > 0 && score == 0 && gemCountTimerDelay == 0) {
-                if (soundEnabled)
+                if (soundEnabled) {
                     itemSound.play(0.075f);
+                }
 
                 gemCount--;
                 finalGemCount--;

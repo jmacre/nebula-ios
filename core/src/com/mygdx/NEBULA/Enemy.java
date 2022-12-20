@@ -220,7 +220,7 @@ public class Enemy extends GameElements implements Pool.Poolable{
             ENEMY_Y -= Math.ceil((int) (SPEED * delta * ENEMY_Y_SPEED_MULTIPLIER * hourglassMultiplier));
         }
 
-        if (ENEMY_Y < - ENEMY_HEIGHT){
+        if (ENEMY_Y + ENEMY_HEIGHT < 0){
             remove = true;
         }
 
@@ -333,7 +333,7 @@ public class Enemy extends GameElements implements Pool.Poolable{
             }
         }
 
-        if(ENEMY_Y <= SCREEN_HEIGHT && enemyAnimation != null) {
+        if(ENEMY_Y <= SCREEN_HEIGHT && enemyAnimation != null && ENEMY_Y + ENEMY_HEIGHT > 0) {
             enemyAnim.drawAnim(enemyAnimation, stateTime/1.5f, ENEMY_X, ENEMY_Y, width, height, true, batch, hurt);
             if(hurt){
                 batch.end();

@@ -146,8 +146,13 @@ public class GameInterface extends GameElements {
     }
 
     public void drawTitleScreen(Main game, boolean transitionInDone, Prefs prefs) {
-        game.batch.draw(startButton.getTexture(), START_BUTTON_X, START_BUTTON_Y, START_BUTTON_WIDTH, START_BUTTON_HEIGHT);
-        game.batch.draw(shopButton.getTexture(), SHOP_BUTTON_X, SHOP_BUTTON_Y, SHOP_BUTTON_WIDTH, SHOP_BUTTON_HEIGHT);
+        if(START_BUTTON_Y < SCREEN_HEIGHT)
+            game.batch.draw(startButton.getTexture(), START_BUTTON_X, START_BUTTON_Y, START_BUTTON_WIDTH, START_BUTTON_HEIGHT);
+
+        if(SHOP_BUTTON_Y < SCREEN_HEIGHT)
+            game.batch.draw(shopButton.getTexture(), SHOP_BUTTON_X, SHOP_BUTTON_Y, SHOP_BUTTON_WIDTH, SHOP_BUTTON_HEIGHT);
+
+        if(TITLE_LOGO_Y < SCREEN_HEIGHT)
         game.batch.draw(titleTexture, TITLE_LOGO_X, TITLE_LOGO_Y - TITLE_LOGO_HEIGHT, TITLE_LOGO_WIDTH, TITLE_LOGO_HEIGHT);
 
         if (prefs.hasSound())

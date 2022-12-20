@@ -123,7 +123,7 @@ public class Assets implements Disposable {
 
     public void load() {
         assetManager.load(main_theme, Music.class);
-        assetManager.load(bomb_sound, Music.class);
+        assetManager.load(bomb_sound, Sound.class);
 
         assetManager.load(hit_sound, Sound.class);
         assetManager.load(missile_sound, Sound.class);
@@ -246,10 +246,10 @@ public class Assets implements Disposable {
         assetManager.unload(play_sound);
         assetManager.unload(bullet_sound);
         assetManager.unload(heart_sound);
-        assetManager.unload(main_theme);
         assetManager.unload(bomb_sound);
         assetManager.unload(gem_sound);
         assetManager.unload(error_sound);
+        assetManager.unload(main_theme);
 
         assetManager.unload(default_background);
         assetManager.unload(green_background);
