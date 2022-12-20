@@ -23,7 +23,7 @@ public class AndroidLauncher extends AndroidApplication {
 
 	@Override
 	public AndroidAudio createAudio(Context context, AndroidApplicationConfiguration config) {
-		return new OboeAudio(context, config);
+		return new AsynchronousAndroidAudio(context, config);
 	}
 
 }
