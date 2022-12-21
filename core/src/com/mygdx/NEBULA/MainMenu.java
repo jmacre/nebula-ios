@@ -35,7 +35,7 @@ public class MainMenu extends GameElements implements Screen {
 
     Main game;
 
-    Sprite startButtonInactive, startButtonActive,  blackTransition;
+    Sprite startButtonInactive, startButtonActive, blackTransition;
 
     boolean switchScreens = false;
     boolean transitionOutReady = false;
@@ -78,8 +78,10 @@ public class MainMenu extends GameElements implements Screen {
         textParameter.size = SCREEN_WIDTH / 40;
 
         gemCountFont = generator.generateFont(textParameter);
-        gemCountFont.setColor(1,1,1, 0.8f);
+        gemCountFont.setColor(1, 1, 1, 0.8f);
         ShopElement.createElements(assets);
+        refreshRate = Gdx.graphics.getDisplayMode().refreshRate;
+
     }
 
     @Override
@@ -92,26 +94,14 @@ public class MainMenu extends GameElements implements Screen {
         game.batch.begin();
         deltaList.add(delta);
 
-        refreshRate = Gdx.graphics.getDisplayMode().refreshRate;
-        if (!(delta < (1.1f * (1 / refreshRate)) && delta > (.9f * (1 / refreshRate)))) {
-            delta = 1f/refreshRate;
+        for (int i = 0; i < deltaList.size; i++) {
+            deltaSum += deltaList.get(i);
         }
-        else {
-            if (deltaList.size > 100) {
-                for (int i = 0; i < deltaList.size; i++) {
-                    deltaSum += deltaList.get(i);
-                }
-                delta = deltaSum / deltaList.size;
-
-                if (!deltaList.isEmpty())
-                    deltaList.removeIndex(0);
-
-                deltaSum = 0;
-            }
-        }
+        delta = deltaSum / deltaList.size;
+        deltaSum = 0;
 
 
-        if(deltaList.size >= 100 || canRenderBackground) {
+        if (deltaList.size >= 100 || canRenderBackground) {
             if (START_BUTTON_Y >= START_BUTTON_Y_TRANSITIONED && !switchScreens) {
                 isTransitioningIn = true;
                 transitionIn(delta);
@@ -131,22 +121,21 @@ public class MainMenu extends GameElements implements Screen {
                     isShopOpen = false;
                 }
             }
-
         }
 
-        if(beganFading || (START_BUTTON_Y <= START_BUTTON_Y_TRANSITIONED))
+        if (beganFading || (START_BUTTON_Y <= START_BUTTON_Y_TRANSITIONED))
             canRenderBackground = true;
 
-        if(canRenderBackground)
+        if (canRenderBackground)
             background.updateAndRender(delta, false, false, 0, starsAnimFront, starsAnimBack, game.batch, true, false, false, true);
 
-        if(switchScreens){
-            if(soundEnabled && !playSoundHasPlayed) {
+        if (switchScreens) {
+            if (soundEnabled && !playSoundHasPlayed) {
                 game.miniAudio.playSound(play_sound);
                 playSoundHasPlayed = true;
             }
-                transitionOut(delta);
-                transitionInDone = false;
+            transitionOut(delta);
+            transitionInDone = false;
 
         }
 
@@ -154,46 +143,46 @@ public class MainMenu extends GameElements implements Screen {
             soundLoaded = true;
         }
 
-        if(!isShopOpen) {
+        if (!isShopOpen) {
             gameInterface.drawTitleScreen(game, transitionInDone, prefs);
-        }
-        else {
+        } else {
             gameInterface.drawShopScreen(game, soundEnabled, delta, game.batch, gemCountFont, prefs);
 
         }
 
-        if(isTransitioningIn && !isFadingOut) {
+        if (isTransitioningIn && !isFadingOut) {
             fadeIn(delta);
         }
 
-        if(transitionOutReady) {
+        if (transitionOutReady) {
             fadeOut(delta);
         }
 
-        if(!isFadingOut && !isTransitioningIn){
-            if(transitionInDone  && !switchScreens && !isShopOpen) {
+        if (!isFadingOut && !isTransitioningIn) {
+            if (transitionInDone && !switchScreens && !isShopOpen) {
                 soundEnabled = gameInterface.checkForTSSoundButtonTap(game, soundEnabled, prefs);
             }
         }
         game.batch.end();
     }
+
     public void transitionOut(float delta) {
         transitionOutReady = true;
 
         if (START_BUTTON_Y < SCREEN_HEIGHT * 1.2f) {
-            START_BUTTON_Y += (int)(transitionSpeed * delta);
-            TITLE_LOGO_Y += (int)(transitionSpeed * delta);
-            SHOP_BUTTON_Y += (int)(transitionSpeed * delta);
+            START_BUTTON_Y += (int) (transitionSpeed * delta);
+            TITLE_LOGO_Y += (int) (transitionSpeed * delta);
+            SHOP_BUTTON_Y += (int) (transitionSpeed * delta);
         }
         if (START_BUTTON_Y > SCREEN_HEIGHT * 1.2f) {
             dispose();
         }
     }
 
-    public void transitionIn(float delta){
-        START_BUTTON_Y -= (int)(transitionSpeed * delta);
-        SHOP_BUTTON_Y -= (int)(transitionSpeed * delta);
-        TITLE_LOGO_Y -= (int)(transitionSpeed * delta);
+    public void transitionIn(float delta) {
+        START_BUTTON_Y -= (int) (transitionSpeed * delta);
+        SHOP_BUTTON_Y -= (int) (transitionSpeed * delta);
+        TITLE_LOGO_Y -= (int) (transitionSpeed * delta);
     }
 
     @Override
@@ -201,18 +190,18 @@ public class MainMenu extends GameElements implements Screen {
         game.setScreen(new MainGame(game, gameInterface, assets, background));
     }
 
-    public void fadeOut(float delta){
+    public void fadeOut(float delta) {
         isFadingOut = true;
         transitionOutOpacity += 0.8f * delta;
-        blackTransition.setColor(0,0,0,transitionOutOpacity);
+        blackTransition.setColor(0, 0, 0, transitionOutOpacity);
         blackTransition.draw(game.batch);
     }
 
-    public void fadeIn(float delta){
+    public void fadeIn(float delta) {
         beganFading = true;
         isFadingIn = true;
         transitionInOpacity -= 0.6f * delta;
-        blackTransition.setColor(0,0,0, transitionInOpacity);
+        blackTransition.setColor(0, 0, 0, transitionInOpacity);
 
         blackTransition.draw(game.batch);
     }
@@ -223,14 +212,15 @@ public class MainMenu extends GameElements implements Screen {
 
     @Override
     public void resume() {
-        if(Gdx.graphics.getDisplayMode().refreshRate != refreshRate){
+        if (Gdx.graphics.getDisplayMode().refreshRate != refreshRate) {
             refreshRate = Gdx.graphics.getDisplayMode().refreshRate;
             deltaList.clear();
         }
     }
 
     @Override
-    public void hide() {}
+    public void hide() {
+    }
 
     @Override
     public void resize(int width, int height) {

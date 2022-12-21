@@ -68,12 +68,12 @@ public class Main extends Game implements ApplicationListener {
 
 	@Override
 	public void pause(){
-		miniAudio.stopEngine();
 		super.pause();
+		miniAudio.stopEngine();
 	}
 	@Override
 	public void resume(){
-		miniAudio.startEngine();
 		super.resume();
+		miniAudio.startEngine();
 	}
 }

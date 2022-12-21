@@ -365,9 +365,7 @@ public class MainGame extends GameElements implements Screen {
         if (isPaused || isRunningResumeCountdown) {
             deltaP = 0;
         }
-
-        if (deltaList.size >= 60) {
-            for (int i = 0; i < deltaList.size; i++) {
+         for (int i = 0; i < deltaList.size; i++) {
                 deltaSum += deltaList.get(i);
             }
             delta = deltaSum / deltaList.size;
@@ -377,10 +375,7 @@ public class MainGame extends GameElements implements Screen {
             } else {
                 deltaP = delta;
             }
-            deltaList.removeIndex(0);
             deltaSum = 0;
-        }
-
 
         if (fadeOutOpacity > 0 || fadeInOpacity > 0)
             blackTransition.draw(game.batch);
@@ -1925,15 +1920,13 @@ public class MainGame extends GameElements implements Screen {
         if (!isTransitioningOut && !isFadingOut) {
             isPaused = true;
         }
-
-//        songPausePosition = mainMusic.getCursorPosition();
     }
 
     @Override
     public void resume() {
         if (Gdx.graphics.getDisplayMode().refreshRate != refreshRate) {
             refreshRate = Gdx.graphics.getDisplayMode().refreshRate;
-            deltaList.clear();
+                deltaList.clear();
         }
     }
 
