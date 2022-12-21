@@ -591,7 +591,7 @@ public class MainGame extends GameElements implements Screen {
                     }
                     isShipLeaving = true;
                 }
-                gameInterface.checkForNoButtonTap(game, soundEnabled);
+                gameInterface.checkForNoButtonTap(soundEnabled);
 
             }
             if (isHourglass) {
@@ -658,7 +658,7 @@ public class MainGame extends GameElements implements Screen {
                             }
                             isShipLeaving = true;
                         }
-                        gameInterface.checkForNoButtonTap(game, soundEnabled);
+                        gameInterface.checkForNoButtonTap(soundEnabled);
 
                     }
 

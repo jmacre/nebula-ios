@@ -253,7 +253,7 @@ public class GameElements {
 
     MASound mainMusic;
     MASound pauseSound;
-    MASound playSound;
+    MASound playSound, shopSound;
     MASound bombSound;
     MASound missileSound;
     MASound bulletSound, itemSound, hitSound, gemSound, errorSound;

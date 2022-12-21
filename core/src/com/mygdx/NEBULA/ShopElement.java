@@ -37,7 +37,7 @@ public class ShopElement extends GameElements{
     static Sprite bredShip, greenShip, orangeShip, blueShip;
 
     public static int shipCount = 9; // one less than actual count for cycling between ships
-    private int colorId, price;
+    private int colorId;
 
     private Sprite elementSheet;
     private String title;
