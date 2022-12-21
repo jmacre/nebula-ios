@@ -171,7 +171,7 @@ public class GameInterface extends GameElements {
             game.batch.draw(shopButton.getTexture(), SHOP_BUTTON_X, SHOP_BUTTON_Y, SHOP_BUTTON_WIDTH, SHOP_BUTTON_HEIGHT);
 
         if(TITLE_LOGO_Y < SCREEN_HEIGHT)
-        game.batch.draw(titleTexture, TITLE_LOGO_X, TITLE_LOGO_Y - TITLE_LOGO_HEIGHT, TITLE_LOGO_WIDTH, TITLE_LOGO_HEIGHT);
+        game.batch.draw(titleTexture, TITLE_LOGO_X, TITLE_LOGO_Y, TITLE_LOGO_WIDTH, TITLE_LOGO_HEIGHT);
 
         if (prefs.hasSound())
             tsSoundButton.setTexture(assets.assetManager.get(Assets.sound_on_button_ts, Texture.class));
@@ -324,8 +324,10 @@ public class GameInterface extends GameElements {
         }
         if (noButton.getReleased()) {
             setConfirmLeaveScreenOpen(false);
-            if (soundEnabled)
+            if (soundEnabled) {
+                pauseSound.stop();
                 pauseSound.play();
+            }
         }
     }
 
@@ -392,8 +394,10 @@ public class GameInterface extends GameElements {
         if (selectButton.getReleased()) {
             prefs.setShip(selectedElement);
 
-            if (soundEnabled)
+            if (soundEnabled) {
+                playSound.stop();
                 playSound.play();
+            }
         }
     }
     public void checkForBuyButtonTap(Main game, boolean soundEnabled, int itemPrice, Prefs prefs){
@@ -409,8 +413,10 @@ public class GameInterface extends GameElements {
                 prefs.setUnlockedShips(prefs.getUnlockedShips() + selectedElement);
                 prefs.setGemCount(prefs.getGemCount() - itemPrice);
 
-                if (soundEnabled)
+                if (soundEnabled) {
+                    gemSound.stop();
                     gemSound.play();
+                }
             }
             else{
                 if(soundEnabled){
@@ -457,7 +463,7 @@ public class GameInterface extends GameElements {
         }
 
         if (ship == null) {
-            ship = new ShopElement(SHIP_ID, selectedElement, SHOP_BACK_X + SHOP_BACK_WIDTH / 2 - SHIP_WIDTH / 2, SHOP_BACK_Y + SHOP_BACK_HEIGHT / 2 - SHIP_HEIGHT / 2, SHIP_WIDTH, SHIP_HEIGHT);
+            ship = new ShopElement(SHIP_ID, selectedElement, SHOP_BACK_X + SHOP_BACK_WIDTH / 2 - SHIP_WIDTH / 2f, SHOP_BACK_Y + SHOP_BACK_HEIGHT / 2 - SHIP_HEIGHT / 2, SHIP_WIDTH, SHIP_HEIGHT);
         }
 
         ship.render(stateTime, batch);
