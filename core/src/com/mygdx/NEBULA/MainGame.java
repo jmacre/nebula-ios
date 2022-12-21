@@ -943,6 +943,7 @@ public class MainGame extends GameElements implements Screen {
     }
 
     public void transitionOut(float SHIP_X_TRANSITION_OUT) {
+        mainMusic.stop();
 
         if (SHIP_START_Y >= -3 * SHIP_HEIGHT) {
             isTransitionedOut = false;
@@ -1793,6 +1794,7 @@ public class MainGame extends GameElements implements Screen {
         if (hitSoundTimer < 0) {
             hitSoundTimer += deltaP;
         } else {
+            hitSound.stop();
             hitSound.play();
             playHitSound = false;
             hitSoundTimer = -.08f;

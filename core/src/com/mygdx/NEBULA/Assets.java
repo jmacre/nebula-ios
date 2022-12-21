@@ -1,8 +1,6 @@
 package com.mygdx.NEBULA;
 
 import com.badlogic.gdx.assets.AssetManager;
-import com.badlogic.gdx.audio.Music;
-import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.utils.Disposable;
 
@@ -18,7 +16,7 @@ public class Assets implements Disposable {
     public static final String main_theme = "sound/organ.mp3";
     public static final String pause_sound = "sound/pause.mp3";
     public static final String play_sound = "sound/play.mp3";
-    public static final String heart_sound = "sound/heart_sound.mp3";
+    public static final String item_sound = "sound/item_sound.mp3";
     public static final String bomb_sound = "sound/bomb_sound.mp3";
     public static final String missile_sound = "sound/missile_sound.mp3";
     public static final String gem_sound = "sound/gem.mp3";
@@ -136,7 +134,7 @@ public class Assets implements Disposable {
         assetManager.load(pause_sound, MASound.class);
         assetManager.load(play_sound, MASound.class);
         assetManager.load(bullet_sound, MASound.class);
-        assetManager.load(heart_sound, MASound.class);
+        assetManager.load(item_sound, MASound.class);
         assetManager.load(error_sound, MASound.class);
         assetManager.load(gem_sound, MASound.class);
 
@@ -251,7 +249,7 @@ public class Assets implements Disposable {
         assetManager.unload(pause_sound);
         assetManager.unload(play_sound);
         assetManager.unload(bullet_sound);
-        assetManager.unload(heart_sound);
+        assetManager.unload(item_sound);
         assetManager.unload(bomb_sound);
         assetManager.unload(gem_sound);
         assetManager.unload(error_sound);
