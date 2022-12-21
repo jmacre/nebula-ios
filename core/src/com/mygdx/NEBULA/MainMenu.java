@@ -46,6 +46,7 @@ public class MainMenu extends GameElements implements Screen {
     boolean beganFading = false;
     boolean canRenderBackground = false;
     boolean isShopOpen = false;
+    boolean isGemScreenOpen = false;
     boolean soundEnabled, soundLoaded, playSoundHasPlayed;
     GameInterface gameInterface;
     float refreshRate;
@@ -108,17 +109,23 @@ public class MainMenu extends GameElements implements Screen {
             } else {
                 isTransitioningIn = false;
                 transitionInDone = true;
-                if (!isShopOpen) {
+                if (!isShopOpen && !isGemScreenOpen) {
                     if (gameInterface.checkForStartButtonTap(switchScreens)) {
                         switchScreens = true;
                     }
                 }
 
-                if (gameInterface.checkForShopButtonTap(game, isShopOpen, switchScreens, soundEnabled)) {
+                if (gameInterface.checkForShopButtonTap(isShopOpen, isGemScreenOpen, switchScreens, soundEnabled)) {
                     isShopOpen = true;
                 }
                 if (isShopOpen && gameInterface.checkForXButtonTap(game, true, soundEnabled)) {
                     isShopOpen = false;
+                }
+                if(gameInterface.checkForGemButtonTap(isGemScreenOpen, isShopOpen, switchScreens, soundEnabled)){
+                    isGemScreenOpen = true;
+                }
+                if(isGemScreenOpen && gameInterface.checkForXButtonTap(game, true, soundEnabled)){
+                    isGemScreenOpen = false;
                 }
             }
         }
@@ -143,12 +150,16 @@ public class MainMenu extends GameElements implements Screen {
             soundLoaded = true;
         }
 
-        if (!isShopOpen) {
+        if (!isShopOpen && !isGemScreenOpen) {
             gameInterface.drawTitleScreen(game, transitionInDone, prefs);
-        } else {
-            gameInterface.drawShopScreen(game, soundEnabled, delta, game.batch, gemCountFont, prefs);
-
         }
+        else if(isShopOpen){
+            gameInterface.drawShopScreen(game, soundEnabled, delta, game.batch, gemCountFont, prefs);
+        }
+        else{
+            gameInterface.drawGemScreen(game, soundEnabled, game.batch, prefs);
+        }
+
 
         if (isTransitioningIn && !isFadingOut) {
             fadeIn(delta);
@@ -159,7 +170,7 @@ public class MainMenu extends GameElements implements Screen {
         }
 
         if (!isFadingOut && !isTransitioningIn) {
-            if (transitionInDone && !switchScreens && !isShopOpen) {
+            if (transitionInDone && !switchScreens && !isShopOpen && !isGemScreenOpen) {
                 soundEnabled = gameInterface.checkForTSSoundButtonTap(game, soundEnabled, prefs);
             }
         }

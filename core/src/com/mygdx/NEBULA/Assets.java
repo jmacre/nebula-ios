@@ -4,6 +4,8 @@ import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.utils.Disposable;
 
+import org.w3c.dom.Text;
+
 import games.rednblack.miniaudio.MASound;
 import games.rednblack.miniaudio.MiniAudio;
 import games.rednblack.miniaudio.loader.MASoundLoader;
@@ -48,6 +50,8 @@ public class Assets implements Disposable {
 
     public static final String play_button_inactive = "ui/play_button_inactive.png";
     public static final String play_button_active = "ui/play_button_active.png";
+
+    public static final String gem_button_inactive = "ui/gem_button_inactive.png";
 
     public static final String replay_button_inactive = "ui/replay_button_inactive.png";
     public static final String home_button_inactive = "ui/home_button_inactive.png";
@@ -156,6 +160,7 @@ public class Assets implements Disposable {
         assetManager.load(start_button_active_clear, Texture.class);
         assetManager.load(shop_button_inactive, Texture.class);
         assetManager.load(shop_button_inactive_clear, Texture.class);
+        assetManager.load(gem_button_inactive, Texture.class);
 
         assetManager.load(shop_button_active, Texture.class);
 
@@ -287,6 +292,8 @@ public class Assets implements Disposable {
         assetManager.unload(select_button_active);
         assetManager.unload(select_button_inactive);
         assetManager.unload(active_button);
+
+        assetManager.unload(gem_button_inactive);
 
         assetManager.unload(bullet_yellow);
         assetManager.unload(bullet_red);

@@ -186,6 +186,11 @@ public class GameElements {
     public static final float TS_SOUND_BUTTON_X = SCORE_X;
     public static final float TS_SOUND_BUTTON_Y = TS_SOUND_BUTTON_HEIGHT * 1.05f;
 
+    public static final float GEM_BUTTON_WIDTH = GEM_WIDTH;
+    public static final float GEM_BUTTON_HEIGHT = GEM_HEIGHT;
+    public static final float GEM_BUTTON_X = SCREEN_WIDTH - TS_SOUND_BUTTON_X - GEM_BUTTON_WIDTH;
+    public static final float GEM_BUTTON_Y = TS_SOUND_BUTTON_Y + (TS_SOUND_BUTTON_HEIGHT - GEM_BUTTON_HEIGHT)/2f;
+
     public static final float PAUSE_BUTTON_X = SCREEN_WIDTH - SCREEN_WIDTH / 7.5f;
     public static final float PAUSE_BUTTON_Y = SCREEN_HEIGHT - MAIN_UI_HEIGHT / 2.1f - (MAIN_UI_HEIGHT / 2.5f) / 2;
     public static final float PAUSE_BUTTON_HEIGHT = MAIN_UI_HEIGHT/1.2f;
