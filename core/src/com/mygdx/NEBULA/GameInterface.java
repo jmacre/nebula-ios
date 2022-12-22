@@ -471,7 +471,7 @@ public class GameInterface extends GameElements {
         }
     }
 
-    public void checkForAdButtonTap(boolean soundEnabled, Prefs prefs) {
+    public void checkForAdButtonTap(Main game, boolean soundEnabled, Prefs prefs) {
         if (selectButton.getTappedBefore()) {
             selectButton.setTexture(assets.assetManager.get(Assets.ad_button_active, Texture.class));
 
@@ -479,12 +479,8 @@ public class GameInterface extends GameElements {
             selectButton.setTexture(assets.assetManager.get(ad_button_inactive, Texture.class));
         }
         if (selectButton.getReleased()) {
-            System.out.println("test");
+            game.requestHandler.showAd(soundEnabled, prefs, gemSound);
 
-            if (soundEnabled) {
-                gemSound.stop();
-                gemSound.play();
-            }
         }
     }
 
@@ -496,6 +492,7 @@ public class GameInterface extends GameElements {
             selectButton.setTexture(assets.assetManager.get(Assets.buy_inactive, Texture.class));
         }
         if (selectButton.getReleased()) {
+
             if (prefs.getGemCount() >= itemPrice) {
                 selectButton.setTexture(assets.assetManager.get(Assets.select_button_inactive, Texture.class));
                 prefs.setUnlockedShips(prefs.getUnlockedShips() + selectedShopElement);
@@ -527,14 +524,14 @@ public class GameInterface extends GameElements {
 
         checkForLeftArrowTap(soundEnabled, false, true);
         checkForRightArrowTap(soundEnabled, false, true);
-        checkForSelectButtonTap(soundEnabled, false, true, prefs);
 
-        if (selectedGemScreenElement != AD_ID) {
+        if (selectedGemScreenElement == AD_ID) {
+            checkForAdButtonTap(game, soundEnabled, prefs);
+        } else {
+            checkForSelectButtonTap(soundEnabled, false, true, prefs);
             gl.setText(buyFont, '$' + Float.toString(GemElement.getPriceByElementId(selectedGemScreenElement)), Color.valueOf(PURPLE_COLOR_HEX), SCREEN_WIDTH, Align.center, true);
             buyFont.draw(game.batch, '$' + Float.toString(GemElement.getPriceByElementId(selectedGemScreenElement)), (SCREEN_WIDTH - gl.width) / 2, SELECT_BUTTON_Y + gl.height / 2 + SELECT_BUTTON_HEIGHT / 2);
-        } else {
-            selectButton.setTexture(assets.assetManager.get(Assets.ad_button_inactive, Texture.class));
-            checkForAdButtonTap(soundEnabled, prefs);
+
         }
 
         if (gemElement == null) {

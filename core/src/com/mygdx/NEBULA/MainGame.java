@@ -361,10 +361,8 @@ public class MainGame extends GameElements implements Screen {
 
         deltaList.add(delta);
 
-
         if (isPaused || isRunningResumeCountdown) {
             deltaP = 0;
-
         }
 
         if (deltaList.size >= 60) {

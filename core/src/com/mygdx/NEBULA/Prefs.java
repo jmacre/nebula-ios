@@ -35,6 +35,7 @@ public class Prefs {
         prefs.putInteger("shipColor", selectedShip);
         prefs.flush();
     }
+
     public int getShip(){
         return prefs.getInteger("shipColor", 0);
     }

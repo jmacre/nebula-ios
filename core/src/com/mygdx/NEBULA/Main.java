@@ -49,8 +49,6 @@ public class Main extends Game implements ApplicationListener {
 		miniAudio = new MiniAudio();
 		miniAudio.setupAndroid(miniAudioContextAssets);
 
-//		requestHandler.showAds(false);
-
 		FreeTypeFontGenerator.setMaxTextureSize(2048);
 		generator = new FreeTypeFontGenerator(Gdx.files.internal("mainfont.ttf"));
 		parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();

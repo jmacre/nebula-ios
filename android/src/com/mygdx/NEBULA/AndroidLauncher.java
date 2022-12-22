@@ -21,6 +21,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 
 import com.badlogic.gdx.Audio;
+import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
@@ -43,6 +44,7 @@ import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback;
 import java.util.Arrays;
 import java.util.List;
 
+import games.rednblack.miniaudio.MASound;
 import games.rednblack.miniaudio.MiniAudio;
 
 public class AndroidLauncher extends AndroidApplication implements IActivityRequestHandler{
@@ -106,15 +108,12 @@ public class AndroidLauncher extends AndroidApplication implements IActivityRequ
 					@Override
 					public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
 						// Handle the error.
-						Log.d(TAG, loadAdError.toString());
 						mRewardedAd = null;
 					}
 
 					@Override
 					public void onAdLoaded(@NonNull RewardedAd rewardedAd) {
 						mRewardedAd = rewardedAd;
-						Log.d(TAG, "Ad was loaded.");
-						showRewardedVideo();
 					}
 				});
 
@@ -141,64 +140,78 @@ public class AndroidLauncher extends AndroidApplication implements IActivityRequ
 	}
 
 	@Override
-	public void showAds(boolean show) {
-		handler.sendEmptyMessage(show ? showAds : hideAds);
+	public void showAd(boolean soundEnabled, Prefs prefs, MASound gemSound) {
+		runOnUiThread(new Runnable() {
+			@Override
+			public void run() {
+				showRewardedVideo(soundEnabled, prefs, gemSound);
+			}
+		});
+
 	}
 
-	private void showRewardedVideo() {
+	private void loadAd(){
+        if (mRewardedAd == null) {
+            RewardedAd.load(this, "ca-app-pub-3940256099942544/5224354917",
+                    adRequest, new RewardedAdLoadCallback() {
+                        @Override
+                        public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
+                            // Handle the error.
+                            mRewardedAd = null;
+                        }
 
-		if (mRewardedAd == null) {
-			Log.d("TAG", "The rewarded ad wasn't ready yet.");
-			return;
+                        @Override
+                        public void onAdLoaded(@NonNull RewardedAd rewardedAd) {
+                            mRewardedAd = rewardedAd;
+                        }
+                    });
+        }
+	}
+
+	private void showRewardedVideo(boolean soundEnabled, Prefs prefs, MASound gemSound) {
+		if(mRewardedAd == null){
+			loadAd();
 		}
-//		showVideoButton.setVisibility(View.INVISIBLE);
+		else {
+			mRewardedAd.setFullScreenContentCallback(
+					new FullScreenContentCallback() {
+						@Override
+						public void onAdShowedFullScreenContent() {
 
-		mRewardedAd.setFullScreenContentCallback(
-				new FullScreenContentCallback() {
-					@Override
-					public void onAdShowedFullScreenContent() {
-						// Called when ad is shown.
-						Log.d(TAG, "onAdShowedFullScreenContent");
-						Toast.makeText(AndroidLauncher.this, "onAdShowedFullScreenContent", Toast.LENGTH_SHORT)
-								.show();
-					}
+						}
 
-					@Override
-					public void onAdFailedToShowFullScreenContent(AdError adError) {
-						// Called when ad fails to show.
-						Log.d(TAG, "onAdFailedToShowFullScreenContent");
-						// Don't forget to set the ad reference to null so you
-						// don't show the ad a second time.
-						mRewardedAd = null;
-						Toast.makeText(
-										AndroidLauncher.this, "onAdFailedToShowFullScreenContent", Toast.LENGTH_SHORT)
-								.show();
-					}
+						@Override
+						public void onAdFailedToShowFullScreenContent(AdError adError) {
+							mRewardedAd = null;
+							Toast.makeText(AndroidLauncher.this, "onAdFailedToShowFullScreenContent", Toast.LENGTH_SHORT)
+									.show();
+						}
 
-					@Override
-					public void onAdDismissedFullScreenContent() {
-						// Called when ad is dismissed.
-						// Don't forget to set the ad reference to null so you
-						// don't show the ad a second time.
-						mRewardedAd = null;
-						Log.d(TAG, "onAdDismissedFullScreenContent");
-						Toast.makeText(AndroidLauncher.this, "onAdDismissedFullScreenContent", Toast.LENGTH_SHORT)
-								.show();
-						// Preload the next rewarded ad.
-//						AndroidLauncher.this.loadRewardedAd();
-					}
-				});
-		Activity activityContext = AndroidLauncher.this;
-		mRewardedAd.show(
-				activityContext,
-				new OnUserEarnedRewardListener() {
-					@Override
-					public void onUserEarnedReward(@NonNull RewardItem rewardItem) {
-						// Handle the reward.
-						Log.d("TAG", "The user earned the reward.");
-						int rewardAmount = rewardItem.getAmount();
-						String rewardType = rewardItem.getType();
-					}
-				});
+						@Override
+						public void onAdDismissedFullScreenContent() {
+							mRewardedAd = null;
+							loadAd();
+
+						}
+					});
+			Activity activityContext = AndroidLauncher.this;
+			mRewardedAd.show(
+					activityContext,
+					new OnUserEarnedRewardListener() {
+						@Override
+						public void onUserEarnedReward(@NonNull RewardItem rewardItem) {
+							int gemCount = prefs.getGemCount();
+							int reward = 25;
+							prefs.setGemCount(gemCount + reward);
+
+
+							if (soundEnabled) {
+								gemSound.stop();
+								gemSound.play();
+							}
+
+						}
+					});
+		}
 	}
 }
