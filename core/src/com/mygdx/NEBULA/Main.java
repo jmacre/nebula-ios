@@ -23,7 +23,10 @@ import games.rednblack.miniaudio.loader.MASoundLoader;
 import jdk.nashorn.internal.runtime.Context;
 
 
+
+
 public class Main extends Game implements ApplicationListener {
+
 	public SpriteBatch batch;
 
 	public static BitmapFont scoreFont;
@@ -32,9 +35,11 @@ public class Main extends Game implements ApplicationListener {
 	Assets assets;
 	public Object miniAudioContextAssets;
 	MiniAudio miniAudio;
+	public IActivityRequestHandler requestHandler;
 
-	public Main(Object miniAudioContextAssets){
+	public Main(Object miniAudioContextAssets, IActivityRequestHandler requestHandler){
 		this.miniAudioContextAssets = miniAudioContextAssets;
+		this.requestHandler = requestHandler;
 	}
 	public Main(){}
 
@@ -43,6 +48,8 @@ public class Main extends Game implements ApplicationListener {
 		batch = new SpriteBatch();
 		miniAudio = new MiniAudio();
 		miniAudio.setupAndroid(miniAudioContextAssets);
+
+//		requestHandler.showAds(false);
 
 		FreeTypeFontGenerator.setMaxTextureSize(2048);
 		generator = new FreeTypeFontGenerator(Gdx.files.internal("mainfont.ttf"));

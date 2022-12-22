@@ -364,6 +364,7 @@ public class MainGame extends GameElements implements Screen {
 
         if (isPaused || isRunningResumeCountdown) {
             deltaP = 0;
+
         }
 
         if (deltaList.size >= 60) {
@@ -381,6 +382,7 @@ public class MainGame extends GameElements implements Screen {
             deltaSum = 0;
         }
 
+//        game.requestHandler.showAds(true);
 
         if (fadeOutOpacity > 0 || fadeInOpacity > 0)
             blackTransition.draw(game.batch);

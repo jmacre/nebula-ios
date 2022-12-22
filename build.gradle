@@ -11,6 +11,7 @@ buildscript {
     dependencies {
         classpath 'com.mobidevelop.robovm:robovm-gradle-plugin:2.3.18'
         classpath 'com.android.tools.build:gradle:7.2.2'
+
     }
 }
 
@@ -45,6 +46,8 @@ project(":android") {
 
     dependencies {
         implementation project(":core")
+        implementation 'com.google.android.gms:play-services-ads:21.4.0'
+
         api "com.badlogicgames.gdx:gdx-backend-android:$gdxVersion"
         natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-arm64-v8a"
         natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-x86"
