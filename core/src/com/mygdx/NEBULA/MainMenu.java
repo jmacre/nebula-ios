@@ -138,7 +138,7 @@ public class MainMenu extends GameElements implements Screen {
 
         if (switchScreens) {
             if (soundEnabled && !playSoundHasPlayed) {
-                game.miniAudio.playSound(play_sound);
+                playSound.play();
                 playSoundHasPlayed = true;
             }
             transitionOut(delta);

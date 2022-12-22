@@ -116,7 +116,7 @@ public class MainGame extends GameElements implements Screen {
     float rapidFireTimer = RAPID_FIRE_TIMER;
     float hourglassTimer = HOURGLASS_TIMER;
 
-    float moveSpeed = 20f;
+    float moveSpeed = 27f;
 
     float shipHitTimer = -2f;
     float shipBlinkingTimer = -0.2f;
