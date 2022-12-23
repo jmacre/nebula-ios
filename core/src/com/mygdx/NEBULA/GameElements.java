@@ -95,6 +95,9 @@ public class GameElements {
     public static final float BOMB_HEIGHT = HEART_HEIGHT * (24/11f);
     public static final float BOMB_WIDTH = BOMB_HEIGHT * (18/24f);
 
+    public static final float SPREAD_HEIGHT = BOMB_HEIGHT * (17/24f);
+    public static final float SPREAD_WIDTH = SPREAD_HEIGHT;
+
     public static final float GEM_HEIGHT = BOMB_HEIGHT / 2f;
     public static final float GEM_WIDTH = BOMB_WIDTH * (17/18f);
 

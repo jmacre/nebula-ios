@@ -15,7 +15,7 @@ public class Assets implements Disposable {
 
     public static final String bullet_sound = "sound/bullet_sound.mp3";
     public static final String hit_sound = "sound/hit_sound.mp3";
-    public static final String main_theme = "sound/organ.mp3";
+    public static final String main_theme = "sound/main_theme.mp3";
     public static final String pause_sound = "sound/pause.mp3";
     public static final String play_sound = "sound/play.mp3";
     public static final String item_sound = "sound/item_sound.mp3";
@@ -79,6 +79,8 @@ public class Assets implements Disposable {
     public static final String bullet_yellow = "weapons/bullet_yellow.png";
     public static final String bullet_red = "weapons/bullet_red.png";
     public static final String bullet_blue = "weapons/bullet_blue.png";
+    public static final String bullet_purple = "weapons/bullet_purple.png";
+    public static final String bullet_green = "weapons/bullet_green.png";
     public static final String missile_ss = "weapons/missile_ss.png";
 
     public static final String black_transition = "misc/black_transition.png";
@@ -125,6 +127,7 @@ public class Assets implements Disposable {
     public static final String rapid_fire_ss = "items/rapid_fire_ss.png";
     public static final String hourglass_ss = "items/hourglass_ss.png";
     public static final String gem_ss = "items/gem_ss.png";
+    public static final String spread_ss = "items/spread_ss.png";
     public static final String error_sound = "sound/error_sound.mp3";
 
     public static final String gem_icon = "ui/gem.png";
@@ -185,6 +188,8 @@ public class Assets implements Disposable {
         assetManager.load(bullet_yellow, Texture.class);
         assetManager.load(bullet_red, Texture.class);
         assetManager.load(bullet_blue, Texture.class);
+        assetManager.load(bullet_purple, Texture.class);
+        assetManager.load(bullet_green, Texture.class);
         assetManager.load(missile_ss, Texture.class);
 
         assetManager.load(sound_off_button_active, Texture.class);
@@ -231,6 +236,7 @@ public class Assets implements Disposable {
         assetManager.load(rapid_fire_ss, Texture.class);
         assetManager.load(hourglass_ss, Texture.class);
         assetManager.load(gem_ss, Texture.class);
+        assetManager.load(spread_ss, Texture.class);
 
         assetManager.load(pause_menu_back, Texture.class);
         assetManager.load(shop_back, Texture.class);
@@ -302,6 +308,8 @@ public class Assets implements Disposable {
         assetManager.unload(bullet_yellow);
         assetManager.unload(bullet_red);
         assetManager.unload(bullet_blue);
+        assetManager.unload(bullet_purple);
+        assetManager.unload(bullet_green);
         assetManager.unload(missile_ss);
 
         assetManager.unload(sound_off_button_inactive);
@@ -341,6 +349,7 @@ public class Assets implements Disposable {
         assetManager.unload(missile_item_ss);
         assetManager.unload(rapid_fire_ss);
         assetManager.unload(gem_ss);
+        assetManager.unload(spread_ss);
 
         assetManager.unload(pause_menu_back);
 

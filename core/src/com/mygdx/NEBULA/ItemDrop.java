@@ -19,6 +19,7 @@ public class ItemDrop extends GameElements {
     public static final int RAPID_FIRE_ID = 3;
     public static final int GEM_ID = 4;
     public static final int HOURGLASS_ID = 5;
+    public static final int SPREAD_ID = 6;
 
     public static final float MIN_ITEM_SPAWN_TIME = 15f;
     public static final float MAX_ITEM_SPAWN_TIME = 25f;
@@ -27,13 +28,15 @@ public class ItemDrop extends GameElements {
     public static final float MIN_GEM_SPAWN_TIME = 10f;
 
     public static float MISSILE_TIMER = -9f;
-    public static float RAPID_FIRE_TIMER = -12f;
+    public static float RAPID_FIRE_TIMER = -10f;
+    public static float SPREAD_FIRE_TIMER = -10f;
     public static float HOURGLASS_TIMER = -6f;
     public static float HOURGLASS_SPEED_MULTIPLIER = 0.25f;
 
 
     public Sprite itemSheet;
-    Anim itemAnim;
+    Anim itemAnim = new Anim();
+
 
     public static final float SPEED = SCREEN_HEIGHT / 2f;
 
@@ -46,14 +49,12 @@ public class ItemDrop extends GameElements {
     int itemId;
 
     Collision rect;
-    public boolean remove = false;
 
     public void create(int ITEM_X, int ITEM_HEIGHT, float ITEM_WIDTH, int itemId, Assets assets) {
         this.ITEM_X = ITEM_X;
         this.ITEM_Y = (int) (1.2f * SCREEN_HEIGHT);
         this.ITEM_HEIGHT = ITEM_HEIGHT;
         this.ITEM_WIDTH = ITEM_WIDTH;
-        itemAnim = new Anim();
 
         this.assets = assets;
         this.itemId = itemId;
@@ -78,6 +79,8 @@ public class ItemDrop extends GameElements {
             case HOURGLASS_ID:
                 itemSheet = new Sprite(assets.assetManager.get(Assets.hourglass_ss, Texture.class));
                 break;
+            case SPREAD_ID:
+                itemSheet = new Sprite(assets.assetManager.get(Assets.spread_ss, Texture.class));
         }
 
         if (itemId == RAPID_FIRE_ID) { //lightning flashes at double speed??
