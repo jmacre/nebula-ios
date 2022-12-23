@@ -39,6 +39,13 @@
   <libs>
       <lib>z</lib>   
   </libs>
+
+  <frameworkPaths>
+    <path>libs</path>
+    <path variant="device">libs/arm_libs</path>
+    <path variant="simulator">libs/sim_libs</path>
+  </frameworkPaths>
+
   <frameworks>
     <framework>UIKit</framework>
     <framework>OpenGLES</framework>
@@ -48,5 +55,11 @@
     <framework>AudioToolbox</framework>
     <framework>AVFoundation</framework>
     <framework>GameController</framework>
+
+    <framework>GoogleAppMeasurement</framework>
+    <framework>GoogleMobileAds</framework>
+    <framework>GoogleUtilities</framework>
+    <framework>nanopb</framework>
+
   </frameworks>
 </config>

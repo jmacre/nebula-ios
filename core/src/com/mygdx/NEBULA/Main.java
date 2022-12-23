@@ -35,13 +35,15 @@ public class Main extends Game implements ApplicationListener {
 	Assets assets;
 	public Object miniAudioContextAssets;
 	MiniAudio miniAudio;
-	public IActivityRequestHandler requestHandler;
+	public IActivityRequestHandler requestHandlerAndroid, requestHandlerIOS;
 
 	public Main(Object miniAudioContextAssets, IActivityRequestHandler requestHandler){
 		this.miniAudioContextAssets = miniAudioContextAssets;
-		this.requestHandler = requestHandler;
+		this.requestHandlerAndroid = requestHandler;
 	}
-	public Main(){}
+	public Main(IActivityRequestHandler requestHandler){
+		this.requestHandlerIOS = requestHandler;
+	}
 
 	@Override
 	public void create () {

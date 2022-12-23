@@ -1,4 +1,5 @@
 buildscript {
+    project.ext.altpodsVersion = '1.26.0-SNAPSHOT'
 
     repositories {
         mavenLocal()
@@ -11,6 +12,7 @@ buildscript {
     dependencies {
         classpath 'com.mobidevelop.robovm:robovm-gradle-plugin:2.3.18'
         classpath 'com.android.tools.build:gradle:7.2.2'
+        classpath 'com.google.gms:google-services:4.3.14'
 
     }
 }
@@ -73,6 +75,8 @@ project(":ios") {
 
     dependencies {
         implementation project(":core")
+        implementation "io.github.dkimitsa.robovm:robopods-firebase-google-mobile-ads-ios:$altpodsVersion"
+
         api "com.mobidevelop.robovm:robovm-rt:$roboVMVersion"
         api "com.mobidevelop.robovm:robovm-cocoatouch:$roboVMVersion"
         api "com.badlogicgames.gdx:gdx-backend-robovm:$gdxVersion"

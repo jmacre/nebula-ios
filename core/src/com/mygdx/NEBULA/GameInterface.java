@@ -479,8 +479,13 @@ public class GameInterface extends GameElements {
             selectButton.setTexture(assets.assetManager.get(ad_button_inactive, Texture.class));
         }
         if (selectButton.getReleased()) {
-            game.requestHandler.showAd(soundEnabled, prefs, gemSound);
+            if(Gdx.app.getType() == Application.ApplicationType.Android) {
+                game.requestHandlerAndroid.showAd(soundEnabled, prefs, gemSound);
+            }
+            else if (Gdx.app.getType() == Application.ApplicationType.iOS){
+                game.requestHandlerIOS.showAd(soundEnabled, prefs, gemSound);
 
+            }
         }
     }
 

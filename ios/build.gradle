@@ -1,6 +1,6 @@
 sourceSets.main.java.srcDirs = [ "src/" ]
 
-sourceCompatibility = '1.7'
+sourceCompatibility = '1.8'
 [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
 
 ext {
@@ -17,6 +17,9 @@ robovm {
 	archs = "thumbv7:arm64"
 	iosSignIdentity = "Apple Development: jimmy.macre@gmail.com (7QKY57WL48)"
 	iosProvisioningProfile = "iOS Team Provisioning Profile: com.mygdx.NEBULA"
+}
+dependencies {
+	implementation "io.github.dkimitsa.robovm:robopods-firebase-google-mobile-ads-ios:$altpodsVersion"
 }
 
 eclipse.project.name = appName + "-ios"
