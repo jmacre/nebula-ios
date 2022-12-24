@@ -5,9 +5,14 @@ import com.badlogic.gdx.backends.iosrobovm.IOSApplicationConfiguration;
 
 import org.robovm.apple.foundation.NSArray;
 import org.robovm.apple.foundation.NSAutoreleasePool;
+import org.robovm.apple.foundation.NSCoder;
 import org.robovm.apple.foundation.NSError;
 import org.robovm.apple.foundation.NSString;
+import org.robovm.apple.gamecontroller.GCSystemGestureState;
 import org.robovm.apple.uikit.UIApplication;
+import org.robovm.apple.uikit.UIApplicationLaunchOptions;
+import org.robovm.apple.uikit.UIRectEdge;
+import org.robovm.apple.uikit.UIViewController;
 import org.robovm.objc.block.VoidBlock2;
 import org.robovm.pods.google.mobileads.GADFullScreenContentDelegateAdapter;
 import org.robovm.pods.google.mobileads.GADFullScreenPresentingAd;
@@ -15,37 +20,51 @@ import org.robovm.pods.google.mobileads.GADMobileAds;
 import org.robovm.pods.google.mobileads.GADRequest;
 import org.robovm.pods.google.mobileads.GADRewardedAd;
 
+import java.util.List;
+
 import games.rednblack.miniaudio.MASound;
 
 public class IOSLauncher extends IOSApplication.Delegate implements IActivityRequestHandler {
     IOSApplication iosApplication;
-    NSString testDeviceIdentifier = new NSString("1f6ba829d13351d69bb1849bc28e0d81");
+    NSString testDeviceIdentifier = new NSString("752d10da8f6c7207f94659417c6ac2cf");
     private GADRewardedAd mRewardedAd;
     GADRequest request = new GADRequest();
-
 
     @Override
     protected IOSApplication createApplication() {
         IOSApplicationConfiguration config = new IOSApplicationConfiguration();
+        config.screenEdgesDeferringSystemGestures = UIRectEdge.All;
 
         GADMobileAds.sharedInstance().getRequestConfiguration().setTestDeviceIdentifiers(new NSArray<>(testDeviceIdentifier));
         GADMobileAds.sharedInstance().start(status -> {
             System.out.println("GADMobileAds started with status == " + status);
         });
 
+
         request = new GADRequest();
         loadAd();
 
         iosApplication = new IOSApplication(new Main(this), config);
+//        iosApplication.getUIViewController().getPreferredScreenEdgesDeferringSystemGestures().set(UIRectEdge.All);
+//        iosApplication.getUIViewController().setNeedsUpdateOfScreenEdgesDeferringSystemGestures();
+//        iosApplication.getUIViewController().updateViewConstraints();
         return iosApplication;
     }
 
     public static void main(String[] argv) {
+
         NSAutoreleasePool pool = new NSAutoreleasePool();
         UIApplication.main(argv, null, IOSLauncher.class);
+
         pool.close();
     }
+//
+//    @Override
+//    public UIViewController getViewController(UIApplication application, List<String> identifierComponents, NSCoder coder) {
 
+//
+//        return iosApplication.getUIViewController();
+//    }
 
     @Override
     public void showAd(boolean soundEnabled, Prefs prefs, MASound gemSound) {
@@ -86,9 +105,8 @@ public class IOSLauncher extends IOSApplication.Delegate implements IActivityReq
 
 
     public void loadAd() {
-
         if (mRewardedAd == null) {
-            GADRewardedAd.load("ca-app-pub-3940256099942544/5224354917", request,
+            GADRewardedAd.load("ca-app-pub-8689816410492919/2589576727", request,
                     new VoidBlock2<GADRewardedAd, NSError>() {
                 @Override
                 public void invoke(GADRewardedAd ad, NSError error) {

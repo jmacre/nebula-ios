@@ -209,7 +209,7 @@ public class MainGame extends GameElements implements Screen {
 
     ShapeRenderer sr = new ShapeRenderer();
 
-    MyInputProcessor inputProcessor = new MyInputProcessor(this);
+    MyInputProcessor inputProcessor = new MyInputProcessor();
 
     Array<Bullet> bullets = new Array<>();
     Array<Bullet> bulletsToRemove = new Array<>();
@@ -861,6 +861,20 @@ public class MainGame extends GameElements implements Screen {
 
     public void movePlayer() {
 
+        if (!isPaused && isTransitionedIn && !isShipLeaving && !isFadingOut && !isTransitioningOut) {
+            if (!(Gdx.input.getY() < (int) (SCREEN_HEIGHT / 5f)) && SHIP_START_Y > SHIP_Y) {
+                shipMovementVal = (deltaP * moveSpeed * (Gdx.input.getX() - SHIP_X - SHIP_WIDTH / 2f));
+                if (SHIP_X + shipMovementVal > SCREEN_WIDTH - SHIP_WIDTH) {
+                    SHIP_X = SCREEN_WIDTH - SHIP_WIDTH;
+                } else if (SHIP_X + shipMovementVal < 0) {
+                    SHIP_X = 0;
+                } else {
+                    SHIP_X += (int) shipMovementVal;
+                }
+
+                GameElements.CURRENT_SHIP_X = SHIP_X;
+            }
+        }
     }
 
     public void runResumeCountdown(float delta) {

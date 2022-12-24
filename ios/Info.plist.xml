@@ -2,6 +2,14 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+    <key>UIApplicationSceneManifest</key>
+    <dict>
+<!--        <key>UIApplicationSupportsMultipleScenes</key>-->
+<!--        <true/>-->
+        <key>UISceneConfigurations</key>
+        <dict/>
+    </dict>
+
     <key>CFBundleDevelopmentRegion</key>
     <string>en</string>
     <key>CFBundleDisplayName</key>
@@ -49,7 +57,7 @@
     <string>AppIcon</string>
 
     <key>GADApplicationIdentifier</key>
-    <string>ca-app-pub-3940256099942544~5224354917</string>
+    <string>ca-app-pub-8689816410492919~2589576727</string>
     <key>SKAdNetworkItems</key>
     <array>
         <dict>
@@ -84,6 +92,7 @@
             <key>SKAdNetworkIdentifier</key>
             <string>v72qych5uu.skadnetwork</string>
         </dict>
+
         <dict>
             <key>SKAdNetworkIdentifier</key>
             <string>ludvb6z3bs.skadnetwork</string>
