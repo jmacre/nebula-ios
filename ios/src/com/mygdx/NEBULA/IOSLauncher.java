@@ -45,7 +45,7 @@ public class IOSLauncher extends IOSApplication.Delegate implements IActivityReq
         loadAd();
 
         iosApplication = new IOSApplication(new Main(this), config);
-
+        return iosApplication;
     }
 
     public static void main(String[] argv) {
