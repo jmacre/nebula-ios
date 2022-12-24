@@ -1688,7 +1688,6 @@ public class MainGame extends GameElements implements Screen {
                             itemSound.play();
                         }
 
-                        bulletTimer = .05f;
                         break;
 
                     case HOURGLASS_ID:
