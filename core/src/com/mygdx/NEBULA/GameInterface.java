@@ -71,13 +71,13 @@ public class GameInterface extends GameElements {
 
         shopButton = new Button(assets.assetManager.get(Assets.shop_button_inactive_clear, Texture.class), SHOP_BUTTON_X, SHOP_BUTTON_Y_TRANSITIONED, SHOP_BUTTON_WIDTH, SHOP_BUTTON_HEIGHT);
         soundButton = new Button(assets.assetManager.get(Assets.sound_on_button_active, Texture.class), SOUND_BUTTON_X, SOUND_BUTTON_Y, SOUND_BUTTON_WIDTH, SOUND_BUTTON_HEIGHT);
-        gemButton = new Button(assets.assetManager.get(Assets.gem_button_inactive, Texture.class), GEM_BUTTON_X, GEM_BUTTON_Y, GEM_WIDTH, GEM_HEIGHT);
+        gemButton = new Button(assets.assetManager.get(Assets.gem_button_inactive, Texture.class), GEM_BUTTON_X, GEM_BUTTON_Y, GEM_WIDTH, GEM_HEIGHT, GEM_WIDTH/4f, GEM_HEIGHT/4f);
 
         leftArrow = new Button(assets.assetManager.get(Assets.left_arrow_inactive, Texture.class), LEFT_ARROW_X, LEFT_ARROW_Y, LEFT_ARROW_WIDTH, LEFT_ARROW_HEIGHT);
         rightArrow = new Button(assets.assetManager.get(Assets.right_arrow_inactive, Texture.class), RIGHT_ARROW_X, RIGHT_ARROW_Y, RIGHT_ARROW_WIDTH, RIGHT_ARROW_HEIGHT);
         selectButton = new Button(assets.assetManager.get(Assets.select_button_inactive, Texture.class), SELECT_BUTTON_X, SELECT_BUTTON_Y, SELECT_BUTTON_WIDTH, SELECT_BUTTON_HEIGHT);
 
-        xButton = new Button(assets.assetManager.get(Assets.x_button, Texture.class), X_BUTTON_X, X_BUTTON_Y, X_BUTTON_WIDTH, X_BUTTON_HEIGHT);
+        xButton = new Button(assets.assetManager.get(Assets.x_button, Texture.class), X_BUTTON_X, X_BUTTON_Y, X_BUTTON_WIDTH, X_BUTTON_HEIGHT, X_BUTTON_WIDTH/4f, X_BUTTON_HEIGHT/4f);
         yesButton = new Button(assets.assetManager.get(Assets.yes_button_inactive, Texture.class), YES_BUTTON_X, YES_BUTTON_Y, YES_BUTTON_WIDTH, YES_BUTTON_HEIGHT);
         noButton = new Button(assets.assetManager.get(Assets.no_button_inactive, Texture.class), NO_BUTTON_X, NO_BUTTON_Y, NO_BUTTON_WIDTH, NO_BUTTON_HEIGHT);
 
@@ -112,8 +112,8 @@ public class GameInterface extends GameElements {
             gemIconY = GEM_ICON_Y_IOS;
         }
 
-        tsSoundButton = new Button(assets.assetManager.get(Assets.sound_off_button_ts, Texture.class), TS_SOUND_BUTTON_X, TS_SOUND_BUTTON_Y, TS_SOUND_BUTTON_WIDTH, TS_SOUND_BUTTON_HEIGHT);
-        pauseButton = new Button(assets.assetManager.get(Assets.pause_button, Texture.class), PAUSE_BUTTON_X, PAUSE_BUTTON_Y, PAUSE_BUTTON_WIDTH, PAUSE_BUTTON_HEIGHT);
+        tsSoundButton = new Button(assets.assetManager.get(Assets.sound_off_button_ts, Texture.class), TS_SOUND_BUTTON_X, TS_SOUND_BUTTON_Y, TS_SOUND_BUTTON_WIDTH, TS_SOUND_BUTTON_HEIGHT, TS_SOUND_BUTTON_WIDTH/4f, TS_SOUND_BUTTON_HEIGHT/4f);
+        pauseButton = new Button(assets.assetManager.get(Assets.pause_button, Texture.class), PAUSE_BUTTON_X, PAUSE_BUTTON_Y, PAUSE_BUTTON_WIDTH, PAUSE_BUTTON_HEIGHT, PAUSE_BUTTON_WIDTH/4f, PAUSE_BUTTON_HEIGHT/4f);
         homeButton = new Button(assets.assetManager.get(Assets.home_button_inactive, Texture.class), HOME_BUTTON_X, HOME_BUTTON_Y, HOME_BUTTON_WIDTH, HOME_BUTTON_HEIGHT);
         playButton = new Button(assets.assetManager.get(Assets.play_button_inactive, Texture.class), PLAY_BUTTON_X, PLAY_BUTTON_Y, PLAY_BUTTON_WIDTH, PLAY_BUTTON_HEIGHT);
         replayButton = new Button(assets.assetManager.get(Assets.replay_button_inactive, Texture.class), PLAY_BUTTON_X, PLAY_BUTTON_Y, PLAY_BUTTON_WIDTH, PLAY_BUTTON_HEIGHT);

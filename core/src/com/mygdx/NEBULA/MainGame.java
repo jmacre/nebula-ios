@@ -860,8 +860,8 @@ public class MainGame extends GameElements implements Screen {
 
     public void movePlayer() {
         if (!isPaused && isTransitionedIn && !isShipLeaving && !isFadingOut && !isTransitioningOut) {
-            if (!(Gdx.input.getY(movementPointer) < (int) (SCREEN_HEIGHT / 5f)) && SHIP_START_Y > SHIP_Y) {
-                shipMovementVal = (deltaP * moveSpeed * (Gdx.input.getX(movementPointer) - SHIP_X - SHIP_WIDTH / 2f));
+            if (!(Gdx.input.getY() < (int) (SCREEN_HEIGHT / 5f)) && SHIP_START_Y > SHIP_Y) {
+                shipMovementVal = (deltaP * moveSpeed * (Gdx.input.getX() - SHIP_X - SHIP_WIDTH / 2f));
                 if (SHIP_X + shipMovementVal > SCREEN_WIDTH - SHIP_WIDTH) {
                     SHIP_X = SCREEN_WIDTH - SHIP_WIDTH;
                 } else if (SHIP_X + shipMovementVal < 0) {
