@@ -45,10 +45,7 @@ public class IOSLauncher extends IOSApplication.Delegate implements IActivityReq
         loadAd();
 
         iosApplication = new IOSApplication(new Main(this), config);
-//        iosApplication.getUIViewController().getPreferredScreenEdgesDeferringSystemGestures().set(UIRectEdge.All);
-//        iosApplication.getUIViewController().setNeedsUpdateOfScreenEdgesDeferringSystemGestures();
-//        iosApplication.getUIViewController().updateViewConstraints();
-        return iosApplication;
+
     }
 
     public static void main(String[] argv) {
@@ -58,13 +55,6 @@ public class IOSLauncher extends IOSApplication.Delegate implements IActivityReq
 
         pool.close();
     }
-//
-//    @Override
-//    public UIViewController getViewController(UIApplication application, List<String> identifierComponents, NSCoder coder) {
-
-//
-//        return iosApplication.getUIViewController();
-//    }
 
     @Override
     public void showAd(boolean soundEnabled, Prefs prefs, MASound gemSound) {
