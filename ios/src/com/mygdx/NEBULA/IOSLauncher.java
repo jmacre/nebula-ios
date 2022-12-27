@@ -92,11 +92,14 @@ public class IOSLauncher extends IOSApplication.Delegate implements IActivityReq
             });
         }
     }
+    public boolean isFinishedLoadingAd(){
+        return mRewardedAd != null;
+    }
 
 
     public void loadAd() {
         if (mRewardedAd == null) {
-            GADRewardedAd.load("ca-app-pub-8689816410492919/2589576727", request,
+            GADRewardedAd.load("ca-app-pub-3940256099942544/5224354917", request,
                     new VoidBlock2<GADRewardedAd, NSError>() {
                 @Override
                 public void invoke(GADRewardedAd ad, NSError error) {

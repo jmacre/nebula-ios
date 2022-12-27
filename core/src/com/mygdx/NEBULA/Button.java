@@ -63,12 +63,9 @@ public class Button {
     }
 
     public boolean getTappedBefore(){
-
-
         if (Gdx.input.isTouched() && this.checkFocused(Gdx.input.getX(), Gdx.input.getY(), extendXTapBy, extendYTapBy))
             this.focused = true;
-//        else
-//            this.focused = false;
+
         if(Gdx.input.isTouched(1)){
             this.focused = false;
         }

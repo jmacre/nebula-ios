@@ -11,6 +11,7 @@ import com.badlogic.gdx.math.Vector2;
 public class MyInputProcessor implements InputProcessor {
     private int tapReleaseCount = 0;
     private int tapCount = 0;
+
     @Override
     public boolean keyDown(int keycode) {
         return false;
@@ -42,6 +43,7 @@ public class MyInputProcessor implements InputProcessor {
     public boolean touchDragged(int screenX, int screenY, int pointer) {
         return false;
     }
+
 
 
     @Override

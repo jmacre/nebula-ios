@@ -158,6 +158,7 @@ public class MainGame extends GameElements implements Screen {
     boolean enemyShipsSpawning = false;
 
     float gemCountUpdateTimer = GEM_COUNT_UPDATE_TIMER;
+    int gemSkipTapCount = 0;
 
     boolean scoreUpdated = false;
     float scoreTickerTimer = SCORE_TICKER_TIMER;
@@ -524,7 +525,7 @@ public class MainGame extends GameElements implements Screen {
                 movePlayer();
             }
         }
-        if ((!isAlive || isPaused) && gameInterface.checkForSoundButtonTap(soundEnabled, gemCount, isAlive) && !gameInterface.getConfirmLeaveScreenOpen()) {
+        if ((!isAlive || isPaused) && inputProcessor.getTapCount() != gemSkipTapCount && gameInterface.checkForSoundButtonTap(soundEnabled, gemCount, isAlive) && !gameInterface.getConfirmLeaveScreenOpen()) {
             if (prefs.hasSound()) {
                 prefs.setSound(false);
                 soundEnabled = false;
@@ -614,6 +615,7 @@ public class MainGame extends GameElements implements Screen {
                 if (finalGemCount > 0) {
 
                     if (Gdx.input.justTouched()) {
+                        gemSkipTapCount = inputProcessor.getTapCount();
                         replayScreenGemCount += finalGemCount;
                         gemCount = 0;
                         finalGemCount = 0;
@@ -623,14 +625,17 @@ public class MainGame extends GameElements implements Screen {
                         runGemCountUpdateTimer();
                     }
                 }
+                else{
+                    gemSkipTapCount = -1;
+                }
                 gameInterface.drawReplayScreen(game, menuScoreFont, gameOverFont, gemCountFont, newHighscore, replayScreenGemCount, gemCount, score, prefs.getHighScore(), soundEnabled);
             }
 
-            if (gameInterface.checkForReplayButtonTap(gemCount) && isTransitionedOut) {
+            if (inputProcessor.getTapCount() != gemSkipTapCount && gameInterface.checkForReplayButtonTap(gemCount) && isTransitionedOut) {
                 resetScreen();
 
             } else if (isTransitionedOut) {
-                if (gameInterface.checkForHomeButtonTap(gemCount, isAlive) || gameInterface.getConfirmLeaveScreenOpen()) {
+                if (inputProcessor.getTapCount() != gemSkipTapCount && gameInterface.checkForHomeButtonTap(gemCount, isAlive) || gameInterface.getConfirmLeaveScreenOpen()) {
                     if (!gameInterface.getConfirmLeaveScreenOpen()) {
 
                         gameInterface.setConfirmLeaveScreenOpen(true);
@@ -1332,7 +1337,6 @@ public class MainGame extends GameElements implements Screen {
         if (itemSpawnTimer <= 0) {
 
             randomDrop = random.nextInt(6);
-            System.out.println("randomDrop " + randomDrop);
 
             if (randomDrop == lastItemDrop) {
                 addItemDrops();
@@ -1677,8 +1681,6 @@ public class MainGame extends GameElements implements Screen {
                         if (soundEnabled) {
                             itemSound.play();
                         }
-
-                        bulletTimer = .05f;
                         break;
 
                     case SPREAD_ID:

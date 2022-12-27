@@ -127,10 +127,10 @@ public class GameElements {
     public static final float SHOP_BACK_WIDTH = SHOP_BACK_HEIGHT;
     public static final float SHOP_BACK_Y = SCREEN_HEIGHT/2f - SHOP_BACK_HEIGHT/2;
 
-    public static final float X_BUTTON_WIDTH = SHOP_BACK_WIDTH / 9f;
+    public static final float X_BUTTON_WIDTH = SHOP_BACK_WIDTH / 10f;
     public static final float X_BUTTON_HEIGHT = X_BUTTON_WIDTH;
-    public static final float X_BUTTON_X = SHOP_BACK_X + SHOP_BACK_WIDTH - X_BUTTON_WIDTH/1.5f;
-    public static final float X_BUTTON_Y = SHOP_BACK_Y + SHOP_BACK_HEIGHT - X_BUTTON_HEIGHT/1.5f;
+    public static final float X_BUTTON_X = SHOP_BACK_X + SHOP_BACK_WIDTH - X_BUTTON_WIDTH/2f;
+    public static final float X_BUTTON_Y = SHOP_BACK_Y + SHOP_BACK_HEIGHT - X_BUTTON_HEIGHT/2f;
 
     public static final float PLAY_BUTTON_WIDTH = MENU_BACK_WIDTH/4f;
     public static final float PLAY_BUTTON_HEIGHT = MENU_BACK_WIDTH/4f;

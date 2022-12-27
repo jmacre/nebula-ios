@@ -93,7 +93,9 @@ public class MainMenu extends GameElements implements Screen {
         game.batch.enableBlending();
 
         game.batch.begin();
-        deltaList.add(delta);
+        if(Gdx.graphics.getFramesPerSecond() > refreshRate * .95f && Gdx.graphics.getFramesPerSecond() < refreshRate * 1.05f) {
+            deltaList.add(delta);
+        }
 
         for (int i = 0; i < deltaList.size; i++) {
             deltaSum += deltaList.get(i);
@@ -226,6 +228,7 @@ public class MainMenu extends GameElements implements Screen {
         if (Gdx.graphics.getDisplayMode().refreshRate != refreshRate) {
             refreshRate = Gdx.graphics.getDisplayMode().refreshRate;
             deltaList.clear();
+
         }
     }
 
@@ -235,5 +238,6 @@ public class MainMenu extends GameElements implements Screen {
 
     @Override
     public void resize(int width, int height) {
+
     }
 }
