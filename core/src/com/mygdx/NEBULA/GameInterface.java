@@ -53,10 +53,11 @@ public class GameInterface extends GameElements {
 
     int totalGemsEarned;
 
-    float tapToContinueBlinkingTimer = TAP_TO_CONTINUE_BLINKING_TIMER;
+    float tapToContinueBlinkingTimer = TAP_TO_CONTINUE_BLINKING_TIMER*2;
 
     boolean isRecapScreenOpen = true;
     boolean isReplayScreenOpen = false;
+    boolean soundEnabled;
 
     float scoreY;
     float gemIconY;
@@ -70,12 +71,13 @@ public class GameInterface extends GameElements {
 
     public GameInterface(Assets assets, Main game, boolean soundEnabled) {
         this.assets = assets;
+        this.soundEnabled = soundEnabled;
         parameter.size = SCREEN_WIDTH / 40;
         startButton = new Button(assets.assetManager.get(Assets.start_button_inactive_clear, Texture.class), START_BUTTON_X, START_BUTTON_Y_TRANSITIONED, START_BUTTON_WIDTH, START_BUTTON_HEIGHT);
 
         shopButton = new Button(assets.assetManager.get(Assets.shop_button_inactive_clear, Texture.class), SHOP_BUTTON_X, SHOP_BUTTON_Y_TRANSITIONED, SHOP_BUTTON_WIDTH, SHOP_BUTTON_HEIGHT);
 
-        if(soundEnabled)
+        if(this.soundEnabled)
             soundButton = new Button(assets.assetManager.get(Assets.sound_on_button_inactive, Texture.class), SOUND_BUTTON_X, SOUND_BUTTON_Y, SOUND_BUTTON_WIDTH, SOUND_BUTTON_HEIGHT);
         else
             soundButton = new Button(assets.assetManager.get(Assets.sound_off_button_inactive, Texture.class), SOUND_BUTTON_X, SOUND_BUTTON_Y, SOUND_BUTTON_WIDTH, SOUND_BUTTON_HEIGHT);
@@ -104,7 +106,7 @@ public class GameInterface extends GameElements {
         errorSound.setVolume(0.2f);
 
         playSound = assets.assetManager.get(play_sound, MASound.class);
-        playSound.setVolume(0.3f);
+        playSound.setVolume(0.2f);
 
         shopSound = playSound;
 
@@ -151,6 +153,14 @@ public class GameInterface extends GameElements {
         storeFont.setColor(Color.valueOf(PURPLE_COLOR_HEX));
         gemCountFont = generator.generateFont(parameter);
         gl = new GlyphLayout();
+    }
+
+    public void updateSoundButton(boolean soundEnabled){
+        if(soundEnabled)
+            soundButton = new Button(assets.assetManager.get(Assets.sound_on_button_inactive, Texture.class), SOUND_BUTTON_X, SOUND_BUTTON_Y, SOUND_BUTTON_WIDTH, SOUND_BUTTON_HEIGHT);
+        else
+            soundButton = new Button(assets.assetManager.get(Assets.sound_off_button_inactive, Texture.class), SOUND_BUTTON_X, SOUND_BUTTON_Y, SOUND_BUTTON_WIDTH, SOUND_BUTTON_HEIGHT);
+
     }
 
     public void drawTopUI(Main game, boolean isPaused, int health, boolean isAlive, boolean isTransitionedIn) {
@@ -275,10 +285,8 @@ public class GameInterface extends GameElements {
                     playSound.stop();
                     playSound.play();
                 }
-
                 return true;
             }
-
         }
         return false;
     }
@@ -698,7 +706,7 @@ public class GameInterface extends GameElements {
     public void runTapToContinueBlinking(Main game, float deltaP) {
         tapToContinueBlinkingTimer += deltaP;
 
-        if (tapToContinueBlinkingTimer < 0f && tapToContinueBlinkingTimer >= -0.4f) {
+        if (tapToContinueBlinkingTimer < 0f && tapToContinueBlinkingTimer >= -0.5f) {
             gemCountFont.draw(game.batch, "TAP TO CONTINUE", (SCREEN_WIDTH - gl.width) / 2, MENU_BACK_Y + gemCountFont.getLineHeight() * 2.5f);
         }
         else if(tapToContinueBlinkingTimer > 0) {

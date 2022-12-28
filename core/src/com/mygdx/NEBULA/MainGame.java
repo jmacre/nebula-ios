@@ -548,6 +548,7 @@ public class MainGame extends GameElements implements Screen {
                 soundEnabled = true;
                 pauseSound.play();
             }
+            gameInterface.updateSoundButton(soundEnabled);
         }
 
         //Pausing (pauses music/freezes delta)
@@ -925,7 +926,7 @@ public class MainGame extends GameElements implements Screen {
         gemCountUpdated = false;
         countDownTimer = 0f;
 
-        gameInterface.tapToContinueBlinkingTimer = TAP_TO_CONTINUE_BLINKING_TIMER;
+        gameInterface.tapToContinueBlinkingTimer = TAP_TO_CONTINUE_BLINKING_TIMER*2;
         gemCountTimerDelay = GEM_COUNT_TIMER_DELAY;
 
         isResettingScreen = false;

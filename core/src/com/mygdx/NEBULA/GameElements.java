@@ -26,7 +26,7 @@ public class GameElements {
     public static float SCORE_TICKER_TIMER = -.25f;
     public static float GEM_COUNT_UPDATE_TIMER = -.065f;
     public static float GEM_COUNT_TIMER_DELAY = -0.5f;
-    public static float TAP_TO_CONTINUE_BLINKING_TIMER = -0.4f;
+    public static float TAP_TO_CONTINUE_BLINKING_TIMER = -0.5f;
 
     public static final float MAIN_UI_HEIGHT = SCREEN_HEIGHT/12f;
 
