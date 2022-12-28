@@ -1,8 +1,6 @@
 package com.mygdx.NEBULA;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.audio.Music;
-import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -27,6 +25,8 @@ public class GameElements {
 
     public static float SCORE_TICKER_TIMER = -.25f;
     public static float GEM_COUNT_UPDATE_TIMER = -.065f;
+    public static float GEM_COUNT_TIMER_DELAY = -0.5f;
+    public static float TAP_TO_CONTINUE_BLINKING_TIMER = -0.4f;
 
     public static final float MAIN_UI_HEIGHT = SCREEN_HEIGHT/12f;
 
@@ -132,6 +132,9 @@ public class GameElements {
     public static final float X_BUTTON_X = SHOP_BACK_X + SHOP_BACK_WIDTH - X_BUTTON_WIDTH/2f;
     public static final float X_BUTTON_Y = SHOP_BACK_Y + SHOP_BACK_HEIGHT - X_BUTTON_HEIGHT/2f;
 
+    public static final float X_BUTTON_RECAP_X = MENU_BACK_X + MENU_BACK_WIDTH - X_BUTTON_WIDTH/2f;
+    public static final float X_BUTTON_RECAP_Y = MENU_BACK_Y + MENU_BACK_HEIGHT - X_BUTTON_HEIGHT/2f;
+
     public static final float PLAY_BUTTON_WIDTH = MENU_BACK_WIDTH/4f;
     public static final float PLAY_BUTTON_HEIGHT = MENU_BACK_WIDTH/4f;
     public static final float PLAY_BUTTON_X = SCREEN_WIDTH / 2f - PLAY_BUTTON_WIDTH/2f;
@@ -169,18 +172,28 @@ public class GameElements {
     public static int SHOP_BUTTON_Y = (int)(.3f * (.75f*START_BUTTON_Y) - START_BUTTON_HEIGHT + SCREEN_HEIGHT);
     public static int SHOP_BUTTON_Y_TRANSITIONED = (int)(.3f* (.7f*START_BUTTON_Y) - START_BUTTON_HEIGHT);
 
-    public static final float LEFT_ARROW_WIDTH = SHOP_BACK_WIDTH / 4.5f;
+    public static final float LEFT_ARROW_BTN_WIDTH = SHOP_BACK_WIDTH / 4.5f;
+    public static final float LEFT_ARROW_BTN_HEIGHT = LEFT_ARROW_BTN_WIDTH * (64f/88);
+    public static final float LEFT_ARROW_BTN_Y = SHOP_BACK_Y * 1.05f;
+    public static final float LEFT_ARROW_BTN_X = SHOP_BACK_X + SHOP_BACK_Y * .05f;
+
+    public static final float RIGHT_ARROW_BTN_WIDTH = LEFT_ARROW_BTN_WIDTH;
+    public static final float RIGHT_ARROW_BTN_HEIGHT = LEFT_ARROW_BTN_HEIGHT;
+    public static final float RIGHT_ARROW_BTN_Y = SHOP_BACK_Y * 1.05f;
+    public static final float RIGHT_ARROW_BTN_X = SHOP_BACK_X + SHOP_BACK_WIDTH - SHOP_BACK_Y * .05f - RIGHT_ARROW_BTN_WIDTH;
+
+    public static final float LEFT_ARROW_WIDTH = SHOP_BACK_WIDTH / 8f;
     public static final float LEFT_ARROW_HEIGHT = LEFT_ARROW_WIDTH * (64f/88);
-    public static final float LEFT_ARROW_Y = SHOP_BACK_Y * 1.05f;
-    public static final float LEFT_ARROW_X = SHOP_BACK_X + SHOP_BACK_Y * .05f;
+    public static final float LEFT_ARROW_Y = MENU_BACK_Y * 1.05f;
+    public static final float LEFT_ARROW_X = MENU_BACK_X + MENU_BACK_Y * .05f;
 
     public static final float RIGHT_ARROW_WIDTH = LEFT_ARROW_WIDTH;
     public static final float RIGHT_ARROW_HEIGHT = LEFT_ARROW_HEIGHT;
-    public static final float RIGHT_ARROW_Y = SHOP_BACK_Y * 1.05f;
-    public static final float RIGHT_ARROW_X = SHOP_BACK_X + SHOP_BACK_WIDTH - SHOP_BACK_Y * .05f - RIGHT_ARROW_WIDTH;
+    public static final float RIGHT_ARROW_Y = MENU_BACK_Y * 1.05f;
+    public static final float RIGHT_ARROW_X = MENU_BACK_X + MENU_BACK_WIDTH - MENU_BACK_Y * .05f - RIGHT_ARROW_WIDTH;
 
-    public static final float SELECT_BUTTON_WIDTH = LEFT_ARROW_WIDTH*2;
-    public static final float SELECT_BUTTON_HEIGHT = LEFT_ARROW_HEIGHT;
+    public static final float SELECT_BUTTON_WIDTH = LEFT_ARROW_BTN_WIDTH *2;
+    public static final float SELECT_BUTTON_HEIGHT = LEFT_ARROW_BTN_HEIGHT;
     public static final float SELECT_BUTTON_Y = SHOP_BACK_Y * 1.05f;
     public static final float SELECT_BUTTON_X = SHOP_BACK_X + SHOP_BACK_WIDTH/2f - SELECT_BUTTON_WIDTH/2f;
 
@@ -218,10 +231,10 @@ public class GameElements {
     public static final float GEM_COUNT_MENU_X = GEM_ICON_MENU_X + (GEM_ICON_WIDTH * 1.1f);
     public static final float GEM_COUNT_MENU_Y = GEM_ICON_MENU_Y + (GEM_ICON_HEIGHT * .8f);
 
-    public static final float GEM_ICON_SHOP_X = LEFT_ARROW_X;
+    public static final float GEM_ICON_SHOP_X = LEFT_ARROW_BTN_X;
     public static final float GEM_ICON_SHOP_Y = SHOP_BACK_Y + (SHOP_BACK_HEIGHT* .9f);
 
-    public static final float GEM_COUNT_SHOP_X = LEFT_ARROW_X + (GEM_ICON_WIDTH * 1.1f);
+    public static final float GEM_COUNT_SHOP_X = LEFT_ARROW_BTN_X + (GEM_ICON_WIDTH * 1.1f);
     public static final float GEM_COUNT_SHOP_Y = GEM_ICON_SHOP_Y + (GEM_ICON_HEIGHT * .8f);
 
     public static final float GEM_COUNT_X = GEM_ICON_X + (GEM_ICON_WIDTH * 1.1f);

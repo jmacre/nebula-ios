@@ -4,8 +4,6 @@ import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.utils.Disposable;
 
-import org.w3c.dom.Text;
-
 import games.rednblack.miniaudio.MASound;
 import games.rednblack.miniaudio.MiniAudio;
 import games.rednblack.miniaudio.loader.MASoundLoader;
@@ -64,10 +62,11 @@ public class Assets implements Disposable {
     public static final String sound_off_button_ts = "ui/sound_off_button_ts.png";
     public static final String sound_on_button_ts = "ui/sound_on_button_ts.png";
 
-    public static final String right_arrow_active = "ui/right_arrow_active.png";
-    public static final String left_arrow_active = "ui/left_arrow_active.png";
-    public static final String right_arrow_inactive = "ui/right_arrow_inactive.png";
-    public static final String left_arrow_inactive = "ui/left_arrow_inactive.png";
+    public static final String right_arrow_btn_active = "ui/right_arrow_btn_active.png";
+    public static final String left_arrow_btn_active = "ui/left_arrow_btn_active.png";
+    public static final String right_arrow_btn_inactive = "ui/right_arrow_btn_inactive.png";
+    public static final String left_arrow_btn_inactive = "ui/left_arrow_btn_inactive.png";
+
     public static final String select_button_inactive = "ui/select_button_inactive.png";
     public static final String select_button_active = "ui/select_button_active.png";
     public static final String ad_button_inactive = "ui/ad_button_inactive.png";
@@ -246,10 +245,11 @@ public class Assets implements Disposable {
         assetManager.load(yes_button_inactive, Texture.class);
         assetManager.load(no_button_inactive, Texture.class);
 
-        assetManager.load(right_arrow_active, Texture.class);
-        assetManager.load(right_arrow_inactive, Texture.class);
-        assetManager.load(left_arrow_active, Texture.class);
-        assetManager.load(left_arrow_inactive, Texture.class);
+        assetManager.load(right_arrow_btn_active, Texture.class);
+        assetManager.load(right_arrow_btn_inactive, Texture.class);
+        assetManager.load(left_arrow_btn_active, Texture.class);
+        assetManager.load(left_arrow_btn_inactive, Texture.class);
+
         assetManager.load(select_button_active, Texture.class);
         assetManager.load(select_button_inactive, Texture.class);
         assetManager.load(active_button, Texture.class);
@@ -295,10 +295,11 @@ public class Assets implements Disposable {
         assetManager.unload(replay_button_inactive);
         assetManager.unload(home_button_inactive);
 
-        assetManager.unload(right_arrow_active);
-        assetManager.unload(right_arrow_inactive);
-        assetManager.unload(left_arrow_active);
-        assetManager.unload(left_arrow_inactive);
+        assetManager.unload(right_arrow_btn_active);
+        assetManager.unload(right_arrow_btn_inactive);
+        assetManager.unload(left_arrow_btn_active);
+        assetManager.unload(left_arrow_btn_inactive);
+
         assetManager.unload(select_button_active);
         assetManager.unload(select_button_inactive);
         assetManager.unload(active_button);

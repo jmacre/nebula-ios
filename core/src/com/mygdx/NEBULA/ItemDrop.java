@@ -83,11 +83,7 @@ public class ItemDrop extends GameElements {
                 itemSheet = new Sprite(assets.assetManager.get(Assets.spread_ss, Texture.class));
         }
 
-        if (itemId == RAPID_FIRE_ID) { //lightning flashes at double speed??
-            itemAnimation = Anim.createAnimation(itemSheet, 2, 0.04f);
-        } else {
-            itemAnimation = Anim.createAnimation(itemSheet, 2, 0.02f);
-        }
+        itemAnimation = Anim.createAnimation(itemSheet, 2, 0.02f);
     }
 
 

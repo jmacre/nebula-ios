@@ -56,7 +56,7 @@ public class MainMenu extends GameElements implements Screen {
     public MainMenu(Main game, Assets assets) {
         this.game = game;
         this.assets = assets;
-        gameInterface = new GameInterface(assets, game);
+        gameInterface = new GameInterface(assets, game, soundEnabled);
         this.background = new Background(assets);
     }
 
@@ -93,7 +93,7 @@ public class MainMenu extends GameElements implements Screen {
         game.batch.enableBlending();
 
         game.batch.begin();
-        if(Gdx.graphics.getFramesPerSecond() > refreshRate * .95f && Gdx.graphics.getFramesPerSecond() < refreshRate * 1.05f) {
+        if(Gdx.graphics.getFramesPerSecond() > refreshRate * .8f && Gdx.graphics.getFramesPerSecond() < refreshRate * 1.2f) {
             deltaList.add(delta);
         }
 
@@ -126,7 +126,7 @@ public class MainMenu extends GameElements implements Screen {
                 if(gameInterface.checkForGemButtonTap(isGemScreenOpen, isShopOpen, switchScreens, soundEnabled)){
                     isGemScreenOpen = true;
                 }
-                if(isGemScreenOpen && gameInterface.checkForXButtonTap(isShopOpen, true,soundEnabled)){
+                if(isGemScreenOpen && gameInterface.checkForXButtonTap(isShopOpen, true,  soundEnabled)){
                     isGemScreenOpen = false;
                 }
             }
