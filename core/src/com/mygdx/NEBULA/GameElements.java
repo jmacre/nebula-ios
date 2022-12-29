@@ -271,8 +271,8 @@ public class GameElements {
     MASound pauseSound;
     MASound playSound, shopSound;
     MASound bombSound;
-    MASound missileSound;
-    MASound bulletSound, itemSound, hitSound, gemSound, errorSound;
+    MASound missileSound, missileSound1;
+    MASound bulletSound, bulletSound1, itemSound, hitSound, hitSound1, gemSound, errorSound;
 
     public FreeTypeFontGenerator.FreeTypeFontParameter textParameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
     public FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("mainfont.ttf"));

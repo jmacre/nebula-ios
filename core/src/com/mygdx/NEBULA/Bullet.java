@@ -77,7 +77,7 @@ public class Bullet extends GameElements {
         }
 
         if(isMissile){
-            BULLET_Y += (SPEED * delta) * .75f;
+            BULLET_Y += (SPEED * delta);
         }
         else if(isHourglass) {
             BULLET_Y += (SPEED * delta) * .75f * HOURGLASS_SPEED_MULTIPLIER;

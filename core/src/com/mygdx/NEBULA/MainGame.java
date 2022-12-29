@@ -303,11 +303,20 @@ public class MainGame extends GameElements implements Screen {
         hitSound = game.miniAudio.createSound(hit_sound);
         hitSound.setVolume(0.3f);
 
+        hitSound1 = game.miniAudio.createSound(hit_sound);
+        hitSound1.setVolume(0.3f);
+
         bulletSound = game.miniAudio.createSound(bullet_sound);
         bulletSound.setVolume(0.05f);
 
+        bulletSound1 = game.miniAudio.createSound(bullet_sound);
+        bulletSound1.setVolume(0.05f);
+
         missileSound = game.miniAudio.createSound(missile_sound);
         missileSound.setVolume(0.1f);
+
+        missileSound1 = game.miniAudio.createSound(missile_sound);
+        missileSound1.setVolume(0.1f);
 
         itemSound = game.miniAudio.createSound(play_sound);
         itemSound.setVolume(0.075f);
@@ -789,7 +798,11 @@ public class MainGame extends GameElements implements Screen {
         isMainMusicPlaying = false;
 
         hitSound.stop();
+        hitSound1.stop();
         bulletSound.stop();
+        bulletSound1.stop();
+        missileSound.stop();
+        missileSound1.stop();
         playSound.stop();
         pauseSound.stop();
         gemSound.stop();
@@ -1024,6 +1037,9 @@ public class MainGame extends GameElements implements Screen {
 
     public void transitionIn() {
         resetInputProcessorTaps();
+        if(!isTransitionedIn){
+            stopSounds();
+        }
 
         if (SHIP_START_Y <= SHIP_Y) {
             SHIP_X = (int) (SCREEN_WIDTH / 2 - SHIP_WIDTH / 2);
@@ -1152,7 +1168,7 @@ public class MainGame extends GameElements implements Screen {
             if (missileUsed) {
                 bulletThreshold = 0.3f;
             } else {
-                bulletThreshold = 0.55f;
+                bulletThreshold = 0.45f;
             }
         } else if (isRapidFire) {
             bulletThreshold = 0.1f;
@@ -1166,11 +1182,20 @@ public class MainGame extends GameElements implements Screen {
                 if (soundEnabled) {
                     if (isTransitionedIn) {
                         if (isMissile) {
-                            missileSound.stop();
-                            missileSound.play();
+                            if(missileSound.isPlaying()){
+                                missileSound1.play();
+                            }
+                            else{
+                                missileSound.play();
+                            }
                         } else {
-                            bulletSound.stop();
-                            bulletSound.play();
+                            if(bulletSound.isPlaying()){
+                                bulletSound1.play();
+                            }
+                            else{
+                                bulletSound.play();
+
+                            }
                         }
                     }
                 }
@@ -1295,17 +1320,17 @@ public class MainGame extends GameElements implements Screen {
             randomSpawnLocation = random.nextInt((int) (SCREEN_WIDTH - BLUE_EYEBAT_WIDTH));
 
             if (score <= 10000) {
-                enemy.create(EYEBAT_ID, BLUE_ID, 1, randomSpawnLocation, BLUE_EYEBAT_WIDTH, BLUE_EYEBAT_HEIGHT, 0.3f + speedIncrease / 1.5f, 0.75f + speedIncrease / 1.5f, (float) (DEFAULT_FRAME_DURATION * (1.25 - speedIncrease / 2)), false, hurtTimer);
+                enemy.create(EYEBAT_ID, BLUE_ID, 1, randomSpawnLocation, BLUE_EYEBAT_WIDTH, BLUE_EYEBAT_HEIGHT, 0.3f + speedIncrease / 1.5f, 0.7f + speedIncrease / 1.5f, (float) (DEFAULT_FRAME_DURATION * (1.25 - speedIncrease / 2)), false, hurtTimer);
                 eyebatSpawnTimer = random.nextFloat() * (maxEyebatSpawnTime - minEyebatSpawnTime) + minEyebatSpawnTime;
 
             }
             if (score > 1000 && score <= 2000) {
-                enemy.create(EYEBAT_ID, GREEN_ID, 2, randomSpawnLocation, GREEN_EYEBAT_WIDTH, GREEN_EYEBAT_HEIGHT, 0.75f + speedIncrease / 1.5f, 0.35f + speedIncrease / 1.5f, (float) (DEFAULT_FRAME_DURATION * (1.5 - speedIncrease / 2)), false, hurtTimer);
+                enemy.create(EYEBAT_ID, GREEN_ID, 2, randomSpawnLocation, GREEN_EYEBAT_WIDTH, GREEN_EYEBAT_HEIGHT, 0.65f + speedIncrease / 1.5f, 0.45f + speedIncrease / 1.5f, (float) (DEFAULT_FRAME_DURATION * (1.5 - speedIncrease / 2)), false, hurtTimer);
                 eyebatSpawnTimer = random.nextFloat() * (1.2f * maxEyebatSpawnTime - 1.2f * minEyebatSpawnTime) + 1.2f * minEyebatSpawnTime;
 
             }
             if (score > 2000 && score <= 3000) {
-                enemy.create(EYEBAT_ID, RED_ID, 2, randomSpawnLocation, RED_EYEBAT_WIDTH, RED_EYEBAT_HEIGHT, 0.60f + speedIncrease / 1.5f, 0.25f + speedIncrease / 1.5f, (float) (DEFAULT_FRAME_DURATION * (1.5 - speedIncrease / 2)), false, hurtTimer);
+                enemy.create(EYEBAT_ID, RED_ID, 2, randomSpawnLocation, RED_EYEBAT_WIDTH, RED_EYEBAT_HEIGHT, 0.60f + speedIncrease / 1.5f, 0.35f + speedIncrease / 1.5f, (float) (DEFAULT_FRAME_DURATION * (1.5 - speedIncrease / 2)), false, hurtTimer);
                 eyebatSpawnTimer = random.nextFloat() * (1.3f * maxEyebatSpawnTime - 1.3f * minEyebatSpawnTime) + 1.3f * minEyebatSpawnTime;
 
             }
@@ -1966,8 +1991,13 @@ public class MainGame extends GameElements implements Screen {
         if (hitSoundTimer < 0) {
             hitSoundTimer += deltaP;
         } else {
-            hitSound.stop();
-            hitSound.play();
+            if(hitSound.isPlaying()){
+                hitSound1.play();
+                System.out.println("test1");
+            }
+            else{
+                hitSound.play();
+            }
             playHitSound = false;
             hitSoundTimer = -.08f;
         }
