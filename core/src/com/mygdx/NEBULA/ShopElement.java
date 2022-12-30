@@ -20,15 +20,15 @@ public class ShopElement extends GameElements{
     public static final int BRED_SHIP_ID = 8;
     public static final int PURPLE_SHIP_ID = 9;
 
-    public static final int BLUE_SHIP_PRICE = 50;
-    public static final int RED_SHIP_PRICE = 100;
-    public static final int CYAN_SHIP_PRICE = 250;
-    public static final int YELLOW_SHIP_PRICE = 500;
-    public static final int BLACK_SHIP_PRICE = 1000;
-    public static final int GREEN_SHIP_PRICE = 1500;
-    public static final int ORANGE_SHIP_PRICE = 2500;
-    public static final int BRED_SHIP_PRICE = 5000;
-    public static final int PURPLE_SHIP_PRICE = 9999;
+    public static final int BLUE_SHIP_PRICE = 100;
+    public static final int RED_SHIP_PRICE = 500;
+    public static final int CYAN_SHIP_PRICE = 1000;
+    public static final int YELLOW_SHIP_PRICE = 2500;
+    public static final int BLACK_SHIP_PRICE = 5000;
+    public static final int GREEN_SHIP_PRICE = 7500;
+    public static final int ORANGE_SHIP_PRICE = 10000;
+    public static final int BRED_SHIP_PRICE = 25000;
+    public static final int PURPLE_SHIP_PRICE = 50000;
 
 
     float x, y, width, height;

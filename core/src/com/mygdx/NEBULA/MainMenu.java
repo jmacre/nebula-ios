@@ -1,28 +1,14 @@
 package com.mygdx.NEBULA;
 
-import static com.mygdx.NEBULA.Assets.gem_sound;
 import static com.mygdx.NEBULA.Assets.pause_sound;
 import static com.mygdx.NEBULA.Assets.play_sound;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.Camera;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.pay.PurchaseObserver;
-import com.badlogic.gdx.pay.Transaction;
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.viewport.ExtendViewport;
-import com.badlogic.gdx.utils.viewport.FillViewport;
-import com.badlogic.gdx.utils.viewport.FitViewport;
-import com.badlogic.gdx.utils.viewport.ScreenViewport;
-
-import games.rednblack.miniaudio.MiniAudio;
 
 public class MainMenu extends GameElements implements Screen {
     public Prefs prefs = new Prefs();
@@ -58,13 +44,13 @@ public class MainMenu extends GameElements implements Screen {
     public MainMenu(Main game, Assets assets) {
         this.game = game;
         this.assets = assets;
-        this.gameInterface = new GameInterface(assets, game, soundEnabled, prefs);
+        this.gameInterface = new GameInterface(assets, game, prefs);
         this.background = new Background(assets);
     }
 
     @Override
     public void show() {
-        soundEnabled = prefs.hasSound();
+        soundEnabled = prefs.isSoundEnabled();
         playSound = assets.assetManager.get(play_sound);
         playSound.setVolume(0.2f);
 

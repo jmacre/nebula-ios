@@ -327,7 +327,7 @@ public class MainGame extends GameElements implements Screen {
         bombSound = game.miniAudio.createSound(bomb_sound);
         bombSound.setVolume(0.1f);
 
-        soundEnabled = prefs.hasSound();
+        soundEnabled = prefs.isSoundEnabled();
 
         blackTransition = new Sprite(assets.assetManager.get(Assets.black_transition, Texture.class));
         blackTransition.setSize(SCREEN_WIDTH * 1.5f, SCREEN_HEIGHT * 1.5f);
@@ -549,7 +549,7 @@ public class MainGame extends GameElements implements Screen {
             }
         }
         if ((!isAlive || isPaused || gameInterface.isReplayScreenOpen) && inputProcessor.getTapCount() > continueScreenTapCount && gameInterface.checkForSoundButtonTap(soundEnabled, isAlive) && !gameInterface.isConfirmLeaveScreenOpen()) {
-            if (prefs.hasSound()) {
+            if (prefs.isSoundEnabled()) {
                 prefs.setSound(false);
                 soundEnabled = false;
             } else {
@@ -557,7 +557,6 @@ public class MainGame extends GameElements implements Screen {
                 soundEnabled = true;
                 pauseSound.play();
             }
-            gameInterface.updateSoundButton(soundEnabled);
         }
 
         //Pausing (pauses music/freezes delta)
@@ -1304,7 +1303,7 @@ public class MainGame extends GameElements implements Screen {
 
         for (EnemyBullet enemyBullet : enemyBullets) {
             enemyBullet.update(deltaP * hourglassMultiplier);
-            enemyBullet.render(game.batch);
+            enemyBullet.render(game.batch, deltaP, enemyBulletAnim);
 
             if (enemyBullet.getY() + ENEMY_BULLET_HEIGHT < 0 && !enemyBulletsToRemove.contains(enemyBullet, true)) {
                 enemyBulletsToRemove.add(enemyBullet);

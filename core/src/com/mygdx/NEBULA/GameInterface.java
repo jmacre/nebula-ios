@@ -72,7 +72,6 @@ public class GameInterface extends GameElements {
 
     boolean isRecapScreenOpen = true;
     boolean isReplayScreenOpen = false;
-    boolean soundEnabled;
 
     float scoreY;
     float gemIconY;
@@ -86,9 +85,8 @@ public class GameInterface extends GameElements {
 
     public FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
 
-    public GameInterface(Assets assets, Main game, boolean soundEnabled, Prefs prefs) {
+    public GameInterface(Assets assets, Main game, Prefs prefs) {
         this.assets = assets;
-        this.soundEnabled = soundEnabled;
         this.game = game;
         this.prefs = prefs;
 
@@ -99,7 +97,7 @@ public class GameInterface extends GameElements {
 
         shopButton = new Button(assets.assetManager.get(Assets.shop_button_inactive_clear, Texture.class), SHOP_BUTTON_X, SHOP_BUTTON_Y_TRANSITIONED, SHOP_BUTTON_WIDTH, SHOP_BUTTON_HEIGHT);
 
-        if(this.soundEnabled)
+        if(prefs.isSoundEnabled())
             soundButton = new Button(assets.assetManager.get(Assets.sound_on_button_inactive, Texture.class), SOUND_BUTTON_X, SOUND_BUTTON_Y, SOUND_BUTTON_WIDTH, SOUND_BUTTON_HEIGHT);
         else
             soundButton = new Button(assets.assetManager.get(Assets.sound_off_button_inactive, Texture.class), SOUND_BUTTON_X, SOUND_BUTTON_Y, SOUND_BUTTON_WIDTH, SOUND_BUTTON_HEIGHT);
@@ -175,12 +173,6 @@ public class GameInterface extends GameElements {
         gl = new GlyphLayout();
     }
 
-    public void updateSoundButton(boolean soundEnabled){
-        if(soundEnabled)
-            soundButton = new Button(assets.assetManager.get(Assets.sound_on_button_inactive, Texture.class), SOUND_BUTTON_X, SOUND_BUTTON_Y, SOUND_BUTTON_WIDTH, SOUND_BUTTON_HEIGHT);
-        else
-            soundButton = new Button(assets.assetManager.get(Assets.sound_off_button_inactive, Texture.class), SOUND_BUTTON_X, SOUND_BUTTON_Y, SOUND_BUTTON_WIDTH, SOUND_BUTTON_HEIGHT);
-    }
 
     public void drawTopUI(Main game, boolean isPaused, int health, boolean isAlive, boolean isTransitionedIn) {
         if (!isPaused && isAlive && isTransitionedIn)
@@ -219,7 +211,7 @@ public class GameInterface extends GameElements {
         if (TITLE_LOGO_Y < SCREEN_HEIGHT)
             game.batch.draw(titleTexture, TITLE_LOGO_X, TITLE_LOGO_Y, TITLE_LOGO_WIDTH, TITLE_LOGO_HEIGHT);
 
-        if (prefs.hasSound())
+        if (prefs.isSoundEnabled())
             tsSoundButton.setTexture(assets.assetManager.get(Assets.sound_on_button_ts, Texture.class));
         else
             tsSoundButton.setTexture(assets.assetManager.get(Assets.sound_off_button_ts, Texture.class));
@@ -237,14 +229,14 @@ public class GameInterface extends GameElements {
 
     public boolean checkForTSSoundButtonTap(Main game, boolean soundEnabled, Prefs prefs) {
         if (tsSoundButton.getTappedBefore()) {
-            if (prefs.hasSound()) {
+            if (prefs.isSoundEnabled()) {
                 tsSoundButton.setTexture(assets.assetManager.get(Assets.sound_off_button_ts, Texture.class));
             } else {
                 tsSoundButton.setTexture(assets.assetManager.get(Assets.sound_on_button_ts, Texture.class));
             }
         }
         if (tsSoundButton.getReleased()) {
-            if (prefs.hasSound()) {
+            if (prefs.isSoundEnabled()) {
                 prefs.setSound(false);
                 soundEnabled = false;
             } else {

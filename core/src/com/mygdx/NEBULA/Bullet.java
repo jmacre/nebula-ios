@@ -116,7 +116,7 @@ public class Bullet extends GameElements {
     }
 
     public void render (Anim missileAnim, float delta, float width, float height, SpriteBatch batch) {
-        stateTime += delta / 6;
+        stateTime += delta;
         if(BULLET_Y < SCREEN_HEIGHT)
             missileAnim.drawAnim(missileAnimation, stateTime, BULLET_X, BULLET_Y, width, height, true, batch);
     }

@@ -263,6 +263,7 @@ public class GameElements {
 
     Anim shipAnim = new Anim();
     Anim missileAnim = new Anim();
+    Anim enemyBulletAnim = new Anim();
     Anim eyebatAnim = new Anim();
     Anim enemyShipAnim = new Anim();
     Anim laserTrapHAnim = new Anim();

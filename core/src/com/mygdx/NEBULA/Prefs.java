@@ -39,7 +39,7 @@ public class Prefs {
     public int getShip(){
         return prefs.getInteger("shipColor", 0);
     }
-    public boolean hasSound(){
+    public boolean isSoundEnabled(){
         return prefs.getBoolean("hasSound", true);
     }
     public String getUnlockedShips(){

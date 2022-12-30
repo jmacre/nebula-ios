@@ -1,8 +1,10 @@
 package com.mygdx.NEBULA;
 
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 import static com.mygdx.NEBULA.GameElements.ENEMY_SHIP_WIDTH;
 import static com.mygdx.NEBULA.GameElements.SCREEN_HEIGHT;
@@ -13,6 +15,8 @@ public class EnemyBullet {
     Assets assets;
     float speed;
     int ENEMY_BULLET_X, ENEMY_BULLET_Y;
+    Animation<TextureRegion> enemyBulletAnimation;
+
 
     public static float ENEMY_BULLET_WIDTH = ENEMY_SHIP_WIDTH * (2/31f);
     public static float ENEMY_BULLET_HEIGHT = ENEMY_BULLET_WIDTH * 4f;
@@ -32,6 +36,7 @@ public class EnemyBullet {
     public boolean remove = false;
     int bulletColor;
     Collision rect;
+    float stateTime = 0f;
 
     public void create (int ENEMY_BULLET_X, int ENEMY_BULLET_Y, float speed, int bulletColor, Assets assets) {
         this.assets = assets;
@@ -44,6 +49,8 @@ public class EnemyBullet {
         this.rect = new Collision(ENEMY_BULLET_X, ENEMY_BULLET_Y, ENEMY_BULLET_WIDTH, ENEMY_BULLET_HEIGHT);
         enemyBulletSprite = new Sprite(assets.assetManager.get(Assets.bullet_red, Texture.class));
         enemyBulletSprite.setSize(ENEMY_BULLET_WIDTH, ENEMY_BULLET_HEIGHT);
+        enemyBulletAnimation = Anim.createAnimation(enemyBulletSprite, 2, Anim.DEFAULT_FRAME_DURATION*1.5f);
+
 
     }
 
@@ -66,9 +73,11 @@ public class EnemyBullet {
         return ENEMY_BULLET_X;
     }
 
-    public void render (SpriteBatch batch) {
-        if (ENEMY_BULLET_Y + ENEMY_BULLET_HEIGHT> 0) {
-            enemyBulletSprite.draw(batch);
+    public void render (SpriteBatch batch, float delta, Anim enemyBulletAnim) {
+        stateTime += delta / 6;
+
+        if (ENEMY_BULLET_Y + ENEMY_BULLET_HEIGHT > 0) {
+            enemyBulletAnim.drawAnim(enemyBulletAnimation, stateTime, ENEMY_BULLET_X, ENEMY_BULLET_Y, ENEMY_BULLET_WIDTH, ENEMY_BULLET_HEIGHT, true, batch);
         }
     }
 
