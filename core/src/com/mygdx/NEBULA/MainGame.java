@@ -368,7 +368,7 @@ public class MainGame extends GameElements implements Screen {
         refreshRate = Gdx.graphics.getDisplayMode().refreshRate;
 
         ShaderProgram.pedantic = false;
-        invertedShader = new ShaderProgram(Gdx.files.internal("shaders/invert.vsh"), Gdx.files.internal("shaders/invert.fsh"));
+        invertedShader = new ShaderProgram(Gdx.files.internal("shader/invert.vsh"), Gdx.files.internal("shader/invert.fsh"));
     }
 
     @Override
@@ -1168,7 +1168,7 @@ public class MainGame extends GameElements implements Screen {
             if (missileUsed) {
                 bulletThreshold = 0.3f;
             } else {
-                bulletThreshold = 0.45f;
+                bulletThreshold = 0.65f;
             }
         } else if (isRapidFire) {
             bulletThreshold = 0.1f;

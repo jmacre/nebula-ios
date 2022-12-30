@@ -21,6 +21,12 @@ public class GameElements {
     public static final int PURPLE_ID = 3;
     public static final int WHITE_ID = 4;
 
+
+    public static final String GEM_1K_SKU = "1k_gems";
+    public static final String GEM_10K_SKU = "10k_gems";
+    public static final String GEM_30K_SKU = "30k_gems";
+    public static final String GEM_100K_SKU = "100k_gems";
+
     public static final String PURPLE_COLOR_HEX = "6a11f6";
 
     public static float SCORE_TICKER_TIMER = -.25f;
@@ -100,6 +106,9 @@ public class GameElements {
 
     public static final float GEM_HEIGHT = BOMB_HEIGHT / 2f;
     public static final float GEM_WIDTH = BOMB_WIDTH * (17/18f);
+
+    public static final float GEM_SHOP_HEIGHT = WHITE_EYEBAT_HEIGHT * (48 / 39f);
+    public static final float GEM_SHOP_WIDTH = WHITE_EYEBAT_WIDTH * (69 / 60f);
 
     public static final float RAPID_FIRE_HEIGHT = BOMB_HEIGHT * (16/23f);
     public static final float RAPID_FIRE_WIDTH = HEART_WIDTH;
@@ -225,7 +234,7 @@ public class GameElements {
     public static final float GEM_ICON_MENU_X = PLAY_BUTTON_X + PLAY_BUTTON_WIDTH;
     public static final float GEM_ICON_MENU_Y = MENU_SCORE_Y - GEM_ICON_HEIGHT * 0.8f;
 
-    public static final float TS_GEM_ICON_MENU_X = SCREEN_WIDTH * .7f;
+    public static final float TS_GEM_ICON_MENU_X = SCREEN_WIDTH * .65f;
     public static final float TS_GEM_COUNT_MENU_X = TS_GEM_ICON_MENU_X + (GEM_ICON_WIDTH * 1.1f);
 
     public static final float GEM_COUNT_MENU_X = GEM_ICON_MENU_X + (GEM_ICON_WIDTH * 1.1f);
@@ -269,7 +278,7 @@ public class GameElements {
 
     MASound mainMusic;
     MASound pauseSound;
-    MASound playSound, shopSound;
+    MASound playSound;
     MASound bombSound;
     MASound missileSound, missileSound1;
     MASound bulletSound, bulletSound1, itemSound, hitSound, hitSound1, gemSound, errorSound;

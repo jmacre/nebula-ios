@@ -15,11 +15,18 @@ import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
+import com.badlogic.gdx.pay.Offer;
+import com.badlogic.gdx.pay.OfferType;
+import com.badlogic.gdx.pay.PurchaseManagerConfig;
+import com.badlogic.gdx.pay.PurchaseObserver;
+import com.badlogic.gdx.pay.Transaction;
 import com.badlogic.gdx.utils.Align;
 
 import games.rednblack.miniaudio.MASound;
 
 public class GameInterface extends GameElements {
+    Main game;
+
     Assets assets;
     Button pauseButton;
     Button homeButton;
@@ -55,6 +62,14 @@ public class GameInterface extends GameElements {
 
     float tapToContinueBlinkingTimer = TAP_TO_CONTINUE_BLINKING_TIMER*2;
 
+    float gemPurchaseTimer = GEM_COUNT_UPDATE_TIMER;
+
+    boolean gemsPurchased = false;
+    int purchasedGemCount = 0;
+
+    int gemCount = 0;
+    int prePurchaseGemCount = 0;
+
     boolean isRecapScreenOpen = true;
     boolean isReplayScreenOpen = false;
     boolean soundEnabled;
@@ -67,11 +82,18 @@ public class GameInterface extends GameElements {
     int selectedShopElement = 0;
     int selectedGemScreenElement = 0;
 
+    Prefs prefs;
+
     public FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
 
-    public GameInterface(Assets assets, Main game, boolean soundEnabled) {
+    public GameInterface(Assets assets, Main game, boolean soundEnabled, Prefs prefs) {
         this.assets = assets;
         this.soundEnabled = soundEnabled;
+        this.game = game;
+        this.prefs = prefs;
+
+        initPurchaseManager();
+
         parameter.size = SCREEN_WIDTH / 40;
         startButton = new Button(assets.assetManager.get(Assets.start_button_inactive_clear, Texture.class), START_BUTTON_X, START_BUTTON_Y_TRANSITIONED, START_BUTTON_WIDTH, START_BUTTON_HEIGHT);
 
@@ -98,7 +120,6 @@ public class GameInterface extends GameElements {
         textParameter.size = SCREEN_WIDTH / 15;
         storeFont = generator.generateFont(textParameter);
 
-
         gemSound = assets.assetManager.get(Assets.gem_sound, MASound.class);
         gemSound.setVolume(0.2f);
 
@@ -107,8 +128,6 @@ public class GameInterface extends GameElements {
 
         playSound = assets.assetManager.get(play_sound, MASound.class);
         playSound.setVolume(0.2f);
-
-        shopSound = playSound;
 
         pauseSound = assets.assetManager.get(pause_sound, MASound.class);
         pauseSound.setVolume(0.2f);
@@ -120,7 +139,8 @@ public class GameInterface extends GameElements {
             scoreY = SCORE_Y_AND;
             topElemY = TOP_ELEM_Y_AND;
             gemIconY = GEM_ICON_Y_AND;
-        } else {
+        }
+        else {
             scoreY = SCORE_Y_IOS;
             topElemY = TOP_ELEM_Y_IOS;
             gemIconY = GEM_ICON_Y_IOS;
@@ -160,7 +180,6 @@ public class GameInterface extends GameElements {
             soundButton = new Button(assets.assetManager.get(Assets.sound_on_button_inactive, Texture.class), SOUND_BUTTON_X, SOUND_BUTTON_Y, SOUND_BUTTON_WIDTH, SOUND_BUTTON_HEIGHT);
         else
             soundButton = new Button(assets.assetManager.get(Assets.sound_off_button_inactive, Texture.class), SOUND_BUTTON_X, SOUND_BUTTON_Y, SOUND_BUTTON_WIDTH, SOUND_BUTTON_HEIGHT);
-
     }
 
     public void drawTopUI(Main game, boolean isPaused, int health, boolean isAlive, boolean isTransitionedIn) {
@@ -247,10 +266,6 @@ public class GameInterface extends GameElements {
             }
             return startButton.getReleased();
         }
-//        startButton.setTexture(assets.assetManager.get(Assets.start_button_active_clear, Texture.class));
-//        shopButton.setTexture(assets.assetManager.get(Assets.shop_button_inactive_clear, Texture.class));
-//        titleTexture.setTexture(assets.assetManager.get(Assets.title_logo_clear, Texture.class));
-
 
         return false;
     }
@@ -342,7 +357,6 @@ public class GameInterface extends GameElements {
     }
 
     public boolean checkForXButtonTap(boolean isShopOpen, boolean isGemScreenOpen, boolean soundEnabled) {
-
         if (isShopOpen) {
             if (xButton.getTapped()) {
                 isShopOpen = false;
@@ -354,6 +368,7 @@ public class GameInterface extends GameElements {
             }
             return !isShopOpen;
         }
+
         else if (isGemScreenOpen) {
             if (xButton.getTapped()) {
                 isGemScreenOpen = false;
@@ -362,6 +377,7 @@ public class GameInterface extends GameElements {
                     pauseSound.stop();
                     pauseSound.play();
                 }
+                gemCount = prefs.getGemCount();
             }
             return !isGemScreenOpen;
         }
@@ -485,20 +501,25 @@ public class GameInterface extends GameElements {
             }
         } else if (isGemScreenOpen) {
             if (selectButton.getTappedBefore()) {
+                if(gemsPurchased) {
+                    gemCount = prefs.getGemCount();
+                    prePurchaseGemCount = gemCount;
+                }
+
                 selectButton.setTexture(assets.assetManager.get(Assets.buy_active, Texture.class));
             } else {
                 selectButton.setTexture(assets.assetManager.get(Assets.buy_inactive, Texture.class));
             }
             if (selectButton.getReleased()) {
-                if (soundEnabled) {
-                    playSound.stop();
-                    playSound.play();
-                }
+                buyItem(gemElement.getSKU());
+
             }
         }
     }
 
     public void checkForAdButtonTap(Main game, boolean soundEnabled, Prefs prefs) {
+        gemCount = prefs.getGemCount();
+
         if (selectButton.getTappedBefore()) {
             selectButton.setTexture(assets.assetManager.get(Assets.ad_button_active, Texture.class));
 
@@ -515,12 +536,12 @@ public class GameInterface extends GameElements {
         }
     }
 
-    public void checkForBuyButtonTap(boolean soundEnabled, int itemPrice, Prefs prefs) {
+    public void checkForShopBuyButtonTap(boolean soundEnabled, int itemPrice, Prefs prefs) {
         if (selectButton.getTappedBefore()) {
-            selectButton.setTexture(assets.assetManager.get(Assets.buy_active, Texture.class));
+            selectButton.setTexture(assets.assetManager.get(Assets.blank_active, Texture.class));
 
         } else {
-            selectButton.setTexture(assets.assetManager.get(Assets.buy_inactive, Texture.class));
+            selectButton.setTexture(assets.assetManager.get(Assets.blank_inactive, Texture.class));
         }
         if (selectButton.getReleased()) {
 
@@ -542,12 +563,19 @@ public class GameInterface extends GameElements {
         }
     }
 
-    public void drawGemScreen(Main game, boolean soundEnabled, SpriteBatch batch, Prefs prefs) {
+    public void drawGemScreen(Main game, float delta, boolean soundEnabled, SpriteBatch batch, Prefs prefs) {
+        if(gemCount == 0){
+            gemCount = prefs.getGemCount();
+        }
+        else if (prePurchaseGemCount != 0 && gemCount < prefs.getGemCount()){
+            gemCount = prePurchaseGemCount;
+        }
+
         game.batch.draw(shopBack, SHOP_BACK_X, SHOP_BACK_Y, SHOP_BACK_WIDTH, SHOP_BACK_HEIGHT);
         game.batch.draw(xButton.getTexture(), X_BUTTON_X, X_BUTTON_Y, X_BUTTON_WIDTH, X_BUTTON_HEIGHT);
 
         game.batch.draw(gemIcon, GEM_ICON_SHOP_X, GEM_ICON_SHOP_Y, GEM_ICON_WIDTH, GEM_ICON_HEIGHT);
-        gemCountFont.draw(game.batch, " x " + prefs.getGemCount(), GEM_COUNT_SHOP_X, GEM_COUNT_SHOP_Y);
+        gemCountFont.draw(game.batch, " x " + gemCount, GEM_COUNT_SHOP_X, GEM_COUNT_SHOP_Y);
 
         game.batch.draw(leftArrowBtn.getTexture(), LEFT_ARROW_BTN_X, LEFT_ARROW_BTN_Y, LEFT_ARROW_BTN_WIDTH, LEFT_ARROW_BTN_HEIGHT);
         game.batch.draw(rightArrowBtn.getTexture(), RIGHT_ARROW_BTN_X, RIGHT_ARROW_BTN_Y, RIGHT_ARROW_BTN_WIDTH, RIGHT_ARROW_BTN_HEIGHT);
@@ -558,25 +586,24 @@ public class GameInterface extends GameElements {
 
         if (selectedGemScreenElement == AD_ID) {
             checkForAdButtonTap(game, soundEnabled, prefs);
-        } else {
+        }
+        else {
             checkForSelectButtonTap(soundEnabled, false, true, prefs);
-            gl.setText(buyFont, '$' + Float.toString(GemElement.getPriceByElementId(selectedGemScreenElement)), Color.valueOf(PURPLE_COLOR_HEX), SCREEN_WIDTH, Align.center, true);
-            buyFont.draw(game.batch, '$' + Float.toString(GemElement.getPriceByElementId(selectedGemScreenElement)), (SCREEN_WIDTH - gl.width) / 2, SELECT_BUTTON_Y + gl.height / 2 + SELECT_BUTTON_HEIGHT / 2);
-
         }
 
         if (gemElement == null) {
-            gemElement = new GemElement(AD_ID, selectedGemScreenElement, SHOP_BACK_X + SHOP_BACK_WIDTH / 2 - SHIP_WIDTH / 2f, SHOP_BACK_Y + SHOP_BACK_HEIGHT / 2 - SHIP_HEIGHT / 2f, SHIP_WIDTH, SHIP_HEIGHT);
+            gemElement = new GemElement(AD_ID, selectedGemScreenElement, SHOP_BACK_X + SHOP_BACK_WIDTH / 2 - GEM_SHOP_WIDTH / 2f, SHOP_BACK_Y + SHOP_BACK_HEIGHT / 2 - GEM_SHOP_HEIGHT / 2f, GEM_SHOP_WIDTH, GEM_SHOP_HEIGHT);
+        }
+        if(gemsPurchased) {
+            getPurchasedGems(delta, gemCount, purchasedGemCount, soundEnabled);
         }
 
-//        gemElement.render(stateTime, batch);
+        gemElement.render(stateTime, batch);
 
         gemElement.setElementAnimation(selectedGemScreenElement);
 
         gl.setText(storeFont, gemElement.getTitle(), Color.valueOf(PURPLE_COLOR_HEX), SCREEN_WIDTH, Align.center, true);
         storeFont.draw(game.batch, gemElement.getTitle(), (SCREEN_WIDTH - gl.width) / 2, SHOP_BACK_Y + SHOP_BACK_HEIGHT * .8f + gl.height / 2);
-
-
     }
 
     public void drawShopScreen(Main game, boolean soundEnabled, float delta, SpriteBatch batch, BitmapFont gemCountFont, Prefs prefs) {
@@ -601,7 +628,7 @@ public class GameInterface extends GameElements {
             buyFont.draw(game.batch, Integer.toString(ShopElement.getPriceByShipId(selectedShopElement)), (SCREEN_WIDTH - gl.width) / 2, SELECT_BUTTON_Y + gl.height / 2 + SELECT_BUTTON_HEIGHT / 2);
             game.batch.draw(gemIcon, (SCREEN_WIDTH + gl.width) / 2 + GEM_ICON_WIDTH / 2, SELECT_BUTTON_Y + SELECT_BUTTON_HEIGHT / 2 - GEM_ICON_HEIGHT / 2, GEM_ICON_WIDTH, GEM_ICON_HEIGHT);
 
-            checkForBuyButtonTap(soundEnabled, ShopElement.getPriceByShipId(selectedShopElement), prefs);
+            checkForShopBuyButtonTap(soundEnabled, ShopElement.getPriceByShipId(selectedShopElement), prefs);
 
         } else {
             if (prefs.getShip() == selectedShopElement) {
@@ -612,7 +639,7 @@ public class GameInterface extends GameElements {
         }
 
         if (ship == null) {
-            ship = new ShopElement(SHIP_ID, selectedShopElement, SHOP_BACK_X + SHOP_BACK_WIDTH / 2 - SHIP_WIDTH / 2f, SHOP_BACK_Y + SHOP_BACK_HEIGHT / 2 - SHIP_HEIGHT / 2, SHIP_WIDTH, SHIP_HEIGHT);
+            ship = new ShopElement(SHIP_ID, selectedShopElement, SHOP_BACK_X + SHOP_BACK_WIDTH / 2 - SHIP_WIDTH / 2f, SHOP_BACK_Y + SHOP_BACK_HEIGHT / 2 - SHIP_HEIGHT / 2f, SHIP_WIDTH, SHIP_HEIGHT);
         }
 
         ship.render(stateTime, batch);
@@ -711,6 +738,154 @@ public class GameInterface extends GameElements {
         }
         else if(tapToContinueBlinkingTimer > 0) {
             tapToContinueBlinkingTimer = TAP_TO_CONTINUE_BLINKING_TIMER * 2f;
+        }
+    }
+
+    public int getPurchasedGems(float deltaP, int gemCount, int purchasedGemCount, boolean soundEnabled) {
+        if(prePurchaseGemCount == 0){
+            prePurchaseGemCount = gemCount;
+        }
+
+        if (gemPurchaseTimer < 0) {
+            gemPurchaseTimer += deltaP;
+
+        } else {
+                if(prePurchaseGemCount < prefs.getGemCount()) {
+                    if(purchasedGemCount == 1000) {
+                        prePurchaseGemCount += 10;
+                    }
+                    else if (purchasedGemCount == 10000){
+                        prePurchaseGemCount += 50;
+                    }
+                    else{
+                        prePurchaseGemCount += 500;
+                    }
+
+                    if (soundEnabled) {
+                        playSound.play();
+                    }
+                }
+                else{
+                    gemsPurchased = false;
+                    prePurchaseGemCount = 0;
+                }
+        }
+        return prePurchaseGemCount;
+    }
+
+    private void initPurchaseManager() {
+        // the purchase manager config here in the core project works if your SKUs are the same in every
+        // payment system. If this is not the case, inject them like the PurchaseManager is injected
+        PurchaseManagerConfig pmc = new PurchaseManagerConfig();
+        pmc.addOffer(new Offer().setType(OfferType.CONSUMABLE).setIdentifier(GEM_1K_SKU));
+        pmc.addOffer(new Offer().setType(OfferType.CONSUMABLE).setIdentifier(GEM_10K_SKU));
+        pmc.addOffer(new Offer().setType(OfferType.CONSUMABLE).setIdentifier(GEM_30K_SKU));
+        pmc.addOffer(new Offer().setType(OfferType.CONSUMABLE).setIdentifier(GEM_100K_SKU));
+
+        game.purchaseManager.install(new MyPurchaseObserver(), pmc, true);
+    }
+
+    private void updateGuiWhenPurchaseManInstalled(String errorMessage) {
+//        buyConsumable.updateFromManager();
+    }
+
+    private void buyItem(String sku) {
+        game.purchaseManager.purchase(sku);
+    }
+
+    private class MyPurchaseObserver implements PurchaseObserver {
+
+        @Override
+        public void handleInstall() {
+            Gdx.app.log("IAP", "Installed");
+
+            Gdx.app.postRunnable(new Runnable() {
+                @Override
+                public void run() {
+                    updateGuiWhenPurchaseManInstalled(null);
+                }
+            });
+        }
+
+        @Override
+        public void handleInstallError(final Throwable e) {
+            Gdx.app.error("IAP", "Error when trying to install PurchaseManager", e);
+            Gdx.app.postRunnable(new Runnable() {
+                @Override
+                public void run() {
+                    updateGuiWhenPurchaseManInstalled(e.getMessage());
+                }
+            });
+        }
+
+        @Override
+        public void handleRestore(Transaction[] transactions) {
+            if (transactions != null && transactions.length > 0) {
+                for (Transaction t : transactions) {
+                    handlePurchase(t);
+                }
+            }
+        }
+
+
+        @Override
+        public void handleRestoreError(Throwable e) {
+
+        }
+
+        @Override
+        public void handlePurchase(final Transaction transaction) {
+            Gdx.app.postRunnable(new Runnable() {
+                @Override
+                public void run() {
+                    if (transaction.isPurchased()) {
+                        switch (transaction.getIdentifier()) {
+                            case GEM_1K_SKU:
+                                gemsPurchased = true;
+                                purchasedGemCount = 1000;
+                                prefs.setGemCount(gemCount + purchasedGemCount);
+                                break;
+
+                            case GEM_10K_SKU:
+                                purchasedGemCount = 10000;
+                                gemsPurchased = true;
+                                prefs.setGemCount(gemCount + purchasedGemCount);
+                                break;
+
+                            case GEM_30K_SKU:
+                                purchasedGemCount = 30000;
+                                gemsPurchased = true;
+                                prefs.setGemCount(gemCount + purchasedGemCount);
+                                break;
+
+                            case GEM_100K_SKU:
+                                purchasedGemCount = 100000;
+                                gemsPurchased = true;
+                                prefs.setGemCount(gemCount + purchasedGemCount);
+                                break;
+                        }
+                    }
+                }
+            });
+        }
+
+        @Override
+        public void handlePurchaseError(Throwable e) {
+            showErrorOnMainThread("Error on buying:\n" + e.getMessage());
+        }
+
+        @Override
+        public void handlePurchaseCanceled() {
+
+        }
+
+        private void showErrorOnMainThread(final String message) {
+            Gdx.app.postRunnable(new Runnable() {
+                @Override
+                public void run() {
+                    // show a dialog here...
+                }
+            });
         }
     }
 }

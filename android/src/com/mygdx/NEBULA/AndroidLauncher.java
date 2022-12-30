@@ -1,17 +1,9 @@
 package com.mygdx.NEBULA;
 
-import static android.content.ContentValues.TAG;
-
-import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.content.Context;
-import android.content.res.AssetManager;
-import android.content.res.Resources;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
-import android.view.Display;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -20,18 +12,12 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
-import com.badlogic.gdx.Audio;
-import com.badlogic.gdx.Preferences;
-import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
-import com.badlogic.gdx.backends.android.AndroidAudio;
-import com.badlogic.gdx.backends.android.AsynchronousAndroidAudio;
+import com.badlogic.gdx.pay.android.googlebilling.PurchaseManagerGoogleBilling;
 import com.google.android.gms.ads.AdError;
-import com.google.android.gms.ads.AdListener;
-import com.google.android.gms.ads.AdSize;
-import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.FullScreenContentCallback;
 import com.google.android.gms.ads.LoadAdError;
 import com.google.android.gms.ads.MobileAds;
@@ -45,34 +31,10 @@ import java.util.Arrays;
 import java.util.List;
 
 import games.rednblack.miniaudio.MASound;
-import games.rednblack.miniaudio.MiniAudio;
 
 public class AndroidLauncher extends AndroidApplication implements IActivityRequestHandler{
-	private final int showAds = 1;
-	private final int hideAds = 0;
-	AdView adView;
 	AdRequest adRequest;
 	private RewardedAd mRewardedAd;
-
-
-	Handler handler = new Handler()
-	{
-		@Override
-		public void handleMessage(Message msg) {
-			switch(msg.what) {
-				case showAds:
-				{
-					adView.setVisibility(View.VISIBLE);
-					break;
-				}
-				case hideAds:
-				{
-					adView.setVisibility(View.GONE);
-					break;
-				}
-			}
-		}
-	};
 
 
 	@Override
@@ -94,13 +56,10 @@ public class AndroidLauncher extends AndroidApplication implements IActivityRequ
 		AndroidApplicationConfiguration config = new AndroidApplicationConfiguration();
 		config.useImmersiveMode = true;
 
-		View gameView = initializeForView(new Main(getContext().getAssets(), this), config);
+		Main game = new Main(getContext().getAssets(), this);
+		game.purchaseManager = new PurchaseManagerGoogleBilling(this);
 
-		// Create and setup the AdMob view
-//		adView = new AdView(this);
-//		adView.setAdSize(AdSize.BANNER);
-//		adView.setAdUnitId("ca-app-pub-3940256099942544/6300978111"); // Put in your secret key here
-
+		View gameView = initializeForView(game, config);
 
 		adRequest = new AdRequest.Builder().build();
 		RewardedAd.load(this, "ca-app-pub-3940256099942544/5224354917",

@@ -4,6 +4,7 @@ import static com.mygdx.NEBULA.Assets.*;
 import static com.mygdx.NEBULA.GameElements.SCREEN_WIDTH;
 import static com.mygdx.NEBULA.GameElements.SCREEN_WIDTH;
 
+import com.badlogic.gdx.Application;
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Game;
 
@@ -14,6 +15,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
+import com.badlogic.gdx.pay.PurchaseManager;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 import games.rednblack.miniaudio.MAGroup;
@@ -28,20 +30,21 @@ import jdk.nashorn.internal.runtime.Context;
 public class Main extends Game implements ApplicationListener {
 
 	public SpriteBatch batch;
-
 	public static BitmapFont scoreFont;
 	public FreeTypeFontGenerator generator;
 	public FreeTypeFontGenerator.FreeTypeFontParameter parameter;
 	Assets assets;
+
 	public Object miniAudioContextAssets;
 	MiniAudio miniAudio;
 	public IActivityRequestHandler requestHandlerAndroid, requestHandlerIOS;
+	public PurchaseManager purchaseManager;
 
-	public Main(Object miniAudioContextAssets, IActivityRequestHandler requestHandler){
+	public Main(Object miniAudioContextAssets, IActivityRequestHandler requestHandler){ // android constructor
 		this.miniAudioContextAssets = miniAudioContextAssets;
 		this.requestHandlerAndroid = requestHandler;
 	}
-	public Main(IActivityRequestHandler requestHandler){
+	public Main(IActivityRequestHandler requestHandler){ // ios constructor
 		this.requestHandlerIOS = requestHandler;
 	}
 

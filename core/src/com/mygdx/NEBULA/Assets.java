@@ -20,6 +20,7 @@ public class Assets implements Disposable {
     public static final String bomb_sound = "sound/bomb_sound.mp3";
     public static final String missile_sound = "sound/missile_sound.mp3";
     public static final String gem_sound = "sound/gem.mp3";
+    public static final String error_sound = "sound/error_sound.mp3";
 
     public static final String default_background = "background/default_bg.png";
     public static final String blue_background = "background/blue_bg.png";
@@ -74,13 +75,15 @@ public class Assets implements Disposable {
     public static final String active_button = "ui/active_button.png";
     public static final String buy_active = "ui/buy_active.png";
     public static final String buy_inactive = "ui/buy_inactive.png";
+    public static final String blank_active = "ui/blank_active.png";
+    public static final String blank_inactive = "ui/blank_inactive.png";
 
-    public static final String bullet_yellow = "weapons/bullet_yellow.png";
-    public static final String bullet_red = "weapons/bullet_red.png";
-    public static final String bullet_blue = "weapons/bullet_blue.png";
-    public static final String bullet_purple = "weapons/bullet_purple.png";
-    public static final String bullet_green = "weapons/bullet_green.png";
-    public static final String missile_ss = "weapons/missile_ss.png";
+    public static final String bullet_yellow = "weapon/bullet_yellow.png";
+    public static final String bullet_red = "weapon/bullet_red.png";
+    public static final String bullet_blue = "weapon/bullet_blue.png";
+    public static final String bullet_purple = "weapon/bullet_purple.png";
+    public static final String bullet_green = "weapon/bullet_green.png";
+    public static final String missile_ss = "weapon/missile_ss.png";
 
     public static final String black_transition = "misc/black_transition.png";
     public static final String white_flash = "misc/white_flash.png";
@@ -120,14 +123,19 @@ public class Assets implements Disposable {
     public static final String no_button_active = "ui/no_button_active.png";
     public static final String no_button_inactive = "ui/no_button_inactive.png";
 
-    public static final String heart_item_ss = "items/heart_ss.png";
-    public static final String missile_item_ss = "items/missile_ss.png";
-    public static final String bomb_ss = "items/bomb_ss.png";
-    public static final String rapid_fire_ss = "items/rapid_fire_ss.png";
-    public static final String hourglass_ss = "items/hourglass_ss.png";
-    public static final String gem_ss = "items/gem_ss.png";
-    public static final String spread_ss = "items/spread_ss.png";
-    public static final String error_sound = "sound/error_sound.mp3";
+    public static final String heart_item_ss = "item/heart_ss.png";
+    public static final String missile_item_ss = "item/missile_ss.png";
+    public static final String bomb_ss = "item/bomb_ss.png";
+    public static final String rapid_fire_ss = "item/rapid_fire_ss.png";
+    public static final String hourglass_ss = "item/hourglass_ss.png";
+    public static final String gem_ss = "item/gem_ss.png";
+    public static final String spread_ss = "item/spread_ss.png";
+
+    public static final String gem_25 = "gem/gem_25.png";
+    public static final String gem_1k = "gem/gem_1k.png";
+    public static final String gem_10k = "gem/gem_10k.png";
+    public static final String gem_30k = "gem/gem_30k.png";
+    public static final String gem_100k = "gem/gem_100k.png";
 
     public static final String gem_icon = "ui/gem.png";
 
@@ -256,6 +264,15 @@ public class Assets implements Disposable {
 
         assetManager.load(buy_active, Texture.class);
         assetManager.load(buy_inactive, Texture.class);
+
+        assetManager.load(blank_active, Texture.class);
+        assetManager.load(blank_inactive, Texture.class);
+
+        assetManager.load(gem_25, Texture.class);
+        assetManager.load(gem_1k, Texture.class);
+        assetManager.load(gem_10k, Texture.class);
+        assetManager.load(gem_30k, Texture.class);
+        assetManager.load(gem_100k, Texture.class);
     }
 
     public void unloadAll() {
@@ -357,6 +374,14 @@ public class Assets implements Disposable {
         assetManager.unload(powerup_timer);
         assetManager.unload(buy_inactive);
         assetManager.unload(buy_active);
+        assetManager.unload(blank_inactive);
+        assetManager.unload(blank_active);
+
+        assetManager.unload(gem_25);
+        assetManager.unload(gem_1k);
+        assetManager.unload(gem_10k);
+        assetManager.unload(gem_30k);
+        assetManager.unload(gem_100k);
     }
 
     @Override

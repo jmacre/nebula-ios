@@ -21,14 +21,15 @@ public class GemElement extends GameElements{
     public static final float TEN_DOLLAR_PRICE = 9.99f;
     public static final float TWENTY_DOLLAR_PRICE = 19.99f;
 
+    static Sprite adGem, oneDollarGem, fiveDollarGem, tenDollarGem, twentyDollarGem;
 
     float x, y, width, height;
 
-
-    public static int gemOptionsCount = 4; // one less than actual count for cycling between ships
+    public static int gemOptionsCount = 4;
 
     private Sprite elementSheet;
     private String title;
+    private String sku;
 
     Animation<TextureRegion> elementAnimation;
     Anim elementAnim = new Anim();
@@ -41,12 +42,12 @@ public class GemElement extends GameElements{
 
         if(id == AD_ID) {
 
-//            setElementAnimation(colorId);
-//
-//            if(elementSheet != null) {
-//                elementAnimation = Anim.createAnimation(elementSheet, 4, DEFAULT_FRAME_DURATION * 1.5f);
-//                elementAnimation.setPlayMode(Animation.PlayMode.LOOP);
-//            }
+            setElementAnimation(colorId);
+
+            if(elementSheet != null) {
+                elementAnimation = Anim.createAnimation(elementSheet, 1, DEFAULT_FRAME_DURATION * 1.5f);
+                elementAnimation.setPlayMode(Animation.PlayMode.LOOP);
+            }
         }
     }
     public void render(float stateTime, SpriteBatch batch){
@@ -54,16 +55,11 @@ public class GemElement extends GameElements{
     }
 
     public static void createElements(Assets assets){
-//        mainShip = new Sprite(assets.assetManager.get(Assets.ship_ss, Texture.class));
-//        redShip = new Sprite(assets.assetManager.get(Assets.ship_red_ss, Texture.class));
-//        blackShip = new Sprite(assets.assetManager.get(Assets.ship_black_ss, Texture.class));
-//        purpleShip = new Sprite(assets.assetManager.get(Assets.ship_purple_ss, Texture.class));
-//        yellowShip = new Sprite(assets.assetManager.get(Assets.ship_yellow_ss, Texture.class));
-//        cyanShip = new Sprite((assets.assetManager.get(Assets.ship_cyan_ss, Texture.class)));
-//        blueShip = new Sprite((assets.assetManager.get(Assets.ship_blue_ss, Texture.class)));
-//        bredShip = new Sprite((assets.assetManager.get(Assets.ship_bred_ss, Texture.class)));
-//        orangeShip = new Sprite((assets.assetManager.get(Assets.ship_orange_ss, Texture.class)));
-//        greenShip = new Sprite((assets.assetManager.get(Assets.ship_green_ss, Texture.class)));
+        adGem = new Sprite(assets.assetManager.get(Assets.gem_25, Texture.class));
+        oneDollarGem = new Sprite(assets.assetManager.get(Assets.gem_1k, Texture.class));
+        fiveDollarGem = new Sprite(assets.assetManager.get(Assets.gem_10k, Texture.class));
+        tenDollarGem = new Sprite(assets.assetManager.get(Assets.gem_30k, Texture.class));
+        twentyDollarGem = new Sprite(assets.assetManager.get(Assets.gem_100k, Texture.class));
     }
 
     public String getTitle(){
@@ -74,29 +70,33 @@ public class GemElement extends GameElements{
         switch (colorId) {
 
             case AD_ID:
-//                elementSheet = mainShip;
+                elementSheet = adGem;
                 title = "25 GEMS";
                 break;
             case ONE_DOLLAR_ID:
-//                elementSheet = redShip;
+                elementSheet = oneDollarGem;
                 title = "1,000 GEMS";
+                sku = "1k_gems";
                 break;
             case FIVE_DOLLAR_ID:
-//                elementSheet = blackShip;
+                elementSheet = fiveDollarGem;
                 title = "10,000 GEMS";
+                sku = "10k_gems";
                 break;
             case TEN_DOLLAR_ID:
-//                elementSheet = purpleShip;
+                elementSheet = tenDollarGem;
                 title = "30,000 GEMS";
+                sku = "30k_gems";
                 break;
             case TWENTY_DOLLAR_ID:
-//                elementSheet = yellowShip;
+                elementSheet = twentyDollarGem;
                 title = "100,000 GEMS";
+                sku = "100k_gems";
                 break;
         }
 
         if(elementSheet != null) {
-            elementAnimation = Anim.createAnimation(elementSheet, 4, DEFAULT_FRAME_DURATION * 1.5f);
+            elementAnimation = Anim.createAnimation(elementSheet, 1, DEFAULT_FRAME_DURATION * 1.5f);
             elementAnimation.setPlayMode(Animation.PlayMode.LOOP);
         }
     }
@@ -119,11 +119,7 @@ public class GemElement extends GameElements{
 
         return 0;
     }
-
-//    public void setColorId(int colorId){
-//        this.colorId = colorId;
-//    }
-//    public int getColorId(){
-//        return colorId;
-//    }
+    public String getSKU(){
+        return sku;
+    }
 }

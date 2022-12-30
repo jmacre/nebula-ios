@@ -14,6 +14,8 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.pay.PurchaseObserver;
+import com.badlogic.gdx.pay.Transaction;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.FillViewport;
@@ -56,7 +58,7 @@ public class MainMenu extends GameElements implements Screen {
     public MainMenu(Main game, Assets assets) {
         this.game = game;
         this.assets = assets;
-        gameInterface = new GameInterface(assets, game, soundEnabled);
+        this.gameInterface = new GameInterface(assets, game, soundEnabled, prefs);
         this.background = new Background(assets);
     }
 
@@ -80,9 +82,11 @@ public class MainMenu extends GameElements implements Screen {
 
         gemCountFont = generator.generateFont(textParameter);
         gemCountFont.setColor(1, 1, 1, 0.8f);
-        ShopElement.createElements(assets);
+
         refreshRate = Gdx.graphics.getDisplayMode().refreshRate;
 
+        ShopElement.createElements(assets);
+        GemElement.createElements(assets);
     }
 
     @Override
@@ -159,7 +163,7 @@ public class MainMenu extends GameElements implements Screen {
             gameInterface.drawShopScreen(game, soundEnabled, delta, game.batch, gemCountFont, prefs);
         }
         else{
-            gameInterface.drawGemScreen(game, soundEnabled, game.batch, prefs);
+            gameInterface.drawGemScreen(game, delta, soundEnabled, game.batch, prefs);
         }
 
 

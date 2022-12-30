@@ -163,11 +163,4 @@ public class ShopElement extends GameElements{
         }
         return 0;
     }
-
-    public void setColorId(int colorId){
-        this.colorId = colorId;
-    }
-    public int getColorId(){
-        return colorId;
-    }
 }
