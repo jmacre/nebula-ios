@@ -4,6 +4,7 @@ import static com.mygdx.NEBULA.Assets.pause_sound;
 import static com.mygdx.NEBULA.Assets.play_sound;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
@@ -83,6 +84,7 @@ public class MainMenu extends GameElements implements Screen {
         game.batch.enableBlending();
 
         game.batch.begin();
+
         if(Gdx.graphics.getFramesPerSecond() > refreshRate * .8f && Gdx.graphics.getFramesPerSecond() < refreshRate * 1.2f) {
             deltaList.add(delta);
         }

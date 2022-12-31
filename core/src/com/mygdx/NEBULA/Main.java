@@ -9,6 +9,7 @@ import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Game;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -54,6 +55,7 @@ public class Main extends Game implements ApplicationListener {
 		miniAudio = new MiniAudio();
 		miniAudio.setupAndroid(miniAudioContextAssets);
 
+		Gdx.input.setCatchKey(Input.Keys.BACK, true);
 		FreeTypeFontGenerator.setMaxTextureSize(2048);
 		generator = new FreeTypeFontGenerator(Gdx.files.internal("mainfont.ttf"));
 		parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
@@ -72,7 +74,9 @@ public class Main extends Game implements ApplicationListener {
 
 	@Override
 	public void dispose() {
+		super.dispose();
 		assets.unloadAll();
+		purchaseManager.dispose();
 		assets.assetManager.dispose();
 		miniAudio.dispose();
 	}

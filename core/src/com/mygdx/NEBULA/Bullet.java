@@ -4,7 +4,6 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.utils.Pool;
 
 import static com.mygdx.NEBULA.ItemDrop.HOURGLASS_SPEED_MULTIPLIER;
 
@@ -13,7 +12,8 @@ public class Bullet extends GameElements {
     public Sprite bulletSprite = new Sprite();
     Animation<TextureRegion> missileAnimation;
 
-    public static final float SPEED = SCREEN_HEIGHT/1.56f;
+    public static final float SPEED_VERTICAL = SCREEN_HEIGHT/1.56f;
+    public static final float SPEED_HORIZONTAL = (SPEED_VERTICAL * ((float)SCREEN_WIDTH / SCREEN_HEIGHT))/3;
 
     int BULLET_X, BULLET_Y;
     float stateTime = 0f;
@@ -69,22 +69,22 @@ public class Bullet extends GameElements {
     public void update(float delta, boolean isHourglass, boolean isSpreadFire, boolean isLeftSpread, boolean isRightSpread){
         if(isSpreadFire) {
             if (isLeftSpread) {
-                BULLET_X -= (int)((SPEED * delta) * .15f);
+                BULLET_X -= (int)(SPEED_HORIZONTAL * delta);
             }
             if (isRightSpread) {
-                BULLET_X += (int)((SPEED * delta) * .15f);
+                BULLET_X += (int)(SPEED_HORIZONTAL * delta);
             }
         }
 
         if(isMissile){
-            BULLET_Y += (SPEED * delta) * .75f;
+            BULLET_Y += (SPEED_VERTICAL * delta) * .75f;
         }
         else if(isHourglass) {
-            BULLET_Y += (SPEED * delta) * .75f * HOURGLASS_SPEED_MULTIPLIER;
+            BULLET_Y += (SPEED_VERTICAL * delta) * .75f * HOURGLASS_SPEED_MULTIPLIER;
         }
 
         if(!isHourglass && !isMissile) {
-            BULLET_Y += SPEED * delta;
+            BULLET_Y += SPEED_VERTICAL * delta;
         }
 
         rect.move(this.BULLET_X, this.BULLET_Y);

@@ -2,6 +2,7 @@ package com.mygdx.NEBULA;
 
 import com.badlogic.gdx.backends.iosrobovm.IOSApplication;
 import com.badlogic.gdx.backends.iosrobovm.IOSApplicationConfiguration;
+import com.badlogic.gdx.pay.ios.apple.PurchaseManageriOSApple;
 
 import org.robovm.apple.foundation.NSArray;
 import org.robovm.apple.foundation.NSAutoreleasePool;
@@ -40,11 +41,13 @@ public class IOSLauncher extends IOSApplication.Delegate implements IActivityReq
             System.out.println("GADMobileAds started with status == " + status);
         });
 
-
         request = new GADRequest();
         loadAd();
 
-        iosApplication = new IOSApplication(new Main(this), config);
+        Main game = new Main(this);
+        game.purchaseManager = new PurchaseManageriOSApple();
+
+        iosApplication = new IOSApplication(game, config);
         return iosApplication;
     }
 

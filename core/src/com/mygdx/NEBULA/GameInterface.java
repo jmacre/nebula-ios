@@ -45,7 +45,7 @@ public class GameInterface extends GameElements {
     Sprite titleTexture;
     Button tsSoundButton;
     Button gemButton;
-    Button xButton, xButtonRecap;
+    Button xButton;
     Button yesButton;
     Button noButton;
     BitmapFont scoreFont;
@@ -109,8 +109,6 @@ public class GameInterface extends GameElements {
         selectButton = new Button(assets.assetManager.get(Assets.select_button_inactive, Texture.class), SELECT_BUTTON_X, SELECT_BUTTON_Y, SELECT_BUTTON_WIDTH, SELECT_BUTTON_HEIGHT);
 
         xButton = new Button(assets.assetManager.get(Assets.x_button, Texture.class), X_BUTTON_X, X_BUTTON_Y, X_BUTTON_WIDTH, X_BUTTON_HEIGHT, X_BUTTON_WIDTH / 4f, X_BUTTON_HEIGHT / 4f);
-        xButtonRecap = new Button(assets.assetManager.get(Assets.x_button, Texture.class), X_BUTTON_RECAP_X, X_BUTTON_RECAP_Y, X_BUTTON_WIDTH, X_BUTTON_HEIGHT, X_BUTTON_WIDTH / 4f, X_BUTTON_HEIGHT / 4f);
-
 
         yesButton = new Button(assets.assetManager.get(Assets.yes_button_inactive, Texture.class), YES_BUTTON_X, YES_BUTTON_Y, YES_BUTTON_WIDTH, YES_BUTTON_HEIGHT);
         noButton = new Button(assets.assetManager.get(Assets.no_button_inactive, Texture.class), NO_BUTTON_X, NO_BUTTON_Y, NO_BUTTON_WIDTH, NO_BUTTON_HEIGHT);
@@ -221,8 +219,11 @@ public class GameInterface extends GameElements {
             game.batch.draw(tsSoundButton.getTexture(), TS_SOUND_BUTTON_X, TS_SOUND_BUTTON_Y, TS_SOUND_BUTTON_WIDTH, TS_SOUND_BUTTON_HEIGHT);
             game.batch.draw(gemButton.getTexture(), GEM_BUTTON_X, GEM_BUTTON_Y, GEM_BUTTON_WIDTH, GEM_BUTTON_HEIGHT);
             scoreFont.draw(game.batch, "HIGH SCORE: " + prefs.getHighScore(), SCORE_X, scoreY);
-            game.batch.draw(gemIcon, TS_GEM_ICON_MENU_X, scoreY - GEM_ICON_HEIGHT * .8f, GEM_ICON_WIDTH, GEM_ICON_HEIGHT);
-            gemCountFont.draw(game.batch, " x " + prefs.getGemCount(), TS_GEM_COUNT_MENU_X, scoreY);
+
+            gl.setText(gemCountFont, " x " + prefs.getGemCount(), Color.WHITE, SCREEN_WIDTH, Align.center, true);
+            gemCountFont.draw(game.batch, " x " + prefs.getGemCount(), 0.95f * (SCREEN_WIDTH - gl.width), scoreY);
+            game.batch.draw(gemIcon, 0.95f * (SCREEN_WIDTH - gl.width) - GEM_ICON_WIDTH, scoreY - GEM_ICON_HEIGHT * .8f, GEM_ICON_WIDTH, GEM_ICON_HEIGHT);
+
 
         }
     }
@@ -609,6 +610,8 @@ public class GameInterface extends GameElements {
         game.batch.draw(selectButton.getTexture(), SELECT_BUTTON_X, SELECT_BUTTON_Y, SELECT_BUTTON_WIDTH, SELECT_BUTTON_HEIGHT);
 
         game.batch.draw(gemIcon, GEM_ICON_SHOP_X, GEM_ICON_SHOP_Y, GEM_ICON_WIDTH, GEM_ICON_HEIGHT);
+
+        gl.setText(gemCountFont, " x " + prefs.getGemCount(), Color.WHITE, SCREEN_WIDTH, Align.center, true);
         gemCountFont.draw(game.batch, " x " + prefs.getGemCount(), GEM_COUNT_SHOP_X, GEM_COUNT_SHOP_Y);
 
         checkForLeftArrowBtnTap(soundEnabled, true, false);
@@ -649,9 +652,9 @@ public class GameInterface extends GameElements {
 
             scoreFont.draw(game.batch, "HIGH SCORE: " + prefs.getHighScore(), MENU_SCORE_X, MENU_SCORE_Y);
 
-            game.batch.draw(gemIcon, GEM_ICON_MENU_X, GEM_ICON_MENU_Y, GEM_ICON_WIDTH, GEM_ICON_HEIGHT);
-            gemCountFont.draw(game.batch, " x " + prefs.getGemCount(), GEM_COUNT_MENU_X, GEM_COUNT_MENU_Y);
-
+        gl.setText(gemCountFont, " x " + prefs.getGemCount(), Color.WHITE, SCREEN_WIDTH, Align.center, true);
+        gemCountFont.draw(game.batch, " x " + prefs.getGemCount(), 0.95f*(MENU_BACK_X + MENU_BACK_WIDTH - gl.width), GEM_COUNT_MENU_Y);
+        game.batch.draw(gemIcon,    0.95f*(MENU_BACK_X + MENU_BACK_WIDTH - gl.width) - GEM_ICON_WIDTH, GEM_ICON_MENU_Y, GEM_ICON_WIDTH, GEM_ICON_HEIGHT);
     }
 
     public void drawConfirmLeave(Main game, BitmapFont confirmScreenFont) {
@@ -687,17 +690,28 @@ public class GameInterface extends GameElements {
 
             if (newHighScore) {
                 gl.setText(gameOverFont, "HIGH SCORE", Color.WHITE, SCREEN_WIDTH, Align.center, true);
-                gameOverFont.draw(game.batch, "HIGH SCORE", (SCREEN_WIDTH - gl.width) / 2, GAME_OVER_TEXT_Y);
+                if(Gdx.app.getType() == Application.ApplicationType.Android) {
+                    gameOverFont.draw(game.batch, "HIGH SCORE", (SCREEN_WIDTH - gl.width) / 2, GAME_OVER_TEXT_Y_AND + gl.height/2);
+                }
+                else{
+                    gameOverFont.draw(game.batch, "HIGH SCORE", (SCREEN_WIDTH - gl.width) / 2, GAME_OVER_TEXT_Y_IOS + gl.height/2);
+                }
 
             } else {
                 gl.setText(gameOverFont, "GAME OVER", Color.WHITE, SCREEN_WIDTH, Align.center, true);
-                gameOverFont.draw(game.batch, "GAME OVER", (SCREEN_WIDTH - gl.width) / 2, GAME_OVER_TEXT_Y);
+                if(Gdx.app.getType() == Application.ApplicationType.Android) {
+                    gameOverFont.draw(game.batch, "GAME OVER", (SCREEN_WIDTH - gl.width) / 2, GAME_OVER_TEXT_Y_AND + gl.height/2);
+                }
+                else{
+                    gameOverFont.draw(game.batch, "GAME OVER", (SCREEN_WIDTH - gl.width) / 2, GAME_OVER_TEXT_Y_IOS + gl.height/2);
+                }
             }
 
             scoreFont.draw(game.batch, "HIGH SCORE: " + highScore, MENU_SCORE_X, MENU_SCORE_Y);
-            game.batch.draw(gemIcon, GEM_ICON_MENU_X, GEM_ICON_MENU_Y, GEM_ICON_WIDTH, GEM_ICON_HEIGHT);
 
-            gemCountFont.draw(game.batch, " x " + replayScreenGemCount, GEM_COUNT_MENU_X, GEM_COUNT_MENU_Y);
+            gl.setText(gemCountFont, " x " + prefs.getGemCount(), Color.WHITE, SCREEN_WIDTH, Align.center, true);
+            gemCountFont.draw(game.batch, " x " + prefs.getGemCount(), 0.95f*(MENU_BACK_X + MENU_BACK_WIDTH - gl.width), GEM_COUNT_MENU_Y);
+            game.batch.draw(gemIcon,    0.95f*(MENU_BACK_X + MENU_BACK_WIDTH - gl.width) - GEM_ICON_WIDTH, GEM_ICON_MENU_Y, GEM_ICON_WIDTH, GEM_ICON_HEIGHT);
         }
 
             if (isRecapScreenOpen) {

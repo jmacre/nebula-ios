@@ -1239,6 +1239,7 @@ public class MainGame extends GameElements implements Screen {
     }
 
     public void addBullets() {
+        isSpreadFire = true;
         if (isMissile) {
             bullet1 = bp.obtain();
             bullet1.create((int) SHIP_X, true, false, false, false, false, false, assets);
@@ -1283,6 +1284,8 @@ public class MainGame extends GameElements implements Screen {
         bp.freeAll(bulletsToRemove);
         bullets.removeAll(bulletsToRemove, true);
         bulletsToRemove.clear();
+
+        System.out.println(bullets.size);
 
         for (Bullet bullet : bullets) {
             bullet.update(deltaP, isHourglass, bullet.isSpreadFire(), bullet.isLeftSpread(), bullet.isRightSpread());
