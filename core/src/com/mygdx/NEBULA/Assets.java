@@ -28,9 +28,13 @@ public class Assets implements Disposable {
     public static final String purple_background = "background/purple_bg.png";
     public static final String red_background = "background/red_bg.png";
     public static final String black_background = "background/black_bg.png";
+    public static final String white_background = "background/white_bg.png";
 
     public static final String stars_back = "background/stars_back.png";
     public static final String stars_front = "background/stars_front.png";
+
+    public static final String black_stars_back = "background/stars_back.png";
+    public static final String black_stars_front = "background/stars_front.png";
 
     public static final String start_button_inactive = "ui/start_button_inactive.png";
     public static final String start_button_inactive_clear = "ui/start_button_inactive_clear.png";
@@ -163,8 +167,13 @@ public class Assets implements Disposable {
         assetManager.load(purple_background, Texture.class);
         assetManager.load(red_background, Texture.class);
         assetManager.load(black_background, Texture.class);
+        assetManager.load(white_background, Texture.class);
+
         assetManager.load(stars_front, Texture.class);
         assetManager.load(stars_back, Texture.class);
+
+        assetManager.load(black_stars_front, Texture.class);
+        assetManager.load(black_stars_back, Texture.class);
 
         assetManager.load(start_button_inactive, Texture.class);
         assetManager.load(start_button_inactive_clear, Texture.class);
@@ -293,9 +302,13 @@ public class Assets implements Disposable {
         assetManager.unload(purple_background);
         assetManager.unload(red_background);
         assetManager.unload(black_background);
+        assetManager.unload(white_background);
 
         assetManager.unload(stars_front);
         assetManager.unload(stars_back);
+
+        assetManager.unload(black_stars_front);
+        assetManager.unload(black_stars_back);
 
         assetManager.unload(powerup_timer);
         assetManager.unload(gem_icon);
