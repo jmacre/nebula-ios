@@ -1239,7 +1239,6 @@ public class MainGame extends GameElements implements Screen {
     }
 
     public void addBullets() {
-        isSpreadFire = true;
         if (isMissile) {
             bullet1 = bp.obtain();
             bullet1.create((int) SHIP_X, true, false, false, false, false, false, assets);
