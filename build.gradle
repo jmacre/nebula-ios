@@ -93,6 +93,7 @@ project(":ios") {
         implementation "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
         api "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-ios"
         implementation "games.rednblack.miniaudio:miniaudio:$miniaudioVersion:natives-ios"
+        implementation "com.badlogicgames.gdxpay:gdx-pay-iosrobovm-apple:$gdxPayVersion"
 
     }
 }

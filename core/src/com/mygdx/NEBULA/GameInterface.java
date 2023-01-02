@@ -709,8 +709,8 @@ public class GameInterface extends GameElements {
 
             scoreFont.draw(game.batch, "HIGH SCORE: " + highScore, MENU_SCORE_X, MENU_SCORE_Y);
 
-            gl.setText(gemCountFont, " x " + prefs.getGemCount(), Color.WHITE, SCREEN_WIDTH, Align.center, true);
-            gemCountFont.draw(game.batch, " x " + prefs.getGemCount(), 0.95f*(MENU_BACK_X + MENU_BACK_WIDTH - gl.width), GEM_COUNT_MENU_Y);
+            gl.setText(gemCountFont, " x " + replayScreenGemCount, Color.WHITE, SCREEN_WIDTH, Align.center, true);
+            gemCountFont.draw(game.batch, " x " + replayScreenGemCount, 0.95f*(MENU_BACK_X + MENU_BACK_WIDTH - gl.width), GEM_COUNT_MENU_Y);
             game.batch.draw(gemIcon,    0.95f*(MENU_BACK_X + MENU_BACK_WIDTH - gl.width) - GEM_ICON_WIDTH, GEM_ICON_MENU_Y, GEM_ICON_WIDTH, GEM_ICON_HEIGHT);
         }
 
