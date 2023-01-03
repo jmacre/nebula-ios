@@ -535,7 +535,7 @@ public class MainGame extends GameElements implements Screen {
             }
             if (!explosionsToDelay.isEmpty()) {
                 for (Explosion explosion : explosionsToDelay) {
-                    runExplosionDelay(explosion);
+                    runExplosionDelay(explosion      );
                 }
             }
 
@@ -1155,13 +1155,10 @@ public class MainGame extends GameElements implements Screen {
 
             gl.setText(Main.scoreFont, String.valueOf(score));
 
-            if (Gdx.app.getType() == Application.ApplicationType.iOS) {
-                Main.scoreFont.draw(game.batch, gl, SCORE_X, SCREEN_HEIGHT - gl.height * 2f);
-                gemCountFont.draw(game.batch, " x " + gemCount, GEM_COUNT_X, GEM_COUNT_Y_IOS);
-            } else {
-                Main.scoreFont.draw(game.batch, gl, SCORE_X, SCREEN_HEIGHT - gl.height);
-                gemCountFont.draw(game.batch, " x " + gemCount, GEM_COUNT_X, GEM_COUNT_Y_AND);
-            }
+
+            Main.scoreFont.draw(game.batch, gl, SCORE_X, TOP_ELEM_Y + gl.height - (int)(0.6f * Gdx.graphics.getSafeInsetTop()));
+            gemCountFont.draw(game.batch, " x " + gemCount, GEM_COUNT_X, GEM_COUNT_Y - (int)(0.6f * Gdx.graphics.getSafeInsetTop()));
+
 
 
             updatingScore = false;
@@ -1283,8 +1280,6 @@ public class MainGame extends GameElements implements Screen {
         bp.freeAll(bulletsToRemove);
         bullets.removeAll(bulletsToRemove, true);
         bulletsToRemove.clear();
-
-        System.out.println(bullets.size);
 
         for (Bullet bullet : bullets) {
             bullet.update(deltaP, isHourglass, bullet.isSpreadFire(), bullet.isLeftSpread(), bullet.isRightSpread());
@@ -1952,11 +1947,8 @@ public class MainGame extends GameElements implements Screen {
     public void addPowerUpTimer(float totalTimerLength) {
         if (powerUpTimers.isEmpty()) {
             powerUpTimer = new PowerupTimer();
-            if (Gdx.app.getType() == Application.ApplicationType.iOS) {
-                powerUpTimer.create(POWERUP_TIMER_X, POWERUP_TIMER_Y_IOS, POWERUP_TIMER_HEIGHT, totalTimerLength);
-            } else {
-                powerUpTimer.create(POWERUP_TIMER_X, POWERUP_TIMER_Y_AND, POWERUP_TIMER_HEIGHT, totalTimerLength);
-            }
+            powerUpTimer.create(POWERUP_TIMER_X, POWERUP_TIMER_Y - (int)(0.6f * Gdx.graphics.getSafeInsetTop()), POWERUP_TIMER_HEIGHT, totalTimerLength);
+
 
             powerUpTimers.add(powerUpTimer);
         }

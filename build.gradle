@@ -73,6 +73,7 @@ project(":android") {
         natives "games.rednblack.miniaudio:miniaudio:$miniaudioVersion:natives-x86_64"
 
         implementation "com.badlogicgames.gdxpay:gdx-pay-android-googlebilling:$gdxPayVersion"
+        natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-ios"
         implementation "com.badlogicgames.gdxpay:gdx-pay-iosrobovm-apple:$gdxPayVersion"
 
     }

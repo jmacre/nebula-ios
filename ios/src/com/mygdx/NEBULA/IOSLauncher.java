@@ -2,7 +2,6 @@ package com.mygdx.NEBULA;
 
 import com.badlogic.gdx.backends.iosrobovm.IOSApplication;
 import com.badlogic.gdx.backends.iosrobovm.IOSApplicationConfiguration;
-import com.badlogic.gdx.pay.ios.apple.PurchaseManageriOSApple;
 
 import org.robovm.apple.foundation.NSArray;
 import org.robovm.apple.foundation.NSAutoreleasePool;
@@ -20,6 +19,7 @@ import org.robovm.pods.google.mobileads.GADFullScreenPresentingAd;
 import org.robovm.pods.google.mobileads.GADMobileAds;
 import org.robovm.pods.google.mobileads.GADRequest;
 import org.robovm.pods.google.mobileads.GADRewardedAd;
+import com.badlogic.gdx.pay.ios.apple.PurchaseManageriOSApple;
 
 import java.util.List;
 
@@ -46,7 +46,6 @@ public class IOSLauncher extends IOSApplication.Delegate implements IActivityReq
 
         Main game = new Main(this);
         game.purchaseManager = new PurchaseManageriOSApple();
-
         iosApplication = new IOSApplication(game, config);
         return iosApplication;
     }

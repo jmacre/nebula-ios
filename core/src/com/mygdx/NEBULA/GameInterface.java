@@ -75,11 +75,15 @@ public class GameInterface extends GameElements {
 
     float scoreY;
     float gemIconY;
+    float pauseButtonY;
+    float gameOverTextY;
 
     float topElemY;
     float stateTime = 0f;
     int selectedShopElement = 0;
     int selectedGemScreenElement = 0;
+
+    int topInset = 0;
 
     Prefs prefs;
 
@@ -91,6 +95,10 @@ public class GameInterface extends GameElements {
         this.prefs = prefs;
 
         initPurchaseManager();
+
+        if(Gdx.graphics.getSafeInsetTop() > 0) {
+            topInset = (int) (0.6 * Gdx.graphics.getSafeInsetTop());
+        }
 
         parameter.size = SCREEN_WIDTH / 40;
         startButton = new Button(assets.assetManager.get(Assets.start_button_inactive_clear, Texture.class), START_BUTTON_X, START_BUTTON_Y_TRANSITIONED, START_BUTTON_WIDTH, START_BUTTON_HEIGHT);
@@ -131,19 +139,16 @@ public class GameInterface extends GameElements {
         textParameter.size = (int) SELECT_BUTTON_WIDTH / 8;
         buyFont = generator.generateFont(textParameter);
 
-        if (Gdx.app.getType() == Application.ApplicationType.Android) {
-            scoreY = SCORE_Y_AND;
-            topElemY = TOP_ELEM_Y_AND;
-            gemIconY = GEM_ICON_Y_AND;
-        }
-        else {
-            scoreY = SCORE_Y_IOS;
-            topElemY = TOP_ELEM_Y_IOS;
-            gemIconY = GEM_ICON_Y_IOS;
-        }
+        scoreY = SCORE_Y - topInset;
+        topElemY = TOP_ELEM_Y - topInset;
+        gemIconY = GEM_ICON_Y - topInset;
+        pauseButtonY = PAUSE_BUTTON_Y - topInset;
+        gameOverTextY = GAME_OVER_TEXT_Y - topInset;
+
+
 
         tsSoundButton = new Button(assets.assetManager.get(Assets.sound_off_button_ts, Texture.class), TS_SOUND_BUTTON_X, TS_SOUND_BUTTON_Y, TS_SOUND_BUTTON_WIDTH, TS_SOUND_BUTTON_HEIGHT, TS_SOUND_BUTTON_WIDTH / 4f, TS_SOUND_BUTTON_HEIGHT / 4f);
-        pauseButton = new Button(assets.assetManager.get(Assets.pause_button, Texture.class), PAUSE_BUTTON_X, PAUSE_BUTTON_Y, PAUSE_BUTTON_WIDTH, PAUSE_BUTTON_HEIGHT, PAUSE_BUTTON_WIDTH / 4f, PAUSE_BUTTON_HEIGHT / 4f);
+        pauseButton = new Button(assets.assetManager.get(Assets.pause_button, Texture.class), PAUSE_BUTTON_X, pauseButtonY, PAUSE_BUTTON_WIDTH, PAUSE_BUTTON_HEIGHT, PAUSE_BUTTON_WIDTH / 4f, PAUSE_BUTTON_HEIGHT / 4f);
         homeButton = new Button(assets.assetManager.get(Assets.home_button_inactive, Texture.class), HOME_BUTTON_X, HOME_BUTTON_Y, HOME_BUTTON_WIDTH, HOME_BUTTON_HEIGHT);
         playButton = new Button(assets.assetManager.get(Assets.play_button_inactive, Texture.class), PLAY_BUTTON_X, PLAY_BUTTON_Y, PLAY_BUTTON_WIDTH, PLAY_BUTTON_HEIGHT);
         replayButton = new Button(assets.assetManager.get(Assets.replay_button_inactive, Texture.class), PLAY_BUTTON_X, PLAY_BUTTON_Y, PLAY_BUTTON_WIDTH, PLAY_BUTTON_HEIGHT);
@@ -690,21 +695,13 @@ public class GameInterface extends GameElements {
 
             if (newHighScore) {
                 gl.setText(gameOverFont, "HIGH SCORE", Color.WHITE, SCREEN_WIDTH, Align.center, true);
-                if(Gdx.app.getType() == Application.ApplicationType.Android) {
-                    gameOverFont.draw(game.batch, "HIGH SCORE", (SCREEN_WIDTH - gl.width) / 2, GAME_OVER_TEXT_Y_AND + gl.height/2);
-                }
-                else{
-                    gameOverFont.draw(game.batch, "HIGH SCORE", (SCREEN_WIDTH - gl.width) / 2, GAME_OVER_TEXT_Y_IOS + gl.height/2);
-                }
+                gameOverFont.draw(game.batch, "HIGH SCORE", (SCREEN_WIDTH - gl.width) / 2, GAME_OVER_TEXT_Y - Gdx.graphics.getSafeInsetTop() + gl.height/2);
+
 
             } else {
                 gl.setText(gameOverFont, "GAME OVER", Color.WHITE, SCREEN_WIDTH, Align.center, true);
-                if(Gdx.app.getType() == Application.ApplicationType.Android) {
-                    gameOverFont.draw(game.batch, "GAME OVER", (SCREEN_WIDTH - gl.width) / 2, GAME_OVER_TEXT_Y_AND + gl.height/2);
-                }
-                else{
-                    gameOverFont.draw(game.batch, "GAME OVER", (SCREEN_WIDTH - gl.width) / 2, GAME_OVER_TEXT_Y_IOS + gl.height/2);
-                }
+                gameOverFont.draw(game.batch, "GAME OVER", (SCREEN_WIDTH - gl.width) / 2, GAME_OVER_TEXT_Y + gl.height/2  - Gdx.graphics.getSafeInsetTop());
+
             }
 
             scoreFont.draw(game.batch, "HIGH SCORE: " + highScore, MENU_SCORE_X, MENU_SCORE_Y);

@@ -91,8 +91,7 @@ public class GameElements {
     public static final float HEART_ITEM_HEIGHT = HEART_HEIGHT * (17/11f);
     public static final float HEART_ITEM_WIDTH = HEART_WIDTH * (19/13f);
 
-    public static float TOP_ELEM_Y_AND = SCREEN_HEIGHT - HEART_HEIGHT * 1.75f;
-    public static float TOP_ELEM_Y_IOS = SCREEN_HEIGHT - HEART_HEIGHT * 2.5f;
+    public static float TOP_ELEM_Y = SCREEN_HEIGHT - HEART_HEIGHT * 1.75f;
 
     public static final float RIGHT_HEART_X = SCREEN_WIDTH - SCREEN_WIDTH / 4f;
     public static final float MIDDLE_HEART_X = RIGHT_HEART_X - HEART_WIDTH*1.1f;
@@ -122,8 +121,7 @@ public class GameElements {
     public static final float MISSILE_ITEM_HEIGHT = HOURGLASS_HEIGHT * (21/16f);
     public static final float MISSILE_ITEM_WIDTH = MISSILE_ITEM_HEIGHT * (15/20f);
 
-    public static final float SCORE_Y_AND = SCREEN_HEIGHT - (SCREEN_HEIGHT / 12f) /3f;
-    public static final float SCORE_Y_IOS = SCREEN_HEIGHT - MAIN_UI_HEIGHT;
+    public static final float SCORE_Y = SCREEN_HEIGHT - (SCREEN_HEIGHT / 12f) /3f;
     public static final float SCORE_X = SCREEN_WIDTH / 2f - (SCREEN_WIDTH / 1.1f)/2;
 
     public static final float MENU_BACK_WIDTH = SCREEN_WIDTH*.9f;
@@ -204,9 +202,9 @@ public class GameElements {
     public static final float GEM_BUTTON_Y = TS_SOUND_BUTTON_Y + (TS_SOUND_BUTTON_HEIGHT - GEM_BUTTON_HEIGHT)/2f;
 
     public static final float PAUSE_BUTTON_X = SCREEN_WIDTH - SCREEN_WIDTH / 7.5f;
-    public static final float PAUSE_BUTTON_Y = SCREEN_HEIGHT - MAIN_UI_HEIGHT / 2.1f - (MAIN_UI_HEIGHT / 2.5f) / 2;
     public static final float PAUSE_BUTTON_HEIGHT = MAIN_UI_HEIGHT/1.2f;
     public static final float PAUSE_BUTTON_WIDTH = PAUSE_BUTTON_HEIGHT * 1.3f;
+    public static final float PAUSE_BUTTON_Y = SCORE_Y - PAUSE_BUTTON_HEIGHT;
 
     public static final float MENU_SCORE_X = MENU_BACK_X + MENU_BACK_WIDTH * 0.05f;
     public static final float MENU_SCORE_Y = (MENU_BACK_Y + MENU_BACK_HEIGHT - .45f * HOME_BUTTON_HEIGHT);
@@ -215,8 +213,7 @@ public class GameElements {
     public static final float GEM_ICON_WIDTH = HEART_WIDTH * (7 / 13f);
     public static final float GEM_ICON_X = SCORE_X;
 
-    public static final float GEM_ICON_Y_AND = TOP_ELEM_Y_AND - GEM_ICON_HEIGHT*1.75f;
-    public static final float GEM_ICON_Y_IOS = TOP_ELEM_Y_IOS - GEM_ICON_HEIGHT*1.75f;
+    public static final float GEM_ICON_Y = TOP_ELEM_Y - GEM_ICON_HEIGHT*1.75f;
 
     public static final float GEM_ICON_MENU_X = PLAY_BUTTON_X + PLAY_BUTTON_WIDTH;
     public static final float GEM_ICON_MENU_Y = MENU_SCORE_Y - GEM_ICON_HEIGHT * 0.8f;
@@ -231,20 +228,17 @@ public class GameElements {
     public static final float GEM_COUNT_SHOP_Y = GEM_ICON_SHOP_Y + (GEM_ICON_HEIGHT * .8f);
 
     public static final float GEM_COUNT_X = GEM_ICON_X + (GEM_ICON_WIDTH * 1.1f);
-    public static final float GEM_COUNT_Y_AND = GEM_ICON_Y_AND + (GEM_ICON_HEIGHT * .8f);
-    public static final float GEM_COUNT_Y_IOS = GEM_ICON_Y_IOS + (GEM_ICON_HEIGHT * .8f);
+    public static final float GEM_COUNT_Y = GEM_ICON_Y + (GEM_ICON_HEIGHT * .8f);
 
     public static final float POWERUP_TIMER_HEIGHT = HEART_HEIGHT * (17/11f);
     public static final float POWERUP_TIMER_WIDTH = POWERUP_TIMER_HEIGHT;
     public static final float POWERUP_TIMER_X = SCORE_X;
-    public static final float POWERUP_TIMER_Y_IOS = GEM_ICON_Y_IOS - (POWERUP_TIMER_HEIGHT * 1.2f);
-    public static final float POWERUP_TIMER_Y_AND = GEM_ICON_Y_AND - (POWERUP_TIMER_HEIGHT * 1.2f);
+    public static final float POWERUP_TIMER_Y= GEM_ICON_Y - (POWERUP_TIMER_HEIGHT * 1.2f);
 
     public static final float CONFIRM_LEAVE_FONT_Y = (MENU_BACK_Y + MENU_BACK_HEIGHT - .55f * HOME_BUTTON_HEIGHT);
     public static final float CONFIRM_LEAVE_FONT_X = YES_BUTTON_X;
 
-    public static final float GAME_OVER_TEXT_Y_IOS = (MENU_BACK_Y + MENU_BACK_HEIGHT) + (GEM_ICON_Y_IOS - MENU_BACK_Y - MENU_BACK_HEIGHT)/2;
-    public static final float GAME_OVER_TEXT_Y_AND = (MENU_BACK_Y + MENU_BACK_HEIGHT) + (GEM_ICON_Y_AND - MENU_BACK_Y - MENU_BACK_HEIGHT)/2;
+    public static final float GAME_OVER_TEXT_Y = (MENU_BACK_Y + MENU_BACK_HEIGHT) + (GEM_ICON_Y - MENU_BACK_Y - MENU_BACK_HEIGHT)/2;
 
     Anim shipAnim = new Anim();
     Anim missileAnim = new Anim();
