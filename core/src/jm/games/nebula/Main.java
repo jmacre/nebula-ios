@@ -64,11 +64,11 @@ public class Main extends Game implements ApplicationListener {
 
 	@Override
 	public void dispose() {
-		super.dispose();
 		assets.unloadAll();
 		purchaseManager.dispose();
 		assets.assetManager.dispose();
 		miniAudio.dispose();
+		super.dispose();
 	}
 
 	@Override

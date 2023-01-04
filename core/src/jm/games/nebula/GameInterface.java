@@ -205,6 +205,8 @@ public class GameInterface extends GameElements {
     }
 
     public void drawTitleScreen(Main game, boolean transitionInDone, Prefs prefs) {
+        skipGemPurchaseCount();
+
         if (START_BUTTON_Y < SCREEN_HEIGHT)
             game.batch.draw(startButton.getTexture(), START_BUTTON_X, START_BUTTON_Y, START_BUTTON_WIDTH, START_BUTTON_HEIGHT);
 
@@ -604,7 +606,16 @@ public class GameInterface extends GameElements {
         storeFont.draw(game.batch, gemElement.getTitle(), (SCREEN_WIDTH - gl.width) / 2, SHOP_BACK_Y + SHOP_BACK_HEIGHT * .8f + gl.height / 2);
     }
 
+    public void skipGemPurchaseCount(){
+        if(gemsPurchased){
+            prePurchaseGemCount = prefs.getGemCount();
+            gemsPurchased = false;
+        }
+    }
+
     public void drawShopScreen(Main game, boolean soundEnabled, float delta, SpriteBatch batch, BitmapFont gemCountFont, Prefs prefs) {
+        skipGemPurchaseCount();
+
         stateTime += delta / 6;
 
         game.batch.draw(shopBack, SHOP_BACK_X, SHOP_BACK_Y, SHOP_BACK_WIDTH, SHOP_BACK_HEIGHT);
@@ -846,25 +857,25 @@ public class GameInterface extends GameElements {
                             case GEM_1K_SKU:
                                 gemsPurchased = true;
                                 purchasedGemCount = 1000;
-                                prefs.setGemCount(gemCount + purchasedGemCount);
+                                prefs.setGemCount(prefs.getGemCount() + purchasedGemCount);
                                 break;
 
                             case GEM_10K_SKU:
                                 purchasedGemCount = 10000;
                                 gemsPurchased = true;
-                                prefs.setGemCount(gemCount + purchasedGemCount);
+                                prefs.setGemCount(prefs.getGemCount() + purchasedGemCount);
                                 break;
 
                             case GEM_30K_SKU:
                                 purchasedGemCount = 30000;
                                 gemsPurchased = true;
-                                prefs.setGemCount(gemCount + purchasedGemCount);
+                                prefs.setGemCount(prefs.getGemCount() + purchasedGemCount);
                                 break;
 
                             case GEM_100K_SKU:
                                 purchasedGemCount = 100000;
                                 gemsPurchased = true;
-                                prefs.setGemCount(gemCount + purchasedGemCount);
+                                prefs.setGemCount(prefs.getGemCount() + purchasedGemCount);
                                 break;
                         }
                     }

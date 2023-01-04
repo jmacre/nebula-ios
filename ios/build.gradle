@@ -4,7 +4,7 @@ sourceCompatibility = '1.8'
 [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
 
 ext {
-	mainClassName = "IOSLauncher"
+	mainClassName = "jm.games.nebula.IOSLauncher"
 }
 
 launchIPhoneSimulator.dependsOn build
@@ -14,14 +14,15 @@ createIPA.dependsOn build
 
 
 robovm {
-	archs = "thumbv7:arm64"
+	archs = "arm64"
 	iosSignIdentity = "Apple Distribution: James Macre (ZG76X575A5)"
 	iosProvisioningProfile = "jm.games.nebuladist"
 	iosSkipSigning = false
-	archs = "thumbv7:arm64"
+	archs = "arm64"
 }
 dependencies {
 	implementation "io.github.dkimitsa.robovm:robopods-firebase-google-mobile-ads-ios:$altpodsVersion"
+	implementation "com.badlogicgames.gdxpay:gdx-pay-iosrobovm-apple:$gdxPayVersion"
 }
 
 eclipse.project.name = appName + "-ios"

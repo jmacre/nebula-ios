@@ -41,6 +41,7 @@ public class IOSLauncher extends IOSApplication.Delegate implements IActivityReq
         Main game = new Main(this);
         game.purchaseManager = new PurchaseManageriOSApple();
         iosApplication = new IOSApplication(game, config);
+
         return iosApplication;
     }
 
@@ -88,10 +89,6 @@ public class IOSLauncher extends IOSApplication.Delegate implements IActivityReq
             });
         }
     }
-    public boolean isFinishedLoadingAd(){
-        return mRewardedAd != null;
-    }
-
 
     public void loadAd() {
         if (mRewardedAd == null) {
