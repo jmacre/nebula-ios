@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
 
-    package="com.mygdx.NEBULA" >
+    package="jm.games.nebula" >
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.VIBRATE" />
@@ -26,7 +26,7 @@
             android:value="5.0.0"
             tools:replace="android:value"/>
         <activity
-            android:name="com.mygdx.NEBULA.AndroidLauncher"
+            android:name="jm.games.nebula.AndroidLauncher"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:configChanges="keyboard|keyboardHidden|navigation|orientation|screenSize|screenLayout"

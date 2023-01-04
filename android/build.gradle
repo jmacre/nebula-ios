@@ -17,7 +17,7 @@ android {
         exclude 'META-INF/robovm/ios/robovm.xml'
     }
     defaultConfig {
-        applicationId "com.mygdx.NEBULA"
+        applicationId "jm.games.nebula"
         minSdkVersion 19
         targetSdkVersion 33
         versionCode 1
@@ -87,7 +87,7 @@ task run(type: Exec) {
     }
 
     def adb = path + "/platform-tools/adb"
-    commandLine "$adb", 'shell', 'am', 'start', '-n', 'com.mygdx.NEBULA/AndroidLauncher'
+    commandLine "$adb", 'shell', 'am', 'start', '-n', 'jm.games.nebula/AndroidLauncher'
 }
 
 eclipse.project.name = appName + "-android"

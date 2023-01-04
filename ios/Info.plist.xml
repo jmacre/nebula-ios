@@ -27,7 +27,7 @@
     <key>CFBundleShortVersionString</key>
     <string>${app.version}</string>
     <key>CFBundleSignature</key>
-    <string>????</string>
+    <string>jm.games.nebula"</string>
     <key>CFBundleVersion</key>
     <string>${app.build}</string>
     <key>LSRequiresIPhoneOS</key>
@@ -46,6 +46,7 @@
     <key>UIRequiredDeviceCapabilities</key>
     <array>
         <string>opengles-2</string>
+        <string>arm64</string>
     </array>
     <key>UISupportedInterfaceOrientations</key>
     <array>
@@ -55,7 +56,8 @@
     <string>LaunchScreen</string>
     <key>CFBundleIconName</key>
     <string>AppIcon</string>
-
+    <key>UIRequiresFullScreen</key>
+    <true/>
     <key>GADApplicationIdentifier</key>
     <string>ca-app-pub-3940256099942544~5224354917</string>
     <key>SKAdNetworkItems</key>

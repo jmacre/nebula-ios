@@ -56,6 +56,7 @@
     <framework>AVFoundation</framework>
     <framework>GameController</framework>
 
+    <framework>FBLPromises</framework>
     <framework>GoogleAppMeasurement</framework>
     <framework>GoogleMobileAds</framework>
     <framework>GoogleUtilities</framework>
