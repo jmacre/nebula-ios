@@ -1397,19 +1397,14 @@ public class MainGame extends GameElements implements Screen {
                 }
             }
 
-            if (!shipPositions.contains(3, true)) {
-                position = 3;
-            } else if (!shipPositions.contains(2, true)) {
-                position = 2;
+            if (!shipPositions.contains(0, true)) {
+                position = 0;
             } else if (!shipPositions.contains(1, true)) {
                 position = 1;
-            } else if (!shipPositions.contains(0, true)) {
-                position = 0;
             }
-
             shipPositions.add(position);
 
-            if (enemyShipCount < 4) {
+            if (enemyShipCount < 2) {
                 Enemy enemy = ep.obtain();
 
                 if(score < 5000) {

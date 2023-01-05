@@ -207,7 +207,7 @@ public class Enemy extends GameElements implements Pool.Poolable{
                 ENEMY_Y -= Math.ceil((int)(SPEED * delta * ENEMY_Y_SPEED_MULTIPLIER * hourglassMultiplier));
         }
 
-        else if(id == ENEMY_SHIP_ID && !shipMovingToPos) {
+        else if(id == ENEMY_SHIP_ID && shipMovingToPos) {
             ENEMY_Y -= Math.ceil((int)(SPEED * .6f * delta * ENEMY_Y_SPEED_MULTIPLIER * hourglassMultiplier));
         }
 
@@ -315,16 +315,17 @@ public class Enemy extends GameElements implements Pool.Poolable{
         }
         if(position != null) {
 
-            if (ENEMY_Y <= SCREEN_HEIGHT - 6.5f * (ENEMY_HEIGHT) + (1.15f * ENEMY_HEIGHT * position - 1)) {
+            if (ENEMY_Y >= POWERUP_TIMER_Y - ((1.15f * ENEMY_HEIGHT) * (position + 1))) {
                 shipMovingToPos = true;
+
+            } else {
+                shipMovingToPos = false;
 
                 if (!isPaused && !movingRight && (movingLeft || (randomNumber == 0))) {
                     ENEMY_X -= Math.ceil((int)(SCREEN_WIDTH / 4.5) * delta * ENEMY_X_SPEED_MULTIPLIER * hourglassMultiplier);
                 } else if (!isPaused && !movingLeft && (movingRight || (randomNumber == 1))) {
                     ENEMY_X += Math.ceil((int)(SCREEN_WIDTH / 4.5) * delta * ENEMY_X_SPEED_MULTIPLIER * hourglassMultiplier);
                 }
-            } else {
-                shipMovingToPos = false;
             }
         }
 
