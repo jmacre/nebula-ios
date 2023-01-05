@@ -1636,11 +1636,14 @@ public class MainGame extends GameElements implements Screen {
             if (bombUsed && enemy.getId() != LASER_TRAP_ID) {
                 enemy.HP = 0;
             }
-            if (bombUsed && !enemiesToRemove.contains(enemy, true) && enemy.getEnemyY() < SCREEN_HEIGHT) {
-                addPointsOnEnemyDeath(enemy);
-                pointsEarned = true;
-
-                enemiesToRemove.add(enemy);
+            if (bombUsed) {
+                if(enemy.getEnemyY() < SCREEN_HEIGHT) {
+                    addPointsOnEnemyDeath(enemy);
+                    pointsEarned = true;
+                }
+                if(!enemiesToRemove.contains(enemy, true)) {
+                    enemiesToRemove.add(enemy);
+                }
             }
 
             for (Bullet bullet : bullets) {
