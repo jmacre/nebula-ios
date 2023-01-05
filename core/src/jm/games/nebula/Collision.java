@@ -63,13 +63,19 @@ public class Collision {
 
 
             this.vertices = new float[]{
-                    center.x + Player.getWidth() / 2, center.y - Player.getWidth() / 3,
-                    center.x + Player.getWidth() / 3.25f, center.y + Player.getWidth() / 1.75f,
-                    center.x + Player.getWidth() / 5, center.y + Player.getWidth() / 8f,
+                    center.x + Player.getWidth() / 2, center.y - Player.getWidth() / 2.5f,
+                    center.x + Player.getWidth() / 2.75f, center.y + Player.getWidth() / 1.75f,
+                    center.x + Player.getWidth() / 3.75f, center.y + Player.getWidth() / 1.75f,
+                    center.x + Player.getWidth() / 3.75f, center.y + Player.getWidth() / 4f,
+                    center.x + Player.getWidth() / 4.5f, center.y + Player.getWidth() / 8f,
+
                     center.x, center.y + Player.getHeight() / 2.5f,
-                    center.x - Player.getWidth() / 5, center.y + Player.getWidth() / 8f,
-                    center.x - Player.getWidth() / 3.25f, center.y + Player.getWidth() / 1.75f,
-                    center.x - Player.getWidth() / 2, center.y - Player.getWidth() / 3
+
+                    center.x - Player.getWidth() / 4.5f, center.y + Player.getWidth() / 8f,
+                    center.x - Player.getWidth() / 3.75f, center.y + Player.getWidth() / 4f,
+                    center.x - Player.getWidth() / 3.75f, center.y + Player.getWidth() / 1.75f,
+                    center.x - Player.getWidth() / 2.75f, center.y + Player.getWidth() / 1.75f,
+                    center.x - Player.getWidth() / 2, center.y - Player.getWidth() / 2.5f,
             };
             polygon.setVertices(vertices);
             polygon.setPosition(this.x, this.y);
@@ -84,12 +90,12 @@ public class Collision {
         if(enemy.getId() == (Enemy.EYEBAT_ID)) {
             if(enemy.getEnemyAnimation().getKeyFrameIndex(enemy.stateTime) == 0){
                 this.vertices = new float[]{
-                        center.x + enemy.getWidth() / 2.5f, center.y + enemy.getWidth() / 3.5f,
+                        center.x + enemy.getWidth() / 2.25f, center.y + enemy.getWidth() / 3.5f,
                         center.x + enemy.getWidth() / 2, center.y,
                         center.x + enemy.getWidth() / 7, center.y - enemy.getWidth() / 7,
                         center.x - enemy.getWidth() / 7, center.y - enemy.getWidth() / 7,
                         center.x - enemy.getWidth() / 2, center.y,
-                        center.x - enemy.getWidth() / 2.5f, center.y + enemy.getWidth() / 3.5f};
+                        center.x - enemy.getWidth() / 2.25f, center.y + enemy.getWidth() / 3.5f};
             }
             else if (enemy.getEnemyAnimation().getKeyFrameIndex(enemy.stateTime) == 1
                     || enemy.getEnemyAnimation().getKeyFrameIndex(enemy.stateTime) == 3) {
@@ -105,10 +111,10 @@ public class Collision {
             else {
                 this.vertices = new float[]{
                     center.x + enemy.getWidth() / 2.5f, center.y - enemy.getWidth() / 3, // bottom right
-                    center.x + enemy.getWidth() / 2, center.y - enemy.getWidth() / 8f, // right middle
+                    center.x + enemy.getWidth() / 2, center.y - enemy.getWidth() / 6f, // right middle
                     center.x + enemy.getWidth() / 7, center.y + enemy.getWidth() / 6, // top right
                     center.x - enemy.getWidth() / 7, center.y + enemy.getWidth() / 6, // top left
-                    center.x - enemy.getWidth() / 2, center.y - enemy.getWidth() / 8f, // left middle
+                    center.x - enemy.getWidth() / 2, center.y - enemy.getWidth() / 6f, // left middle
                     center.x - enemy.getWidth() / 2.5f, center.y - enemy.getWidth() / 3,// bottom left
                     center.x - enemy.getWidth() / 3.25f, center.y - enemy.getWidth() / 3, //left inner wing
                     center.x - enemy.getWidth() / 7f, center.y - enemy.getWidth() / 7f, //left under eye

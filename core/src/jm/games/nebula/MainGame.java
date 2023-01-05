@@ -764,7 +764,7 @@ public class MainGame extends GameElements implements Screen {
                 if (speedIncrease < 1) {
                     speedIncrease += (0.0005 * scoreMultiplier) / 5f;
                 }
-            } else if (score < 20000){
+            } else if (score < 10000){
                 if (eyebatsSpawning) {
                     maxEyebatSpawnTime -= (.0002 * scoreMultiplier) / 5f;
                     minEyebatSpawnTime -= (.0001 * scoreMultiplier) / 5f;
