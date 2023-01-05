@@ -47,7 +47,7 @@ public class Main extends Game implements ApplicationListener {
 
 		Gdx.input.setCatchKey(Input.Keys.BACK, true);
 		FreeTypeFontGenerator.setMaxTextureSize(2048);
-		generator = new FreeTypeFontGenerator(Gdx.files.internal("PressStart2P.ttf"));
+		generator = new FreeTypeFontGenerator(Gdx.files.internal("font.otf"));
 		parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
 		parameter.size = SCREEN_WIDTH/14;
 		assets = new Assets();
