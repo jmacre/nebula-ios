@@ -264,6 +264,6 @@ public class GameElements {
     MASound bulletSound, bulletSound1, itemSound, hitSound, hitSound1, gemSound, errorSound;
 
     public FreeTypeFontGenerator.FreeTypeFontParameter textParameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
-    public FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("mainfont.ttf"));
+    public FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("PressStart2P.ttf"));
     public BitmapFont menuScoreFont, gameOverFont, countdownFont, confirmScreenFont, storeFont, gemCountFont, buyFont;
 }

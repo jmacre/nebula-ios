@@ -2052,7 +2052,6 @@ public class MainGame extends GameElements implements Screen {
         } else {
             if (hitSound.isPlaying()) {
                 hitSound1.play();
-                System.out.println("test1");
             } else {
                 hitSound.play();
             }
