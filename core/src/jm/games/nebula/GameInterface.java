@@ -511,6 +511,7 @@ public class GameInterface extends GameElements {
                 selectButton.setTexture(assets.assetManager.get(Assets.blank_inactive, Texture.class));
             }
             if (selectButton.getReleased()) {
+
                 buyItem(gemElement.getSKU());
 
             }
@@ -637,7 +638,7 @@ public class GameInterface extends GameElements {
         checkForRightArrowBtnTap(soundEnabled, true, false);
 
         if (!prefs.getUnlockedShips().contains(Integer.toString(selectedShopElement)) && selectedShopElement != SHIP_ID) {
-            selectButton.setTexture(assets.assetManager.get(Assets.buy_inactive, Texture.class));
+            selectButton.setTexture(assets.assetManager.get(Assets.blank_inactive, Texture.class));
             gl.setText(buyFont, Integer.toString(ShopElement.getPriceByShipId(selectedShopElement)), Color.valueOf(PURPLE_COLOR_HEX), SCREEN_WIDTH, Align.center, true);
             buyFont.draw(game.batch, Integer.toString(ShopElement.getPriceByShipId(selectedShopElement)), (SCREEN_WIDTH - gl.width) / 2, SELECT_BUTTON_Y + gl.height / 2 + SELECT_BUTTON_HEIGHT / 2);
             game.batch.draw(gemIcon, (SCREEN_WIDTH + gl.width) / 2 + GEM_ICON_WIDTH / 2, SELECT_BUTTON_Y + SELECT_BUTTON_HEIGHT / 2 - GEM_ICON_HEIGHT / 2, GEM_ICON_WIDTH, GEM_ICON_HEIGHT);
