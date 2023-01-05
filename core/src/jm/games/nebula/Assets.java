@@ -77,8 +77,7 @@ public class Assets implements Disposable {
     public static final String ad_button_inactive = "ui/ad_button_inactive.png";
     public static final String ad_button_active = "ui/ad_button_active.png";
     public static final String active_button = "ui/active_button.png";
-    public static final String buy_active = "ui/buy_active.png";
-    public static final String buy_inactive = "ui/buy_inactive.png";
+
     public static final String blank_active = "ui/blank_active.png";
     public static final String blank_inactive = "ui/blank_inactive.png";
 
@@ -269,10 +268,7 @@ public class Assets implements Disposable {
 
         assetManager.load(select_button_active, Texture.class);
         assetManager.load(select_button_inactive, Texture.class);
-        assetManager.load(active_button, Texture.class);
-
-        assetManager.load(buy_active, Texture.class);
-        assetManager.load(buy_inactive, Texture.class);
+        assetManager.load(active_button, Texture.class);;
 
         assetManager.load(blank_active, Texture.class);
         assetManager.load(blank_inactive, Texture.class);
@@ -385,8 +381,6 @@ public class Assets implements Disposable {
         assetManager.unload(pause_menu_back);
 
         assetManager.unload(powerup_timer);
-        assetManager.unload(buy_inactive);
-        assetManager.unload(buy_active);
         assetManager.unload(blank_inactive);
         assetManager.unload(blank_active);
 
