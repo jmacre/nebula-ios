@@ -20,7 +20,7 @@ android {
         applicationId "jm.games.nebula"
         minSdkVersion 19
         targetSdkVersion 33
-        versionCode 2
+        versionCode 3
         versionName "1.0"
     }
     buildTypes {
