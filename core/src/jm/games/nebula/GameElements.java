@@ -236,7 +236,6 @@ public class GameElements {
     public static final float POWERUP_TIMER_Y= GEM_ICON_Y - (POWERUP_TIMER_HEIGHT * 1.2f);
 
     public static final float CONFIRM_LEAVE_FONT_Y = (MENU_BACK_Y + MENU_BACK_HEIGHT - .55f * HOME_BUTTON_HEIGHT);
-    public static final float CONFIRM_LEAVE_FONT_X = YES_BUTTON_X;
 
     public static final float GAME_OVER_TEXT_Y = (MENU_BACK_Y + MENU_BACK_HEIGHT) + (GEM_ICON_Y - MENU_BACK_Y - MENU_BACK_HEIGHT)/2;
 
