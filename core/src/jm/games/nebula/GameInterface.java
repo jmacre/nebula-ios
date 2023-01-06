@@ -682,8 +682,10 @@ public class GameInterface extends GameElements {
         game.batch.draw(yesButton.getTexture(), YES_BUTTON_X, YES_BUTTON_Y, YES_BUTTON_WIDTH, YES_BUTTON_HEIGHT);
         game.batch.draw(noButton.getTexture(), NO_BUTTON_X, NO_BUTTON_Y, NO_BUTTON_WIDTH, NO_BUTTON_HEIGHT);
 
-        gl.setText(confirmScreenFont, "ARE YOU SURE YOU \n\n WANT TO LEAVE?", Color.valueOf(PURPLE_COLOR_HEX), MENU_BACK_WIDTH, Align.left, true);
-        confirmScreenFont.draw(game.batch, "ARE YOU SURE YOU \n\n WANT TO LEAVE?", CONFIRM_LEAVE_FONT_X, CONFIRM_LEAVE_FONT_Y);
+        gl.setText(confirmScreenFont, "ARE YOU SURE YOU \n\n  WANT TO LEAVE?", Color.valueOf(PURPLE_COLOR_HEX), SCREEN_WIDTH, Align.center, true);
+        confirmScreenFont.draw(game.batch, "ARE YOU SURE YOU \n\n  WANT TO LEAVE?", SCREEN_WIDTH/2 - (gl.width/2), CONFIRM_LEAVE_FONT_Y);
+
+
     }
 
     public void setConfirmLeaveScreenOpen(boolean isOpen) {
