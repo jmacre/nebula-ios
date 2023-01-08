@@ -18,7 +18,6 @@ robovm {
 	iosSignIdentity = "Apple Distribution: James Macre (ZG76X575A5)"
 	iosProvisioningProfile = "jm.games.nebula"
 	iosSkipSigning = false
-	archs = "arm64"
 }
 dependencies {
 	implementation "io.github.dkimitsa.robovm:robopods-firebase-google-mobile-ads-ios:$altpodsVersion"
