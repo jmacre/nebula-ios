@@ -12,7 +12,7 @@ public class Bullet extends GameElements {
     public Sprite bulletSprite = new Sprite();
     Animation<TextureRegion> missileAnimation;
 
-    public static final float SPEED_VERTICAL = SCREEN_HEIGHT/1.56f;
+    public static final float SPEED_VERTICAL = SCREEN_HEIGHT/1.4f;
     public static final float SPEED_HORIZONTAL = (SPEED_VERTICAL * ((float)SCREEN_WIDTH / SCREEN_HEIGHT))/3;
 
     int BULLET_X, BULLET_Y;
