@@ -16,7 +16,7 @@ createIPA.dependsOn build
 robovm {
 	archs = "arm64"
 	iosSignIdentity = "Apple Distribution: James Macre (ZG76X575A5)"
-	iosProvisioningProfile = "jm.games.nebuladist"
+	iosProvisioningProfile = "jm.games.nebula"
 	iosSkipSigning = false
 	archs = "arm64"
 }
