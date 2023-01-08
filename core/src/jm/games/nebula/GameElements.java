@@ -264,5 +264,5 @@ public class GameElements {
 
     public FreeTypeFontGenerator.FreeTypeFontParameter textParameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
     public FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("font.otf"));
-    public BitmapFont menuScoreFont, gameOverFont, countdownFont, confirmScreenFont, storeFont, gemCountFont, buyFont, IAPRequestFont;
+    public BitmapFont menuScoreFont, gameOverFont, countdownFont, confirmScreenFont, storeFont, gemCountFont, buyFont;
 }
