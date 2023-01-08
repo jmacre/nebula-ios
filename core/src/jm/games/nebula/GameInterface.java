@@ -38,6 +38,8 @@ public class GameInterface extends GameElements {
     Button leftArrowBtn;
     Button rightArrowBtn;
     Button selectButton;
+    boolean isIAPLoading = false;
+    boolean texturesUpdatedAfterIAPBtnTap;
 
     ShopElement ship;
     GemElement gemElement;
@@ -65,6 +67,9 @@ public class GameInterface extends GameElements {
     float gemPurchaseTimer = GEM_COUNT_UPDATE_TIMER;
 
     boolean gemsPurchased = false;
+    boolean purchaseCompleted = false;
+    boolean purchaseStarted = false;
+
     int purchasedGemCount = 0;
 
     int gemCount = 0;
@@ -138,6 +143,9 @@ public class GameInterface extends GameElements {
 
         textParameter.size = (int) SELECT_BUTTON_WIDTH / 8;
         buyFont = generator.generateFont(textParameter);
+
+        IAPRequestFont = generator.generateFont(textParameter);
+        IAPRequestFont.setColor(Color.WHITE);
 
         scoreY = SCORE_Y - topInset;
         topElemY = TOP_ELEM_Y - topInset;
@@ -501,6 +509,7 @@ public class GameInterface extends GameElements {
             }
         } else if (isGemScreenOpen) {
             if (selectButton.getTappedBefore()) {
+                System.out.println("test");
                 if(gemsPurchased) {
                     gemCount = prefs.getGemCount();
                     prePurchaseGemCount = gemCount;
@@ -511,9 +520,7 @@ public class GameInterface extends GameElements {
                 selectButton.setTexture(assets.assetManager.get(Assets.blank_inactive, Texture.class));
             }
             if (selectButton.getReleased()) {
-
-                buyItem(gemElement.getSKU());
-
+                isIAPLoading = true;
             }
         }
     }
@@ -573,25 +580,16 @@ public class GameInterface extends GameElements {
         }
 
         game.batch.draw(shopBack, SHOP_BACK_X, SHOP_BACK_Y, SHOP_BACK_WIDTH, SHOP_BACK_HEIGHT);
-        game.batch.draw(xButton.getTexture(), X_BUTTON_X, X_BUTTON_Y, X_BUTTON_WIDTH, X_BUTTON_HEIGHT);
 
-        game.batch.draw(gemIcon, GEM_ICON_SHOP_X, GEM_ICON_SHOP_Y, GEM_ICON_WIDTH, GEM_ICON_HEIGHT);
-        gemCountFont.draw(game.batch, " x " + gemCount, GEM_COUNT_SHOP_X, GEM_COUNT_SHOP_Y);
+        if(!isIAPLoading) {
+            game.batch.draw(xButton.getTexture(), X_BUTTON_X, X_BUTTON_Y, X_BUTTON_WIDTH, X_BUTTON_HEIGHT);
 
-        game.batch.draw(leftArrowBtn.getTexture(), LEFT_ARROW_BTN_X, LEFT_ARROW_BTN_Y, LEFT_ARROW_BTN_WIDTH, LEFT_ARROW_BTN_HEIGHT);
-        game.batch.draw(rightArrowBtn.getTexture(), RIGHT_ARROW_BTN_X, RIGHT_ARROW_BTN_Y, RIGHT_ARROW_BTN_WIDTH, RIGHT_ARROW_BTN_HEIGHT);
-        game.batch.draw(selectButton.getTexture(), SELECT_BUTTON_X, SELECT_BUTTON_Y, SELECT_BUTTON_WIDTH, SELECT_BUTTON_HEIGHT);
+            game.batch.draw(gemIcon, GEM_ICON_SHOP_X, GEM_ICON_SHOP_Y, GEM_ICON_WIDTH, GEM_ICON_HEIGHT);
+            gemCountFont.draw(game.batch, " x " + gemCount, GEM_COUNT_SHOP_X, GEM_COUNT_SHOP_Y);
 
-        checkForLeftArrowBtnTap(soundEnabled, false, true);
-        checkForRightArrowBtnTap(soundEnabled, false, true);
-
-        if (selectedGemScreenElement == AD_ID) {
-            checkForAdButtonTap(game, soundEnabled, prefs);
-        }
-        else {
-            checkForSelectButtonTap(soundEnabled, false, true, prefs);
-            gl.setText(buyFont, '$' + Float.toString(GemElement.getPriceByElementId(selectedGemScreenElement)), Color.valueOf(PURPLE_COLOR_HEX), SCREEN_WIDTH, Align.center, true);
-            buyFont.draw(game.batch, '$' + Float.toString(GemElement.getPriceByElementId(selectedGemScreenElement)), (SCREEN_WIDTH - gl.width) / 2, SELECT_BUTTON_Y + gl.height / 2 + SELECT_BUTTON_HEIGHT / 2);
+            game.batch.draw(leftArrowBtn.getTexture(), LEFT_ARROW_BTN_X, LEFT_ARROW_BTN_Y, LEFT_ARROW_BTN_WIDTH, LEFT_ARROW_BTN_HEIGHT);
+            game.batch.draw(rightArrowBtn.getTexture(), RIGHT_ARROW_BTN_X, RIGHT_ARROW_BTN_Y, RIGHT_ARROW_BTN_WIDTH, RIGHT_ARROW_BTN_HEIGHT);
+            game.batch.draw(selectButton.getTexture(), SELECT_BUTTON_X, SELECT_BUTTON_Y, SELECT_BUTTON_WIDTH, SELECT_BUTTON_HEIGHT);
 
         }
 
@@ -601,13 +599,53 @@ public class GameInterface extends GameElements {
         if(gemsPurchased) {
             getPurchasedGems(delta, gemCount, purchasedGemCount, soundEnabled);
         }
+        if(!isIAPLoading) {
 
-        gemElement.render(stateTime, batch);
+            gemElement.render(stateTime, batch);
 
-        gemElement.setElementAnimation(selectedGemScreenElement);
+            gemElement.setElementAnimation(selectedGemScreenElement);
 
-        gl.setText(storeFont, gemElement.getTitle(), Color.valueOf(PURPLE_COLOR_HEX), SCREEN_WIDTH, Align.center, true);
-        storeFont.draw(game.batch, gemElement.getTitle(), (SCREEN_WIDTH - gl.width) / 2, SHOP_BACK_Y + SHOP_BACK_HEIGHT * .8f + gl.height / 2);
+            gl.setText(storeFont, gemElement.getTitle(), Color.valueOf(PURPLE_COLOR_HEX), SCREEN_WIDTH, Align.center, true);
+            storeFont.draw(game.batch, gemElement.getTitle(), (SCREEN_WIDTH - gl.width) / 2, SHOP_BACK_Y + SHOP_BACK_HEIGHT * .8f + gl.height / 2);
+        }
+        if(!isIAPLoading) {
+            checkForLeftArrowBtnTap(soundEnabled, false, true);
+            checkForRightArrowBtnTap(soundEnabled, false, true);
+        }
+        if (selectedGemScreenElement == AD_ID) {
+            checkForAdButtonTap(game, soundEnabled, prefs);
+        }
+        else {
+            if(!purchaseStarted && !purchaseCompleted) {
+                checkForSelectButtonTap(soundEnabled, false, true, prefs);
+            }
+            if(!isIAPLoading) {
+                gl.setText(buyFont, '$' + Float.toString(GemElement.getPriceByElementId(selectedGemScreenElement)), Color.valueOf(PURPLE_COLOR_HEX), SCREEN_WIDTH, Align.center, true);
+                buyFont.draw(game.batch, '$' + Float.toString(GemElement.getPriceByElementId(selectedGemScreenElement)), (SCREEN_WIDTH - gl.width) / 2, SELECT_BUTTON_Y + gl.height / 2 + SELECT_BUTTON_HEIGHT / 2);
+            }
+            else{
+                if(texturesUpdatedAfterIAPBtnTap) {
+                    gl.setText(IAPRequestFont, "  PROCESSING \n\nYOUR REQUEST", Color.valueOf(PURPLE_COLOR_HEX), SCREEN_WIDTH, Align.center, true);
+                    IAPRequestFont.draw(game.batch, "  PROCESSING \n\nYOUR REQUEST", (SCREEN_WIDTH - gl.width) / 2, SHOP_BACK_Y + SHOP_BACK_HEIGHT/2 + gl.height / 2);
+
+                    if(!purchaseStarted && !purchaseCompleted) {
+                        buyItem(gemElement.getSKU());
+                        purchaseStarted = true;
+                    }
+
+                    if(purchaseCompleted) {
+                        isIAPLoading = false;
+                        texturesUpdatedAfterIAPBtnTap = false;
+                        purchaseStarted = false;
+                        purchaseCompleted = false;
+                    }
+                }
+                if(isIAPLoading){
+                    texturesUpdatedAfterIAPBtnTap = true;
+                }
+            }
+        }
+
     }
 
     public void skipGemPurchaseCount(){
@@ -864,24 +902,28 @@ public class GameInterface extends GameElements {
                                 gemsPurchased = true;
                                 purchasedGemCount = 1000;
                                 prefs.setGemCount(prefs.getGemCount() + purchasedGemCount);
+                                purchaseCompleted = true;
                                 break;
 
                             case GEM_10K_SKU:
                                 purchasedGemCount = 10000;
                                 gemsPurchased = true;
                                 prefs.setGemCount(prefs.getGemCount() + purchasedGemCount);
+                                purchaseCompleted = true;
                                 break;
 
                             case GEM_30K_SKU:
                                 purchasedGemCount = 30000;
                                 gemsPurchased = true;
                                 prefs.setGemCount(prefs.getGemCount() + purchasedGemCount);
+                                purchaseCompleted = true;
                                 break;
 
                             case GEM_100K_SKU:
                                 purchasedGemCount = 100000;
                                 gemsPurchased = true;
                                 prefs.setGemCount(prefs.getGemCount() + purchasedGemCount);
+                                purchaseCompleted = true;
                                 break;
                         }
                     }
@@ -891,12 +933,13 @@ public class GameInterface extends GameElements {
 
         @Override
         public void handlePurchaseError(Throwable e) {
-            showErrorOnMainThread("Error on buying:\n" + e.getMessage());
+            System.out.println("test");
+            purchaseCompleted = true;
         }
 
         @Override
         public void handlePurchaseCanceled() {
-
+            purchaseCompleted = true;
         }
 
         private void showErrorOnMainThread(final String message) {
