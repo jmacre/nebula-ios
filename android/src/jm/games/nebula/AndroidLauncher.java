@@ -108,6 +108,11 @@ public class AndroidLauncher extends AndroidApplication implements IActivityRequ
 
 	}
 
+	@Override
+	public boolean isAdLoaded() {
+		return mRewardedAd != null;
+	}
+
 	private void loadAd(){
         if (mRewardedAd == null) {
             RewardedAd.load(this, "ca-app-pub-8689816410492919/3317793905",

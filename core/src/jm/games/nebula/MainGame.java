@@ -2,6 +2,7 @@ package jm.games.nebula;
 
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Net;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
@@ -97,6 +98,8 @@ public class MainGame extends GameElements implements Screen {
     ExplosionPool exp = new ExplosionPool();
     ItemDropPool idp = new ItemDropPool();
 
+    boolean isAdLoaded;
+
     Vector2 center;
     FloatArray vertices;
 
@@ -119,6 +122,8 @@ public class MainGame extends GameElements implements Screen {
     float hourglassTimer = HOURGLASS_TIMER;
 
     float moveSpeed = 27f;
+
+    Boolean hasConnection;
 
     float shipHitTimer = -2f;
     float shipBlinkingTimer = -0.2f;
@@ -1049,6 +1054,7 @@ public class MainGame extends GameElements implements Screen {
     }
 
     public void transitionIn() {
+        hasConnection = null;
         resetInputProcessorTaps();
         if (!isTransitionedIn) {
             stopSounds();
@@ -1103,11 +1109,53 @@ public class MainGame extends GameElements implements Screen {
 
         if (SHIP_START_Y <= -3 * SHIP_HEIGHT) {
             if (!isTransitionedOut) {
-                gameInterface.drawContinueScreen(game, confirmScreenFont);
+                Net.HttpRequest request = new Net.HttpRequest(Net.HttpMethods.GET);
+                request.setUrl("https://www.google.com/");
+
+                Gdx.net.sendHttpRequest(request, new Net.HttpResponseListener() {
+                    @Override
+                    public void handleHttpResponse(Net.HttpResponse httpResponse) {
+                        if(httpResponse.getResult() != null) {
+                            hasConnection = true;
+                        }
+                    }
+
+                    @Override
+                    public void failed(Throwable t) {
+                        hasConnection = false;
+                    }
+
+                    @Override
+                    public void cancelled() {
+                        hasConnection = false;
+                    }
+                });
+                if(hasConnection != null && hasConnection){
+                    gameInterface.drawContinueScreen(game, confirmScreenFont);
+                }
+                else if(hasConnection != null){
+                    gameInterface.setContinueScreenOpen(false);
+                    isTransitionedOut = true;
+
+                    if (finalScore == 0) {
+                        finalScore = score;
+                    }
+                    isResettingScreen = true;
+                    finalGemCount = gemCount;
+                    if (score >= 100) {
+                        finalGemCount = gemCount + (score / 100);
+                    }
+                    if (!gemCountUpdated) {
+                        prefs.setGemCount(prefs.getGemCount() + finalGemCount);
+                        finalGemCountTemp = finalGemCount;
+                        gemCountUpdated = true;
+                    }
+                }
             }
             if (gameInterface.isContinueScreenOpen() && gameInterface.checkForNoButtonTap(soundEnabled)) {
                 gameInterface.setContinueScreenOpen(false);
                 isTransitionedOut = true;
+                hasConnection = null;
 
                 if (finalScore == 0) {
                     finalScore = score;
@@ -1124,21 +1172,27 @@ public class MainGame extends GameElements implements Screen {
                 }
 
             } else if (gameInterface.isContinueScreenOpen() && gameInterface.checkForYesButtonTap()) {
-                gameInterface.setContinueScreenOpen(false);
-
                 if (Gdx.app.getType() == Application.ApplicationType.Android) {
+                    isAdLoaded = game.requestHandlerAndroid.isAdLoaded();
                     game.requestHandlerAndroid.showAd(true, soundEnabled, prefs, gemSound);
                 } else if (Gdx.app.getType() == Application.ApplicationType.iOS) {
+                    isAdLoaded = game.requestHandlerIOS.isAdLoaded();
                     game.requestHandlerIOS.showAd(true, soundEnabled, prefs, gemSound);
 
                 }
-                isPaused = true;
-                resetPlayer(1);
-                resetPools();
-                resetMainLists();
-                resetBulletTimers();
-                resetItems();
-                resetMusicAndSoundPitches();
+
+                if(isAdLoaded) {
+
+                    gameInterface.setContinueScreenOpen(false);
+
+                    isPaused = true;
+                    resetPlayer(1);
+                    resetPools();
+                    resetMainLists();
+                    resetBulletTimers();
+                    resetItems();
+                    resetMusicAndSoundPitches();
+                }
             }
         }
         if (prefs.getHighScore() < score) {

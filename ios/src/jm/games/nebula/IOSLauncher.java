@@ -90,6 +90,11 @@ public class IOSLauncher extends IOSApplication.Delegate implements IActivityReq
         }
     }
 
+    @Override
+    public boolean isAdLoaded() {
+        return mRewardedAd != null;
+    }
+
     public void loadAd() {
         if (mRewardedAd == null) {
             GADRewardedAd.load("ca-app-pub-8689816410492919/2589576727", request,
