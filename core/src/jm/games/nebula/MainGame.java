@@ -99,6 +99,7 @@ public class MainGame extends GameElements implements Screen {
     ItemDropPool idp = new ItemDropPool();
 
     boolean isAdLoaded;
+    boolean isAdFinished;
 
     Vector2 center;
     FloatArray vertices;
@@ -1184,9 +1185,11 @@ public class MainGame extends GameElements implements Screen {
                 if (Gdx.app.getType() == Application.ApplicationType.Android) {
                     isAdLoaded = game.requestHandlerAndroid.isAdLoaded();
                     game.requestHandlerAndroid.showAd(true, soundEnabled, prefs, gemSound);
+                    deltaList.clear();
                 } else if (Gdx.app.getType() == Application.ApplicationType.iOS) {
                     isAdLoaded = game.requestHandlerIOS.isAdLoaded();
                     game.requestHandlerIOS.showAd(true, soundEnabled, prefs, gemSound);
+                    deltaList.clear();
                 }
 
                 if (isAdLoaded) {
@@ -1304,7 +1307,10 @@ public class MainGame extends GameElements implements Screen {
         }
 
         if (bulletTimer > bulletThreshold) {
-            if (score < 99999 && !isShipLeaving) {
+            if (!isShipLeaving && SHIP_START_Y >= SHIP_Y && isAlive && !gameInterface.isContinueScreenOpen()) {
+                addBullets();
+            }
+            if (!isShipLeaving) {
 
                 if (soundEnabled) {
                     if (isTransitionedIn) {
@@ -1314,22 +1320,21 @@ public class MainGame extends GameElements implements Screen {
                             } else {
                                 missileSound.play();
                             }
-                        } else {
+                        } else if(!bullets.isEmpty()){
                             if (bulletSound.isPlaying()) {
                                 bulletSound1.play();
                             } else {
                                 bulletSound.play();
 
                             }
+
                         }
                     }
                 }
             }
-            if (!isShipLeaving && SHIP_START_Y >= SHIP_Y && isAlive && !gameInterface.isContinueScreenOpen()) {
-                addBullets();
-            }
+
             if (bullets.isEmpty() && !isMissile && !isRapidFire) { // allows bullets to fire right after transitioning in
-                bulletThreshold = 0.1f;
+                bulletThreshold = 0.2f;
             }
             bulletTimer -= bulletThreshold;
         }
