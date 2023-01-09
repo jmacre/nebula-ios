@@ -1326,8 +1326,8 @@ public class MainGame extends GameElements implements Screen {
             if (!isShipLeaving && SHIP_START_Y >= SHIP_Y && isAlive && !gameInterface.isContinueScreenOpen()) {
                 addBullets();
             }
-            if (bullets.isEmpty() && !isMissile && !isRapidFire) { // allows bullets to fire immediately after transitioning in
-                bulletThreshold = 0;
+            if (bullets.isEmpty() && !isMissile && !isRapidFire) { // allows bullets to fire right after transitioning in
+                bulletThreshold = 0.1f;
             }
             bulletTimer -= bulletThreshold;
         }
