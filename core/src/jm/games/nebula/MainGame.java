@@ -878,6 +878,7 @@ public class MainGame extends GameElements implements Screen {
         SHIP_X = (int) (SCREEN_WIDTH / 2 - SHIP_WIDTH / 2);
         CURRENT_SHIP_X = SHIP_X;
         health = hp;
+        shipHitTimer = -2f;
 
         isAlive = true;
         justHit = false;
@@ -1050,7 +1051,7 @@ public class MainGame extends GameElements implements Screen {
                     countdownFont.draw(game.batch, "1", (SCREEN_WIDTH - gl.width) / 2, SCREEN_HEIGHT / 2f + gl.height);
 
                 } else {
-                    if (resumeCountdownTimer < 0.25f && runResumeCountdown) {
+                    if (resumeCountdownTimer < 0.25f) {
                         gl.setText(countdownFont, "GO", Color.WHITE, SCREEN_WIDTH, Align.center, true);
                         countdownFont.draw(game.batch, "GO", (SCREEN_WIDTH - gl.width) / 2, SCREEN_HEIGHT / 2f + gl.height);
 
@@ -1206,6 +1207,7 @@ public class MainGame extends GameElements implements Screen {
                     game.requestHandlerAndroid.setAdFinished(false);
                     isAdLoaded = false;
                     scoreTickerTimer = SCORE_TICKER_TIMER;
+                    countDownTimer = 0f;
 
                     resetPlayer(1);
                     resetPools();
@@ -1221,7 +1223,7 @@ public class MainGame extends GameElements implements Screen {
                     game.requestHandlerIOS.setAdFinished(false);
                     isAdLoaded = false;
                     scoreTickerTimer = SCORE_TICKER_TIMER;
-
+                    countDownTimer = 0f;
 
                     resetPlayer(1);
                     resetPools();
