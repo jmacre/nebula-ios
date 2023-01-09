@@ -390,18 +390,20 @@ public class MainGame extends GameElements implements Screen {
             deltaP = 0;
         }
 
-        for (int i = 0; i < deltaList.size; i++) {
-            deltaSum += deltaList.get(i);
-        }
-        delta = deltaSum / deltaList.size;
-        if (isPaused || isRunningResumeCountdown) {
-            deltaP = 0;
-        } else {
-            deltaP = delta;
-        }
-        deltaList.removeIndex(0);
-        deltaSum = 0;
+        if (deltaList.size >= 60) {
+            for (int i = 0; i < deltaList.size; i++) {
+                deltaSum += deltaList.get(i);
+            }
+            delta = deltaSum / deltaList.size;
 
+            if (isPaused || isRunningResumeCountdown) {
+                deltaP = 0;
+            } else {
+                deltaP = delta;
+            }
+            deltaList.removeIndex(0);
+            deltaSum = 0;
+        }
 
         if (fadeOutOpacity > 0 || fadeInOpacity > 0)
             blackTransition.draw(game.batch);
