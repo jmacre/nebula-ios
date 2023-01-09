@@ -23,6 +23,7 @@ public class IOSLauncher extends IOSApplication.Delegate implements IActivityReq
     IOSApplication iosApplication;
     NSString testDeviceIdentifier = new NSString("96b13088c743a128f6548fdf77e26c58");
     private GADRewardedAd mRewardedAd;
+    private boolean adFinished;
     GADRequest request = new GADRequest();
 
     @Override
@@ -63,8 +64,7 @@ public class IOSLauncher extends IOSApplication.Delegate implements IActivityReq
                 @Override
                 public void adDidDismissFullScreenContent(GADFullScreenPresentingAd ad) {
                     if (!inGame) {
-                        mRewardedAd = null;
-                        loadAd();
+
                         int gemCount = prefs.getGemCount();
                         int reward = 25;
                         prefs.setGemCount(gemCount + reward);
@@ -75,6 +75,9 @@ public class IOSLauncher extends IOSApplication.Delegate implements IActivityReq
                             gemSound.play();
                         }
                     }
+                    adFinished = true;
+                    mRewardedAd = null;
+                    loadAd();
                 }
                 @Override
                 public void didFailToPresentFullScreenContent(GADFullScreenPresentingAd ad, NSError error) {
@@ -95,7 +98,18 @@ public class IOSLauncher extends IOSApplication.Delegate implements IActivityReq
         return mRewardedAd != null;
     }
 
+    @Override
+    public boolean isAdFinished() {
+        return adFinished;
+    }
+
+    @Override
+    public void setAdFinished(boolean adFinished) {
+        this.adFinished = adFinished;
+    }
+
     public void loadAd() {
+
         if (mRewardedAd == null) {
             GADRewardedAd.load("ca-app-pub-8689816410492919/2589576727", request,
                     new VoidBlock2<GADRewardedAd, NSError>() {

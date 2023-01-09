@@ -34,6 +34,7 @@ import games.rednblack.miniaudio.MASound;
 public class AndroidLauncher extends AndroidApplication implements IActivityRequestHandler {
 	AdRequest adRequest;
 	private RewardedAd mRewardedAd;
+	private boolean adFinished = false;
 
 
 	@Override
@@ -113,6 +114,16 @@ public class AndroidLauncher extends AndroidApplication implements IActivityRequ
 		return mRewardedAd != null;
 	}
 
+	@Override
+	public boolean isAdFinished() {
+		return adFinished;
+	}
+
+	@Override
+	public void setAdFinished(boolean adFinished) {
+		this.adFinished = adFinished;
+	}
+
 	private void loadAd(){
         if (mRewardedAd == null) {
             RewardedAd.load(this, "ca-app-pub-8689816410492919/3317793905",
@@ -140,7 +151,6 @@ public class AndroidLauncher extends AndroidApplication implements IActivityRequ
 					new FullScreenContentCallback() {
 						@Override
 						public void onAdShowedFullScreenContent() {
-
 						}
 
 						@Override
@@ -163,9 +173,10 @@ public class AndroidLauncher extends AndroidApplication implements IActivityRequ
 					new OnUserEarnedRewardListener() {
 						@Override
 						public void onUserEarnedReward(@NonNull RewardItem rewardItem) {
+							mRewardedAd = null;
+							loadAd();
 							if (!inGame) {
-								mRewardedAd = null;
-								loadAd();
+
 								int gemCount = prefs.getGemCount();
 								int reward = 25;
 								prefs.setGemCount(gemCount + reward);
@@ -176,7 +187,7 @@ public class AndroidLauncher extends AndroidApplication implements IActivityRequ
 									gemSound.play();
 								}
 							}
-
+							adFinished = true;
 						}
 					});
 		}

@@ -390,20 +390,18 @@ public class MainGame extends GameElements implements Screen {
             deltaP = 0;
         }
 
-        if (deltaList.size >= 60) {
-            for (int i = 0; i < deltaList.size; i++) {
-                deltaSum += deltaList.get(i);
-            }
-            delta = deltaSum / deltaList.size;
-
-            if (isPaused || isRunningResumeCountdown) {
-                deltaP = 0;
-            } else {
-                deltaP = delta;
-            }
-            deltaList.removeIndex(0);
-            deltaSum = 0;
+        for (int i = 0; i < deltaList.size; i++) {
+            deltaSum += deltaList.get(i);
         }
+        delta = deltaSum / deltaList.size;
+        if (isPaused || isRunningResumeCountdown) {
+            deltaP = 0;
+        } else {
+            deltaP = delta;
+        }
+        deltaList.removeIndex(0);
+        deltaSum = 0;
+
 
         if (fadeOutOpacity > 0 || fadeInOpacity > 0)
             blackTransition.draw(game.batch);
@@ -565,7 +563,9 @@ public class MainGame extends GameElements implements Screen {
             resetShader();
 
             if (!gameInterface.isReplayScreenOpen && !gameInterface.isConfirmLeaveScreenOpen()) {
-                gameInterface.drawPauseScreen(game, menuScoreFont, gemCountFont, prefs);
+                if (!isAdLoaded) {
+                    gameInterface.drawPauseScreen(game, menuScoreFont, gemCountFont, prefs);
+                }
 
                 if (gameInterface.checkForPlayButtonTap(soundEnabled) && !isTransitioningOut) {
                     playButtonTapVal = inputProcessor.getTapCount();
@@ -646,7 +646,7 @@ public class MainGame extends GameElements implements Screen {
                         runGemCountUpdateTimer();
                     }
                 }
-                if (!gameInterface.isConfirmLeaveScreenOpen() && !gameInterface.isContinueScreenOpen()) {
+                if (!gameInterface.isConfirmLeaveScreenOpen() && !gameInterface.isContinueScreenOpen() && !isAdLoaded) {
                     gameInterface.drawReplayScreen(game, menuScoreFont, gameOverFont, gemCountFont, newHighscore, replayScreenGemCount, gemsFromScore, gemsCaught, gemCountStarted, finalScore, prefs.getHighScore(), scoreCountStarted, recapStarted, recapComplete, deltaP);
                 }
                 if (recapComplete && gameInterface.isRecapScreenOpen) {
@@ -1060,6 +1060,10 @@ public class MainGame extends GameElements implements Screen {
             stopSounds();
         }
 
+        if (SHIP_START_Y < -3 * SHIP_HEIGHT) {
+            SHIP_START_Y = -3 * SHIP_HEIGHT;
+        }
+
         if (SHIP_START_Y <= SHIP_Y) {
             SHIP_X = (int) (SCREEN_WIDTH / 2 - SHIP_WIDTH / 2);
             SHIP_START_Y += (int) (1.6 * SHIP_Y * deltaP);
@@ -1097,7 +1101,7 @@ public class MainGame extends GameElements implements Screen {
         mainMusic.stop();
         resetHourglassMultiplier();
 
-        if (SHIP_START_Y >= -3 * SHIP_HEIGHT) {
+        if (SHIP_START_Y > -3 * SHIP_HEIGHT) {
             isTransitionedOut = false;
             isTransitioningOut = true;
         }
@@ -1108,6 +1112,8 @@ public class MainGame extends GameElements implements Screen {
         shipAnim.drawAnim(shipAnimation, stateTime, SHIP_X_TRANSITION_OUT, SHIP_START_Y, SHIP_WIDTH, SHIP_HEIGHT, true, game.batch, true);
 
         if (SHIP_START_Y <= -3 * SHIP_HEIGHT) {
+            SHIP_START_Y = -3 * SHIP_HEIGHT;
+
             if (!isTransitionedOut) {
                 Net.HttpRequest request = new Net.HttpRequest(Net.HttpMethods.GET);
                 request.setUrl("https://www.google.com/");
@@ -1115,7 +1121,7 @@ public class MainGame extends GameElements implements Screen {
                 Gdx.net.sendHttpRequest(request, new Net.HttpResponseListener() {
                     @Override
                     public void handleHttpResponse(Net.HttpResponse httpResponse) {
-                        if(httpResponse.getResult() != null) {
+                        if (httpResponse.getResult() != null) {
                             hasConnection = true;
                         }
                     }
@@ -1130,10 +1136,9 @@ public class MainGame extends GameElements implements Screen {
                         hasConnection = false;
                     }
                 });
-                if(hasConnection != null && hasConnection){
+                if (hasConnection != null && hasConnection && !isAdLoaded) {
                     gameInterface.drawContinueScreen(game, confirmScreenFont);
-                }
-                else if(hasConnection != null){
+                } else if (hasConnection != null) {
                     gameInterface.setContinueScreenOpen(false);
                     isTransitionedOut = true;
 
@@ -1172,20 +1177,43 @@ public class MainGame extends GameElements implements Screen {
                 }
 
             } else if (gameInterface.isContinueScreenOpen() && gameInterface.checkForYesButtonTap()) {
+                gameInterface.setContinueScreenOpen(false);
+
                 if (Gdx.app.getType() == Application.ApplicationType.Android) {
                     isAdLoaded = game.requestHandlerAndroid.isAdLoaded();
                     game.requestHandlerAndroid.showAd(true, soundEnabled, prefs, gemSound);
                 } else if (Gdx.app.getType() == Application.ApplicationType.iOS) {
                     isAdLoaded = game.requestHandlerIOS.isAdLoaded();
                     game.requestHandlerIOS.showAd(true, soundEnabled, prefs, gemSound);
-
                 }
 
-                if(isAdLoaded) {
-
-                    gameInterface.setContinueScreenOpen(false);
-
+                if (isAdLoaded) {
                     isPaused = true;
+                }
+            }
+
+            if (Gdx.app.getType() == Application.ApplicationType.Android) {
+                if (game.requestHandlerAndroid.isAdFinished()) {
+                    isPaused = false;
+                    gameInterface.setContinueScreenOpen(false);
+                    game.requestHandlerAndroid.setAdFinished(false);
+                    isAdLoaded = false;
+
+                    resetPlayer(1);
+                    resetPools();
+                    resetMainLists();
+                    resetBulletTimers();
+                    resetItems();
+                    resetMusicAndSoundPitches();
+                }
+            } else if (Gdx.app.getType() == Application.ApplicationType.iOS) {
+                if (game.requestHandlerIOS.isAdFinished()) {
+                    isPaused = false;
+                    gameInterface.setContinueScreenOpen(false);
+                    game.requestHandlerIOS.setAdFinished(false);
+                    isAdLoaded = false;
+
+
                     resetPlayer(1);
                     resetPools();
                     resetMainLists();
@@ -1195,6 +1223,7 @@ public class MainGame extends GameElements implements Screen {
                 }
             }
         }
+
         if (prefs.getHighScore() < score) {
             prefs.setHighScore(score);
             newHighscore = true;

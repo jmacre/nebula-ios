@@ -593,7 +593,7 @@ public class GameInterface extends GameElements {
     }
 
     public void drawContinueScreen(Main game, BitmapFont confirmScreenFont){
-        setContinueScreenOpen(true);
+        continueScreenOpen = true;
 
         game.batch.draw(pauseMenuBack, MENU_BACK_X, MENU_BACK_Y, MENU_BACK_WIDTH, MENU_BACK_HEIGHT);
         game.batch.draw(yesButton.getTexture(), YES_BUTTON_X, YES_BUTTON_Y, YES_BUTTON_WIDTH, YES_BUTTON_HEIGHT);
