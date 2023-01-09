@@ -21,7 +21,7 @@ import games.rednblack.miniaudio.MASound;
 
 public class IOSLauncher extends IOSApplication.Delegate implements IActivityRequestHandler {
     IOSApplication iosApplication;
-    NSString testDeviceIdentifier = new NSString("752d10da8f6c7207f94659417c6ac2cf");
+    NSString testDeviceIdentifier = new NSString("96b13088c743a128f6548fdf77e26c58");
     private GADRewardedAd mRewardedAd;
     GADRequest request = new GADRequest();
 
