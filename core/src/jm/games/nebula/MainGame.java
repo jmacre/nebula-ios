@@ -420,7 +420,18 @@ public class MainGame extends GameElements implements Screen {
             isMainMusicPlaying = false;
         }
         isAlive = health > 0;
-
+        if (!isAlive && isTransitionedOut) {
+            isResettingScreen = true;
+            finalGemCount = gemCount;
+            if (score >= 100) {
+                finalGemCount = gemCount + (score / 100);
+            }
+            if (!gemCountUpdated) {
+                prefs.setGemCount(prefs.getGemCount() + finalGemCount);
+                finalGemCountTemp = finalGemCount;
+                gemCountUpdated = true;
+            }
+        }
 
         if (fadeInOpacity < 1) {
             musicPosition = mainMusic.getCursorPosition();
@@ -979,6 +990,7 @@ public class MainGame extends GameElements implements Screen {
         resetScoreVariables();
         resetBulletTimers();
         resetInterface();
+        scoreTickerTimer = SCORE_TICKER_TIMER;
     }
 
     public void playMusic() {
@@ -1038,7 +1050,7 @@ public class MainGame extends GameElements implements Screen {
                     countdownFont.draw(game.batch, "1", (SCREEN_WIDTH - gl.width) / 2, SCREEN_HEIGHT / 2f + gl.height);
 
                 } else {
-                    if (resumeCountdownTimer < 0.25f) {
+                    if (resumeCountdownTimer < 0.25f && runResumeCountdown) {
                         gl.setText(countdownFont, "GO", Color.WHITE, SCREEN_WIDTH, Align.center, true);
                         countdownFont.draw(game.batch, "GO", (SCREEN_WIDTH - gl.width) / 2, SCREEN_HEIGHT / 2f + gl.height);
 
@@ -1084,7 +1096,7 @@ public class MainGame extends GameElements implements Screen {
             } else if (transitionDistTraveled < totalTransitionDist) {
                 gl.setText(countdownFont, "1", Color.WHITE, SCREEN_WIDTH, Align.center, true);
                 countdownFont.draw(game.batch, "1", (SCREEN_WIDTH - gl.width) / 2, SCREEN_HEIGHT / 2f + gl.height / 2);
-            } else if (transitionDistTraveled >= totalTransitionDist && SHIP_START_Y >= SHIP_Y) {
+            } else if (transitionDistTraveled >= totalTransitionDist || SHIP_START_Y >= SHIP_Y) {
 
                 if (countDownTimer < 0.25f) {
                     countDownTimer += deltaP;
@@ -1148,16 +1160,6 @@ public class MainGame extends GameElements implements Screen {
                     if (finalScore == 0) {
                         finalScore = score;
                     }
-                    isResettingScreen = true;
-                    finalGemCount = gemCount;
-                    if (score >= 100) {
-                        finalGemCount = gemCount + (score / 100);
-                    }
-                    if (!gemCountUpdated) {
-                        prefs.setGemCount(prefs.getGemCount() + finalGemCount);
-                        finalGemCountTemp = finalGemCount;
-                        gemCountUpdated = true;
-                    }
                 }
             }
             if (gameInterface.isContinueScreenOpen() && gameInterface.checkForNoButtonTap(soundEnabled)) {
@@ -1203,6 +1205,7 @@ public class MainGame extends GameElements implements Screen {
                     gameInterface.setContinueScreenOpen(false);
                     game.requestHandlerAndroid.setAdFinished(false);
                     isAdLoaded = false;
+                    scoreTickerTimer = SCORE_TICKER_TIMER;
 
                     resetPlayer(1);
                     resetPools();
@@ -1217,6 +1220,7 @@ public class MainGame extends GameElements implements Screen {
                     gameInterface.setContinueScreenOpen(false);
                     game.requestHandlerIOS.setAdFinished(false);
                     isAdLoaded = false;
+                    scoreTickerTimer = SCORE_TICKER_TIMER;
 
 
                     resetPlayer(1);
