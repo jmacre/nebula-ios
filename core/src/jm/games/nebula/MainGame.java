@@ -1,5 +1,6 @@
 package jm.games.nebula;
 
+import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
@@ -170,7 +171,7 @@ public class MainGame extends GameElements implements Screen {
     boolean recapComplete = false;
     boolean recapSkipped = false;
 
-    int gemSkipTapCount = 0, continueScreenTapCount = 0;
+    int gemSkipTapCount = 0, tapToContinueScreenTapCount = 0;
 
     boolean scoreUpdated = false;
     float scoreTickerTimer = SCORE_TICKER_TIMER;
@@ -413,18 +414,7 @@ public class MainGame extends GameElements implements Screen {
             isMainMusicPlaying = false;
         }
         isAlive = health > 0;
-        if (!isAlive) {
-            isResettingScreen = true;
-            finalGemCount = gemCount;
-            if (score >= 100) {
-                finalGemCount = gemCount + (score / 100);
-            }
-            if (!gemCountUpdated) {
-                prefs.setGemCount(prefs.getGemCount() + finalGemCount);
-                finalGemCountTemp = finalGemCount;
-                gemCountUpdated = true;
-            }
-        }
+
 
         if (fadeInOpacity < 1) {
             musicPosition = mainMusic.getCursorPosition();
@@ -486,7 +476,7 @@ public class MainGame extends GameElements implements Screen {
             }
 
             if (isAlive) {
-                if (score >= 100) {
+                if (score >= 100 && !isTransitioningIn) {
                     addGemDrops();
                     addItemDrops();
                     playerItemCollision();
@@ -534,7 +524,7 @@ public class MainGame extends GameElements implements Screen {
             }
             if (!explosionsToDelay.isEmpty()) {
                 for (Explosion explosion : explosionsToDelay) {
-                    runExplosionDelay(explosion      );
+                    runExplosionDelay(explosion);
                 }
             }
 
@@ -547,14 +537,13 @@ public class MainGame extends GameElements implements Screen {
                 movePlayer();
             }
         }
-        if ((!isAlive || isPaused || gameInterface.isReplayScreenOpen) && inputProcessor.getTapCount() > continueScreenTapCount && gameInterface.checkForSoundButtonTap(soundEnabled, isAlive) && !gameInterface.isConfirmLeaveScreenOpen()) {
+        if ((!isAlive || isPaused || gameInterface.isReplayScreenOpen) && inputProcessor.getTapCount() > tapToContinueScreenTapCount && gameInterface.checkForSoundButtonTap(soundEnabled, isAlive) && !gameInterface.isConfirmLeaveScreenOpen()) {
             if (prefs.isSoundEnabled()) {
                 prefs.setSound(false);
                 soundEnabled = false;
             } else {
                 prefs.setSound(true);
                 soundEnabled = true;
-                pauseSound.play();
             }
         }
 
@@ -573,27 +562,20 @@ public class MainGame extends GameElements implements Screen {
             if (!gameInterface.isReplayScreenOpen && !gameInterface.isConfirmLeaveScreenOpen()) {
                 gameInterface.drawPauseScreen(game, menuScoreFont, gemCountFont, prefs);
 
-                if (gameInterface.checkForPlayButtonTap() && !isTransitioningOut && !gameInterface.isConfirmLeaveScreenOpen()) {
+                if (gameInterface.checkForPlayButtonTap(soundEnabled) && !isTransitioningOut) {
                     playButtonTapVal = inputProcessor.getTapCount();
 
                     if (!isFadingIn && !isTransitioningIn) {
                         runResumeCountdown = true;
                     }
-
                     isPaused = false;
 
-                    if (soundEnabled) {
-                        playSound.play();
-
-                    }
                 }
             }
-            if (gameInterface.checkForHomeButtonTap() || gameInterface.isConfirmLeaveScreenOpen()) {
+            if (gameInterface.checkForHomeButtonTap(soundEnabled) || gameInterface.isConfirmLeaveScreenOpen()) {
                 if (!gameInterface.isConfirmLeaveScreenOpen()) {
                     gameInterface.setConfirmLeaveScreenOpen(true);
-                    if (soundEnabled) {
-                        pauseSound.play();
-                    }
+
                 }
                 if (!isFadingOut) {
                     gameInterface.drawConfirmLeave(game, confirmScreenFont);
@@ -608,7 +590,9 @@ public class MainGame extends GameElements implements Screen {
                     }
                     isShipLeaving = true;
                 }
-                gameInterface.checkForNoButtonTap(soundEnabled);
+                if (gameInterface.checkForNoButtonTap(soundEnabled)) {
+                    gameInterface.setConfirmLeaveScreenOpen(false);
+                }
 
             }
             if (isHourglass) {
@@ -624,9 +608,6 @@ public class MainGame extends GameElements implements Screen {
         }
 
         if (!isAlive) {
-            if (finalScore == 0) {
-                finalScore = score;
-            }
             resetShader();
 
             if (inputProcessor.getTapCount() == 0) {
@@ -660,15 +641,15 @@ public class MainGame extends GameElements implements Screen {
                         runGemCountUpdateTimer();
                     }
                 }
-                if (!gameInterface.isConfirmLeaveScreenOpen()) {
+                if (!gameInterface.isConfirmLeaveScreenOpen() && !gameInterface.isContinueScreenOpen()) {
                     gameInterface.drawReplayScreen(game, menuScoreFont, gameOverFont, gemCountFont, newHighscore, replayScreenGemCount, gemsFromScore, gemsCaught, gemCountStarted, finalScore, prefs.getHighScore(), scoreCountStarted, recapStarted, recapComplete, deltaP);
                 }
                 if (recapComplete && gameInterface.isRecapScreenOpen) {
                     if (Gdx.input.justTouched() && inputProcessor.getTapCount() != gemSkipTapCount) {
-                        continueScreenTapCount = inputProcessor.getTapCount();
+                        tapToContinueScreenTapCount = inputProcessor.getTapCount();
                     }
 
-                    if (continueScreenTapCount != 0) {
+                    if (tapToContinueScreenTapCount != 0) {
                         gameInterface.isRecapScreenOpen = false;
                         gameInterface.isReplayScreenOpen = true;
 
@@ -679,12 +660,12 @@ public class MainGame extends GameElements implements Screen {
                 }
             }
 
-            if (gameInterface.isReplayScreenOpen && inputProcessor.getTapCount() > continueScreenTapCount && isTransitionedOut) {
+            if (gameInterface.isReplayScreenOpen && inputProcessor.getTapCount() > tapToContinueScreenTapCount && isTransitionedOut) {
                 if (gameInterface.checkForReplayButtonTap()) {
                     resetScreen();
                 }
             } else if (isTransitionedOut) {
-                if (!gameInterface.isRecapScreenOpen && inputProcessor.getTapCount() > continueScreenTapCount || gameInterface.isConfirmLeaveScreenOpen()) {
+                if (!gameInterface.isRecapScreenOpen && inputProcessor.getTapCount() > tapToContinueScreenTapCount || gameInterface.isConfirmLeaveScreenOpen()) {
                     if (!gameInterface.isConfirmLeaveScreenOpen()) {
 
                         gameInterface.setConfirmLeaveScreenOpen(true);
@@ -692,7 +673,6 @@ public class MainGame extends GameElements implements Screen {
                             pauseSound.play();
                         }
                     }
-
 
                     if (!isFadingOut) {
 
@@ -706,7 +686,9 @@ public class MainGame extends GameElements implements Screen {
                             }
                             isShipLeaving = true;
                         }
-                        gameInterface.checkForNoButtonTap(soundEnabled);
+                        if (gameInterface.checkForNoButtonTap(soundEnabled)) {
+                            gameInterface.setConfirmLeaveScreenOpen(false);
+                        }
 
                     }
                 }
@@ -764,7 +746,7 @@ public class MainGame extends GameElements implements Screen {
                 if (speedIncrease < 1) {
                     speedIncrease += (0.0005 * scoreMultiplier) / 5f;
                 }
-            } else if (score < 10000){
+            } else if (score < 10000) {
                 if (eyebatsSpawning) {
                     maxEyebatSpawnTime -= (.0002 * scoreMultiplier) / 5f;
                     minEyebatSpawnTime -= (.0001 * scoreMultiplier) / 5f;
@@ -855,6 +837,9 @@ public class MainGame extends GameElements implements Screen {
     }
 
     public void resetItems() {
+        itemSpawnTimer = random.nextFloat() * (MAX_ITEM_SPAWN_TIME - MIN_ITEM_SPAWN_TIME) + MIN_ITEM_SPAWN_TIME;
+        gemSpawnTimer = random.nextFloat() * (MAX_GEM_SPAWN_TIME - MIN_GEM_SPAWN_TIME) + MIN_GEM_SPAWN_TIME;
+
         bombUsed = false;
         missileUsed = false;
         rapidFireUsed = false;
@@ -870,10 +855,10 @@ public class MainGame extends GameElements implements Screen {
         bulletThreshold = 0;
     }
 
-    public void resetPlayer() {
+    public void resetPlayer(int hp) {
         SHIP_X = (int) (SCREEN_WIDTH / 2 - SHIP_WIDTH / 2);
         CURRENT_SHIP_X = SHIP_X;
-        health = 3;
+        health = hp;
 
         isAlive = true;
         justHit = false;
@@ -955,7 +940,7 @@ public class MainGame extends GameElements implements Screen {
 
     public void resetInterface() {
         replayScreenGemCount = prefs.getGemCount();
-        continueScreenTapCount = 0;
+        tapToContinueScreenTapCount = 0;
         gemCountUpdated = false;
         countDownTimer = 0f;
 
@@ -965,14 +950,20 @@ public class MainGame extends GameElements implements Screen {
         isResettingScreen = false;
     }
 
+    public void resetMusicAndSoundPitches() {
+        mainMusic.setPitch(1);
+        bulletSound.setPitch(1);
+    }
+
     public void resetScreen() {
+        resetMusicAndSoundPitches();
         stopSounds();
         resetGemCounts();
         resetShader();
         resetRecapVariables();
         resetSpawnTimes();
         resetItems();
-        resetPlayer();
+        resetPlayer(3);
         resetEnemySpawnVariables();
         resetPools();
         resetMainLists();
@@ -1023,28 +1014,30 @@ public class MainGame extends GameElements implements Screen {
     }
 
     public void runResumeCountdown(float delta) {
-        resumeCountdownTimer += delta;
-        if (resumeCountdownTimer >= -1) {
-            if (resumeCountdownTimer < -0.66f) {
-                gl.setText(countdownFont, "3");
-                countdownFont.draw(game.batch, "3", (SCREEN_WIDTH - gl.width) / 2, SCREEN_HEIGHT / 2f + gl.height);
+        if (!gameInterface.isReplayScreenOpen && !gameInterface.isPauseScreenOpen) {
+            resumeCountdownTimer += delta;
+            if (resumeCountdownTimer >= -1) {
+                if (resumeCountdownTimer < -0.66f) {
+                    gl.setText(countdownFont, "3");
+                    countdownFont.draw(game.batch, "3", (SCREEN_WIDTH - gl.width) / 2, SCREEN_HEIGHT / 2f + gl.height);
 
-            } else if (resumeCountdownTimer <= -0.33) {
-                gl.setText(countdownFont, "2", Color.WHITE, SCREEN_WIDTH, Align.center, true);
-                countdownFont.draw(game.batch, "2", (SCREEN_WIDTH - gl.width) / 2, SCREEN_HEIGHT / 2f + gl.height);
+                } else if (resumeCountdownTimer <= -0.33) {
+                    gl.setText(countdownFont, "2", Color.WHITE, SCREEN_WIDTH, Align.center, true);
+                    countdownFont.draw(game.batch, "2", (SCREEN_WIDTH - gl.width) / 2, SCREEN_HEIGHT / 2f + gl.height);
 
-            } else if (resumeCountdownTimer < 0) {
-                gl.setText(countdownFont, "1", Color.WHITE, SCREEN_WIDTH, Align.center, true);
-                countdownFont.draw(game.batch, "1", (SCREEN_WIDTH - gl.width) / 2, SCREEN_HEIGHT / 2f + gl.height);
-
-            } else {
-                if (resumeCountdownTimer < 0.25f) {
-                    gl.setText(countdownFont, "GO", Color.WHITE, SCREEN_WIDTH, Align.center, true);
-                    countdownFont.draw(game.batch, "GO", (SCREEN_WIDTH - gl.width) / 2, SCREEN_HEIGHT / 2f + gl.height);
+                } else if (resumeCountdownTimer < 0) {
+                    gl.setText(countdownFont, "1", Color.WHITE, SCREEN_WIDTH, Align.center, true);
+                    countdownFont.draw(game.batch, "1", (SCREEN_WIDTH - gl.width) / 2, SCREEN_HEIGHT / 2f + gl.height);
 
                 } else {
-                    runResumeCountdown = false;
-                    resumeCountdownTimer = -1.5f;
+                    if (resumeCountdownTimer < 0.25f) {
+                        gl.setText(countdownFont, "GO", Color.WHITE, SCREEN_WIDTH, Align.center, true);
+                        countdownFont.draw(game.batch, "GO", (SCREEN_WIDTH - gl.width) / 2, SCREEN_HEIGHT / 2f + gl.height);
+
+                    } else {
+                        runResumeCountdown = false;
+                        resumeCountdownTimer = -1.5f;
+                    }
                 }
             }
         }
@@ -1052,7 +1045,7 @@ public class MainGame extends GameElements implements Screen {
 
     public void resetInputProcessorTaps() {
         gemSkipTapCount = 0;
-        continueScreenTapCount = 0;
+        tapToContinueScreenTapCount = 0;
     }
 
     public void transitionIn() {
@@ -1068,7 +1061,7 @@ public class MainGame extends GameElements implements Screen {
             transitionInTapVal = inputProcessor.getTapCount();
         }
 
-        if (fadeInOpacity < 1) {
+        if (fadeInOpacity < 1 && !gameInterface.isReplayScreenOpen && !gameInterface.isPauseScreenOpen) {
             if (transitionDistTraveled <= totalTransitionDist / 3) {
                 gl.setText(countdownFont, "3", Color.WHITE, SCREEN_WIDTH, Align.center, true);
                 countdownFont.draw(game.batch, "3", (SCREEN_WIDTH - gl.width) / 2, SCREEN_HEIGHT / 2f + gl.height / 2);
@@ -1096,20 +1089,57 @@ public class MainGame extends GameElements implements Screen {
 
     public void transitionOut(float SHIP_X_TRANSITION_OUT) {
         mainMusic.stop();
+        resetHourglassMultiplier();
 
         if (SHIP_START_Y >= -3 * SHIP_HEIGHT) {
             isTransitionedOut = false;
             isTransitioningOut = true;
         }
-        if (!isTransitionedOut) {
+        if (!isTransitionedOut && !gameInterface.isContinueScreenOpen()) {
             SHIP_START_Y -= 1.6 * SHIP_Y * deltaP;
-
         }
 
         shipAnim.drawAnim(shipAnimation, stateTime, SHIP_X_TRANSITION_OUT, SHIP_START_Y, SHIP_WIDTH, SHIP_HEIGHT, true, game.batch, true);
 
         if (SHIP_START_Y <= -3 * SHIP_HEIGHT) {
-            isTransitionedOut = true;
+            if (!isTransitionedOut) {
+                gameInterface.drawContinueScreen(game, confirmScreenFont);
+            }
+            if (gameInterface.isContinueScreenOpen() && gameInterface.checkForNoButtonTap(soundEnabled)) {
+                gameInterface.setContinueScreenOpen(false);
+                isTransitionedOut = true;
+
+                if (finalScore == 0) {
+                    finalScore = score;
+                }
+                isResettingScreen = true;
+                finalGemCount = gemCount;
+                if (score >= 100) {
+                    finalGemCount = gemCount + (score / 100);
+                }
+                if (!gemCountUpdated) {
+                    prefs.setGemCount(prefs.getGemCount() + finalGemCount);
+                    finalGemCountTemp = finalGemCount;
+                    gemCountUpdated = true;
+                }
+
+            } else if (gameInterface.isContinueScreenOpen() && gameInterface.checkForYesButtonTap()) {
+                gameInterface.setContinueScreenOpen(false);
+
+                if (Gdx.app.getType() == Application.ApplicationType.Android) {
+                    game.requestHandlerAndroid.showAd(true, soundEnabled, prefs, gemSound);
+                } else if (Gdx.app.getType() == Application.ApplicationType.iOS) {
+                    game.requestHandlerIOS.showAd(true, soundEnabled, prefs, gemSound);
+
+                }
+                isPaused = true;
+                resetPlayer(1);
+                resetPools();
+                resetMainLists();
+                resetBulletTimers();
+                resetItems();
+                resetMusicAndSoundPitches();
+            }
         }
         if (prefs.getHighScore() < score) {
             prefs.setHighScore(score);
@@ -1155,9 +1185,8 @@ public class MainGame extends GameElements implements Screen {
             gl.setText(Main.scoreFont, String.valueOf(score));
 
 
-            Main.scoreFont.draw(game.batch, gl, SCORE_X, TOP_ELEM_Y + gl.height - (int)(0.6f * Gdx.graphics.getSafeInsetTop()));
-            gemCountFont.draw(game.batch, " x " + gemCount, GEM_COUNT_X, GEM_COUNT_Y - (int)(0.6f * Gdx.graphics.getSafeInsetTop()));
-
+            Main.scoreFont.draw(game.batch, gl, SCORE_X, TOP_ELEM_Y + gl.height - (int) (0.6f * Gdx.graphics.getSafeInsetTop()));
+            gemCountFont.draw(game.batch, " x " + gemCount, GEM_COUNT_X, GEM_COUNT_Y - (int) (0.6f * Gdx.graphics.getSafeInsetTop()));
 
 
             updatingScore = false;
@@ -1211,7 +1240,7 @@ public class MainGame extends GameElements implements Screen {
                     }
                 }
             }
-            if (!isShipLeaving && SHIP_START_Y >= SHIP_Y && isAlive) {
+            if (!isShipLeaving && SHIP_START_Y >= SHIP_Y && isAlive && !gameInterface.isContinueScreenOpen()) {
                 addBullets();
             }
             if (bullets.isEmpty() && !isMissile && !isRapidFire) { // allows bullets to fire immediately after transitioning in
@@ -1358,22 +1387,17 @@ public class MainGame extends GameElements implements Screen {
                     eyebatSpawnTimer = random.nextFloat() * (2f * maxEyebatSpawnTime - 2f * minEyebatSpawnTime) + 2f * minEyebatSpawnTime;
 
                 }
-            }
-            else{
+            } else {
                 randomEnemy = random.nextInt(5);
-                if(randomEnemy == 0){
+                if (randomEnemy == 0) {
                     enemy.create(EYEBAT_ID, BLUE_ID, 1, randomSpawnLocation, BLUE_EYEBAT_WIDTH, BLUE_EYEBAT_HEIGHT, 0.3f + speedIncrease / 1.5f, .3f + speedIncrease / 1.5f, (float) (DEFAULT_FRAME_DURATION * (1.25 - speedIncrease / 3)), false, hurtTimer);
-                }
-                else if(randomEnemy == 1){
+                } else if (randomEnemy == 1) {
                     enemy.create(EYEBAT_ID, GREEN_ID, 2, randomSpawnLocation, GREEN_EYEBAT_WIDTH, GREEN_EYEBAT_HEIGHT, 0.65f + speedIncrease / 1.5f, .25f + speedIncrease / 1.5f, (float) (DEFAULT_FRAME_DURATION * (1.5 - speedIncrease / 3)), false, hurtTimer);
-                }
-                else if(randomEnemy == 2){
+                } else if (randomEnemy == 2) {
                     enemy.create(EYEBAT_ID, RED_ID, 2, randomSpawnLocation, RED_EYEBAT_WIDTH, RED_EYEBAT_HEIGHT, 0.60f + speedIncrease / 1.5f, .2f + speedIncrease / 1.5f, (float) (DEFAULT_FRAME_DURATION * (1.5 - speedIncrease / 3)), false, hurtTimer);
-                }
-                else if(randomEnemy == 3){
+                } else if (randomEnemy == 3) {
                     enemy.create(EYEBAT_ID, PURPLE_ID, 3, randomSpawnLocation, PURPLE_EYEBAT_WIDTH, PURPLE_EYEBAT_HEIGHT, 0.45f + speedIncrease / 1.75f, 0.20f + speedIncrease / 1.75f, (float) (DEFAULT_FRAME_DURATION * (1.75 - speedIncrease / 2)), false, hurtTimer);
-                }
-                else{
+                } else {
                     enemy.create(EYEBAT_ID, WHITE_ID, 4, randomSpawnLocation, WHITE_EYEBAT_WIDTH, WHITE_EYEBAT_HEIGHT, 0.25f + speedIncrease / 1.75f, 0.15f + speedIncrease / 1.75f, (float) (DEFAULT_FRAME_DURATION * (2.0 - speedIncrease / 2)), false, hurtTimer);
                 }
                 eyebatSpawnTimer = random.nextFloat() * (1.6f * maxEyebatSpawnTime - 1.6f * minEyebatSpawnTime) + 1.6f * minEyebatSpawnTime;
@@ -1407,7 +1431,7 @@ public class MainGame extends GameElements implements Screen {
             if (enemyShipCount < 2) {
                 Enemy enemy = ep.obtain();
 
-                if(score < 5000) {
+                if (score < 5000) {
 
                     if (score <= 1000) {
                         enemy.create(ENEMY_SHIP_ID, BLUE_ID, 2, random.nextInt((SCREEN_WIDTH - (int) ENEMY_SHIP_WIDTH)), ENEMY_SHIP_WIDTH, ENEMY_SHIP_HEIGHT,
@@ -1439,31 +1463,26 @@ public class MainGame extends GameElements implements Screen {
                                 false, hurtTimer, position, whiteShipBulletSpeed);
                         enemyShipSpawnTimer = random.nextFloat() * (1.5f * maxEnemyShipSpawnTime - 1.5f * minEnemyShipSpawnTime) + 1.5f * minEnemyShipSpawnTime;
                     }
-                }
-                 else{
+                } else {
 
                     randomEnemy = random.nextInt(5);
-                    if(randomEnemy == 0){
+                    if (randomEnemy == 0) {
                         enemy.create(ENEMY_SHIP_ID, BLUE_ID, 2, random.nextInt((SCREEN_WIDTH - (int) ENEMY_SHIP_WIDTH)), ENEMY_SHIP_WIDTH, ENEMY_SHIP_HEIGHT,
                                 1.3f + speedIncrease, 1.05f + speedIncrease, DEFAULT_FRAME_DURATION * 1.5f, enemyBulletDelay, blueShipBulletThreshold,
                                 false, hurtTimer, position, blueShipBulletSpeed);
-                    }
-                    else if(randomEnemy == 1){
+                    } else if (randomEnemy == 1) {
                         enemy.create(ENEMY_SHIP_ID, GREEN_ID, 3, random.nextInt((SCREEN_WIDTH - (int) ENEMY_SHIP_WIDTH)), ENEMY_SHIP_WIDTH, ENEMY_SHIP_HEIGHT,
                                 1.2f + speedIncrease, 1f + speedIncrease, DEFAULT_FRAME_DURATION * 1.5f, enemyBulletDelay, greenShipBulletThreshold,
                                 false, hurtTimer, position, greenShipBulletSpeed);
-                   }
-                    else if(randomEnemy == 2){
+                    } else if (randomEnemy == 2) {
                         enemy.create(ENEMY_SHIP_ID, RED_ID, 3, random.nextInt((SCREEN_WIDTH - (int) ENEMY_SHIP_WIDTH)), ENEMY_SHIP_WIDTH, ENEMY_SHIP_HEIGHT,
                                 1f + speedIncrease, 0.95f + speedIncrease, DEFAULT_FRAME_DURATION * 1.5f, enemyBulletDelay, redShipBulletThreshold,
                                 false, hurtTimer, position, redShipBulletSpeed);
-                   }
-                    else if(randomEnemy == 3){
+                    } else if (randomEnemy == 3) {
                         enemy.create(ENEMY_SHIP_ID, PURPLE_ID, 4, random.nextInt((SCREEN_WIDTH - (int) ENEMY_SHIP_WIDTH)), ENEMY_SHIP_WIDTH, ENEMY_SHIP_HEIGHT,
                                 0.9f + speedIncrease, 0.85f + speedIncrease, DEFAULT_FRAME_DURATION * 1.5f, enemyBulletDelay, purpleShipBulletThreshold,
                                 false, hurtTimer, position, purpleShipBulletSpeed);
-                   }
-                    else{
+                    } else {
                         enemy.create(ENEMY_SHIP_ID, WHITE_ID, 4, random.nextInt((SCREEN_WIDTH - (int) ENEMY_SHIP_WIDTH)), ENEMY_SHIP_WIDTH, ENEMY_SHIP_HEIGHT,
                                 0.8f + speedIncrease, 0.75f + speedIncrease, DEFAULT_FRAME_DURATION * 1.5f, enemyBulletDelay, whiteShipBulletThreshold,
                                 false, hurtTimer, position, whiteShipBulletSpeed);
@@ -1527,19 +1546,13 @@ public class MainGame extends GameElements implements Screen {
         if (score > 1000 && score < 2000 && maxGemSpawnTime != MAX_GEM_SPAWN_TIME - 3f) {
             maxGemSpawnTime -= 3f;
             minGemSpawnTime -= 2f;
-        }
-
-        else if (score >= 2000 && score < 3000 && maxGemSpawnTime != MAX_GEM_SPAWN_TIME - 6f) {
+        } else if (score >= 2000 && score < 3000 && maxGemSpawnTime != MAX_GEM_SPAWN_TIME - 6f) {
             maxGemSpawnTime -= 3f;
             minGemSpawnTime -= 2f;
-        }
-
-        else if (score >= 3000 && score < 4000 && maxGemSpawnTime != MAX_GEM_SPAWN_TIME - 9f) {
+        } else if (score >= 3000 && score < 4000 && maxGemSpawnTime != MAX_GEM_SPAWN_TIME - 9f) {
             maxGemSpawnTime -= 3f;
             minGemSpawnTime -= 2f;
-        }
-
-        else if (score >= 4000 && maxGemSpawnTime != MAX_GEM_SPAWN_TIME - 12f) {
+        } else if (score >= 4000 && maxGemSpawnTime != MAX_GEM_SPAWN_TIME - 12f) {
             maxGemSpawnTime -= 3f;
             minGemSpawnTime -= 2f;
         }
@@ -1637,11 +1650,11 @@ public class MainGame extends GameElements implements Screen {
                 enemy.HP = 0;
             }
             if (bombUsed) {
-                if(enemy.getEnemyY() < SCREEN_HEIGHT) {
+                if (enemy.getEnemyY() < SCREEN_HEIGHT) {
                     addPointsOnEnemyDeath(enemy);
                     pointsEarned = true;
                 }
-                if(!enemiesToRemove.contains(enemy, true)) {
+                if (!enemiesToRemove.contains(enemy, true)) {
                     enemiesToRemove.add(enemy);
                 }
             }
@@ -1944,7 +1957,7 @@ public class MainGame extends GameElements implements Screen {
     public void addPowerUpTimer(float totalTimerLength) {
         if (powerUpTimers.isEmpty()) {
             powerUpTimer = new PowerupTimer();
-            powerUpTimer.create(POWERUP_TIMER_X, POWERUP_TIMER_Y - (int)(0.6f * Gdx.graphics.getSafeInsetTop()), POWERUP_TIMER_HEIGHT, totalTimerLength);
+            powerUpTimer.create(POWERUP_TIMER_X, POWERUP_TIMER_Y - (int) (0.6f * Gdx.graphics.getSafeInsetTop()), POWERUP_TIMER_HEIGHT, totalTimerLength);
 
 
             powerUpTimers.add(powerUpTimer);

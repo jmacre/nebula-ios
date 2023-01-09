@@ -61,7 +61,7 @@ public class AndroidLauncher extends AndroidApplication implements IActivityRequ
 		View gameView = initializeForView(game, config);
 
 		adRequest = new AdRequest.Builder().build();
-		RewardedAd.load(this, "ca-app-pub-3940256099942544/5224354917",
+		RewardedAd.load(this, "ca-app-pub-8689816410492919/3317793905",
 				adRequest, new RewardedAdLoadCallback() {
 					@Override
 					public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
@@ -98,11 +98,11 @@ public class AndroidLauncher extends AndroidApplication implements IActivityRequ
 	}
 
 	@Override
-	public void showAd(boolean soundEnabled, Prefs prefs, MASound gemSound) {
+	public void showAd(boolean inGame, boolean soundEnabled, Prefs prefs, MASound gemSound) {
 		runOnUiThread(new Runnable() {
 			@Override
 			public void run() {
-				showRewardedVideo(soundEnabled, prefs, gemSound);
+				showRewardedVideo(inGame, soundEnabled, prefs, gemSound);
 			}
 		});
 
@@ -110,7 +110,7 @@ public class AndroidLauncher extends AndroidApplication implements IActivityRequ
 
 	private void loadAd(){
         if (mRewardedAd == null) {
-            RewardedAd.load(this, "ca-app-pub-3940256099942544/5224354917",
+            RewardedAd.load(this, "ca-app-pub-8689816410492919/3317793905",
                     adRequest, new RewardedAdLoadCallback() {
                         @Override
                         public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
@@ -126,7 +126,7 @@ public class AndroidLauncher extends AndroidApplication implements IActivityRequ
         }
 	}
 
-	private void showRewardedVideo(boolean soundEnabled, Prefs prefs, MASound gemSound) {
+	private void showRewardedVideo(boolean inGame, boolean soundEnabled, Prefs prefs, MASound gemSound) {
 		if(mRewardedAd == null){
 			loadAd();
 		}
@@ -158,14 +158,18 @@ public class AndroidLauncher extends AndroidApplication implements IActivityRequ
 					new OnUserEarnedRewardListener() {
 						@Override
 						public void onUserEarnedReward(@NonNull RewardItem rewardItem) {
-							int gemCount = prefs.getGemCount();
-							int reward = 25;
-							prefs.setGemCount(gemCount + reward);
+							if (!inGame) {
+								mRewardedAd = null;
+								loadAd();
+								int gemCount = prefs.getGemCount();
+								int reward = 25;
+								prefs.setGemCount(gemCount + reward);
 
 
-							if (soundEnabled) {
-								gemSound.stop();
-								gemSound.play();
+								if (soundEnabled) {
+									gemSound.stop();
+									gemSound.play();
+								}
 							}
 
 						}

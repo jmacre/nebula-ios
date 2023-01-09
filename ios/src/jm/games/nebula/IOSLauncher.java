@@ -54,7 +54,7 @@ public class IOSLauncher extends IOSApplication.Delegate implements IActivityReq
     }
 
     @Override
-    public void showAd(boolean soundEnabled, Prefs prefs, MASound gemSound) {
+    public void showAd(boolean inGame, boolean soundEnabled, Prefs prefs, MASound gemSound) {
         if(mRewardedAd == null) {
             loadAd();
         }
@@ -62,20 +62,20 @@ public class IOSLauncher extends IOSApplication.Delegate implements IActivityReq
             mRewardedAd.setFullScreenContentDelegate(new GADFullScreenContentDelegateAdapter() {
                 @Override
                 public void adDidDismissFullScreenContent(GADFullScreenPresentingAd ad) {
-                    mRewardedAd = null;
-                    loadAd();
-                    int gemCount = prefs.getGemCount();
-                    int reward = 25;
-                    prefs.setGemCount(gemCount + reward);
+                    if (!inGame) {
+                        mRewardedAd = null;
+                        loadAd();
+                        int gemCount = prefs.getGemCount();
+                        int reward = 25;
+                        prefs.setGemCount(gemCount + reward);
 
 
-                    if (soundEnabled) {
-                        gemSound.stop();
-                        gemSound.play();
+                        if (soundEnabled) {
+                            gemSound.stop();
+                            gemSound.play();
+                        }
                     }
-                    System.out.println("adDidDismissFullScreenContent");
                 }
-
                 @Override
                 public void didFailToPresentFullScreenContent(GADFullScreenPresentingAd ad, NSError error) {
                     mRewardedAd = null;
@@ -92,7 +92,7 @@ public class IOSLauncher extends IOSApplication.Delegate implements IActivityReq
 
     public void loadAd() {
         if (mRewardedAd == null) {
-            GADRewardedAd.load("ca-app-pub-3940256099942544/5224354917", request,
+            GADRewardedAd.load("ca-app-pub-8689816410492919/2589576727", request,
                     new VoidBlock2<GADRewardedAd, NSError>() {
                 @Override
                 public void invoke(GADRewardedAd ad, NSError error) {

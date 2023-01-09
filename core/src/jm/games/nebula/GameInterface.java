@@ -57,6 +57,7 @@ public class GameInterface extends GameElements {
     Sprite heartMissing1, heartMissing2, heartMissing3, gemIcon, pauseMenuBack, shopBack;
     GlyphLayout gl;
     Boolean confirmLeaveScreenOpen = false;
+    Boolean continueScreenOpen = false;
 
     int totalGemsEarned;
 
@@ -72,6 +73,8 @@ public class GameInterface extends GameElements {
 
     boolean isRecapScreenOpen = true;
     boolean isReplayScreenOpen = false;
+    boolean isPauseScreenOpen = false;
+
 
     float scoreY;
     float gemIconY;
@@ -323,11 +326,18 @@ public class GameInterface extends GameElements {
                 }
             }
         }
-        return soundButton.getReleased();
+        if(soundButton.getReleased()){
+            if(!soundEnabled){
+                pauseSound.play();
+            }
+            return true;
+        }
+        return false;
     }
 
 
     public boolean checkForReplayButtonTap() {
+
         if (!isConfirmLeaveScreenOpen()) {
             if (replayButton.getTappedBefore()) {
                 replayButton.setTexture(assets.assetManager.get(Assets.replay_button_active, Texture.class));
@@ -337,19 +347,30 @@ public class GameInterface extends GameElements {
         }
         if(replayButton.getReleased()){
             replayButton.setTexture(assets.assetManager.get(Assets.replay_button_inactive, Texture.class));
+            isPauseScreenOpen = false;
+
             return true;
         }
         return false;
     }
 
-    public boolean checkForPlayButtonTap() {
+    public boolean checkForPlayButtonTap(boolean soundEnabled) {
         if (playButton.getTappedBefore()) {
             playButton.setTexture(assets.assetManager.get(Assets.play_button_active, Texture.class));
 
         } else {
             playButton.setTexture(assets.assetManager.get(Assets.play_button_inactive, Texture.class));
         }
-        return playButton.getReleased();
+        if(playButton.getReleased()){
+            isPauseScreenOpen = false;
+
+            if (soundEnabled) {
+                playSound.play();
+
+            }
+            return true;
+        }
+        return false;
     }
 
     public boolean checkForPauseButtonTap() {
@@ -394,22 +415,23 @@ public class GameInterface extends GameElements {
         return yesButton.getReleased();
     }
 
-    public void checkForNoButtonTap(boolean soundEnabled) {
+    public boolean checkForNoButtonTap(boolean soundEnabled) {
         if (noButton.getTappedBefore()) {
             noButton.setTexture(assets.assetManager.get(Assets.no_button_active, Texture.class));
         } else {
             noButton.setTexture(assets.assetManager.get(Assets.no_button_inactive, Texture.class));
         }
         if (noButton.getReleased()) {
-            setConfirmLeaveScreenOpen(false);
             if (soundEnabled) {
                 pauseSound.stop();
                 pauseSound.play();
             }
+            return true;
         }
+        return false;
     }
 
-    public boolean checkForHomeButtonTap() {
+    public boolean checkForHomeButtonTap(boolean soundEnabled) {
         if (!isConfirmLeaveScreenOpen()) {
             if (homeButton.getTappedBefore()) {
                 homeButton.setTexture(assets.assetManager.get(Assets.home_button_active, Texture.class));
@@ -417,7 +439,13 @@ public class GameInterface extends GameElements {
                 homeButton.setTexture(assets.assetManager.get(Assets.home_button_inactive, Texture.class));
             }
         }
-        return homeButton.getReleased();
+        if(homeButton.getReleased()){
+            if (soundEnabled) {
+                pauseSound.play();
+            }
+            return true;
+        }
+        return false;
     }
 
     public void checkForLeftArrowBtnTap(boolean soundEnabled, boolean isShopOpen, boolean isGemScreenOpen) {
@@ -529,9 +557,9 @@ public class GameInterface extends GameElements {
         }
         if (selectButton.getReleased()) {
             if (Gdx.app.getType() == Application.ApplicationType.Android) {
-                game.requestHandlerAndroid.showAd(soundEnabled, prefs, gemSound);
+                game.requestHandlerAndroid.showAd(false, soundEnabled, prefs, gemSound);
             } else if (Gdx.app.getType() == Application.ApplicationType.iOS) {
-                game.requestHandlerIOS.showAd(soundEnabled, prefs, gemSound);
+                game.requestHandlerIOS.showAd(false, soundEnabled, prefs, gemSound);
 
             }
         }
@@ -562,6 +590,18 @@ public class GameInterface extends GameElements {
                 }
             }
         }
+    }
+
+    public void drawContinueScreen(Main game, BitmapFont confirmScreenFont){
+        setContinueScreenOpen(true);
+
+        game.batch.draw(pauseMenuBack, MENU_BACK_X, MENU_BACK_Y, MENU_BACK_WIDTH, MENU_BACK_HEIGHT);
+        game.batch.draw(yesButton.getTexture(), YES_BUTTON_X, YES_BUTTON_Y, YES_BUTTON_WIDTH, YES_BUTTON_HEIGHT);
+        game.batch.draw(noButton.getTexture(), NO_BUTTON_X, NO_BUTTON_Y, NO_BUTTON_WIDTH, NO_BUTTON_HEIGHT);
+
+        gl.setText(confirmScreenFont, "WATCH AN AD \n\nTO CONTINUE?", Color.valueOf(PURPLE_COLOR_HEX), SCREEN_WIDTH, Align.center, true);
+        confirmScreenFont.draw(game.batch, "WATCH AN AD \n\nTO CONTINUE?", SCREEN_WIDTH/2 - (gl.width/2), CONFIRM_LEAVE_FONT_Y);
+
     }
 
     public void drawGemScreen(Main game, float delta, boolean soundEnabled, SpriteBatch batch, Prefs prefs) {
@@ -664,6 +704,7 @@ public class GameInterface extends GameElements {
     }
 
     public void drawPauseScreen(Main game, BitmapFont scoreFont, BitmapFont gemCountFont, Prefs prefs) {
+        isPauseScreenOpen = true;
         game.batch.draw(pauseMenuBack, MENU_BACK_X, MENU_BACK_Y, MENU_BACK_WIDTH, MENU_BACK_HEIGHT);
 
             game.batch.draw(soundButton.getTexture(), SOUND_BUTTON_X, SOUND_BUTTON_Y, SOUND_BUTTON_WIDTH, SOUND_BUTTON_HEIGHT);
@@ -694,6 +735,14 @@ public class GameInterface extends GameElements {
 
     public boolean isConfirmLeaveScreenOpen() {
         return confirmLeaveScreenOpen;
+    }
+
+    public void setContinueScreenOpen(boolean isOpen) {
+        continueScreenOpen = isOpen;
+    }
+
+    public boolean isContinueScreenOpen() {
+        return continueScreenOpen;
     }
 
     public void drawReplayScreen(Main game, BitmapFont scoreFont, BitmapFont gameOverFont, BitmapFont gemCountFont, boolean newHighScore,
