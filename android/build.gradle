@@ -20,7 +20,7 @@ android {
         applicationId "jm.games.nebula"
         minSdkVersion 19
         targetSdkVersion 33
-        versionCode 9
+        versionCode 10
         versionName "1.0"
         multiDexEnabled true
     }
