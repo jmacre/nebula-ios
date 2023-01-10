@@ -21,7 +21,7 @@ import games.rednblack.miniaudio.MASound;
 
 public class IOSLauncher extends IOSApplication.Delegate implements IActivityRequestHandler {
     IOSApplication iosApplication;
-    NSString testDeviceIdentifier = new NSString("3a0d2176136021f929cbce463722776b");
+    NSString testDeviceIdentifier = new NSString("96b13088c743a128f6548fdf77e26c58");
     private GADRewardedAd mRewardedAd;
     private boolean adFinished;
     GADRequest request = new GADRequest();
@@ -56,10 +56,7 @@ public class IOSLauncher extends IOSApplication.Delegate implements IActivityReq
 
     @Override
     public void showAd(boolean inGame, boolean soundEnabled, Prefs prefs, MASound gemSound) {
-        if(mRewardedAd == null) {
-            loadAd();
-        }
-        else{
+        if(mRewardedAd != null){
             mRewardedAd.setFullScreenContentDelegate(new GADFullScreenContentDelegateAdapter() {
                 @Override
                 public void adDidDismissFullScreenContent(GADFullScreenPresentingAd ad) {
@@ -77,11 +74,11 @@ public class IOSLauncher extends IOSApplication.Delegate implements IActivityReq
                     }
                     adFinished = true;
                     mRewardedAd = null;
-                    loadAd();
                 }
                 @Override
                 public void didFailToPresentFullScreenContent(GADFullScreenPresentingAd ad, NSError error) {
                     mRewardedAd = null;
+                    adFinished = true;
                 }
             });
             mRewardedAd.present(iosApplication.getUIViewController(), new Runnable() {
@@ -108,6 +105,7 @@ public class IOSLauncher extends IOSApplication.Delegate implements IActivityReq
         this.adFinished = adFinished;
     }
 
+    @Override
     public void loadAd() {
 
         if (mRewardedAd == null) {

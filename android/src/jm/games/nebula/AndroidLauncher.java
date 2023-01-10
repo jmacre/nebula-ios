@@ -32,105 +32,91 @@ import java.util.List;
 import games.rednblack.miniaudio.MASound;
 
 public class AndroidLauncher extends AndroidApplication implements IActivityRequestHandler {
-	AdRequest adRequest;
-	private RewardedAd mRewardedAd;
-	private boolean adFinished = false;
+    AdRequest adRequest;
+    private RewardedAd mRewardedAd;
+    private boolean adFinished = false;
 
 
-	@Override
-	protected void onCreate (Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		MobileAds.initialize(this);
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        MobileAds.initialize(this);
 
-		List<String> testDeviceIds = Arrays.asList("21D5A8FE5E36C5B87CE8DB9820C8BD88");
-		RequestConfiguration configuration =
-				new RequestConfiguration.Builder().setTestDeviceIds(testDeviceIds).build();
-		MobileAds.setRequestConfiguration(configuration);
+        List<String> testDeviceIds = Arrays.asList("21D5A8FE5E36C5B87CE8DB9820C8BD88");
+        RequestConfiguration configuration =
+                new RequestConfiguration.Builder().setTestDeviceIds(testDeviceIds).build();
+        MobileAds.setRequestConfiguration(configuration);
 
-		RelativeLayout layout = new RelativeLayout(this);
+        RelativeLayout layout = new RelativeLayout(this);
 
-		requestWindowFeature(Window.FEATURE_NO_TITLE);
-		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
-		getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
 
-		AndroidApplicationConfiguration config = new AndroidApplicationConfiguration();
-		config.useImmersiveMode = true;
+        AndroidApplicationConfiguration config = new AndroidApplicationConfiguration();
+        config.useImmersiveMode = true;
 
-		Main game = new Main(getContext().getAssets(), this);
-		game.purchaseManager = new PurchaseManagerGoogleBilling(this);
+        Main game = new Main(getContext().getAssets(), this);
+        game.purchaseManager = new PurchaseManagerGoogleBilling(this);
 
-		View gameView = initializeForView(game, config);
+        View gameView = initializeForView(game, config);
 
-		adRequest = new AdRequest.Builder().build();
-		RewardedAd.load(this, "ca-app-pub-8689816410492919/3317793905",
-				adRequest, new RewardedAdLoadCallback() {
-					@Override
-					public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
-						// Handle the error.
-						mRewardedAd = null;
-					}
-
-					@Override
-					public void onAdLoaded(@NonNull RewardedAd rewardedAd) {
-						mRewardedAd = rewardedAd;
-					}
-				});
-
-
+        adRequest = new AdRequest.Builder().build();
+        loadAd();
 
 
 //		adView.loadAd(adRequest);
 
-		// Add the libGDX view
-		layout.addView(gameView);
+        // Add the libGDX view
+        layout.addView(gameView);
 
-		// Add the AdMob view
-		RelativeLayout.LayoutParams adParams =
-				new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,
-						RelativeLayout.LayoutParams.WRAP_CONTENT);
-		adParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
-		adParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+        // Add the AdMob view
+        RelativeLayout.LayoutParams adParams =
+                new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,
+                        RelativeLayout.LayoutParams.WRAP_CONTENT);
+        adParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
+        adParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
 
 //		layout.addView(adView, adParams);
 
-		// Hook it all up
-		setContentView(layout);
+        // Hook it all up
+        setContentView(layout);
 
-	}
+    }
 
-	@Override
-	public void showAd(boolean inGame, boolean soundEnabled, Prefs prefs, MASound gemSound) {
-		runOnUiThread(new Runnable() {
-			@Override
-			public void run() {
-				showRewardedVideo(inGame, soundEnabled, prefs, gemSound);
-			}
-		});
+    @Override
+    public void showAd(boolean inGame, boolean soundEnabled, Prefs prefs, MASound gemSound) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                showRewardedVideo(inGame, soundEnabled, prefs, gemSound);
+            }
+        });
 
-	}
+    }
 
-	@Override
-	public boolean isAdLoaded() {
-		return mRewardedAd != null;
-	}
+    @Override
+    public boolean isAdLoaded() {
+        return mRewardedAd != null;
+    }
 
-	@Override
-	public boolean isAdFinished() {
-		return adFinished;
-	}
+    @Override
+    public boolean isAdFinished() {
+        return adFinished;
+    }
 
-	@Override
-	public void setAdFinished(boolean adFinished) {
-		this.adFinished = adFinished;
-	}
+    @Override
+    public void setAdFinished(boolean adFinished) {
+        this.adFinished = adFinished;
+    }
 
-	private void loadAd(){
+    @Override
+    public void loadAd() {
         if (mRewardedAd == null) {
             RewardedAd.load(this, "ca-app-pub-8689816410492919/3317793905",
                     adRequest, new RewardedAdLoadCallback() {
                         @Override
                         public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
-                            // Handle the error.
                             mRewardedAd = null;
                         }
 
@@ -140,56 +126,52 @@ public class AndroidLauncher extends AndroidApplication implements IActivityRequ
                         }
                     });
         }
-	}
+    }
 
-	private void showRewardedVideo(boolean inGame, boolean soundEnabled, Prefs prefs, MASound gemSound) {
-		if(mRewardedAd == null){
-			loadAd();
-		}
-		else {
-			mRewardedAd.setFullScreenContentCallback(
-					new FullScreenContentCallback() {
-						@Override
-						public void onAdShowedFullScreenContent() {
-						}
+    private void showRewardedVideo(boolean inGame, boolean soundEnabled, Prefs prefs, MASound gemSound) {
+        if (mRewardedAd != null) {
 
-						@Override
-						public void onAdFailedToShowFullScreenContent(AdError adError) {
-							mRewardedAd = null;
-							Toast.makeText(AndroidLauncher.this, "onAdFailedToShowFullScreenContent", Toast.LENGTH_SHORT)
-									.show();
-						}
+            mRewardedAd.setFullScreenContentCallback(
+                    new FullScreenContentCallback() {
+                        @Override
+                        public void onAdShowedFullScreenContent() {
+                        }
 
-						@Override
-						public void onAdDismissedFullScreenContent() {
-							mRewardedAd = null;
-							loadAd();
+                        @Override
+                        public void onAdFailedToShowFullScreenContent(AdError adError) {
+                            mRewardedAd = null;
+                            adFinished = true;
+                        }
 
-						}
-					});
-			Activity activityContext = AndroidLauncher.this;
-			mRewardedAd.show(
-					activityContext,
-					new OnUserEarnedRewardListener() {
-						@Override
-						public void onUserEarnedReward(@NonNull RewardItem rewardItem) {
-							mRewardedAd = null;
-							loadAd();
-							if (!inGame) {
+                        @Override
+                        public void onAdDismissedFullScreenContent() {
+                            mRewardedAd = null;
+                            adFinished = true;
+                        }
+                    });
+            Activity activityContext = AndroidLauncher.this;
+            mRewardedAd.show(
+                    activityContext,
+                    new OnUserEarnedRewardListener() {
+                        @Override
+                        public void onUserEarnedReward(@NonNull RewardItem rewardItem) {
+                            mRewardedAd = null;
+                            loadAd();
+                            if (!inGame) {
 
-								int gemCount = prefs.getGemCount();
-								int reward = 25;
-								prefs.setGemCount(gemCount + reward);
+                                int gemCount = prefs.getGemCount();
+                                int reward = 25;
+                                prefs.setGemCount(gemCount + reward);
 
 
-								if (soundEnabled) {
-									gemSound.stop();
-									gemSound.play();
-								}
-							}
-							adFinished = true;
-						}
-					});
-		}
-	}
+                                if (soundEnabled) {
+                                    gemSound.stop();
+                                    gemSound.play();
+                                }
+                            }
+                            adFinished = true;
+                        }
+                    });
+        }
+    }
 }

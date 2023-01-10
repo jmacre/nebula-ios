@@ -7,4 +7,5 @@ public interface IActivityRequestHandler {
     public boolean isAdLoaded();
     public boolean isAdFinished();
     public void setAdFinished(boolean adFinished);
+    public void loadAd();
 }

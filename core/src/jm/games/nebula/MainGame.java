@@ -16,6 +16,7 @@ import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.FloatArray;
 
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.GdxRuntimeException;
 
 import java.util.Random;
 
@@ -98,8 +99,7 @@ public class MainGame extends GameElements implements Screen {
     ExplosionPool exp = new ExplosionPool();
     ItemDropPool idp = new ItemDropPool();
 
-    boolean isAdLoaded;
-    boolean isAdFinished;
+    boolean isAdLoaded, isPlayingAd;
 
     Vector2 center;
     FloatArray vertices;
@@ -123,8 +123,6 @@ public class MainGame extends GameElements implements Screen {
     float hourglassTimer = HOURGLASS_TIMER;
 
     float moveSpeed = 27f;
-
-    Boolean hasConnection;
 
     float shipHitTimer = -2f;
     float shipBlinkingTimer = -0.2f;
@@ -577,7 +575,7 @@ public class MainGame extends GameElements implements Screen {
             resetShader();
 
             if (!gameInterface.isReplayScreenOpen && !gameInterface.isConfirmLeaveScreenOpen()) {
-                if (!isAdLoaded) {
+                if (!isPlayingAd) {
                     gameInterface.drawPauseScreen(game, menuScoreFont, gemCountFont, prefs);
                 }
 
@@ -660,8 +658,9 @@ public class MainGame extends GameElements implements Screen {
                         runGemCountUpdateTimer();
                     }
                 }
-                if (!gameInterface.isConfirmLeaveScreenOpen() && !gameInterface.isContinueScreenOpen() && !isAdLoaded) {
+                if (!gameInterface.isConfirmLeaveScreenOpen() && !gameInterface.isContinueScreenOpen() && !isPlayingAd) {
                     gameInterface.drawReplayScreen(game, menuScoreFont, gameOverFont, gemCountFont, newHighscore, replayScreenGemCount, gemsFromScore, gemsCaught, gemCountStarted, finalScore, prefs.getHighScore(), scoreCountStarted, recapStarted, recapComplete, deltaP);
+                    isAdLoaded = false;
                 }
                 if (recapComplete && gameInterface.isRecapScreenOpen) {
                     if (Gdx.input.justTouched() && inputProcessor.getTapCount() != gemSkipTapCount) {
@@ -1070,7 +1069,16 @@ public class MainGame extends GameElements implements Screen {
     }
 
     public void transitionIn() {
-        hasConnection = null;
+        if (!isAdLoaded) {
+            if (Gdx.app.getType() == Application.ApplicationType.Android) {
+                game.requestHandlerAndroid.loadAd();
+                isAdLoaded = true;
+
+            } else if (Gdx.app.getType() == Application.ApplicationType.iOS) {
+                game.requestHandlerIOS.loadAd();
+                isAdLoaded = true;
+            }
+        }
         resetInputProcessorTaps();
         if (!isTransitionedIn) {
             stopSounds();
@@ -1130,43 +1138,23 @@ public class MainGame extends GameElements implements Screen {
         if (SHIP_START_Y <= -3 * SHIP_HEIGHT) {
             SHIP_START_Y = -3 * SHIP_HEIGHT;
 
-            if (!isTransitionedOut) {
-                Net.HttpRequest request = new Net.HttpRequest(Net.HttpMethods.GET);
-                request.setUrl("https://www.google.com/");
 
-                Gdx.net.sendHttpRequest(request, new Net.HttpResponseListener() {
-                    @Override
-                    public void handleHttpResponse(Net.HttpResponse httpResponse) {
-                        if (httpResponse.getResult() != null) {
-                            hasConnection = true;
-                        }
-                    }
+            if (!isPlayingAd && !isTransitionedOut && ((Gdx.app.getType() == Application.ApplicationType.Android && game.requestHandlerAndroid.isAdLoaded()) || (Gdx.app.getType() == Application.ApplicationType.iOS && game.requestHandlerIOS.isAdLoaded()))) {
+                gameInterface.drawContinueScreen(game, confirmScreenFont);
 
-                    @Override
-                    public void failed(Throwable t) {
-                        hasConnection = false;
-                    }
+            } else {
+                gameInterface.setContinueScreenOpen(false);
+                isTransitionedOut = true;
 
-                    @Override
-                    public void cancelled() {
-                        hasConnection = false;
-                    }
-                });
-                if (hasConnection != null && hasConnection && !isAdLoaded) {
-                    gameInterface.drawContinueScreen(game, confirmScreenFont);
-                } else if (hasConnection != null) {
-                    gameInterface.setContinueScreenOpen(false);
-                    isTransitionedOut = true;
-
-                    if (finalScore == 0) {
-                        finalScore = score;
-                    }
+                if (finalScore == 0) {
+                    finalScore = score;
                 }
             }
+
+
             if (gameInterface.isContinueScreenOpen() && gameInterface.checkForNoButtonTap(soundEnabled)) {
                 gameInterface.setContinueScreenOpen(false);
                 isTransitionedOut = true;
-                hasConnection = null;
 
                 if (finalScore == 0) {
                     finalScore = score;
@@ -1185,27 +1173,29 @@ public class MainGame extends GameElements implements Screen {
             } else if (gameInterface.isContinueScreenOpen() && gameInterface.checkForYesButtonTap()) {
                 gameInterface.setContinueScreenOpen(false);
 
-                if (Gdx.app.getType() == Application.ApplicationType.Android) {
-                    isAdLoaded = game.requestHandlerAndroid.isAdLoaded();
+                if (Gdx.app.getType() == Application.ApplicationType.Android && game.requestHandlerAndroid.isAdLoaded() && isAdLoaded) {
                     game.requestHandlerAndroid.showAd(true, soundEnabled, prefs, gemSound);
+                    isPlayingAd = true;
                     deltaList.clear();
-                } else if (Gdx.app.getType() == Application.ApplicationType.iOS) {
-                    isAdLoaded = game.requestHandlerIOS.isAdLoaded();
+                } else if (Gdx.app.getType() == Application.ApplicationType.iOS && game.requestHandlerIOS.isAdLoaded() && isAdLoaded) {
                     game.requestHandlerIOS.showAd(true, soundEnabled, prefs, gemSound);
+                    isPlayingAd = true;
                     deltaList.clear();
                 }
 
-                if (isAdLoaded) {
+                if (isAdLoaded && isPlayingAd) {
                     isPaused = true;
                 }
             }
 
             if (Gdx.app.getType() == Application.ApplicationType.Android) {
                 if (game.requestHandlerAndroid.isAdFinished()) {
+                    isPlayingAd = false;
+                    isAdLoaded = false;
                     isPaused = false;
+
                     gameInterface.setContinueScreenOpen(false);
                     game.requestHandlerAndroid.setAdFinished(false);
-                    isAdLoaded = false;
                     scoreTickerTimer = SCORE_TICKER_TIMER;
                     countDownTimer = 0f;
 
@@ -1218,10 +1208,12 @@ public class MainGame extends GameElements implements Screen {
                 }
             } else if (Gdx.app.getType() == Application.ApplicationType.iOS) {
                 if (game.requestHandlerIOS.isAdFinished()) {
+                    isPlayingAd = false;
+                    isAdLoaded = false;
                     isPaused = false;
+
                     gameInterface.setContinueScreenOpen(false);
                     game.requestHandlerIOS.setAdFinished(false);
-                    isAdLoaded = false;
                     scoreTickerTimer = SCORE_TICKER_TIMER;
                     countDownTimer = 0f;
 
@@ -1326,7 +1318,7 @@ public class MainGame extends GameElements implements Screen {
                             } else {
                                 missileSound.play();
                             }
-                        } else if(!bullets.isEmpty()){
+                        } else if (!bullets.isEmpty()) {
                             if (bulletSound.isPlaying()) {
                                 bulletSound1.play();
                             } else {

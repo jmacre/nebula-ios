@@ -59,6 +59,8 @@ public class GameInterface extends GameElements {
     Boolean confirmLeaveScreenOpen = false;
     Boolean continueScreenOpen = false;
 
+    boolean isAdLoaded = false;
+
     int totalGemsEarned;
 
     float tapToContinueBlinkingTimer = TAP_TO_CONTINUE_BLINKING_TIMER*2;
@@ -393,6 +395,7 @@ public class GameInterface extends GameElements {
         else if (isGemScreenOpen) {
             if (xButton.getTapped()) {
                 isGemScreenOpen = false;
+                isAdLoaded = false;
 
                 if (soundEnabled) {
                     pauseSound.stop();
@@ -466,6 +469,8 @@ public class GameInterface extends GameElements {
                 ship.setElementAnimation(selectedShopElement);
             }
             if (isGemScreenOpen && !isShopOpen) {
+                isAdLoaded = false;
+
                 if (selectedGemScreenElement == 0) {
                     selectedGemScreenElement = GemElement.gemOptionsCount;
                 } else {
@@ -497,7 +502,7 @@ public class GameInterface extends GameElements {
                 ship.setElementAnimation(selectedShopElement);
             }
             if (isGemScreenOpen && !isShopOpen) {
-
+                isAdLoaded = false;
                 if (selectedGemScreenElement == GemElement.gemOptionsCount) {
                     selectedGemScreenElement = 0;
                 } else {
@@ -557,11 +562,22 @@ public class GameInterface extends GameElements {
         }
         if (selectButton.getReleased()) {
             if (Gdx.app.getType() == Application.ApplicationType.Android) {
-                game.requestHandlerAndroid.showAd(false, soundEnabled, prefs, gemSound);
-            } else if (Gdx.app.getType() == Application.ApplicationType.iOS) {
-                game.requestHandlerIOS.showAd(false, soundEnabled, prefs, gemSound);
-
+                game.requestHandlerAndroid.loadAd();
+                isAdLoaded = true;
             }
+            else if (Gdx.app.getType() == Application.ApplicationType.iOS) {
+                game.requestHandlerIOS.loadAd();
+                isAdLoaded = true;
+            }
+        }
+
+        if (Gdx.app.getType() == Application.ApplicationType.Android && game.requestHandlerAndroid.isAdLoaded() && isAdLoaded) {
+            game.requestHandlerAndroid.showAd(false, soundEnabled, prefs, gemSound);
+            isAdLoaded = false;
+        }
+        else if (Gdx.app.getType() == Application.ApplicationType.iOS && game.requestHandlerIOS.isAdLoaded() && isAdLoaded) {
+            game.requestHandlerIOS.showAd(false, soundEnabled, prefs, gemSound);
+            isAdLoaded = false;
         }
     }
 
