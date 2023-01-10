@@ -2,13 +2,10 @@ package jm.games.nebula;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
@@ -112,6 +109,15 @@ public class AndroidLauncher extends AndroidApplication implements IActivityRequ
 
     @Override
     public void loadAd() {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                loadOnUiThread();
+            }
+        });
+
+    }
+    private void loadOnUiThread(){
         if (mRewardedAd == null) {
             RewardedAd.load(this, "ca-app-pub-8689816410492919/3317793905",
                     adRequest, new RewardedAdLoadCallback() {
@@ -156,7 +162,6 @@ public class AndroidLauncher extends AndroidApplication implements IActivityRequ
                         @Override
                         public void onUserEarnedReward(@NonNull RewardItem rewardItem) {
                             mRewardedAd = null;
-                            loadAd();
                             if (!inGame) {
 
                                 int gemCount = prefs.getGemCount();
