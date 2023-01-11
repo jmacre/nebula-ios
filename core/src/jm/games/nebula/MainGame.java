@@ -373,6 +373,16 @@ public class MainGame extends GameElements implements Screen {
 
         ShaderProgram.pedantic = false;
         invertedShader = new ShaderProgram(Gdx.files.internal("shader/invert.vsh"), Gdx.files.internal("shader/invert.fsh"));
+
+        if(Gdx.app.getType() == Application.ApplicationType.Android && !game.requestHandlerAndroid.isAdLoaded()){
+            game.requestHandlerAndroid.setAdFinished(false);
+        }
+        else if(Gdx.app.getType() == Application.ApplicationType.iOS && !game.requestHandlerIOS.isAdLoaded()){
+            game.requestHandlerIOS.setAdFinished(false);
+        }
+        isPlayingAd = false;
+        isAdLoaded = false;
+
     }
 
     @Override
@@ -418,6 +428,7 @@ public class MainGame extends GameElements implements Screen {
             isMainMusicPlaying = false;
         }
         isAlive = health > 0;
+
         if (!isAlive && isTransitionedOut) {
             isResettingScreen = true;
             finalGemCount = gemCount;
@@ -1138,6 +1149,7 @@ public class MainGame extends GameElements implements Screen {
 
         if (SHIP_START_Y <= -3 * SHIP_HEIGHT) {
             SHIP_START_Y = -3 * SHIP_HEIGHT;
+
 
 
             if (!isPlayingAd && !isTransitionedOut && ((Gdx.app.getType() == Application.ApplicationType.Android && game.requestHandlerAndroid.isAdLoaded()) || (Gdx.app.getType() == Application.ApplicationType.iOS && game.requestHandlerIOS.isAdLoaded()))) {
