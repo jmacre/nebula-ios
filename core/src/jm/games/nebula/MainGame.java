@@ -878,6 +878,7 @@ public class MainGame extends GameElements implements Screen {
         CURRENT_SHIP_X = SHIP_X;
         health = hp;
         shipHitTimer = -2f;
+        shipBlinkingTimer = -0.175f;
 
         isAlive = true;
         justHit = false;
@@ -1284,10 +1285,10 @@ public class MainGame extends GameElements implements Screen {
 
         if (shipBlinkingTimer < 0) {
             shipAnim.drawAnim(shipAnimation, stateTime, SHIP_X, SHIP_START_Y, SHIP_WIDTH, SHIP_HEIGHT, true, game.batch, true);
-        } else if (shipBlinkingTimer < 0.2) {
+        } else if (shipBlinkingTimer < 0.175) {
             shipAnim.drawAnim(shipAnimation, stateTime, SHIP_X, SHIP_START_Y, SHIP_WIDTH, SHIP_HEIGHT, true, game.batch);
         } else {
-            shipBlinkingTimer = -0.2f;
+            shipBlinkingTimer = -0.175f;
         }
     }
 
@@ -2255,6 +2256,7 @@ public class MainGame extends GameElements implements Screen {
             justHit = false;
             playerHitSoundPlayed = false;
             shipHitTimer = -2f;
+            shipBlinkingTimer = -0.175f;
         }
     }
 
