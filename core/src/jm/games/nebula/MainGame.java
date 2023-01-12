@@ -1137,6 +1137,10 @@ public class MainGame extends GameElements implements Screen {
         mainMusic.stop();
         resetHourglassMultiplier();
 
+        if (finalScore == 0 || score > finalScore) {
+            finalScore = score;
+        }
+
         if (SHIP_START_Y > -3 * SHIP_HEIGHT) {
             isTransitionedOut = false;
             isTransitioningOut = true;
@@ -1159,9 +1163,6 @@ public class MainGame extends GameElements implements Screen {
                 gameInterface.setContinueScreenOpen(false);
                 isTransitionedOut = true;
 
-                if (finalScore == 0) {
-                    finalScore = score;
-                }
             }
 
 
