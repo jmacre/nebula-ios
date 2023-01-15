@@ -1437,7 +1437,7 @@ public class MainGame extends GameElements implements Screen {
 
         for (EnemyBullet enemyBullet : enemyBullets) {
             enemyBullet.update(deltaP * hourglassMultiplier);
-            enemyBullet.render(game.batch, deltaP, enemyBulletAnim);
+            enemyBullet.render(game.batch, deltaP * hourglassMultiplier, enemyBulletAnim);
 
             if (enemyBullet.getY() + ENEMY_BULLET_HEIGHT < 0 && !enemyBulletsToRemove.contains(enemyBullet, true)) {
                 enemyBulletsToRemove.add(enemyBullet);
@@ -1849,7 +1849,7 @@ public class MainGame extends GameElements implements Screen {
 
         for (Explosion explosion : explosions) {
             if (explosion.y < SCREEN_HEIGHT && explosion.y > 0) {
-                explosion.update(deltaP);
+                explosion.update(deltaP * hourglassMultiplier);
                 explosion.render(explosionAnim, game.batch);
             }
 

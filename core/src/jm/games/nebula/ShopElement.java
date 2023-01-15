@@ -171,7 +171,7 @@ public class ShopElement extends GameElements{
                 break;
             case ORANGE_SHIP_SLOT:
                 elementSheet = orangeShip;
-                title = "TROPICAL";
+                title = "OASIS";
                 break;
             case NEGATIVE_SHIP_SLOT:
                 elementSheet = negativeShip;
