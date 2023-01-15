@@ -11,6 +11,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.pay.PurchaseManager;
+import com.sun.tools.sjavac.Log;
 
 import games.rednblack.miniaudio.MiniAudio;
 import jdk.nashorn.internal.runtime.Context;
@@ -55,20 +56,19 @@ public class Main extends Game implements ApplicationListener {
 		assets.load(miniAudio);
 		assets.assetManager.finishLoading();
 
-		if(assets.assetManager.isFinished()) {
-			this.setScreen(new MainMenu(this, assets));
-			scoreFont = generator.generateFont(parameter);
-			scoreFont.setColor(1,1,1, 0.8f);
-		}
+		this.setScreen(new MainMenu(this, assets));
+		scoreFont = generator.generateFont(parameter);
+		scoreFont.setColor(1,1,1, 0.8f);
+
 	}
 
 	@Override
 	public void dispose() {
+		super.dispose();
 		assets.unloadAll();
 		purchaseManager.dispose();
 		assets.assetManager.dispose();
 		miniAudio.dispose();
-		super.dispose();
 	}
 
 	@Override

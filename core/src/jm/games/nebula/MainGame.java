@@ -1466,17 +1466,17 @@ public class MainGame extends GameElements implements Screen {
 
                 if (score <= 1000) {
                     enemy.create(EYEBAT_ID, BLUE_ID, 1, randomSpawnLocation, BLUE_EYEBAT_WIDTH, BLUE_EYEBAT_HEIGHT, 0.3f + speedIncrease / 1.5f, 0.7f + speedIncrease / 1.5f, (float) (DEFAULT_FRAME_DURATION * (1.25 - speedIncrease / 2)), false, hurtTimer);
-                    eyebatSpawnTimer = random.nextFloat() * (maxEyebatSpawnTime - minEyebatSpawnTime) + minEyebatSpawnTime;
+                    eyebatSpawnTimer = random.nextFloat() * (0.5f * maxEyebatSpawnTime - 0.5f * minEyebatSpawnTime) + 0.5f * minEyebatSpawnTime;
 
                 }
                 if (score > 1000 && score <= 2000) {
                     enemy.create(EYEBAT_ID, GREEN_ID, 2, randomSpawnLocation, GREEN_EYEBAT_WIDTH, GREEN_EYEBAT_HEIGHT, 0.65f + speedIncrease / 1.5f, 0.45f + speedIncrease / 1.5f, (float) (DEFAULT_FRAME_DURATION * (1.5 - speedIncrease / 2)), false, hurtTimer);
-                    eyebatSpawnTimer = random.nextFloat() * (1.2f * maxEyebatSpawnTime - 1.2f * minEyebatSpawnTime) + 1.2f * minEyebatSpawnTime;
+                    eyebatSpawnTimer = random.nextFloat() * (0.9f * maxEyebatSpawnTime - 0.9f * minEyebatSpawnTime) + 0.9f * minEyebatSpawnTime;
 
                 }
                 if (score > 2000 && score <= 3000) {
                     enemy.create(EYEBAT_ID, RED_ID, 2, randomSpawnLocation, RED_EYEBAT_WIDTH, RED_EYEBAT_HEIGHT, 0.60f + speedIncrease / 1.5f, 0.35f + speedIncrease / 1.5f, (float) (DEFAULT_FRAME_DURATION * (1.5 - speedIncrease / 2)), false, hurtTimer);
-                    eyebatSpawnTimer = random.nextFloat() * (1.3f * maxEyebatSpawnTime - 1.3f * minEyebatSpawnTime) + 1.3f * minEyebatSpawnTime;
+                    eyebatSpawnTimer = random.nextFloat() * (1.1f * maxEyebatSpawnTime - 1.1f * minEyebatSpawnTime) + 1.1f * minEyebatSpawnTime;
 
                 }
                 if (score > 3000 && score <= 4000) {
