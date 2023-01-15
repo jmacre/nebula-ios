@@ -593,7 +593,7 @@ public class GameInterface extends GameElements {
 
             if (prefs.getGemCount() >= itemPrice) {
                 selectButton.setTexture(assets.assetManager.get(Assets.select_button_inactive, Texture.class));
-                prefs.setUnlockedShips(prefs.getUnlockedShips() + selectedShopElement);
+                prefs.setUnlockedShips(prefs.getUnlockedShips() + ShopElement.getIdBySlot(selectedShopElement));
                 prefs.setGemCount(prefs.getGemCount() - itemPrice);
 
                 if (soundEnabled) {
@@ -694,7 +694,7 @@ public class GameInterface extends GameElements {
         checkForLeftArrowBtnTap(soundEnabled, true, false);
         checkForRightArrowBtnTap(soundEnabled, true, false);
 
-        if (!prefs.getUnlockedShips().contains(Integer.toString(selectedShopElement)) && selectedShopElement != SHIP_ID) {
+        if (!prefs.getUnlockedShips().contains(ShopElement.getIdBySlot(selectedShopElement)) && !String.valueOf(selectedShopElement).equals(SHIP_ID)) {
             selectButton.setTexture(assets.assetManager.get(Assets.blank_inactive, Texture.class));
             gl.setText(buyFont, Integer.toString(ShopElement.getPriceByShipSlot(selectedShopElement)), Color.valueOf(PURPLE_COLOR_HEX), SCREEN_WIDTH, Align.center, true);
             buyFont.draw(game.batch, Integer.toString(ShopElement.getPriceByShipSlot(selectedShopElement)), (SCREEN_WIDTH - gl.width) / 2, SELECT_BUTTON_Y + gl.height / 2 + SELECT_BUTTON_HEIGHT / 2);

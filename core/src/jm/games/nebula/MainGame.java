@@ -58,18 +58,7 @@ import static jm.games.nebula.ItemDrop.MIN_ITEM_SPAWN_TIME;
 import static jm.games.nebula.ItemDrop.MISSILE_ID;
 import static jm.games.nebula.ItemDrop.SPREAD_FIRE_TIMER;
 import static jm.games.nebula.ItemDrop.SPREAD_ID;
-import static jm.games.nebula.ShopElement.BLACK_SHIP_ID;
-import static jm.games.nebula.ShopElement.BLUE_SHIP_ID;
-import static jm.games.nebula.ShopElement.BRED_SHIP_ID;
-import static jm.games.nebula.ShopElement.CYAN_SHIP_ID;
-import static jm.games.nebula.ShopElement.GREEN_SHIP_ID;
-import static jm.games.nebula.ShopElement.NEGATIVE_SHIP_ID;
-import static jm.games.nebula.ShopElement.ORANGE_SHIP_ID;
-import static jm.games.nebula.ShopElement.PURPLE_SHIP_ID;
-import static jm.games.nebula.ShopElement.RED_SHIP_ID;
-import static jm.games.nebula.ShopElement.SHIP_ID;
-import static jm.games.nebula.ShopElement.YELLOW_SHIP_ID;
-
+import static jm.games.nebula.ShopElement.*;
 
 public class MainGame extends GameElements implements Screen {
     public Prefs prefs = new Prefs();
@@ -341,6 +330,7 @@ public class MainGame extends GameElements implements Screen {
         whiteFlash.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
 
         selectedShip = prefs.getShip();
+        System.out.println(selectedShip);
         powerupTimerSheet = new Sprite(assets.assetManager.get(Assets.powerup_timer, Texture.class));
 
         getSelectedShip();
@@ -2034,28 +2024,40 @@ public class MainGame extends GameElements implements Screen {
     }
 
     public void getSelectedShip() {
-        if (selectedShip == SHIP_ID) {
-            shipSS = new Sprite(assets.assetManager.get(Assets.ship_ss, Texture.class));
-        } else if (selectedShip == RED_SHIP_ID) {
-            shipSS = new Sprite(assets.assetManager.get(Assets.ship_red_ss, Texture.class));
-        } else if (selectedShip == BLACK_SHIP_ID) {
-            shipSS = new Sprite(assets.assetManager.get(Assets.ship_black_ss, Texture.class));
-        } else if (selectedShip == PURPLE_SHIP_ID) {
-            shipSS = new Sprite(assets.assetManager.get(Assets.ship_purple_ss, Texture.class));
-        } else if (selectedShip == YELLOW_SHIP_ID) {
-            shipSS = new Sprite(assets.assetManager.get(Assets.ship_yellow_ss, Texture.class));
-        } else if (selectedShip == CYAN_SHIP_ID) {
-            shipSS = new Sprite(assets.assetManager.get(Assets.ship_cyan_ss, Texture.class));
-        } else if (selectedShip == BLUE_SHIP_ID) {
-            shipSS = new Sprite(assets.assetManager.get(Assets.ship_blue_ss, Texture.class));
-        } else if (selectedShip == BRED_SHIP_ID) {
-            shipSS = new Sprite(assets.assetManager.get(Assets.ship_bred_ss, Texture.class));
-        } else if (selectedShip == GREEN_SHIP_ID) {
-            shipSS = new Sprite(assets.assetManager.get(Assets.ship_green_ss, Texture.class));
-        } else if (selectedShip == ORANGE_SHIP_ID) {
-            shipSS = new Sprite(assets.assetManager.get(Assets.ship_orange_ss, Texture.class));
-        } else if (selectedShip == NEGATIVE_SHIP_ID){
-            shipSS = new Sprite(assets.assetManager.get(Assets.ship_negative_ss, Texture.class));
+        switch (selectedShip) {
+            case SHIP_SLOT:
+                shipSS = new Sprite(assets.assetManager.get(Assets.ship_ss, Texture.class));
+                break;
+            case RED_SHIP_SLOT:
+                shipSS = new Sprite(assets.assetManager.get(Assets.ship_red_ss, Texture.class));
+                break;
+            case BLACK_SHIP_SLOT:
+                shipSS = new Sprite(assets.assetManager.get(Assets.ship_black_ss, Texture.class));
+                break;
+            case PURPLE_SHIP_SLOT:
+                shipSS = new Sprite(assets.assetManager.get(Assets.ship_purple_ss, Texture.class));
+                break;
+            case YELLOW_SHIP_SLOT:
+                shipSS = new Sprite(assets.assetManager.get(Assets.ship_yellow_ss, Texture.class));
+                break;
+            case CYAN_SHIP_SLOT:
+                shipSS = new Sprite(assets.assetManager.get(Assets.ship_cyan_ss, Texture.class));
+                break;
+            case BLUE_SHIP_SLOT:
+                shipSS = new Sprite(assets.assetManager.get(Assets.ship_blue_ss, Texture.class));
+                break;
+            case BRED_SHIP_SLOT:
+                shipSS = new Sprite(assets.assetManager.get(Assets.ship_bred_ss, Texture.class));
+                break;
+            case GREEN_SHIP_SLOT:
+                shipSS = new Sprite(assets.assetManager.get(Assets.ship_green_ss, Texture.class));
+                break;
+            case ORANGE_SHIP_SLOT:
+                shipSS = new Sprite(assets.assetManager.get(Assets.ship_orange_ss, Texture.class));
+                break;
+            case NEGATIVE_SHIP_SLOT:
+                shipSS = new Sprite(assets.assetManager.get(Assets.ship_negative_ss, Texture.class));
+                break;
         }
     }
 

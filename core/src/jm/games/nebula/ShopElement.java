@@ -8,20 +8,22 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
+import java.util.Map;
+
 public class ShopElement extends GameElements{
     public static int shipCount = 10; // one less than actual count for cycling between ships
 
-    public static final int SHIP_ID = 0; //this determines ship ownership in prefs
-    public static final int BLUE_SHIP_ID = 1;
-    public static final int RED_SHIP_ID = 2;
-    public static final int CYAN_SHIP_ID = 3;
-    public static final int YELLOW_SHIP_ID = 4;
-    public static final int BLACK_SHIP_ID = 5;
-    public static final int GREEN_SHIP_ID = 6;
-    public static final int ORANGE_SHIP_ID = 7;
-    public static final int BRED_SHIP_ID = 8;
-    public static final int PURPLE_SHIP_ID = 9;
-    public static final int NEGATIVE_SHIP_ID = 10;
+    public static final String SHIP_ID = "0"; //this determines ship ownership in prefs
+    public static final String BLUE_SHIP_ID = "1";
+    public static final String RED_SHIP_ID = "2";
+    public static final String CYAN_SHIP_ID = "3";
+    public static final String YELLOW_SHIP_ID = "4";
+    public static final String BLACK_SHIP_ID = "5";
+    public static final String GREEN_SHIP_ID = "6";
+    public static final String ORANGE_SHIP_ID = "7";
+    public static final String BRED_SHIP_ID = "8";
+    public static final String PURPLE_SHIP_ID = "9";
+    public static final String NEGATIVE_SHIP_ID = "A";
 
     public static final int SHIP_SLOT = 0; //this determines the display order in the shop
     public static final int BLUE_SHIP_SLOT = 1;
@@ -47,6 +49,7 @@ public class ShopElement extends GameElements{
     public static final int PURPLE_SHIP_PRICE = 50000;
 
 
+
     float x, y, width, height;
 
     static Sprite mainShip, blackShip, redShip, purpleShip, yellowShip, cyanShip;
@@ -67,7 +70,7 @@ public class ShopElement extends GameElements{
         this.height = height;
         this.colorId = colorId;
 
-        if(id == SHIP_ID) {
+        if(String.valueOf(id).equals(SHIP_ID)) {
 
             setElementAnimation(colorId);
 
@@ -98,8 +101,36 @@ public class ShopElement extends GameElements{
     public String getTitle(){
         return title;
     }
+    public static String getIdBySlot(int slot) {
+        switch (slot) {
+            case SHIP_SLOT:
+                return SHIP_ID;
+            case RED_SHIP_SLOT:
+                return RED_SHIP_ID;
+            case BLACK_SHIP_SLOT:
+                return BLACK_SHIP_ID;
+            case PURPLE_SHIP_SLOT:
+                return PURPLE_SHIP_ID;
+            case YELLOW_SHIP_SLOT:
+                return YELLOW_SHIP_ID;
+            case CYAN_SHIP_SLOT:
+                return CYAN_SHIP_ID;
+            case BLUE_SHIP_SLOT:
+                return BLUE_SHIP_ID;
+            case BRED_SHIP_SLOT:
+                return BRED_SHIP_ID;
+            case GREEN_SHIP_SLOT:
+                return GREEN_SHIP_ID;
+            case ORANGE_SHIP_SLOT:
+                return ORANGE_SHIP_ID;
+            case NEGATIVE_SHIP_SLOT:
+                return NEGATIVE_SHIP_ID;
+        }
+        return "";
+    }
 
-    public void setElementAnimation(int itemSlot){
+
+        public void setElementAnimation(int itemSlot){
         switch (itemSlot) {
 
             case SHIP_SLOT:

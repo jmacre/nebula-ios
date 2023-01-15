@@ -83,6 +83,7 @@ public class MainMenu extends GameElements implements Screen {
         game.batch.enableBlending();
 
         game.batch.begin();
+        System.out.println(prefs.getUnlockedShips());
 
         if(Gdx.graphics.getFramesPerSecond() > refreshRate * .8f && Gdx.graphics.getFramesPerSecond() < refreshRate * 1.2f) {
             deltaList.add(delta);
