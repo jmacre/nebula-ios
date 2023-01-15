@@ -1481,12 +1481,12 @@ public class MainGame extends GameElements implements Screen {
                 }
                 if (score > 3000 && score <= 4000) {
                     enemy.create(EYEBAT_ID, PURPLE_ID, 3, randomSpawnLocation, PURPLE_EYEBAT_WIDTH, PURPLE_EYEBAT_HEIGHT, 0.45f + speedIncrease / 1.75f, 0.20f + speedIncrease / 1.75f, (float) (DEFAULT_FRAME_DURATION * (1.75 - speedIncrease / 2)), false, hurtTimer);
-                    eyebatSpawnTimer = random.nextFloat() * (1.6f * maxEyebatSpawnTime - 1.6f * minEyebatSpawnTime) + 1.6f * minEyebatSpawnTime;
+                    eyebatSpawnTimer = random.nextFloat() * (1.5f * maxEyebatSpawnTime - 1.5f * minEyebatSpawnTime) + 1.5f * minEyebatSpawnTime;
 
                 }
                 if (score > 4000) {
                     enemy.create(EYEBAT_ID, WHITE_ID, 4, randomSpawnLocation, WHITE_EYEBAT_WIDTH, WHITE_EYEBAT_HEIGHT, 0.25f + speedIncrease / 1.75f, 0.15f + speedIncrease / 1.75f, (float) (DEFAULT_FRAME_DURATION * (2.0 - speedIncrease / 2)), false, hurtTimer);
-                    eyebatSpawnTimer = random.nextFloat() * (2f * maxEyebatSpawnTime - 2f * minEyebatSpawnTime) + 2f * minEyebatSpawnTime;
+                    eyebatSpawnTimer = random.nextFloat() * (1.9f * maxEyebatSpawnTime - 1.9f * minEyebatSpawnTime) + 1.9f * minEyebatSpawnTime;
 
                 }
             } else {
@@ -1536,7 +1536,7 @@ public class MainGame extends GameElements implements Screen {
                 if (score < 5000) {
 
                     if (score <= 1000) {
-                        enemy.create(ENEMY_SHIP_ID, BLUE_ID, 2, random.nextInt((SCREEN_WIDTH - (int) ENEMY_SHIP_WIDTH)), ENEMY_SHIP_WIDTH, ENEMY_SHIP_HEIGHT,
+                        enemy.create(ENEMY_SHIP_ID, BLUE_ID, 3, random.nextInt((SCREEN_WIDTH - (int) ENEMY_SHIP_WIDTH)), ENEMY_SHIP_WIDTH, ENEMY_SHIP_HEIGHT,
                                 1.3f + speedIncrease, 1.05f + speedIncrease, DEFAULT_FRAME_DURATION * 1.5f, enemyBulletDelay, blueShipBulletThreshold,
                                 false, hurtTimer, position, blueShipBulletSpeed);
                         enemyShipSpawnTimer = random.nextFloat() * (maxEnemyShipSpawnTime - minEnemyShipSpawnTime) + minEnemyShipSpawnTime;
