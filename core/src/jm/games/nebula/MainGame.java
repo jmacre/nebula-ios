@@ -63,6 +63,7 @@ import static jm.games.nebula.ShopElement.BLUE_SHIP_ID;
 import static jm.games.nebula.ShopElement.BRED_SHIP_ID;
 import static jm.games.nebula.ShopElement.CYAN_SHIP_ID;
 import static jm.games.nebula.ShopElement.GREEN_SHIP_ID;
+import static jm.games.nebula.ShopElement.NEGATIVE_SHIP_ID;
 import static jm.games.nebula.ShopElement.ORANGE_SHIP_ID;
 import static jm.games.nebula.ShopElement.PURPLE_SHIP_ID;
 import static jm.games.nebula.ShopElement.RED_SHIP_ID;
@@ -2053,6 +2054,8 @@ public class MainGame extends GameElements implements Screen {
             shipSS = new Sprite(assets.assetManager.get(Assets.ship_green_ss, Texture.class));
         } else if (selectedShip == ORANGE_SHIP_ID) {
             shipSS = new Sprite(assets.assetManager.get(Assets.ship_orange_ss, Texture.class));
+        } else if (selectedShip == NEGATIVE_SHIP_ID){
+            shipSS = new Sprite(assets.assetManager.get(Assets.ship_negative_ss, Texture.class));
         }
     }
 

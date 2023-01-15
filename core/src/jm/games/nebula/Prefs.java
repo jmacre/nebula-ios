@@ -47,7 +47,7 @@ public class Prefs {
     }
     public void setUnlockedShips(String unlockedShips){
         prefs.putString("unlockedShips", unlockedShips + ' ');
-        //blank char is to ensure that 10 isn't confused with 1 and 0
+        //space is added to ensure that 10 isn't confused with 1 and 0
         prefs.flush();
     }
 }

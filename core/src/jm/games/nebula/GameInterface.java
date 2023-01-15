@@ -5,6 +5,7 @@ import static jm.games.nebula.Assets.pause_sound;
 import static jm.games.nebula.Assets.play_sound;
 import static jm.games.nebula.GemElement.AD_ID;
 import static jm.games.nebula.ShopElement.SHIP_ID;
+import static jm.games.nebula.ShopElement.SHIP_SLOT;
 
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
@@ -695,11 +696,11 @@ public class GameInterface extends GameElements {
 
         if (!prefs.getUnlockedShips().contains(Integer.toString(selectedShopElement)) && selectedShopElement != SHIP_ID) {
             selectButton.setTexture(assets.assetManager.get(Assets.blank_inactive, Texture.class));
-            gl.setText(buyFont, Integer.toString(ShopElement.getPriceByShipId(selectedShopElement)), Color.valueOf(PURPLE_COLOR_HEX), SCREEN_WIDTH, Align.center, true);
-            buyFont.draw(game.batch, Integer.toString(ShopElement.getPriceByShipId(selectedShopElement)), (SCREEN_WIDTH - gl.width) / 2, SELECT_BUTTON_Y + gl.height / 2 + SELECT_BUTTON_HEIGHT / 2);
+            gl.setText(buyFont, Integer.toString(ShopElement.getPriceByShipSlot(selectedShopElement)), Color.valueOf(PURPLE_COLOR_HEX), SCREEN_WIDTH, Align.center, true);
+            buyFont.draw(game.batch, Integer.toString(ShopElement.getPriceByShipSlot(selectedShopElement)), (SCREEN_WIDTH - gl.width) / 2, SELECT_BUTTON_Y + gl.height / 2 + SELECT_BUTTON_HEIGHT / 2);
             game.batch.draw(gemIcon, (SCREEN_WIDTH + gl.width) / 2 + GEM_ICON_WIDTH / 2, SELECT_BUTTON_Y + SELECT_BUTTON_HEIGHT / 2 - GEM_ICON_HEIGHT / 2, GEM_ICON_WIDTH, GEM_ICON_HEIGHT);
 
-            checkForShopBuyButtonTap(soundEnabled, ShopElement.getPriceByShipId(selectedShopElement), prefs);
+            checkForShopBuyButtonTap(soundEnabled, ShopElement.getPriceByShipSlot(selectedShopElement), prefs);
 
         } else {
             if (prefs.getShip() == selectedShopElement) {
@@ -710,7 +711,7 @@ public class GameInterface extends GameElements {
         }
 
         if (ship == null) {
-            ship = new ShopElement(SHIP_ID, selectedShopElement, SHOP_BACK_X + SHOP_BACK_WIDTH / 2 - SHIP_WIDTH / 2f, SHOP_BACK_Y + SHOP_BACK_HEIGHT / 2 - SHIP_HEIGHT / 2f, SHIP_WIDTH, SHIP_HEIGHT);
+            ship = new ShopElement(SHIP_SLOT, selectedShopElement, SHOP_BACK_X + SHOP_BACK_WIDTH / 2 - SHIP_WIDTH / 2f, SHOP_BACK_Y + SHOP_BACK_HEIGHT / 2 - SHIP_HEIGHT / 2f, SHIP_WIDTH, SHIP_HEIGHT);
         }
 
         ship.render(stateTime, batch);
