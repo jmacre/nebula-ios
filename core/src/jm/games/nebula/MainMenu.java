@@ -84,7 +84,6 @@ public class MainMenu extends GameElements implements Screen {
 
         game.batch.begin();
 
-        prefs.setGemCount(1000000);
         if(Gdx.graphics.getFramesPerSecond() > refreshRate * .8f && Gdx.graphics.getFramesPerSecond() < refreshRate * 1.2f) {
             deltaList.add(delta);
         }
