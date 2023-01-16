@@ -38,11 +38,12 @@ public class EnemyBullet {
     Collision rect;
     float stateTime = 0f;
 
-    public void create (int ENEMY_BULLET_X, int ENEMY_BULLET_Y, float speed, int bulletColor, Assets assets) {
+    public void create (int ENEMY_BULLET_X, int ENEMY_BULLET_Y, float speed, int bulletColor, float stateTime, Assets assets) {
         this.assets = assets;
         this.ENEMY_BULLET_X = (int)ENEMY_BULLET_X;
         this.ENEMY_BULLET_Y = (int)ENEMY_BULLET_Y;
         this.speed = speed;
+        this.stateTime = stateTime;
 
         this.bulletColor = bulletColor;
 
@@ -50,7 +51,6 @@ public class EnemyBullet {
         enemyBulletSprite = new Sprite(assets.assetManager.get(Assets.bullet_red, Texture.class));
         enemyBulletSprite.setSize(ENEMY_BULLET_WIDTH, ENEMY_BULLET_HEIGHT);
         enemyBulletAnimation = Anim.createAnimation(enemyBulletSprite, 2, Anim.DEFAULT_FRAME_DURATION*2f);
-
 
     }
 

@@ -1421,10 +1421,10 @@ public class MainGame extends GameElements implements Screen {
             EnemyBullet enemyBullet1 = ebp.obtain();
             EnemyBullet enemyBullet2 = ebp.obtain();
             if (enemy.getId() == (ENEMY_SHIP_ID) && enemy.getEnemyBulletTimer() > enemy.getEnemyBulletThreshold()) {
-                enemyBullet1.create((int) (enemy.ENEMY_X + ENEMY_SHIP_WIDTH * (5 / 31f)), (int) (enemy.ENEMY_Y + enemy.ENEMY_HEIGHT * (3 / 27f)), enemy.getBulletSpeed(), RED_ID, assets);
+                enemyBullet1.create((int) (enemy.ENEMY_X + ENEMY_SHIP_WIDTH * (5 / 31f)), (int) (enemy.ENEMY_Y + enemy.ENEMY_HEIGHT * (3 / 27f)), enemy.getBulletSpeed(), RED_ID, 0, assets);
                 enemyBullets.add(enemyBullet1);
 
-                enemyBullet2.create((int) (enemy.ENEMY_X + ENEMY_SHIP_WIDTH - ENEMY_SHIP_WIDTH * (7 / 31f)), (int) (enemy.ENEMY_Y + enemy.ENEMY_HEIGHT * (3 / 27f)), enemy.getBulletSpeed(), RED_ID, assets);
+                enemyBullet2.create((int) (enemy.ENEMY_X + ENEMY_SHIP_WIDTH - ENEMY_SHIP_WIDTH * (7 / 31f)), (int) (enemy.ENEMY_Y + enemy.ENEMY_HEIGHT * (3 / 27f)), enemy.getBulletSpeed(), RED_ID, 0, assets);
                 enemyBullets.add(enemyBullet2);
             }
         }
