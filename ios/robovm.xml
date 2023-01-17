@@ -65,4 +65,5 @@
     <framework>nanopb</framework>
 
   </frameworks>
+  <swiftSupport/>
 </config>

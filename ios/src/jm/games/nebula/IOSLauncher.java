@@ -47,7 +47,6 @@ public class IOSLauncher extends IOSApplication.Delegate implements IActivityReq
     }
 
     public static void main(String[] argv) {
-
         NSAutoreleasePool pool = new NSAutoreleasePool();
         UIApplication.main(argv, null, IOSLauncher.class);
 

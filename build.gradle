@@ -90,9 +90,6 @@ project(":ios") {
 
     dependencies {
         implementation project(":core")
-        implementation "io.github.dkimitsa.robovm:robopods-firebase-google-mobile-ads-ios:$altpodsVersion"
-        implementation "pl.mk5.gdx-fireapp:gdx-fireapp-core:$gdxFireappVersion"
-        implementation "pl.mk5.gdx-fireapp:gdx-fireapp-ios:$gdxFireappVersion"
         api "com.mobidevelop.robovm:robovm-rt:$roboVMVersion"
         api "com.mobidevelop.robovm:robovm-cocoatouch:$roboVMVersion"
         api "com.badlogicgames.gdx:gdx-backend-robovm:$gdxVersion"
@@ -101,7 +98,10 @@ project(":ios") {
         api "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-ios"
         implementation "games.rednblack.miniaudio:miniaudio:$miniaudioVersion:natives-ios"
         implementation "com.badlogicgames.gdxpay:gdx-pay-iosrobovm-apple:$gdxPayVersion"
-
+        implementation "io.github.dkimitsa.robovm:robopods-firebase-google-mobile-ads-ios:$altpodsVersion"
+        implementation "io.github.dkimitsa.robovm:robopods-firebase-crashlytics-ios:$altpodsVersion"
+        implementation "pl.mk5.gdx-fireapp:gdx-fireapp-core:$gdxFireappVersion"
+        implementation "pl.mk5.gdx-fireapp:gdx-fireapp-ios:$gdxFireappVersion"
     }
 }
 
@@ -110,7 +110,7 @@ project(":core") {
 
     dependencies {
         implementation "com.badlogicgames.gdxpay:gdx-pay-client:$gdxPayVersion"
-        implementation "pl.mk5.gdx-fireapp:gdx-fireapp-core:$gdxFireappVersion"
+        api "pl.mk5.gdx-fireapp:gdx-fireapp-core:$gdxFireappVersion"
 
         api "com.badlogicgames.gdx:gdx:$gdxVersion"
         implementation "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
