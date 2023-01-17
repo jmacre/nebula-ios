@@ -22,6 +22,8 @@
     </resource>
   </resources>
   <forceLinkClasses>
+    <pattern>pl.mk5.gdx.fireapp.ios.**</pattern>
+
     <pattern>com.badlogic.gdx.scenes.scene2d.ui.*</pattern>
     <pattern>com.badlogic.gdx.graphics.g3d.particles.**</pattern>
     <pattern>com.android.okhttp.HttpHandler</pattern>
@@ -37,7 +39,7 @@
     <pattern>org.apache.harmony.security.provider.crypto.CryptoProvider</pattern>
   </forceLinkClasses>
   <libs>
-      <lib>z</lib>   
+      <lib>z</lib>
   </libs>
 
   <frameworkPaths>

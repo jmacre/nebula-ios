@@ -55,6 +55,7 @@ project(":android") {
     dependencies {
         implementation project(":core")
         implementation 'com.google.android.gms:play-services-ads:21.4.0'
+        implementation "pl.mk5.gdx-fireapp:gdx-fireapp-core:$gdxFireappVersion"
 
         api "com.badlogicgames.gdx:gdx-backend-android:$gdxVersion"
         natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-armeabi-v7a"
@@ -90,7 +91,8 @@ project(":ios") {
     dependencies {
         implementation project(":core")
         implementation "io.github.dkimitsa.robovm:robopods-firebase-google-mobile-ads-ios:$altpodsVersion"
-
+        implementation "pl.mk5.gdx-fireapp:gdx-fireapp-core:$gdxFireappVersion"
+        implementation "pl.mk5.gdx-fireapp:gdx-fireapp-ios:$gdxFireappVersion"
         api "com.mobidevelop.robovm:robovm-rt:$roboVMVersion"
         api "com.mobidevelop.robovm:robovm-cocoatouch:$roboVMVersion"
         api "com.badlogicgames.gdx:gdx-backend-robovm:$gdxVersion"
@@ -108,7 +110,6 @@ project(":core") {
 
     dependencies {
         implementation "com.badlogicgames.gdxpay:gdx-pay-client:$gdxPayVersion"
-        implementation "pl.mk5.gdx-fireapp:gdx-fireapp-core:$gdxFireappVersion"
 
         api "com.badlogicgames.gdx:gdx:$gdxVersion"
         implementation "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"

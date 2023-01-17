@@ -18,6 +18,8 @@ import org.robovm.pods.google.mobileads.GADRewardedAd;
 import com.badlogic.gdx.pay.ios.apple.PurchaseManageriOSApple;
 
 import games.rednblack.miniaudio.MASound;
+import pl.mk5.gdx.fireapp.GdxFIRApp;
+import pl.mk5.gdx.fireapp.GdxFIRCrash;
 
 public class IOSLauncher extends IOSApplication.Delegate implements IActivityRequestHandler {
     IOSApplication iosApplication;
@@ -42,6 +44,8 @@ public class IOSLauncher extends IOSApplication.Delegate implements IActivityReq
         Main game = new Main(this);
         game.purchaseManager = new PurchaseManageriOSApple();
         iosApplication = new IOSApplication(game, config);
+
+        GdxFIRCrash.inst().initialize();
 
         return iosApplication;
     }
