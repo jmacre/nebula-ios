@@ -330,7 +330,6 @@ public class MainGame extends GameElements implements Screen {
         whiteFlash.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
 
         selectedShip = prefs.getShip();
-        System.out.println(selectedShip);
         powerupTimerSheet = new Sprite(assets.assetManager.get(Assets.powerup_timer, Texture.class));
 
         getSelectedShip();
