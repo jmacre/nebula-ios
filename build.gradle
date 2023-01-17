@@ -110,6 +110,7 @@ project(":core") {
 
     dependencies {
         implementation "com.badlogicgames.gdxpay:gdx-pay-client:$gdxPayVersion"
+        implementation "pl.mk5.gdx-fireapp:gdx-fireapp-core:$gdxFireappVersion"
 
         api "com.badlogicgames.gdx:gdx:$gdxVersion"
         implementation "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"

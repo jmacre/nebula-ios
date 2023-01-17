@@ -22,8 +22,6 @@ robovm {
 dependencies {
 	implementation "io.github.dkimitsa.robovm:robopods-firebase-google-mobile-ads-ios:$altpodsVersion"
 	implementation "com.badlogicgames.gdxpay:gdx-pay-iosrobovm-apple:$gdxPayVersion"
-	implementation "pl.mk5.gdx-fireapp:gdx-fireapp-core:$gdxFireappVersion"
-	implementation "pl.mk5.gdx-fireapp:gdx-fireapp-ios:$gdxFireappVersion"
 }
 
 eclipse.project.name = appName + "-ios"

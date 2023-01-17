@@ -42,7 +42,7 @@ public class Main extends Game implements ApplicationListener {
 
 	@Override
 	public void create () {
-//		GdxFIRCrash.inst().initialize();
+		GdxFIRCrash.inst().initialize();
 
 		batch = new SpriteBatch();
 		miniAudio = new MiniAudio();

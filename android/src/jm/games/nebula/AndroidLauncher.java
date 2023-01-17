@@ -39,7 +39,6 @@ public class AndroidLauncher extends AndroidApplication implements IActivityRequ
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         MobileAds.initialize(this);
-        GdxFIRCrash.inst().initialize();
 
         List<String> testDeviceIds = Arrays.asList("21D5A8FE5E36C5B87CE8DB9820C8BD88");
         RequestConfiguration configuration =

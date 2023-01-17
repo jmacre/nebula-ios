@@ -17,12 +17,10 @@ android {
         // ...
         dependencies {
             classpath 'com.google.gms:google-services:4.3.14'
-            classpath 'com.google.firebase:firebase-crashlytics-gradle:2.9.2'
         }
     }
     dependencies {
         implementation "pl.mk5.gdx-fireapp:gdx-fireapp-android:$gdxFireappVersion"
-        implementation 'com.google.firebase:firebase-crashlytics'
 
         implementation platform("com.google.firebase:firebase-bom:25.12.0")
         implementation 'com.google.firebase:firebase-core'
@@ -116,6 +114,6 @@ task run(type: Exec) {
 
 eclipse.project.name = appName + "-android"
 apply plugin: 'com.google.gms.google-services'
-apply plugin: 'com.google.firebase.crashlytics'
+//apply plugin: 'com.google.firebase.crashlytics'
 
 
