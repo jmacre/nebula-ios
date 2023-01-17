@@ -16,6 +16,7 @@ import com.sun.tools.sjavac.Log;
 import games.rednblack.miniaudio.MiniAudio;
 import jdk.nashorn.internal.runtime.Context;
 import pl.mk5.gdx.fireapp.GdxFIRApp;
+import pl.mk5.gdx.fireapp.GdxFIRCrash;
 
 
 public class Main extends Game implements ApplicationListener {
@@ -41,7 +42,8 @@ public class Main extends Game implements ApplicationListener {
 
 	@Override
 	public void create () {
-		GdxFIRApp.inst().configure();
+		GdxFIRCrash.inst().initialize();
+
 		batch = new SpriteBatch();
 		miniAudio = new MiniAudio();
 		miniAudio.setupAndroid(miniAudioContextAssets);

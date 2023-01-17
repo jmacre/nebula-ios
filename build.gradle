@@ -48,6 +48,7 @@ allprojects {
 
 project(":android") {
     apply plugin: "com.android.application"
+    apply plugin: 'com.google.firebase.crashlytics'
 
     configurations { natives }
 

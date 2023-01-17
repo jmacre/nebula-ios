@@ -17,10 +17,12 @@ android {
         // ...
         dependencies {
             classpath 'com.google.gms:google-services:4.3.14'
+            classpath 'com.google.firebase:firebase-crashlytics-gradle:2.9.2'
         }
     }
     dependencies {
         implementation "pl.mk5.gdx-fireapp:gdx-fireapp-android:$gdxFireappVersion"
+        implementation 'com.google.firebase:firebase-crashlytics'
 
         implementation platform("com.google.firebase:firebase-bom:25.12.0")
         implementation 'com.google.firebase:firebase-core'
@@ -38,8 +40,8 @@ android {
         applicationId "jm.games.nebula"
         minSdkVersion 19
         targetSdkVersion 33
-        versionCode 19
-        versionName "1.1.2"
+        versionCode 20
+        versionName "1.1.3"
         multiDexEnabled true
     }
     buildTypes {
