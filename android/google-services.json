@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "422857949352",
+    "project_id": "nebula-e272d",
+    "storage_bucket": "nebula-e272d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:422857949352:android:a08a6209606802a23bc29d",
+        "android_client_info": {
+          "package_name": "jm.games.nebula"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "422857949352-n4d2u7q853fcni0llh6p2q7de6l5laiv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyANWd0gdLE8A_82TE5RhCLXqtBqTOpPPDg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "422857949352-n4d2u7q853fcni0llh6p2q7de6l5laiv.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -15,8 +15,7 @@ import com.sun.tools.sjavac.Log;
 
 import games.rednblack.miniaudio.MiniAudio;
 import jdk.nashorn.internal.runtime.Context;
-
-
+import pl.mk5.gdx.fireapp.GdxFIRApp;
 
 
 public class Main extends Game implements ApplicationListener {
@@ -42,6 +41,7 @@ public class Main extends Game implements ApplicationListener {
 
 	@Override
 	public void create () {
+		GdxFIRApp.inst().configure();
 		batch = new SpriteBatch();
 		miniAudio = new MiniAudio();
 		miniAudio.setupAndroid(miniAudioContextAssets);
@@ -56,9 +56,10 @@ public class Main extends Game implements ApplicationListener {
 		assets.load(miniAudio);
 		assets.assetManager.finishLoading();
 
-		this.setScreen(new MainMenu(this, assets));
 		scoreFont = generator.generateFont(parameter);
 		scoreFont.setColor(1,1,1, 0.8f);
+
+		this.setScreen(new MainMenu(this, assets));
 
 	}
 
