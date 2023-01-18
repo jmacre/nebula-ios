@@ -55,7 +55,16 @@ project(":android") {
     dependencies {
         implementation project(":core")
         implementation 'com.google.android.gms:play-services-ads:21.4.0'
-        implementation "pl.mk5.gdx-fireapp:gdx-fireapp-core:$gdxFireappVersion"
+
+        implementation "pl.mk5.gdx-fireapp:gdx-fireapp-android:$gdxFireappVersion"
+
+        implementation platform("com.google.firebase:firebase-bom:25.12.0")
+        implementation 'com.google.firebase:firebase-core'
+        implementation 'com.google.firebase:firebase-storage'
+        implementation 'com.google.firebase:firebase-auth'
+        implementation 'com.google.firebase:firebase-database'
+        implementation 'com.google.firebase:firebase-crashlytics'
+        implementation 'com.google.firebase:firebase-analytics'
 
         api "com.badlogicgames.gdx:gdx-backend-android:$gdxVersion"
         natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-armeabi-v7a"
