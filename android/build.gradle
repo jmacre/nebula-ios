@@ -41,10 +41,11 @@ android {
         versionCode 21
         versionName "1.2.0"
         multiDexEnabled true
+        signingConfig signingConfigs.debug
     }
     buildTypes {
         release {
-            minifyEnabled true
+            minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
