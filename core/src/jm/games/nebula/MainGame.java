@@ -336,22 +336,22 @@ public class MainGame extends GameElements implements Screen {
 
         shipAnimation = Anim.createAnimation(shipSS, 4, DEFAULT_FRAME_DURATION * 1.5f);
 
-        textParameter.size = SCREEN_WIDTH / 40;
+        textParameter.size = (int) ((SCREEN_WIDTH / 40) * WIDTH_ADJUSTMENT);
         menuScoreFont = generator.generateFont(textParameter);
         menuScoreFont.setColor(Color.valueOf(PURPLE_COLOR_HEX));
 
         gemCountFont = generator.generateFont(textParameter);
         gemCountFont.setColor(1, 1, 1, 0.8f);
 
-        textParameter.size = SCREEN_WIDTH / 22;
+        textParameter.size = (int)((SCREEN_WIDTH / 22) * WIDTH_ADJUSTMENT);
         confirmScreenFont = generator.generateFont(textParameter);
         confirmScreenFont.setColor(Color.valueOf(PURPLE_COLOR_HEX));
 
-        textParameter.size = SCREEN_WIDTH / 10;
+        textParameter.size = (int)((SCREEN_WIDTH / 10) * WIDTH_ADJUSTMENT);
         gameOverFont = generator.generateFont(textParameter);
         gameOverFont.setColor(Color.WHITE);
 
-        textParameter.size = SCREEN_WIDTH / 6;
+        textParameter.size = (int)((SCREEN_WIDTH / 6) * WIDTH_ADJUSTMENT);
         countdownFont = generator.generateFont(textParameter);
         countdownFont.setColor(Color.WHITE);
 
@@ -1450,47 +1450,56 @@ public class MainGame extends GameElements implements Screen {
 
             Enemy enemy = ep.obtain();
 
-            randomSpawnLocation = random.nextInt((int) (SCREEN_WIDTH - BLUE_EYEBAT_WIDTH));
 
             if (score < 5000) {
 
                 if (score <= 1000) {
                     enemy.create(EYEBAT_ID, BLUE_ID, 1, randomSpawnLocation, BLUE_EYEBAT_WIDTH, BLUE_EYEBAT_HEIGHT, 0.3f + speedIncrease / 1.5f, 0.7f + speedIncrease / 1.5f, (float) (DEFAULT_FRAME_DURATION * (1.25 - speedIncrease / 2)), false, hurtTimer);
                     eyebatSpawnTimer = random.nextFloat() * (0.75f * maxEyebatSpawnTime - 0.75f * minEyebatSpawnTime) + 0.75f * minEyebatSpawnTime;
+                    randomSpawnLocation = random.nextInt((int) (SCREEN_WIDTH - BLUE_EYEBAT_WIDTH));
 
                 }
                 if (score > 1000 && score <= 2000) {
                     enemy.create(EYEBAT_ID, GREEN_ID, 2, randomSpawnLocation, GREEN_EYEBAT_WIDTH, GREEN_EYEBAT_HEIGHT, 0.65f + speedIncrease / 1.5f, 0.45f + speedIncrease / 1.5f, (float) (DEFAULT_FRAME_DURATION * (1.5 - speedIncrease / 2)), false, hurtTimer);
                     eyebatSpawnTimer = random.nextFloat() * (maxEyebatSpawnTime - minEyebatSpawnTime) + minEyebatSpawnTime;
+                    randomSpawnLocation = random.nextInt((int) (SCREEN_WIDTH - GREEN_EYEBAT_WIDTH));
 
                 }
                 if (score > 2000 && score <= 3000) {
                     enemy.create(EYEBAT_ID, RED_ID, 2, randomSpawnLocation, RED_EYEBAT_WIDTH, RED_EYEBAT_HEIGHT, 0.60f + speedIncrease / 1.5f, 0.35f + speedIncrease / 1.5f, (float) (DEFAULT_FRAME_DURATION * (1.5 - speedIncrease / 2)), false, hurtTimer);
                     eyebatSpawnTimer = random.nextFloat() * (1.1f * maxEyebatSpawnTime - 1.1f * minEyebatSpawnTime) + 1.1f * minEyebatSpawnTime;
+                    randomSpawnLocation = random.nextInt((int) (SCREEN_WIDTH - RED_EYEBAT_WIDTH));
 
                 }
                 if (score > 3000 && score <= 4000) {
                     enemy.create(EYEBAT_ID, PURPLE_ID, 3, randomSpawnLocation, PURPLE_EYEBAT_WIDTH, PURPLE_EYEBAT_HEIGHT, 0.45f + speedIncrease / 1.75f, 0.20f + speedIncrease / 1.75f, (float) (DEFAULT_FRAME_DURATION * (1.75 - speedIncrease / 2)), false, hurtTimer);
                     eyebatSpawnTimer = random.nextFloat() * (1.5f * maxEyebatSpawnTime - 1.5f * minEyebatSpawnTime) + 1.5f * minEyebatSpawnTime;
+                    randomSpawnLocation = random.nextInt((int) (SCREEN_WIDTH - PURPLE_EYEBAT_WIDTH));
 
                 }
                 if (score > 4000) {
                     enemy.create(EYEBAT_ID, WHITE_ID, 4, randomSpawnLocation, WHITE_EYEBAT_WIDTH, WHITE_EYEBAT_HEIGHT, 0.25f + speedIncrease / 1.75f, 0.15f + speedIncrease / 1.75f, (float) (DEFAULT_FRAME_DURATION * (2.0 - speedIncrease / 2)), false, hurtTimer);
                     eyebatSpawnTimer = random.nextFloat() * (1.9f * maxEyebatSpawnTime - 1.9f * minEyebatSpawnTime) + 1.9f * minEyebatSpawnTime;
+                    randomSpawnLocation = random.nextInt((int) (SCREEN_WIDTH - WHITE_EYEBAT_WIDTH));
 
                 }
             } else {
                 randomEnemy = random.nextInt(5);
                 if (randomEnemy == 0) {
                     enemy.create(EYEBAT_ID, BLUE_ID, 1, randomSpawnLocation, BLUE_EYEBAT_WIDTH, BLUE_EYEBAT_HEIGHT, 0.3f + speedIncrease / 1.5f, .3f + speedIncrease / 1.5f, (float) (DEFAULT_FRAME_DURATION * (1.25 - speedIncrease / 3)), false, hurtTimer);
+                    randomSpawnLocation = random.nextInt((int) (SCREEN_WIDTH - BLUE_EYEBAT_WIDTH));
                 } else if (randomEnemy == 1) {
                     enemy.create(EYEBAT_ID, GREEN_ID, 2, randomSpawnLocation, GREEN_EYEBAT_WIDTH, GREEN_EYEBAT_HEIGHT, 0.65f + speedIncrease / 1.5f, .25f + speedIncrease / 1.5f, (float) (DEFAULT_FRAME_DURATION * (1.5 - speedIncrease / 3)), false, hurtTimer);
+                    randomSpawnLocation = random.nextInt((int) (SCREEN_WIDTH - GREEN_EYEBAT_WIDTH));
                 } else if (randomEnemy == 2) {
                     enemy.create(EYEBAT_ID, RED_ID, 2, randomSpawnLocation, RED_EYEBAT_WIDTH, RED_EYEBAT_HEIGHT, 0.60f + speedIncrease / 1.5f, .2f + speedIncrease / 1.5f, (float) (DEFAULT_FRAME_DURATION * (1.5 - speedIncrease / 3)), false, hurtTimer);
+                    randomSpawnLocation = random.nextInt((int) (SCREEN_WIDTH - RED_EYEBAT_WIDTH));
                 } else if (randomEnemy == 3) {
                     enemy.create(EYEBAT_ID, PURPLE_ID, 3, randomSpawnLocation, PURPLE_EYEBAT_WIDTH, PURPLE_EYEBAT_HEIGHT, 0.45f + speedIncrease / 1.75f, 0.20f + speedIncrease / 1.75f, (float) (DEFAULT_FRAME_DURATION * (1.75 - speedIncrease / 2)), false, hurtTimer);
+                    randomSpawnLocation = random.nextInt((int) (SCREEN_WIDTH - PURPLE_EYEBAT_WIDTH));
                 } else {
                     enemy.create(EYEBAT_ID, WHITE_ID, 4, randomSpawnLocation, WHITE_EYEBAT_WIDTH, WHITE_EYEBAT_HEIGHT, 0.25f + speedIncrease / 1.75f, 0.15f + speedIncrease / 1.75f, (float) (DEFAULT_FRAME_DURATION * (2.0 - speedIncrease / 2)), false, hurtTimer);
+                    randomSpawnLocation = random.nextInt((int) (SCREEN_WIDTH - WHITE_EYEBAT_WIDTH));
                 }
                 eyebatSpawnTimer = random.nextFloat() * (1.6f * maxEyebatSpawnTime - 1.6f * minEyebatSpawnTime) + 1.6f * minEyebatSpawnTime;
             }
@@ -2299,7 +2308,10 @@ public class MainGame extends GameElements implements Screen {
 
     @Override
     public void resize(int width, int height) {
+        SCREEN_HEIGHT = Gdx.graphics.getHeight();
+        SCREEN_WIDTH = Gdx.graphics.getWidth();
 
+        defineSizesAndPositions();
     }
 
     @Override

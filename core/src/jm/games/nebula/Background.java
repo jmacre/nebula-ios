@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 import static jm.games.nebula.GameElements.SCREEN_HEIGHT;
 import static jm.games.nebula.GameElements.SCREEN_WIDTH;
+import static jm.games.nebula.GameElements.WIDTH_ADJUSTMENT;
 import static jm.games.nebula.ItemDrop.HOURGLASS_SPEED_MULTIPLIER;
 
 
@@ -16,13 +17,15 @@ public class Background {
     Assets assets;
     public static final float DEFAULT_SPEED = SCREEN_HEIGHT / 4f;
 
-    Animation<TextureRegion> starsFrontAnimation, starsBackAnimation;
-    Sprite backgroundSprite, defaultBackgroundSprite, blueBackgroundSprite, greenBackgroundSprite;
+    Animation<TextureRegion> starsFrontAnimation, starsBackAnimation, starsFrontAnimation1, starsBackAnimation1;
+    Sprite backgroundSprite, backgroundSprite1;
+    Sprite defaultBackgroundSprite, blueBackgroundSprite, greenBackgroundSprite;
     Sprite redBackgroundSprite, purpleBackgroundSprite, blackBackgroundSprite, whiteBackgroundSprite;
-    Sprite starsFront, starsBack;
+
+    Sprite starsFront, starsBack, starsFront1, starsBack1;
     float background_y1, background_y2, stars_front_y1, stars_front_y2, stars_back_y1, stars_back_y2;
 
-    Sprite backgroundTransitionSprite;
+    Sprite backgroundTransitionSprite, backgroundTransitionSprite1;
     float transitionOpacity = 0f;
     float stateTime = 0f;
     float titleScreenSpeedModifier = 0f;
@@ -43,7 +46,7 @@ public class Background {
         blackBackgroundSprite = new Sprite(assets.assetManager.get(Assets.black_background, Texture.class));
         whiteBackgroundSprite = new Sprite(assets.assetManager.get(Assets.white_background, Texture.class));
 
-        backgroundSprite.setBounds(0, 0, SCREEN_WIDTH, SCREEN_WIDTH * 6);
+        backgroundSprite.setBounds(0, 0, SCREEN_WIDTH * WIDTH_ADJUSTMENT, (SCREEN_WIDTH  * WIDTH_ADJUSTMENT) * 6);
         backgroundTransitionSprite = backgroundSprite;
 
         defaultBackgroundSprite = backgroundSprite;
@@ -53,8 +56,27 @@ public class Background {
         starsFront = new Sprite(assets.assetManager.get(Assets.stars_front, Texture.class));
         starsBack = new Sprite(assets.assetManager.get(Assets.stars_back, Texture.class));
 
-        starsFront.setBounds(0, 0, SCREEN_WIDTH, SCREEN_WIDTH * 12);
-        starsBack.setBounds(0, 0, SCREEN_WIDTH, SCREEN_WIDTH * 12);
+        if(WIDTH_ADJUSTMENT != 1f){
+            backgroundSprite1 = new Sprite(assets.assetManager.get(Assets.default_background, Texture.class));
+
+            backgroundSprite1.setBounds(SCREEN_WIDTH * WIDTH_ADJUSTMENT, 0, SCREEN_WIDTH * WIDTH_ADJUSTMENT, (SCREEN_WIDTH  * WIDTH_ADJUSTMENT) * 6);
+            backgroundTransitionSprite1 = backgroundSprite1;
+
+            starsFront1 = new Sprite(assets.assetManager.get(Assets.stars_front, Texture.class));
+            starsBack1 = new Sprite(assets.assetManager.get(Assets.stars_back, Texture.class));
+
+            starsFront1.flip(true, false);
+            starsBack1.flip(true, false);
+
+            starsFront1.setBounds(SCREEN_WIDTH * WIDTH_ADJUSTMENT, 0, SCREEN_WIDTH * WIDTH_ADJUSTMENT, (SCREEN_WIDTH * WIDTH_ADJUSTMENT) * 12);
+            starsBack1.setBounds(SCREEN_WIDTH * WIDTH_ADJUSTMENT, 0, SCREEN_WIDTH * WIDTH_ADJUSTMENT, (SCREEN_WIDTH * WIDTH_ADJUSTMENT) * 12);
+
+            starsFrontAnimation1 = Anim.createAnimation(starsFront1, 4, 0.1f);
+            starsBackAnimation1 = Anim.createAnimation(starsBack1, 4, 0.1f);
+        }
+
+        starsFront.setBounds(SCREEN_WIDTH * WIDTH_ADJUSTMENT, 0, SCREEN_WIDTH * WIDTH_ADJUSTMENT, (SCREEN_WIDTH * WIDTH_ADJUSTMENT) * 12);
+        starsBack.setBounds(SCREEN_WIDTH * WIDTH_ADJUSTMENT, 0, SCREEN_WIDTH * WIDTH_ADJUSTMENT, (SCREEN_WIDTH * WIDTH_ADJUSTMENT) * 12);
 
         stars_back_y1 = 0;
         stars_back_y2 = starsFront.getHeight();
@@ -92,6 +114,10 @@ public class Background {
         if (backgroundTransitionSprite != null && transitionOpacity >= 1f) {
             backgroundSprite = backgroundTransitionSprite;
             transitionOpacity = 0f;
+
+            if(WIDTH_ADJUSTMENT != 1F){
+                backgroundSprite1 = backgroundTransitionSprite1;
+            }
         }
 
         if (speed < goalSpeed && !constantSpeed && !isResettingScreen) {
@@ -137,9 +163,21 @@ public class Background {
             stars_back_y2 = stars_back_y1 + starsBack.getHeight();
         }
 
-        backgroundSprite.setSize(SCREEN_WIDTH, backgroundSprite.getHeight());
-        starsFront.setSize(SCREEN_WIDTH, starsFront.getHeight());
-        starsBack.setSize(SCREEN_WIDTH, starsBack.getHeight());
+        backgroundSprite.setSize(SCREEN_WIDTH * WIDTH_ADJUSTMENT, backgroundSprite.getHeight());
+        starsFront.setSize(SCREEN_WIDTH * WIDTH_ADJUSTMENT, starsFront.getHeight());
+        starsBack.setSize(SCREEN_WIDTH * WIDTH_ADJUSTMENT, starsBack.getHeight());
+
+        if(WIDTH_ADJUSTMENT != 1f) {
+            backgroundSprite1.setSize(SCREEN_WIDTH * WIDTH_ADJUSTMENT, backgroundSprite.getHeight());
+            starsFront1.setSize(SCREEN_WIDTH * WIDTH_ADJUSTMENT, starsFront.getHeight());
+            starsBack1.setSize(SCREEN_WIDTH * WIDTH_ADJUSTMENT, starsBack.getHeight());
+
+            backgroundSprite1.setPosition(SCREEN_WIDTH * WIDTH_ADJUSTMENT, background_y1);
+            backgroundSprite1.draw(batch);
+
+            backgroundSprite1.setPosition(SCREEN_WIDTH * WIDTH_ADJUSTMENT, background_y2);
+            backgroundSprite1.draw(batch);
+        }
 
         backgroundSprite.setPosition(0, background_y1);
         backgroundSprite.draw(batch);
@@ -153,16 +191,31 @@ public class Background {
             stateTime += delta / 10 * hourglassMultiplier;
 
         starsFront.setPosition(0, stars_front_y1);
-        starsAnimFront.drawAnim(starsFrontAnimation, stateTime, 0, stars_front_y1, SCREEN_WIDTH, starsFront.getHeight(), true, batch);
+        starsAnimFront.drawAnim(starsFrontAnimation, stateTime, 0, stars_front_y1, SCREEN_WIDTH * WIDTH_ADJUSTMENT, starsFront.getHeight(), true, batch);
 
         starsFront.setPosition(0, stars_front_y2);
-        starsAnimFront.drawAnim(starsFrontAnimation, stateTime, 0, stars_front_y2, SCREEN_WIDTH, starsFront.getHeight(), true, batch);
+        starsAnimFront.drawAnim(starsFrontAnimation, stateTime, 0, stars_front_y2, SCREEN_WIDTH * WIDTH_ADJUSTMENT, starsFront.getHeight(), true, batch);
 
         starsBack.setPosition(0, stars_back_y1);
-        starsAnimBack.drawAnim(starsBackAnimation, stateTime, 0, stars_back_y1, SCREEN_WIDTH, starsBack.getHeight(), true, batch);
+        starsAnimBack.drawAnim(starsBackAnimation, stateTime, 0, stars_back_y1, SCREEN_WIDTH * WIDTH_ADJUSTMENT, starsBack.getHeight(), true, batch);
 
         starsBack.setPosition(0, stars_back_y2);
-        starsAnimBack.drawAnim(starsBackAnimation, stateTime, 0, stars_back_y2, SCREEN_WIDTH, starsBack.getHeight(), true, batch);
+        starsAnimBack.drawAnim(starsBackAnimation, stateTime, 0, stars_back_y2, SCREEN_WIDTH * WIDTH_ADJUSTMENT, starsBack.getHeight(), true, batch);
+
+        if(WIDTH_ADJUSTMENT != 1){
+
+            starsFront1.setPosition(SCREEN_WIDTH * WIDTH_ADJUSTMENT, stars_front_y1);
+            starsAnimFront.drawAnim(starsFrontAnimation1, stateTime, SCREEN_WIDTH * WIDTH_ADJUSTMENT, stars_front_y1, SCREEN_WIDTH * WIDTH_ADJUSTMENT, starsFront.getHeight(), true, batch);
+
+            starsFront1.setPosition(SCREEN_WIDTH * WIDTH_ADJUSTMENT, stars_front_y2);
+            starsAnimFront.drawAnim(starsFrontAnimation1, stateTime, SCREEN_WIDTH * WIDTH_ADJUSTMENT, stars_front_y2, SCREEN_WIDTH * WIDTH_ADJUSTMENT, starsFront.getHeight(), true, batch);
+
+            starsBack1.setPosition(SCREEN_WIDTH * WIDTH_ADJUSTMENT, stars_back_y1);
+            starsAnimBack.drawAnim(starsBackAnimation1, stateTime, SCREEN_WIDTH * WIDTH_ADJUSTMENT, stars_back_y1, SCREEN_WIDTH * WIDTH_ADJUSTMENT, starsBack.getHeight(), true, batch);
+
+            starsBack1.setPosition(SCREEN_WIDTH * WIDTH_ADJUSTMENT, stars_back_y2);
+            starsAnimBack.drawAnim(starsBackAnimation1, stateTime, SCREEN_WIDTH * WIDTH_ADJUSTMENT, stars_back_y2, SCREEN_WIDTH * WIDTH_ADJUSTMENT, starsBack.getHeight(), true, batch);
+        }
     }
 
     public void changeBackgroundColor(float delta, int score, Batch batch, boolean isAlive) {
@@ -172,13 +225,24 @@ public class Background {
             transitionOpacity += 0.2f * delta * hourglassMultiplier;
 
             backgroundTransitionSprite.setAlpha(transitionOpacity);
-            backgroundTransitionSprite.setSize(SCREEN_WIDTH, backgroundSprite.getHeight());
+            backgroundTransitionSprite.setSize(SCREEN_WIDTH * WIDTH_ADJUSTMENT, backgroundSprite.getHeight());
 
             backgroundTransitionSprite.setPosition(0, background_y1);
             backgroundTransitionSprite.draw(batch);
 
             backgroundTransitionSprite.setPosition(0, background_y2);
             backgroundTransitionSprite.draw(batch);
+
+            if(WIDTH_ADJUSTMENT != 1){
+                backgroundTransitionSprite1.setAlpha(transitionOpacity);
+                backgroundTransitionSprite1.setSize(SCREEN_WIDTH * WIDTH_ADJUSTMENT, backgroundSprite.getHeight());
+
+                backgroundTransitionSprite1.setPosition(SCREEN_WIDTH * WIDTH_ADJUSTMENT, background_y1);
+                backgroundTransitionSprite1.draw(batch);
+
+                backgroundTransitionSprite1.setPosition(SCREEN_WIDTH * WIDTH_ADJUSTMENT, background_y2);
+                backgroundTransitionSprite1.draw(batch);
+            }
 
         } else if (score < 100 || !isAlive) {
             backgroundTransitionSprite = defaultBackgroundSprite;
@@ -194,6 +258,9 @@ public class Background {
             backgroundTransitionSprite = blackBackgroundSprite;
         } else {
             backgroundTransitionSprite = whiteBackgroundSprite;
+        }
+        if(WIDTH_ADJUSTMENT != 1){
+            backgroundTransitionSprite1 = backgroundTransitionSprite;
         }
     }
 }

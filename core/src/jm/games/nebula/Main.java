@@ -1,6 +1,7 @@
 package jm.games.nebula;
 
 import static jm.games.nebula.GameElements.SCREEN_WIDTH;
+import static jm.games.nebula.GameElements.WIDTH_ADJUSTMENT;
 
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Game;
@@ -49,11 +50,13 @@ public class Main extends Game implements ApplicationListener {
 		miniAudio = new MiniAudio();
 		miniAudio.setupAndroid(miniAudioContextAssets);
 
+		GameElements.defineSizesAndPositions();
+
 		Gdx.input.setCatchKey(Input.Keys.BACK, true);
 		FreeTypeFontGenerator.setMaxTextureSize(2048);
 		generator = new FreeTypeFontGenerator(Gdx.files.internal("font.otf"));
 		parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
-		parameter.size = SCREEN_WIDTH/14;
+		parameter.size = (int) ((SCREEN_WIDTH/14) * WIDTH_ADJUSTMENT);
 		assets = new Assets();
 
 		assets.load(miniAudio);

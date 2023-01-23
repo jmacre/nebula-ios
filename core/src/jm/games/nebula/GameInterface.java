@@ -106,7 +106,7 @@ public class GameInterface extends GameElements {
             topInset = (int) (0.6 * Gdx.graphics.getSafeInsetTop());
         }
 
-        parameter.size = SCREEN_WIDTH / 40;
+        parameter.size = (int) ((SCREEN_WIDTH / 40) * WIDTH_ADJUSTMENT);
         startButton = new Button(assets.assetManager.get(Assets.start_button_inactive_clear, Texture.class), START_BUTTON_X, START_BUTTON_Y_TRANSITIONED, START_BUTTON_WIDTH, START_BUTTON_HEIGHT);
 
         shopButton = new Button(assets.assetManager.get(Assets.shop_button_inactive_clear, Texture.class), SHOP_BUTTON_X, SHOP_BUTTON_Y_TRANSITIONED, SHOP_BUTTON_WIDTH, SHOP_BUTTON_HEIGHT);
@@ -127,7 +127,7 @@ public class GameInterface extends GameElements {
         yesButton = new Button(assets.assetManager.get(Assets.yes_button_inactive, Texture.class), YES_BUTTON_X, YES_BUTTON_Y, YES_BUTTON_WIDTH, YES_BUTTON_HEIGHT);
         noButton = new Button(assets.assetManager.get(Assets.no_button_inactive, Texture.class), NO_BUTTON_X, NO_BUTTON_Y, NO_BUTTON_WIDTH, NO_BUTTON_HEIGHT);
 
-        textParameter.size = SCREEN_WIDTH / 15;
+        textParameter.size = (int) ((SCREEN_WIDTH / 15) * WIDTH_ADJUSTMENT);
         storeFont = generator.generateFont(textParameter);
 
         gemSound = assets.assetManager.get(Assets.gem_sound, MASound.class);
@@ -142,7 +142,7 @@ public class GameInterface extends GameElements {
         pauseSound = assets.assetManager.get(pause_sound, MASound.class);
         pauseSound.setVolume(0.2f);
 
-        textParameter.size = (int) SELECT_BUTTON_WIDTH / 8;
+        textParameter.size = (int) ((SELECT_BUTTON_WIDTH / 8.75f) * SHOP_FONT_WIDTH_ADJUSTMENT);
         buyFont = generator.generateFont(textParameter);
 
         scoreY = SCORE_Y - topInset;
@@ -150,8 +150,6 @@ public class GameInterface extends GameElements {
         gemIconY = GEM_ICON_Y - topInset;
         pauseButtonY = PAUSE_BUTTON_Y - topInset;
         gameOverTextY = GAME_OVER_TEXT_Y - topInset;
-
-
 
         tsSoundButton = new Button(assets.assetManager.get(Assets.sound_off_button_ts, Texture.class), TS_SOUND_BUTTON_X, TS_SOUND_BUTTON_Y, TS_SOUND_BUTTON_WIDTH, TS_SOUND_BUTTON_HEIGHT, TS_SOUND_BUTTON_WIDTH / 4f, TS_SOUND_BUTTON_HEIGHT / 4f);
         pauseButton = new Button(assets.assetManager.get(Assets.pause_button, Texture.class), PAUSE_BUTTON_X, pauseButtonY, PAUSE_BUTTON_WIDTH, PAUSE_BUTTON_HEIGHT, PAUSE_BUTTON_WIDTH / 4f, PAUSE_BUTTON_HEIGHT / 4f);
@@ -236,7 +234,6 @@ public class GameInterface extends GameElements {
             gl.setText(gemCountFont, " x " + prefs.getGemCount(), Color.WHITE, SCREEN_WIDTH, Align.center, true);
             gemCountFont.draw(game.batch, " x " + prefs.getGemCount(), 0.95f * (SCREEN_WIDTH - gl.width), scoreY);
             game.batch.draw(gemIcon, 0.95f * (SCREEN_WIDTH - gl.width) - GEM_ICON_WIDTH, scoreY - GEM_ICON_HEIGHT * .8f, GEM_ICON_WIDTH, GEM_ICON_HEIGHT);
-
 
         }
     }

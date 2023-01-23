@@ -64,7 +64,7 @@ public class MainMenu extends GameElements implements Screen {
         blackTransition.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
 
         blackTransition.setColor(0, 0, 0, 0);
-        textParameter.size = SCREEN_WIDTH / 40;
+        textParameter.size = (int)((SCREEN_WIDTH / 40) * WIDTH_ADJUSTMENT);
 
         gemCountFont = generator.generateFont(textParameter);
         gemCountFont.setColor(1, 1, 1, 0.8f);
@@ -228,6 +228,9 @@ public class MainMenu extends GameElements implements Screen {
 
     @Override
     public void resize(int width, int height) {
+        GameElements.defineSizesAndPositions();
 
+        this.gameInterface = new GameInterface(assets, game, prefs);
+        this.background = new Background(assets);
     }
 }
