@@ -43,11 +43,11 @@ public class GameElements {
     public static int SHIP_WIDTH;
     public static int SHIP_HEIGHT;
 
-    public static float SHIP_X;
-    public static float CURRENT_SHIP_X;
+    public static float SHIP_X = (SCREEN_WIDTH/2f - SHIP_WIDTH/2f);
+    public static float CURRENT_SHIP_X =  (SCREEN_WIDTH/2f - SHIP_WIDTH/2f);
 
-    public static float SHIP_Y;
-    public static float SHIP_START_Y;
+    public static float SHIP_Y = 0.15f*SCREEN_HEIGHT;
+    public static float SHIP_START_Y = - 3 * SHIP_HEIGHT;
 
     public static float BULLET_WIDTH;
     public static float BULLET_HEIGHT;
@@ -180,6 +180,14 @@ public class GameElements {
     public static float WIDTH_ADJUSTMENT;
     public static float SHOP_FONT_WIDTH_ADJUSTMENT;
 
+    public static void resetShipPositionOnResize(){
+        SHIP_X = (SCREEN_WIDTH/2f - SHIP_WIDTH/2f);
+        CURRENT_SHIP_X =  (SCREEN_WIDTH/2f - SHIP_WIDTH/2f);
+
+        SHIP_Y = 0.15f*SCREEN_HEIGHT;
+        SHIP_START_Y = - 3 * SHIP_HEIGHT;
+    }
+
     public static void defineSizesAndPositions(){
         SCREEN_HEIGHT = Gdx.graphics.getHeight();
         SCREEN_WIDTH = Gdx.graphics.getWidth();
@@ -205,12 +213,6 @@ public class GameElements {
 
         SHIP_WIDTH = (int)((SCREEN_WIDTH/6f)  * WIDTH_ADJUSTMENT);
         SHIP_HEIGHT = (int)(SHIP_WIDTH * (31f/27f));
-
-        SHIP_X = (SCREEN_WIDTH/2f - SHIP_WIDTH/2f);
-        CURRENT_SHIP_X =  (SCREEN_WIDTH/2f - SHIP_WIDTH/2f);
-
-        SHIP_Y = 0.15f*SCREEN_HEIGHT;
-        SHIP_START_Y = - 3 * SHIP_HEIGHT;
 
         BULLET_WIDTH = SHIP_WIDTH*(2/27f);
         BULLET_HEIGHT = BULLET_WIDTH*4f;

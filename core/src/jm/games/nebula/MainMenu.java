@@ -229,6 +229,7 @@ public class MainMenu extends GameElements implements Screen {
     @Override
     public void resize(int width, int height) {
         GameElements.defineSizesAndPositions();
+        resetShipPositionOnResize();
 
         this.gameInterface = new GameInterface(assets, game, prefs);
         this.background = new Background(assets);
