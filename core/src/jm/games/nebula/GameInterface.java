@@ -34,8 +34,8 @@ public class GameInterface extends GameElements {
     Button playButton;
     Button replayButton;
     Button startButton;
-
     Button shopButton;
+    Button creditsButton;
     Button leftArrowBtn;
     Button rightArrowBtn;
     Button selectButton;
@@ -46,10 +46,13 @@ public class GameInterface extends GameElements {
     Sprite titleTexture;
     Button tsSoundButton;
     Button gemButton;
+
     Button xButton;
+    Button xButtonCredits;
+
     Button yesButton;
     Button noButton;
-    BitmapFont scoreFont;
+    BitmapFont scoreFont, creditsFont;
     Sprite soundOnButton;
     Sprite soundOffButton;
     Sprite heart1;
@@ -110,6 +113,7 @@ public class GameInterface extends GameElements {
         startButton = new Button(assets.assetManager.get(Assets.start_button_inactive_clear, Texture.class), START_BUTTON_X, START_BUTTON_Y_TRANSITIONED, START_BUTTON_WIDTH, START_BUTTON_HEIGHT);
 
         shopButton = new Button(assets.assetManager.get(Assets.shop_button_inactive_clear, Texture.class), SHOP_BUTTON_X, SHOP_BUTTON_Y_TRANSITIONED, SHOP_BUTTON_WIDTH, SHOP_BUTTON_HEIGHT);
+        creditsButton = new Button(assets.assetManager.get(Assets.credits_inactive, Texture.class), CREDITS_BUTTON_X, CREDITS_BUTTON_Y, CREDITS_BUTTON_WIDTH, CREDITS_BUTTON_HEIGHT);
 
         if(prefs.isSoundEnabled())
             soundButton = new Button(assets.assetManager.get(Assets.sound_on_button_inactive, Texture.class), SOUND_BUTTON_X, SOUND_BUTTON_Y, SOUND_BUTTON_WIDTH, SOUND_BUTTON_HEIGHT);
@@ -123,6 +127,7 @@ public class GameInterface extends GameElements {
         selectButton = new Button(assets.assetManager.get(Assets.select_button_inactive, Texture.class), SELECT_BUTTON_X, SELECT_BUTTON_Y, SELECT_BUTTON_WIDTH, SELECT_BUTTON_HEIGHT);
 
         xButton = new Button(assets.assetManager.get(Assets.x_button, Texture.class), X_BUTTON_X, X_BUTTON_Y, X_BUTTON_WIDTH, X_BUTTON_HEIGHT, X_BUTTON_WIDTH / 4f, X_BUTTON_HEIGHT / 4f);
+        xButtonCredits = new Button(assets.assetManager.get(Assets.x_button, Texture.class), X_BUTTON_X, X_BUTTON_CREDITS_Y, X_BUTTON_WIDTH, X_BUTTON_HEIGHT, X_BUTTON_WIDTH / 4f, X_BUTTON_HEIGHT / 4f);
 
         yesButton = new Button(assets.assetManager.get(Assets.yes_button_inactive, Texture.class), YES_BUTTON_X, YES_BUTTON_Y, YES_BUTTON_WIDTH, YES_BUTTON_HEIGHT);
         noButton = new Button(assets.assetManager.get(Assets.no_button_inactive, Texture.class), NO_BUTTON_X, NO_BUTTON_Y, NO_BUTTON_WIDTH, NO_BUTTON_HEIGHT);
@@ -131,16 +136,16 @@ public class GameInterface extends GameElements {
         storeFont = generator.generateFont(textParameter);
 
         gemSound = assets.assetManager.get(Assets.gem_sound, MASound.class);
-        gemSound.setVolume(0.2f);
+        gemSound.setVolume(0.4f);
 
         errorSound = assets.assetManager.get(Assets.error_sound, MASound.class);
-        errorSound.setVolume(0.2f);
+        errorSound.setVolume(0.4f);
 
         playSound = assets.assetManager.get(play_sound, MASound.class);
-        playSound.setVolume(0.2f);
+        playSound.setVolume(0.4f);
 
         pauseSound = assets.assetManager.get(pause_sound, MASound.class);
-        pauseSound.setVolume(0.2f);
+        pauseSound.setVolume(0.4f);
 
         textParameter.size = (int) ((SELECT_BUTTON_WIDTH / 8.75f) * SHOP_FONT_WIDTH_ADJUSTMENT);
         buyFont = generator.generateFont(textParameter);
@@ -172,11 +177,22 @@ public class GameInterface extends GameElements {
 
         pauseMenuBack = new Sprite(assets.assetManager.get(Assets.pause_menu_back, Texture.class));
         shopBack = new Sprite(assets.assetManager.get(Assets.shop_back, Texture.class));
+
         scoreFont = generator.generateFont(parameter);
         scoreFont.setColor(Color.valueOf(PURPLE_COLOR_HEX));
 
         storeFont.setColor(Color.valueOf(PURPLE_COLOR_HEX));
+
+
         gemCountFont = generator.generateFont(parameter);
+
+        creditsFont = generator.generateFont(parameter);
+
+        parameter.size = (int) ((SCREEN_WIDTH / 30) * WIDTH_ADJUSTMENT);
+
+        creditsFont = generator.generateFont(parameter);
+        creditsFont.setColor(Color.WHITE);
+
         gl = new GlyphLayout();
     }
 
@@ -227,9 +243,17 @@ public class GameInterface extends GameElements {
 
         if (transitionInDone) {
             titleTexture.setTexture(assets.assetManager.get(Assets.title_logo, Texture.class));
+
             game.batch.draw(tsSoundButton.getTexture(), TS_SOUND_BUTTON_X, TS_SOUND_BUTTON_Y, TS_SOUND_BUTTON_WIDTH, TS_SOUND_BUTTON_HEIGHT);
             game.batch.draw(gemButton.getTexture(), GEM_BUTTON_X, GEM_BUTTON_Y, GEM_BUTTON_WIDTH, GEM_BUTTON_HEIGHT);
+            game.batch.draw(creditsButton.getTexture(), CREDITS_BUTTON_X, CREDITS_BUTTON_Y, CREDITS_BUTTON_WIDTH, CREDITS_BUTTON_HEIGHT);
+
             scoreFont.draw(game.batch, "HIGH SCORE: " + prefs.getHighScore(), SCORE_X, scoreY);
+
+            gl.setText(gemCountFont, " x " + prefs.getGemCount(), Color.WHITE, SCREEN_WIDTH, Align.center, true);
+            gemCountFont.draw(game.batch, " x " + prefs.getGemCount(), 0.95f * (SCREEN_WIDTH - gl.width), scoreY);
+
+            game.batch.draw(gemIcon, 0.95f * (SCREEN_WIDTH - gl.width) - GEM_ICON_WIDTH, scoreY - GEM_ICON_HEIGHT * .8f, GEM_ICON_WIDTH, GEM_ICON_HEIGHT);
 
             gl.setText(gemCountFont, " x " + prefs.getGemCount(), Color.WHITE, SCREEN_WIDTH, Align.center, true);
             gemCountFont.draw(game.batch, " x " + prefs.getGemCount(), 0.95f * (SCREEN_WIDTH - gl.width), scoreY);
@@ -250,7 +274,8 @@ public class GameInterface extends GameElements {
             if (prefs.isSoundEnabled()) {
                 prefs.setSound(false);
                 soundEnabled = false;
-            } else {
+            }
+            else {
                 prefs.setSound(true);
                 soundEnabled = true;
                 playSound.stop();
@@ -273,8 +298,8 @@ public class GameInterface extends GameElements {
         return false;
     }
 
-    public boolean checkForShopButtonTap(boolean isShopOpen, boolean isGemScreenOpen, boolean switchScreens, boolean soundEnabled) {
-        if (!isShopOpen && !switchScreens && !isGemScreenOpen) {
+    public boolean checkForShopButtonTap(boolean isShopOpen, boolean isGemScreenOpen, boolean isCreditsOpen, boolean switchScreens, boolean soundEnabled) {
+        if (!isShopOpen && !switchScreens && !isGemScreenOpen && !isCreditsOpen) {
             if (shopButton.getTappedBefore()) {
                 shopButton.setTexture(assets.assetManager.get(Assets.shop_button_active, Texture.class));
             } else {
@@ -292,10 +317,30 @@ public class GameInterface extends GameElements {
         }
         return false;
     }
+    public boolean checkForCreditsButtonTap(boolean isShopOpen, boolean isGemScreenOpen, boolean isCreditsOpen, boolean switchScreens, boolean soundEnabled) {
+        if (!isShopOpen && !switchScreens && !isGemScreenOpen && !isCreditsOpen) {
+            if (creditsButton.getTappedBefore()) {
+                creditsButton.setTexture(assets.assetManager.get(Assets.credits_active, Texture.class));
+            }
+            else {
+                creditsButton.setTexture(assets.assetManager.get(Assets.credits_inactive, Texture.class));
+            }
+            if (creditsButton.getReleased()) {
+                if (soundEnabled) {
+                    playSound.stop();
+                    playSound.play();
+                }
+
+                return true;
+
+            }
+        }
+        return false;
+    }
 
 
-    public boolean checkForGemButtonTap(boolean isGemScreenOpen, boolean isShopOpen, boolean switchScreens, boolean soundEnabled) {
-        if (!isShopOpen && !switchScreens && !isGemScreenOpen) {
+    public boolean checkForGemButtonTap(boolean isGemScreenOpen, boolean isShopOpen, boolean isCreditsOpen, boolean switchScreens, boolean soundEnabled) {
+        if (!isShopOpen && !switchScreens && !isGemScreenOpen && !isCreditsOpen) {
             gemButton.getTappedBefore();
 
             if (gemButton.getReleased()) {
@@ -377,7 +422,7 @@ public class GameInterface extends GameElements {
         return pauseButton.getTapped();
     }
 
-    public boolean checkForXButtonTap(boolean isShopOpen, boolean isGemScreenOpen, boolean soundEnabled) {
+    public boolean checkForXButtonTap(boolean isShopOpen, boolean isGemScreenOpen, boolean isCreditsScreenOpen, boolean soundEnabled) {
         if (isShopOpen) {
             if (xButton.getTapped()) {
                 isShopOpen = false;
@@ -402,6 +447,23 @@ public class GameInterface extends GameElements {
                 gemCount = prefs.getGemCount();
             }
             return !isGemScreenOpen;
+        }
+
+        return false;
+    }
+
+    public boolean checkForXButtonCreditsTap(boolean isCreditsScreenOpen, boolean soundEnabled) {
+        if (isCreditsScreenOpen) {
+            if (xButtonCredits.getTapped()) {
+                isCreditsScreenOpen = false;
+
+                if (soundEnabled) {
+                    pauseSound.stop();
+                    pauseSound.play();
+                }
+                gemCount = prefs.getGemCount();
+            }
+            return !isCreditsScreenOpen;
         }
 
         return false;
@@ -715,6 +777,18 @@ public class GameInterface extends GameElements {
 
         gl.setText(storeFont, ship.getTitle(), Color.valueOf(PURPLE_COLOR_HEX), SCREEN_WIDTH, Align.center, true);
         storeFont.draw(game.batch, ship.getTitle(), (SCREEN_WIDTH - gl.width) / 2, SHOP_BACK_Y + SHOP_BACK_HEIGHT * .8f + gl.height / 2);
+    }
+
+    public void drawCreditsScreen(Main game) {
+        game.batch.draw(pauseMenuBack, SHOP_BACK_X, MENU_BACK_Y, SHOP_BACK_WIDTH, MENU_BACK_HEIGHT);
+        game.batch.draw(xButtonCredits.getTexture(), X_BUTTON_X, X_BUTTON_CREDITS_Y, X_BUTTON_WIDTH, X_BUTTON_HEIGHT);
+
+        gl.setText(creditsFont, "Designed and programmed by\nJames Macre\n\nwith special thanks to\nthe musical talents of\nSamuel Mossa", Color.valueOf(PURPLE_COLOR_HEX), SCREEN_WIDTH, Align.center, true);
+        creditsFont.draw(game.batch, "Designed and programmed by\nJames Macre\n\nwith special thanks to\nthe musical talents of\nSamuel Mossa", (SCREEN_WIDTH - gl.width) / 2, MENU_BACK_Y + MENU_BACK_HEIGHT * .5f + gl.height / 2);
+
+//        gl.setText(creditsFont, "", Color.valueOf(PURPLE_COLOR_HEX), SCREEN_WIDTH, Align.center, true);
+//        creditsFont.draw(game.batch, "with special thanks to the musical talents of Samuel Mossa", (SCREEN_WIDTH - gl.width) / 2, SHOP_BACK_Y + MENU_BACK_HEIGHT * .5f - gl.height / 2);
+
     }
 
     public void drawPauseScreen(Main game, BitmapFont scoreFont, BitmapFont gemCountFont, Prefs prefs) {

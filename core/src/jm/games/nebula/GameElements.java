@@ -137,6 +137,7 @@ public class GameElements {
     public static float X_BUTTON_HEIGHT;
     public static float X_BUTTON_X;
     public static float X_BUTTON_Y;
+    public static float X_BUTTON_CREDITS_Y;
     
     public static float PLAY_BUTTON_WIDTH;
     public static float PLAY_BUTTON_HEIGHT;
@@ -176,6 +177,7 @@ public class GameElements {
     public static int SHOP_BUTTON_Y_TRANSITIONED;
 
     public static float TITLE_SCREEN_Y_ADJUSTMENT;
+    public static float SHOP_BUTTON_ADJUSTMENT;
 
     public static float WIDTH_ADJUSTMENT;
     public static float SHOP_FONT_WIDTH_ADJUSTMENT;
@@ -197,6 +199,7 @@ public class GameElements {
 
         if(SCREEN_WIDTH / (float)SCREEN_HEIGHT >= 0.75f){
             TITLE_SCREEN_Y_ADJUSTMENT = 1.05f;
+            SHOP_BUTTON_ADJUSTMENT = 1.065f;
             WIDTH_ADJUSTMENT = 0.7f;
             SHOP_FONT_WIDTH_ADJUSTMENT = 0.85f;
         }
@@ -204,6 +207,7 @@ public class GameElements {
             TITLE_SCREEN_Y_ADJUSTMENT = 1f;
             WIDTH_ADJUSTMENT = 1f;
             SHOP_FONT_WIDTH_ADJUSTMENT = 1f;
+            SHOP_BUTTON_ADJUSTMENT = 1f;
         }
 
         TITLE_LOGO_WIDTH = (SCREEN_WIDTH / 1.1f) * WIDTH_ADJUSTMENT;
@@ -302,6 +306,7 @@ public class GameElements {
         X_BUTTON_HEIGHT = X_BUTTON_WIDTH;
         X_BUTTON_X = SHOP_BACK_X + SHOP_BACK_WIDTH - (X_BUTTON_WIDTH/2f) - (SHOP_BACK_WIDTH * .0065f);
         X_BUTTON_Y = SHOP_BACK_Y + SHOP_BACK_HEIGHT - (X_BUTTON_HEIGHT/2f) - (SHOP_BACK_WIDTH * .0065f);
+        X_BUTTON_CREDITS_Y = MENU_BACK_Y + MENU_BACK_HEIGHT - (X_BUTTON_HEIGHT/2f) - (MENU_BACK_WIDTH * .0065f);
 
         PLAY_BUTTON_WIDTH = MENU_BACK_WIDTH/4f;
         PLAY_BUTTON_HEIGHT = MENU_BACK_WIDTH/4f;
@@ -337,8 +342,8 @@ public class GameElements {
         SHOP_BUTTON_WIDTH = (SCREEN_WIDTH/3f) * WIDTH_ADJUSTMENT;
         SHOP_BUTTON_HEIGHT = SHOP_BUTTON_WIDTH/2;
         SHOP_BUTTON_X = SCREEN_WIDTH / 2f - SHOP_BUTTON_WIDTH*.5f;
-        SHOP_BUTTON_Y = (int)((.3f * (.75f*START_BUTTON_Y) - START_BUTTON_HEIGHT + SCREEN_HEIGHT) * TITLE_SCREEN_Y_ADJUSTMENT);
-        SHOP_BUTTON_Y_TRANSITIONED = (int)((.3f* (.7f*START_BUTTON_Y) - START_BUTTON_HEIGHT) * TITLE_SCREEN_Y_ADJUSTMENT);
+        SHOP_BUTTON_Y = (int)((.3f * (.75f*START_BUTTON_Y) - START_BUTTON_HEIGHT + SCREEN_HEIGHT) * SHOP_BUTTON_ADJUSTMENT);
+        SHOP_BUTTON_Y_TRANSITIONED = (int)((.3f* (.7f*START_BUTTON_Y) - START_BUTTON_HEIGHT) * SHOP_BUTTON_ADJUSTMENT);
 
         SELECT_BUTTON_WIDTH = (SHOP_BACK_WIDTH / 4.5f) * 2;
         SELECT_BUTTON_HEIGHT = (SHOP_BACK_WIDTH / 4.5f) * (64f / 88);
@@ -364,6 +369,11 @@ public class GameElements {
         GEM_BUTTON_HEIGHT = GEM_HEIGHT;
         GEM_BUTTON_X = SCREEN_WIDTH - TS_SOUND_BUTTON_X - GEM_BUTTON_WIDTH;
         GEM_BUTTON_Y = TS_SOUND_BUTTON_Y + (TS_SOUND_BUTTON_HEIGHT - GEM_BUTTON_HEIGHT)/2f;
+
+        CREDITS_BUTTON_WIDTH = (SCREEN_WIDTH / 4f) * WIDTH_ADJUSTMENT;
+        CREDITS_BUTTON_HEIGHT = CREDITS_BUTTON_WIDTH * (64f / 176);
+        CREDITS_BUTTON_Y = TS_SOUND_BUTTON_Y + (TS_SOUND_BUTTON_HEIGHT - CREDITS_BUTTON_HEIGHT)/2f;
+        CREDITS_BUTTON_X = SCREEN_WIDTH/2f - CREDITS_BUTTON_WIDTH/2f;
 
         PAUSE_BUTTON_X = SCREEN_WIDTH - SCREEN_WIDTH / 7.5f;
         PAUSE_BUTTON_HEIGHT = MAIN_UI_HEIGHT/1.2f;
@@ -429,6 +439,12 @@ public class GameElements {
     public static float GEM_BUTTON_X = SCREEN_WIDTH - TS_SOUND_BUTTON_X - GEM_BUTTON_WIDTH;
     public static float GEM_BUTTON_Y = TS_SOUND_BUTTON_Y + (TS_SOUND_BUTTON_HEIGHT - GEM_BUTTON_HEIGHT)/2f;
 
+    public static float CREDITS_BUTTON_WIDTH;
+    public static float CREDITS_BUTTON_HEIGHT;
+    public static float CREDITS_BUTTON_Y;
+    public static float CREDITS_BUTTON_X;
+
+
     public static float PAUSE_BUTTON_X = SCREEN_WIDTH - SCREEN_WIDTH / 7.5f;
     public static float PAUSE_BUTTON_HEIGHT = MAIN_UI_HEIGHT/1.2f;
     public static float PAUSE_BUTTON_WIDTH = PAUSE_BUTTON_HEIGHT * 1.3f;
@@ -482,7 +498,8 @@ public class GameElements {
     Sprite blackTransition, whiteFlash, shipSS;
     Animation<TextureRegion> shipAnimation;
 
-    MASound mainMusic;
+    MASound mainSong;
+    MASound titleSong;
     MASound pauseSound;
     MASound playSound;
     MASound bombSound;
@@ -491,5 +508,5 @@ public class GameElements {
 
     public FreeTypeFontGenerator.FreeTypeFontParameter textParameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
     public FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("font.otf"));
-    public BitmapFont menuScoreFont, gameOverFont, countdownFont, confirmScreenFont, storeFont, gemCountFont, buyFont;
+    public BitmapFont menuScoreFont, gameOverFont, countdownFont, confirmScreenFont, storeFont, gemCountFont, buyFont, creditsFont;
 }

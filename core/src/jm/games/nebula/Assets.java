@@ -13,7 +13,8 @@ public class Assets implements Disposable {
 
     public static final String bullet_sound = "sound/bullet_sound.mp3";
     public static final String hit_sound = "sound/hit_sound.mp3";
-    public static final String main_theme = "sound/main_theme.mp3";
+    public static final String starship_song = "sound/starship_song.mp3";
+    public static final String title_song = "sound/title_song.mp3";
     public static final String pause_sound = "sound/pause.mp3";
     public static final String play_sound = "sound/play.mp3";
     public static final String item_sound = "sound/item_sound.mp3";
@@ -80,6 +81,9 @@ public class Assets implements Disposable {
 
     public static final String blank_active = "ui/blank_active.png";
     public static final String blank_inactive = "ui/blank_inactive.png";
+
+    public static final String credits_active = "ui/credits_button_active.png";
+    public static final String credits_inactive = "ui/credits_button_inactive.png";
 
     public static final String bullet_yellow = "weapon/bullet_yellow.png";
     public static final String bullet_red = "weapon/bullet_red.png";
@@ -171,6 +175,9 @@ public class Assets implements Disposable {
         assetManager.load(gem_button_inactive, Texture.class);
         assetManager.load(ad_button_active, Texture.class);
         assetManager.load(ad_button_inactive, Texture.class);
+
+        assetManager.load(credits_active, Texture.class);
+        assetManager.load(credits_inactive, Texture.class);
 
         assetManager.load(shop_button_active, Texture.class);
 
@@ -270,7 +277,8 @@ public class Assets implements Disposable {
 
         assetManager.setLoader(MASound.class, new MASoundLoader(miniAudio, assetManager.getFileHandleResolver()));
 
-        assetManager.load(main_theme, MASound.class);
+        assetManager.load(starship_song, MASound.class);
+        assetManager.load(title_song, MASound.class);
         assetManager.load(bomb_sound, MASound.class);
         assetManager.load(hit_sound, MASound.class);
         assetManager.load(missile_sound, MASound.class);
@@ -293,7 +301,11 @@ public class Assets implements Disposable {
         assetManager.unload(bomb_sound);
         assetManager.unload(gem_sound);
         assetManager.unload(error_sound);
-        assetManager.unload(main_theme);
+        assetManager.unload(starship_song);
+        assetManager.unload(title_song);
+
+        assetManager.unload(credits_active);
+        assetManager.unload(credits_inactive);
 
         assetManager.unload(default_background);
         assetManager.unload(green_background);
