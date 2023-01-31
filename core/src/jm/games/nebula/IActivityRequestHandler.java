@@ -8,4 +8,6 @@ public interface IActivityRequestHandler {
     public boolean isAdFinished();
     public void setAdFinished(boolean adFinished);
     public void loadAd();
+    public boolean adFailedToLoad();
+    public void setAdFailedToLoad(boolean adFailedToLoad);
 }

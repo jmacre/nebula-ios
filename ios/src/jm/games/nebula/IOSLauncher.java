@@ -24,7 +24,7 @@ public class IOSLauncher extends IOSApplication.Delegate implements IActivityReq
     IOSApplication iosApplication;
     NSString testDeviceIdentifier = new NSString("96b13088c743a128f6548fdf77e26c58");
     private GADRewardedAd mRewardedAd;
-    private boolean adFinished;
+    private boolean adFinished, adFailedToLoad;
     GADRequest request = new GADRequest();
 
     @Override
@@ -38,8 +38,6 @@ public class IOSLauncher extends IOSApplication.Delegate implements IActivityReq
         });
 
         request = new GADRequest();
-        loadAd();
-
 
         Main game = new Main(this);
         game.purchaseManager = new PurchaseManageriOSApple();
@@ -80,6 +78,7 @@ public class IOSLauncher extends IOSApplication.Delegate implements IActivityReq
                 public void didFailToPresentFullScreenContent(GADFullScreenPresentingAd ad, NSError error) {
                     mRewardedAd = null;
                     adFinished = true;
+                    adFailedToLoad = true;
                 }
             });
             mRewardedAd.present(iosApplication.getUIViewController(), new Runnable() {
@@ -115,13 +114,25 @@ public class IOSLauncher extends IOSApplication.Delegate implements IActivityReq
                 @Override
                 public void invoke(GADRewardedAd ad, NSError error) {
                     if (error != null) {
+                        adFailedToLoad = true;
                         System.out.println("failed to load ad due to " + error);
                     } else {
                         mRewardedAd = ad;
+                        adFailedToLoad= false;
                     }
                 }
             });
         }
+    }
+
+    @Override
+    public boolean adFailedToLoad() {
+        return adFailedToLoad;
+    }
+
+    @Override
+    public void setAdFailedToLoad(boolean adFailedToLoad) {
+        this.adFailedToLoad = adFailedToLoad;
     }
 
 }

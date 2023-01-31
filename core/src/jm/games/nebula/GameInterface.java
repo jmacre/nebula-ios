@@ -64,10 +64,11 @@ public class GameInterface extends GameElements {
     Boolean continueScreenOpen = false;
 
     boolean isAdLoaded = false;
+    boolean adRequested = false;
 
     int totalGemsEarned;
 
-    float tapToContinueBlinkingTimer = TAP_TO_CONTINUE_BLINKING_TIMER*2;
+    float tapToContinueBlinkingTimer = TAP_TO_CONTINUE_BLINKING_TIMER * 2;
 
     float gemPurchaseTimer = GEM_COUNT_UPDATE_TIMER;
 
@@ -105,7 +106,7 @@ public class GameInterface extends GameElements {
 
         initPurchaseManager();
 
-        if(Gdx.graphics.getSafeInsetTop() > 0) {
+        if (Gdx.graphics.getSafeInsetTop() > 0) {
             topInset = (int) (0.6 * Gdx.graphics.getSafeInsetTop());
         }
 
@@ -115,7 +116,7 @@ public class GameInterface extends GameElements {
         shopButton = new Button(assets.assetManager.get(Assets.shop_button_inactive_clear, Texture.class), SHOP_BUTTON_X, SHOP_BUTTON_Y_TRANSITIONED, SHOP_BUTTON_WIDTH, SHOP_BUTTON_HEIGHT);
         creditsButton = new Button(assets.assetManager.get(Assets.credits_inactive, Texture.class), CREDITS_BUTTON_X, CREDITS_BUTTON_Y, CREDITS_BUTTON_WIDTH, CREDITS_BUTTON_HEIGHT);
 
-        if(prefs.isSoundEnabled())
+        if (prefs.isSoundEnabled())
             soundButton = new Button(assets.assetManager.get(Assets.sound_on_button_inactive, Texture.class), SOUND_BUTTON_X, SOUND_BUTTON_Y, SOUND_BUTTON_WIDTH, SOUND_BUTTON_HEIGHT);
         else
             soundButton = new Button(assets.assetManager.get(Assets.sound_off_button_inactive, Texture.class), SOUND_BUTTON_X, SOUND_BUTTON_Y, SOUND_BUTTON_WIDTH, SOUND_BUTTON_HEIGHT);
@@ -274,8 +275,7 @@ public class GameInterface extends GameElements {
             if (prefs.isSoundEnabled()) {
                 prefs.setSound(false);
                 soundEnabled = false;
-            }
-            else {
+            } else {
                 prefs.setSound(true);
                 soundEnabled = true;
                 playSound.stop();
@@ -317,12 +317,12 @@ public class GameInterface extends GameElements {
         }
         return false;
     }
+
     public boolean checkForCreditsButtonTap(boolean isShopOpen, boolean isGemScreenOpen, boolean isCreditsOpen, boolean switchScreens, boolean soundEnabled) {
         if (!isShopOpen && !switchScreens && !isGemScreenOpen && !isCreditsOpen) {
             if (creditsButton.getTappedBefore()) {
                 creditsButton.setTexture(assets.assetManager.get(Assets.credits_active, Texture.class));
-            }
-            else {
+            } else {
                 creditsButton.setTexture(assets.assetManager.get(Assets.credits_inactive, Texture.class));
             }
             if (creditsButton.getReleased()) {
@@ -371,8 +371,8 @@ public class GameInterface extends GameElements {
                 }
             }
         }
-        if(soundButton.getReleased()){
-            if(!soundEnabled){
+        if (soundButton.getReleased()) {
+            if (!soundEnabled) {
                 pauseSound.play();
             }
             return true;
@@ -390,7 +390,7 @@ public class GameInterface extends GameElements {
                 replayButton.setTexture(assets.assetManager.get(Assets.replay_button_inactive, Texture.class));
             }
         }
-        if(replayButton.getReleased()){
+        if (replayButton.getReleased()) {
             replayButton.setTexture(assets.assetManager.get(Assets.replay_button_inactive, Texture.class));
             isPauseScreenOpen = false;
 
@@ -406,7 +406,7 @@ public class GameInterface extends GameElements {
         } else {
             playButton.setTexture(assets.assetManager.get(Assets.play_button_inactive, Texture.class));
         }
-        if(playButton.getReleased()){
+        if (playButton.getReleased()) {
             isPauseScreenOpen = false;
 
             if (soundEnabled) {
@@ -433,9 +433,7 @@ public class GameInterface extends GameElements {
                 }
             }
             return !isShopOpen;
-        }
-
-        else if (isGemScreenOpen) {
+        } else if (isGemScreenOpen) {
             if (xButton.getTapped()) {
                 isGemScreenOpen = false;
                 isAdLoaded = false;
@@ -502,7 +500,7 @@ public class GameInterface extends GameElements {
                 homeButton.setTexture(assets.assetManager.get(Assets.home_button_inactive, Texture.class));
             }
         }
-        if(homeButton.getReleased()){
+        if (homeButton.getReleased()) {
             if (soundEnabled) {
                 pauseSound.play();
             }
@@ -594,7 +592,7 @@ public class GameInterface extends GameElements {
             }
         } else if (isGemScreenOpen) {
             if (selectButton.getTappedBefore()) {
-                if(gemsPurchased) {
+                if (gemsPurchased) {
                     gemCount = prefs.getGemCount();
                     prePurchaseGemCount = gemCount;
                 }
@@ -621,11 +619,14 @@ public class GameInterface extends GameElements {
             selectButton.setTexture(assets.assetManager.get(ad_button_inactive, Texture.class));
         }
         if (selectButton.getReleased()) {
+            adRequested = true;
+
             if (Gdx.app.getType() == Application.ApplicationType.Android) {
+                game.requestHandlerAndroid.setAdFinished(false);
                 game.requestHandlerAndroid.loadAd();
                 isAdLoaded = true;
-            }
-            else if (Gdx.app.getType() == Application.ApplicationType.iOS) {
+            } else if (Gdx.app.getType() == Application.ApplicationType.iOS) {
+                game.requestHandlerIOS.setAdFinished(false);
                 game.requestHandlerIOS.loadAd();
                 isAdLoaded = true;
             }
@@ -634,10 +635,14 @@ public class GameInterface extends GameElements {
         if (Gdx.app.getType() == Application.ApplicationType.Android && game.requestHandlerAndroid.isAdLoaded() && isAdLoaded) {
             game.requestHandlerAndroid.showAd(false, soundEnabled, prefs, gemSound);
             isAdLoaded = false;
-        }
-        else if (Gdx.app.getType() == Application.ApplicationType.iOS && game.requestHandlerIOS.isAdLoaded() && isAdLoaded) {
+        } else if (Gdx.app.getType() == Application.ApplicationType.iOS && game.requestHandlerIOS.isAdLoaded() && isAdLoaded) {
             game.requestHandlerIOS.showAd(false, soundEnabled, prefs, gemSound);
             isAdLoaded = false;
+        }
+        if (Gdx.app.getType() == Application.ApplicationType.Android && game.requestHandlerAndroid.isAdFinished()) {
+            adRequested = false;
+        } else if (Gdx.app.getType() == Application.ApplicationType.iOS && game.requestHandlerIOS.isAdFinished()) {
+            adRequested = false;
         }
     }
 
@@ -668,7 +673,7 @@ public class GameInterface extends GameElements {
         }
     }
 
-    public void drawContinueScreen(Main game, BitmapFont confirmScreenFont){
+    public void drawContinueScreen(Main game, BitmapFont confirmScreenFont) {
         continueScreenOpen = true;
 
         game.batch.draw(pauseMenuBack, MENU_BACK_X, MENU_BACK_Y, MENU_BACK_WIDTH, MENU_BACK_HEIGHT);
@@ -676,58 +681,67 @@ public class GameInterface extends GameElements {
         game.batch.draw(noButton.getTexture(), NO_BUTTON_X, NO_BUTTON_Y, NO_BUTTON_WIDTH, NO_BUTTON_HEIGHT);
 
         gl.setText(confirmScreenFont, "WATCH AN AD \n\nTO CONTINUE?", Color.valueOf(PURPLE_COLOR_HEX), SCREEN_WIDTH, Align.center, true);
-        confirmScreenFont.draw(game.batch, "WATCH AN AD \n\nTO CONTINUE?", SCREEN_WIDTH/2 - (gl.width/2), CONFIRM_LEAVE_FONT_Y);
-
+        confirmScreenFont.draw(game.batch, "WATCH AN AD \n\nTO CONTINUE?", SCREEN_WIDTH / 2f - (gl.width / 2), CONFIRM_LEAVE_FONT_Y);
     }
 
     public void drawGemScreen(Main game, float delta, boolean soundEnabled, SpriteBatch batch, Prefs prefs) {
-        if(gemCount == 0){
+        if (gemCount == 0) {
             gemCount = prefs.getGemCount();
-        }
-        else if (prePurchaseGemCount != 0 && gemCount < prefs.getGemCount()){
+        } else if (prePurchaseGemCount != 0 && gemCount < prefs.getGemCount()) {
             gemCount = prePurchaseGemCount;
         }
 
         game.batch.draw(shopBack, SHOP_BACK_X, SHOP_BACK_Y, SHOP_BACK_WIDTH, SHOP_BACK_HEIGHT);
-        game.batch.draw(xButton.getTexture(), X_BUTTON_X, X_BUTTON_Y, X_BUTTON_WIDTH, X_BUTTON_HEIGHT);
 
-        game.batch.draw(gemIcon, GEM_ICON_SHOP_X, GEM_ICON_SHOP_Y, GEM_ICON_WIDTH, GEM_ICON_HEIGHT);
-        gemCountFont.draw(game.batch, " x " + gemCount, GEM_COUNT_SHOP_X, GEM_COUNT_SHOP_Y);
+        if ((Gdx.app.getType() == Application.ApplicationType.Android && game.requestHandlerAndroid.adFailedToLoad()) || (Gdx.app.getType() == Application.ApplicationType.iOS && game.requestHandlerIOS.adFailedToLoad())) {
+            adRequested = false;
+        }
+        if (!adRequested || (Gdx.app.getType() == Application.ApplicationType.Android && game.requestHandlerAndroid.adFailedToLoad()) || Gdx.app.getType() == Application.ApplicationType.iOS && game.requestHandlerIOS.adFailedToLoad()) {
+            game.batch.draw(xButton.getTexture(), X_BUTTON_X, X_BUTTON_Y, X_BUTTON_WIDTH, X_BUTTON_HEIGHT);
 
-        game.batch.draw(leftArrowBtn.getTexture(), LEFT_ARROW_BTN_X, LEFT_ARROW_BTN_Y, LEFT_ARROW_BTN_WIDTH, LEFT_ARROW_BTN_HEIGHT);
-        game.batch.draw(rightArrowBtn.getTexture(), RIGHT_ARROW_BTN_X, RIGHT_ARROW_BTN_Y, RIGHT_ARROW_BTN_WIDTH, RIGHT_ARROW_BTN_HEIGHT);
-        game.batch.draw(selectButton.getTexture(), SELECT_BUTTON_X, SELECT_BUTTON_Y, SELECT_BUTTON_WIDTH, SELECT_BUTTON_HEIGHT);
+            game.batch.draw(gemIcon, GEM_ICON_SHOP_X, GEM_ICON_SHOP_Y, GEM_ICON_WIDTH, GEM_ICON_HEIGHT);
+            gemCountFont.draw(game.batch, " x " + gemCount, GEM_COUNT_SHOP_X, GEM_COUNT_SHOP_Y);
 
-        checkForLeftArrowBtnTap(soundEnabled, false, true);
-        checkForRightArrowBtnTap(soundEnabled, false, true);
+            game.batch.draw(leftArrowBtn.getTexture(), LEFT_ARROW_BTN_X, LEFT_ARROW_BTN_Y, LEFT_ARROW_BTN_WIDTH, LEFT_ARROW_BTN_HEIGHT);
+            game.batch.draw(rightArrowBtn.getTexture(), RIGHT_ARROW_BTN_X, RIGHT_ARROW_BTN_Y, RIGHT_ARROW_BTN_WIDTH, RIGHT_ARROW_BTN_HEIGHT);
+            game.batch.draw(selectButton.getTexture(), SELECT_BUTTON_X, SELECT_BUTTON_Y, SELECT_BUTTON_WIDTH, SELECT_BUTTON_HEIGHT);
+
+            checkForLeftArrowBtnTap(soundEnabled, false, true);
+            checkForRightArrowBtnTap(soundEnabled, false, true);
+
+            if (gemElement == null) {
+                gemElement = new GemElement(AD_ID, selectedGemScreenElement, SHOP_BACK_X + SHOP_BACK_WIDTH / 2 - GEM_SHOP_WIDTH / 2f, SHOP_BACK_Y + SHOP_BACK_HEIGHT / 2 - GEM_SHOP_HEIGHT / 2f, GEM_SHOP_WIDTH, GEM_SHOP_HEIGHT);
+            }
+            gemElement.render(stateTime, batch);
+            gemElement.setElementAnimation(selectedGemScreenElement);
+
+            gl.setText(storeFont, gemElement.getTitle(), Color.valueOf(PURPLE_COLOR_HEX), SCREEN_WIDTH, Align.center, true);
+            storeFont.draw(game.batch, gemElement.getTitle(), (SCREEN_WIDTH - gl.width) / 2, SHOP_BACK_Y + SHOP_BACK_HEIGHT * .8f + gl.height / 2);
+
+        }
+        else{
+            gl.setText(storeFont, "LOADING...", Color.valueOf(PURPLE_COLOR_HEX), SCREEN_WIDTH, Align.center, true);
+            storeFont.draw(game.batch, "LOADING...", (SCREEN_WIDTH - gl.width) / 2, SHOP_BACK_Y + SHOP_BACK_HEIGHT * .8f + gl.height / 2);
+
+        }
 
         if (selectedGemScreenElement == AD_ID) {
             checkForAdButtonTap(game, soundEnabled, prefs);
-        }
-        else {
+        } else {
             checkForSelectButtonTap(soundEnabled, false, true, prefs);
             gl.setText(buyFont, '$' + Float.toString(GemElement.getPriceByElementId(selectedGemScreenElement)), Color.valueOf(PURPLE_COLOR_HEX), SCREEN_WIDTH, Align.center, true);
             buyFont.draw(game.batch, '$' + Float.toString(GemElement.getPriceByElementId(selectedGemScreenElement)), (SCREEN_WIDTH - gl.width) / 2, SELECT_BUTTON_Y + gl.height / 2 + SELECT_BUTTON_HEIGHT / 2);
 
         }
 
-        if (gemElement == null) {
-            gemElement = new GemElement(AD_ID, selectedGemScreenElement, SHOP_BACK_X + SHOP_BACK_WIDTH / 2 - GEM_SHOP_WIDTH / 2f, SHOP_BACK_Y + SHOP_BACK_HEIGHT / 2 - GEM_SHOP_HEIGHT / 2f, GEM_SHOP_WIDTH, GEM_SHOP_HEIGHT);
-        }
-        if(gemsPurchased) {
+
+        if (gemsPurchased) {
             getPurchasedGems(delta, gemCount, purchasedGemCount, soundEnabled);
         }
-
-        gemElement.render(stateTime, batch);
-
-        gemElement.setElementAnimation(selectedGemScreenElement);
-
-        gl.setText(storeFont, gemElement.getTitle(), Color.valueOf(PURPLE_COLOR_HEX), SCREEN_WIDTH, Align.center, true);
-        storeFont.draw(game.batch, gemElement.getTitle(), (SCREEN_WIDTH - gl.width) / 2, SHOP_BACK_Y + SHOP_BACK_HEIGHT * .8f + gl.height / 2);
     }
 
-    public void skipGemPurchaseCount(){
-        if(gemsPurchased){
+    public void skipGemPurchaseCount() {
+        if (gemsPurchased) {
             prePurchaseGemCount = prefs.getGemCount();
             gemsPurchased = false;
         }
@@ -785,25 +799,21 @@ public class GameInterface extends GameElements {
 
         gl.setText(creditsFont, "Designed and programmed by\nJames Macre\n\nwith special thanks to\nthe musical talents of\nSamuel Mossa", Color.valueOf(PURPLE_COLOR_HEX), SCREEN_WIDTH, Align.center, true);
         creditsFont.draw(game.batch, "Designed and programmed by\nJames Macre\n\nwith special thanks to\nthe musical talents of\nSamuel Mossa", (SCREEN_WIDTH - gl.width) / 2, MENU_BACK_Y + MENU_BACK_HEIGHT * .5f + gl.height / 2);
-
-//        gl.setText(creditsFont, "", Color.valueOf(PURPLE_COLOR_HEX), SCREEN_WIDTH, Align.center, true);
-//        creditsFont.draw(game.batch, "with special thanks to the musical talents of Samuel Mossa", (SCREEN_WIDTH - gl.width) / 2, SHOP_BACK_Y + MENU_BACK_HEIGHT * .5f - gl.height / 2);
-
     }
 
     public void drawPauseScreen(Main game, BitmapFont scoreFont, BitmapFont gemCountFont, Prefs prefs) {
         isPauseScreenOpen = true;
         game.batch.draw(pauseMenuBack, MENU_BACK_X, MENU_BACK_Y, MENU_BACK_WIDTH, MENU_BACK_HEIGHT);
 
-            game.batch.draw(soundButton.getTexture(), SOUND_BUTTON_X, SOUND_BUTTON_Y, SOUND_BUTTON_WIDTH, SOUND_BUTTON_HEIGHT);
-            game.batch.draw(playButton.getTexture(), PLAY_BUTTON_X, PLAY_BUTTON_Y, PLAY_BUTTON_WIDTH, PLAY_BUTTON_HEIGHT);
-            game.batch.draw(homeButton.getTexture(), HOME_BUTTON_X, HOME_BUTTON_Y, HOME_BUTTON_WIDTH, HOME_BUTTON_HEIGHT);
+        game.batch.draw(soundButton.getTexture(), SOUND_BUTTON_X, SOUND_BUTTON_Y, SOUND_BUTTON_WIDTH, SOUND_BUTTON_HEIGHT);
+        game.batch.draw(playButton.getTexture(), PLAY_BUTTON_X, PLAY_BUTTON_Y, PLAY_BUTTON_WIDTH, PLAY_BUTTON_HEIGHT);
+        game.batch.draw(homeButton.getTexture(), HOME_BUTTON_X, HOME_BUTTON_Y, HOME_BUTTON_WIDTH, HOME_BUTTON_HEIGHT);
 
-            scoreFont.draw(game.batch, "HIGH SCORE: " + prefs.getHighScore(), MENU_SCORE_X, MENU_SCORE_Y);
+        scoreFont.draw(game.batch, "HIGH SCORE: " + prefs.getHighScore(), MENU_SCORE_X, MENU_SCORE_Y);
 
         gl.setText(gemCountFont, " x " + prefs.getGemCount(), Color.WHITE, SCREEN_WIDTH, Align.center, true);
-        gemCountFont.draw(game.batch, " x " + prefs.getGemCount(), 0.95f*(MENU_BACK_X + MENU_BACK_WIDTH - gl.width), GEM_COUNT_MENU_Y);
-        game.batch.draw(gemIcon,    0.95f*(MENU_BACK_X + MENU_BACK_WIDTH - gl.width) - GEM_ICON_WIDTH, GEM_ICON_MENU_Y, GEM_ICON_WIDTH, GEM_ICON_HEIGHT);
+        gemCountFont.draw(game.batch, " x " + prefs.getGemCount(), 0.95f * (MENU_BACK_X + MENU_BACK_WIDTH - gl.width), GEM_COUNT_MENU_Y);
+        game.batch.draw(gemIcon, 0.95f * (MENU_BACK_X + MENU_BACK_WIDTH - gl.width) - GEM_ICON_WIDTH, GEM_ICON_MENU_Y, GEM_ICON_WIDTH, GEM_ICON_HEIGHT);
     }
 
     public void drawConfirmLeave(Main game, BitmapFont confirmScreenFont) {
@@ -812,7 +822,7 @@ public class GameInterface extends GameElements {
         game.batch.draw(noButton.getTexture(), NO_BUTTON_X, NO_BUTTON_Y, NO_BUTTON_WIDTH, NO_BUTTON_HEIGHT);
 
         gl.setText(confirmScreenFont, "ARE YOU SURE YOU \n\n  WANT TO LEAVE?", Color.valueOf(PURPLE_COLOR_HEX), SCREEN_WIDTH, Align.center, true);
-        confirmScreenFont.draw(game.batch, "ARE YOU SURE YOU \n\n  WANT TO LEAVE?", SCREEN_WIDTH/2 - (gl.width/2), CONFIRM_LEAVE_FONT_Y);
+        confirmScreenFont.draw(game.batch, "ARE YOU SURE YOU \n\n  WANT TO LEAVE?", SCREEN_WIDTH / 2 - (gl.width / 2), CONFIRM_LEAVE_FONT_Y);
 
 
     }
@@ -849,57 +859,56 @@ public class GameInterface extends GameElements {
 
             if (newHighScore) {
                 gl.setText(gameOverFont, "HIGH SCORE", Color.WHITE, SCREEN_WIDTH, Align.center, true);
-                gameOverFont.draw(game.batch, "HIGH SCORE", (SCREEN_WIDTH - gl.width) / 2, GAME_OVER_TEXT_Y - Gdx.graphics.getSafeInsetTop() + gl.height/2);
+                gameOverFont.draw(game.batch, "HIGH SCORE", (SCREEN_WIDTH - gl.width) / 2, GAME_OVER_TEXT_Y - Gdx.graphics.getSafeInsetTop() + gl.height / 2);
 
 
             } else {
                 gl.setText(gameOverFont, "GAME OVER", Color.WHITE, SCREEN_WIDTH, Align.center, true);
-                gameOverFont.draw(game.batch, "GAME OVER", (SCREEN_WIDTH - gl.width) / 2, GAME_OVER_TEXT_Y + gl.height/2  - Gdx.graphics.getSafeInsetTop());
+                gameOverFont.draw(game.batch, "GAME OVER", (SCREEN_WIDTH - gl.width) / 2, GAME_OVER_TEXT_Y + gl.height / 2 - Gdx.graphics.getSafeInsetTop());
 
             }
 
             scoreFont.draw(game.batch, "HIGH SCORE: " + highScore, MENU_SCORE_X, MENU_SCORE_Y);
 
             gl.setText(gemCountFont, " x " + replayScreenGemCount, Color.WHITE, SCREEN_WIDTH, Align.center, true);
-            gemCountFont.draw(game.batch, " x " + replayScreenGemCount, 0.95f*(MENU_BACK_X + MENU_BACK_WIDTH - gl.width), GEM_COUNT_MENU_Y);
-            game.batch.draw(gemIcon,    0.95f*(MENU_BACK_X + MENU_BACK_WIDTH - gl.width) - GEM_ICON_WIDTH, GEM_ICON_MENU_Y, GEM_ICON_WIDTH, GEM_ICON_HEIGHT);
+            gemCountFont.draw(game.batch, " x " + replayScreenGemCount, 0.95f * (MENU_BACK_X + MENU_BACK_WIDTH - gl.width), GEM_COUNT_MENU_Y);
+            game.batch.draw(gemIcon, 0.95f * (MENU_BACK_X + MENU_BACK_WIDTH - gl.width) - GEM_ICON_WIDTH, GEM_ICON_MENU_Y, GEM_ICON_WIDTH, GEM_ICON_HEIGHT);
         }
 
-            if (isRecapScreenOpen) {
-                gl.setText(gemCountFont, "FINAL SCORE: " + finalScore, Color.WHITE, SCREEN_WIDTH, Align.center, false);
-                gemCountFont.draw(game.batch, "FINAL SCORE: " + finalScore, (SCREEN_WIDTH - gl.width) / 2, (SCREEN_HEIGHT - gl.height) / 2 + gemCountFont.getLineHeight() * 3f);
-                if (gemCountStarted || recapComplete) {
-                    gemCountFont.draw(game.batch, "GEMS CAUGHT:  " + gemsCaught, (SCREEN_WIDTH - gl.width) / 2, (SCREEN_HEIGHT - gl.height) / 2 + (gemCountFont.getLineHeight()));
-                }
+        if (isRecapScreenOpen) {
+            gl.setText(gemCountFont, "FINAL SCORE: " + finalScore, Color.WHITE, SCREEN_WIDTH, Align.center, false);
+            gemCountFont.draw(game.batch, "FINAL SCORE: " + finalScore, (SCREEN_WIDTH - gl.width) / 2, (SCREEN_HEIGHT - gl.height) / 2 + gemCountFont.getLineHeight() * 3f);
+            if (gemCountStarted || recapComplete) {
+                gemCountFont.draw(game.batch, "GEMS CAUGHT:  " + gemsCaught, (SCREEN_WIDTH - gl.width) / 2, (SCREEN_HEIGHT - gl.height) / 2 + (gemCountFont.getLineHeight()));
+            }
 
-                if (scoreCountStarted || recapComplete) {
-                    gemCountFont.draw(game.batch, "SCORE BONUS:  " + gemsFromScore,(SCREEN_WIDTH - gl.width) / 2, (SCREEN_HEIGHT - gl.height) / 2 - gemCountFont.getLineHeight());
+            if (scoreCountStarted || recapComplete) {
+                gemCountFont.draw(game.batch, "SCORE BONUS:  " + gemsFromScore, (SCREEN_WIDTH - gl.width) / 2, (SCREEN_HEIGHT - gl.height) / 2 - gemCountFont.getLineHeight());
 
-                }
+            }
 
-                if (recapStarted || recapComplete) {
-                        gemCountFont.draw(game.batch, "GEMS EARNED:  " + totalGemsEarned, (SCREEN_WIDTH - gl.width) / 2, (SCREEN_HEIGHT - gl.height) / 2 - gemCountFont.getLineHeight() * 3f);
+            if (recapStarted || recapComplete) {
+                gemCountFont.draw(game.batch, "GEMS EARNED:  " + totalGemsEarned, (SCREEN_WIDTH - gl.width) / 2, (SCREEN_HEIGHT - gl.height) / 2 - gemCountFont.getLineHeight() * 3f);
 
-                    if(recapComplete){
-                        runTapToContinueBlinking(game, deltaP);
-                    }
+                if (recapComplete) {
+                    runTapToContinueBlinking(game, deltaP);
                 }
             }
         }
+    }
 
     public void runTapToContinueBlinking(Main game, float deltaP) {
         tapToContinueBlinkingTimer += deltaP;
 
         if (tapToContinueBlinkingTimer < 0f && tapToContinueBlinkingTimer >= -0.5f) {
             gemCountFont.draw(game.batch, "TAP TO CONTINUE", (SCREEN_WIDTH - gl.width) / 2, MENU_BACK_Y + gemCountFont.getLineHeight() * 2.5f);
-        }
-        else if(tapToContinueBlinkingTimer > 0) {
+        } else if (tapToContinueBlinkingTimer > 0) {
             tapToContinueBlinkingTimer = TAP_TO_CONTINUE_BLINKING_TIMER * 2f;
         }
     }
 
     public int getPurchasedGems(float deltaP, int gemCount, int purchasedGemCount, boolean soundEnabled) {
-        if(prePurchaseGemCount == 0){
+        if (prePurchaseGemCount == 0) {
             prePurchaseGemCount = gemCount;
         }
 
@@ -907,25 +916,22 @@ public class GameInterface extends GameElements {
             gemPurchaseTimer += deltaP;
 
         } else {
-                if(prePurchaseGemCount < prefs.getGemCount()) {
-                    if(purchasedGemCount == 1000) {
-                        prePurchaseGemCount += 10;
-                    }
-                    else if (purchasedGemCount == 10000){
-                        prePurchaseGemCount += 50;
-                    }
-                    else{
-                        prePurchaseGemCount += 500;
-                    }
+            if (prePurchaseGemCount < prefs.getGemCount()) {
+                if (purchasedGemCount == 1000) {
+                    prePurchaseGemCount += 10;
+                } else if (purchasedGemCount == 10000) {
+                    prePurchaseGemCount += 50;
+                } else {
+                    prePurchaseGemCount += 500;
+                }
 
-                    if (soundEnabled) {
-                        playSound.play();
-                    }
+                if (soundEnabled) {
+                    playSound.play();
                 }
-                else{
-                    gemsPurchased = false;
-                    prePurchaseGemCount = 0;
-                }
+            } else {
+                gemsPurchased = false;
+                prePurchaseGemCount = 0;
+            }
         }
         return prePurchaseGemCount;
     }

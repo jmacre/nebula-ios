@@ -1070,16 +1070,6 @@ public class MainGame extends GameElements implements Screen {
     }
 
     public void transitionIn() {
-        if (!isAdLoaded) {
-            if (Gdx.app.getType() == Application.ApplicationType.Android) {
-                game.requestHandlerAndroid.loadAd();
-                isAdLoaded = true;
-
-            } else if (Gdx.app.getType() == Application.ApplicationType.iOS) {
-                game.requestHandlerIOS.loadAd();
-                isAdLoaded = true;
-            }
-        }
         resetInputProcessorTaps();
         if (!isTransitionedIn) {
             stopSounds();
@@ -1123,6 +1113,7 @@ public class MainGame extends GameElements implements Screen {
     }
 
     public void transitionOut(float SHIP_X_TRANSITION_OUT) {
+
         mainSong.stop();
         resetHourglassMultiplier();
 
@@ -1906,6 +1897,18 @@ public class MainGame extends GameElements implements Screen {
 
                 if (health == 0) {
                     isAlive = false;
+                }
+                if(health == 1){
+                    if (!isAdLoaded) {
+                        if (Gdx.app.getType() == Application.ApplicationType.Android) {
+                            game.requestHandlerAndroid.loadAd();
+                            isAdLoaded = true;
+
+                        } else if (Gdx.app.getType() == Application.ApplicationType.iOS) {
+                            game.requestHandlerIOS.loadAd();
+                            isAdLoaded = true;
+                        }
+                    }
                 }
             }
         }

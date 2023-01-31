@@ -33,6 +33,7 @@ public class AndroidLauncher extends AndroidApplication implements IActivityRequ
     AdRequest adRequest;
     private RewardedAd mRewardedAd;
     private boolean adFinished = false;
+    private boolean adFailedToLoad;
 
 
     @Override
@@ -60,10 +61,7 @@ public class AndroidLauncher extends AndroidApplication implements IActivityRequ
         View gameView = initializeForView(game, config);
 
         adRequest = new AdRequest.Builder().build();
-        loadAd();
 
-
-//		adView.loadAd(adRequest);
 
         // Add the libGDX view
         layout.addView(gameView);
@@ -118,6 +116,17 @@ public class AndroidLauncher extends AndroidApplication implements IActivityRequ
         });
 
     }
+
+    @Override
+    public boolean adFailedToLoad() {
+        return adFailedToLoad;
+    }
+
+    @Override
+    public void setAdFailedToLoad(boolean adFailedToLoad) {
+        this.adFailedToLoad = adFailedToLoad;
+    }
+
     private void loadOnUiThread(){
         if (mRewardedAd == null) {
             RewardedAd.load(this, "ca-app-pub-8689816410492919/3317793905",
@@ -125,11 +134,14 @@ public class AndroidLauncher extends AndroidApplication implements IActivityRequ
                         @Override
                         public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
                             mRewardedAd = null;
+                            adFailedToLoad = true;
                         }
 
                         @Override
                         public void onAdLoaded(@NonNull RewardedAd rewardedAd) {
                             mRewardedAd = rewardedAd;
+                            adFailedToLoad = false;
+
                         }
                     });
         }
@@ -148,6 +160,7 @@ public class AndroidLauncher extends AndroidApplication implements IActivityRequ
                         public void onAdFailedToShowFullScreenContent(AdError adError) {
                             mRewardedAd = null;
                             adFinished = true;
+                            adFailedToLoad = true;
                         }
 
                         @Override

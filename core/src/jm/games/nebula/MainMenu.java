@@ -142,7 +142,7 @@ public class MainMenu extends GameElements implements Screen {
                 if(gameInterface.checkForGemButtonTap(isGemScreenOpen, isShopOpen,  isCreditsOpen, switchScreens, soundEnabled)){
                     isGemScreenOpen = true;
                 }
-                if(isGemScreenOpen && gameInterface.checkForXButtonTap(isShopOpen, true, false, soundEnabled)){
+                if(isGemScreenOpen && !gameInterface.adRequested && gameInterface.checkForXButtonTap(isShopOpen, true, false, soundEnabled)){
                     isGemScreenOpen = false;
                 }
                 if(gameInterface.checkForCreditsButtonTap(isShopOpen, isGemScreenOpen, isCreditsOpen, switchScreens, soundEnabled)){
