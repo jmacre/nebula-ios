@@ -75,23 +75,23 @@ public class GemElement extends GameElements{
                 break;
             case ONE_DOLLAR_ID:
                 elementSheet = oneDollarGem;
-                title = "1,000 GEMS";
-                sku = GEM_1K_SKU;
-                break;
-            case FIVE_DOLLAR_ID:
-                elementSheet = fiveDollarGem;
                 title = "10,000 GEMS";
                 sku = GEM_10K_SKU;
                 break;
+            case FIVE_DOLLAR_ID:
+                elementSheet = fiveDollarGem;
+                title = "75,000 GEMS";
+                sku = GEM_75K_SKU;
+                break;
             case TEN_DOLLAR_ID:
                 elementSheet = tenDollarGem;
-                title = "30,000 GEMS";
-                sku = GEM_30K_SKU;
+                title = "200,000 GEMS";
+                sku = GEM_200K_SKU;
                 break;
             case TWENTY_DOLLAR_ID:
                 elementSheet = twentyDollarGem;
-                title = "100,000 GEMS";
-                sku = GEM_100K_SKU;
+                title = "500,000 GEMS";
+                sku = GEM_500K_SKU;
                 break;
         }
 

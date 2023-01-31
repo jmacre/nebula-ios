@@ -934,10 +934,10 @@ public class GameInterface extends GameElements {
         // the purchase manager config here in the core project works if your SKUs are the same in every
         // payment system. If this is not the case, inject them like the PurchaseManager is injected
         PurchaseManagerConfig pmc = new PurchaseManagerConfig();
-        pmc.addOffer(new Offer().setType(OfferType.CONSUMABLE).setIdentifier(GEM_1K_SKU));
         pmc.addOffer(new Offer().setType(OfferType.CONSUMABLE).setIdentifier(GEM_10K_SKU));
-        pmc.addOffer(new Offer().setType(OfferType.CONSUMABLE).setIdentifier(GEM_30K_SKU));
-        pmc.addOffer(new Offer().setType(OfferType.CONSUMABLE).setIdentifier(GEM_100K_SKU));
+        pmc.addOffer(new Offer().setType(OfferType.CONSUMABLE).setIdentifier(GEM_75K_SKU));
+        pmc.addOffer(new Offer().setType(OfferType.CONSUMABLE).setIdentifier(GEM_200K_SKU));
+        pmc.addOffer(new Offer().setType(OfferType.CONSUMABLE).setIdentifier(GEM_500K_SKU));
 
         game.purchaseManager.install(new MyPurchaseObserver(), pmc, true);
     }
@@ -997,26 +997,26 @@ public class GameInterface extends GameElements {
                 public void run() {
                     if (transaction.isPurchased()) {
                         switch (transaction.getIdentifier()) {
-                            case GEM_1K_SKU:
-                                gemsPurchased = true;
-                                purchasedGemCount = 1000;
-                                prefs.setGemCount(prefs.getGemCount() + purchasedGemCount);
-                                break;
-
                             case GEM_10K_SKU:
+                                gemsPurchased = true;
                                 purchasedGemCount = 10000;
+                                prefs.setGemCount(prefs.getGemCount() + purchasedGemCount);
+                                break;
+
+                            case GEM_75K_SKU:
+                                purchasedGemCount = 75000;
                                 gemsPurchased = true;
                                 prefs.setGemCount(prefs.getGemCount() + purchasedGemCount);
                                 break;
 
-                            case GEM_30K_SKU:
-                                purchasedGemCount = 30000;
+                            case GEM_200K_SKU:
+                                purchasedGemCount = 200000;
                                 gemsPurchased = true;
                                 prefs.setGemCount(prefs.getGemCount() + purchasedGemCount);
                                 break;
 
-                            case GEM_100K_SKU:
-                                purchasedGemCount = 100000;
+                            case GEM_500K_SKU:
+                                purchasedGemCount = 500000;
                                 gemsPurchased = true;
                                 prefs.setGemCount(prefs.getGemCount() + purchasedGemCount);
                                 break;

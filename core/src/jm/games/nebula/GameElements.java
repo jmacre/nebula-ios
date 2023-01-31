@@ -21,10 +21,10 @@ public class GameElements {
     public static final int PURPLE_ID = 3;
     public static final int WHITE_ID = 4;
 
-    public static final String GEM_1K_SKU = "1k_g";
     public static final String GEM_10K_SKU = "10k_g";
-    public static final String GEM_30K_SKU = "30k_g";
-    public static final String GEM_100K_SKU = "100k_g";
+    public static final String GEM_75K_SKU = "75k_g";
+    public static final String GEM_200K_SKU = "200k_g";
+    public static final String GEM_500K_SKU = "500k_g";
 
     public static String PURPLE_COLOR_HEX = "6a11f6";
 
