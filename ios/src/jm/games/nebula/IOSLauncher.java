@@ -64,7 +64,7 @@ public class IOSLauncher extends IOSApplication.Delegate implements IActivityReq
                     if (!inGame) {
 
                         int gemCount = prefs.getGemCount();
-                        int reward = 25;
+                        int reward = 100;
                         prefs.setGemCount(gemCount + reward);
 
 

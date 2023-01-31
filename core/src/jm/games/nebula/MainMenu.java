@@ -84,7 +84,7 @@ public class MainMenu extends GameElements implements Screen {
         gemCountFont = generator.generateFont(textParameter);
         gemCountFont.setColor(1, 1, 1, 0.8f);
 
-//        creditsFont = generator.generateFont(textParameter);
+        creditsFont = generator.generateFont(textParameter);
 
         refreshRate = Gdx.graphics.getDisplayMode().refreshRate;
 
@@ -273,7 +273,6 @@ public class MainMenu extends GameElements implements Screen {
 
     @Override
     public void pause() {
-
     }
 
     @Override

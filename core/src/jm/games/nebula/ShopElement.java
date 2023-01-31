@@ -42,12 +42,11 @@ public class ShopElement extends GameElements{
     public static final int CYAN_SHIP_PRICE = 1000;
     public static final int YELLOW_SHIP_PRICE = 2500;
     public static final int BLACK_SHIP_PRICE = 5000;
-    public static final int GREEN_SHIP_PRICE = 7500;
-    public static final int ORANGE_SHIP_PRICE = 10000;
-    public static final int NEGATIVE_SHIP_PRICE = 15000;
-    public static final int BRED_SHIP_PRICE = 25000;
-    public static final int PURPLE_SHIP_PRICE = 50000;
-
+    public static final int GREEN_SHIP_PRICE = 10000;
+    public static final int ORANGE_SHIP_PRICE = 15000;
+    public static final int NEGATIVE_SHIP_PRICE = 99999;
+    public static final int BRED_SHIP_PRICE = 99999;
+    public static final int PURPLE_SHIP_PRICE = 99999;
 
 
     float x, y, width, height;

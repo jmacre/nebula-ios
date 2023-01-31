@@ -139,11 +139,11 @@ public class Assets implements Disposable {
     public static final String gem_ss = "item/gem_ss.png";
     public static final String spread_ss = "item/spread_ss.png";
 
-    public static final String gem_25 = "gem/gem_25.png";
-    public static final String gem_1k = "gem/gem_1k.png";
+    public static final String gem_100 = "gem/gem_100.png";
     public static final String gem_10k = "gem/gem_10k.png";
-    public static final String gem_30k = "gem/gem_30k.png";
-    public static final String gem_100k = "gem/gem_100k.png";
+    public static final String gem_75k = "gem/gem_75k.png";
+    public static final String gem_200k = "gem/gem_200k.png";
+    public static final String gem_500k = "gem/gem_500k.png";
 
     public static final String gem_icon = "ui/gem.png";
 
@@ -269,11 +269,11 @@ public class Assets implements Disposable {
         assetManager.load(blank_active, Texture.class);
         assetManager.load(blank_inactive, Texture.class);
 
-        assetManager.load(gem_25, Texture.class);
-        assetManager.load(gem_1k, Texture.class);
+        assetManager.load(gem_100, Texture.class);
         assetManager.load(gem_10k, Texture.class);
-        assetManager.load(gem_30k, Texture.class);
-        assetManager.load(gem_100k, Texture.class);
+        assetManager.load(gem_75k, Texture.class);
+        assetManager.load(gem_200k, Texture.class);
+        assetManager.load(gem_500k, Texture.class);
 
         assetManager.setLoader(MASound.class, new MASoundLoader(miniAudio, assetManager.getFileHandleResolver()));
 
@@ -400,11 +400,11 @@ public class Assets implements Disposable {
         assetManager.unload(blank_inactive);
         assetManager.unload(blank_active);
 
-        assetManager.unload(gem_25);
-        assetManager.unload(gem_1k);
+        assetManager.unload(gem_100);
         assetManager.unload(gem_10k);
-        assetManager.unload(gem_30k);
-        assetManager.unload(gem_100k);
+        assetManager.unload(gem_75k);
+        assetManager.unload(gem_200k);
+        assetManager.unload(gem_500k);
     }
 
     @Override

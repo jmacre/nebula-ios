@@ -55,11 +55,11 @@ public class GemElement extends GameElements{
     }
 
     public static void createElements(Assets assets){
-        adGem = new Sprite(assets.assetManager.get(Assets.gem_25, Texture.class));
-        oneDollarGem = new Sprite(assets.assetManager.get(Assets.gem_1k, Texture.class));
-        fiveDollarGem = new Sprite(assets.assetManager.get(Assets.gem_10k, Texture.class));
-        tenDollarGem = new Sprite(assets.assetManager.get(Assets.gem_30k, Texture.class));
-        twentyDollarGem = new Sprite(assets.assetManager.get(Assets.gem_100k, Texture.class));
+        adGem = new Sprite(assets.assetManager.get(Assets.gem_100, Texture.class));
+        oneDollarGem = new Sprite(assets.assetManager.get(Assets.gem_10k, Texture.class));
+        fiveDollarGem = new Sprite(assets.assetManager.get(Assets.gem_75k, Texture.class));
+        tenDollarGem = new Sprite(assets.assetManager.get(Assets.gem_200k, Texture.class));
+        twentyDollarGem = new Sprite(assets.assetManager.get(Assets.gem_500k, Texture.class));
     }
 
     public String getTitle(){
@@ -71,7 +71,7 @@ public class GemElement extends GameElements{
 
             case AD_ID:
                 elementSheet = adGem;
-                title = "25 GEMS";
+                title = "100 GEMS";
                 break;
             case ONE_DOLLAR_ID:
                 elementSheet = oneDollarGem;
