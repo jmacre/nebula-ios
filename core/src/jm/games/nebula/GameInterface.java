@@ -651,7 +651,8 @@ public class GameInterface extends GameElements {
         if (selectButton.getTappedBefore()) {
             selectButton.setTexture(assets.assetManager.get(Assets.blank_active, Texture.class));
 
-        } else {
+        }
+        else {
             selectButton.setTexture(assets.assetManager.get(Assets.blank_inactive, Texture.class));
         }
         if (selectButton.getReleased()) {
