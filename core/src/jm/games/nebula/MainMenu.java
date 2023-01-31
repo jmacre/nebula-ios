@@ -4,6 +4,7 @@ import static jm.games.nebula.Assets.pause_sound;
 import static jm.games.nebula.Assets.play_sound;
 import static jm.games.nebula.Assets.title_song;
 
+import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
@@ -119,8 +120,10 @@ public class MainMenu extends GameElements implements Screen {
                 playMusic();
 
         }
+            titleSong.setVolume(musicVolume);
 
-        if (deltaList.size >= 100 || canRenderBackground) {
+
+            if (deltaList.size >= 100 || canRenderBackground) {
             if (START_BUTTON_Y >= START_BUTTON_Y_TRANSITIONED && !switchScreens) {
                 isTransitioningIn = true;
                 transitionIn(delta);
@@ -184,7 +187,7 @@ public class MainMenu extends GameElements implements Screen {
             gameInterface.drawCreditsScreen(game);
         }
         else{
-            gameInterface.drawGemScreen(game, delta, soundEnabled, game.batch, prefs);
+            gameInterface.drawGemScreen(game, delta, soundEnabled, game.batch, prefs, titleSong);
         }
 
 
@@ -196,6 +199,7 @@ public class MainMenu extends GameElements implements Screen {
             if(musicVolume > 0f && titleSong != null) {
                 musicVolume = 1-fadeOutOpacity;
 
+                if(!gameInterface.adRequested)
                 titleSong.setVolume(musicVolume);
             }
 

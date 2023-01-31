@@ -22,7 +22,7 @@ import pl.mk5.gdx.fireapp.auth.GdxFirebaseUser;
 
 public class IOSLauncher extends IOSApplication.Delegate implements IActivityRequestHandler {
     IOSApplication iosApplication;
-    NSString testDeviceIdentifier = new NSString("96b13088c743a128f6548fdf77e26c58");
+    NSString testDeviceIdentifier = new NSString("88e3db1c9244ffe80ad4c3b0b79b21f7");
     private GADRewardedAd mRewardedAd;
     private boolean adFinished, adFailedToLoad;
     GADRequest request = new GADRequest();
@@ -84,7 +84,7 @@ public class IOSLauncher extends IOSApplication.Delegate implements IActivityReq
             mRewardedAd.present(iosApplication.getUIViewController(), new Runnable() {
                 @Override
                 public void run() {
-
+                    adFailedToLoad= false;
                 }
             });
         }
@@ -118,7 +118,7 @@ public class IOSLauncher extends IOSApplication.Delegate implements IActivityReq
                         System.out.println("failed to load ad due to " + error);
                     } else {
                         mRewardedAd = ad;
-                        adFailedToLoad= false;
+                        adFailedToLoad = false;
                     }
                 }
             });

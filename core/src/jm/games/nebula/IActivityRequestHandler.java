@@ -10,4 +10,5 @@ public interface IActivityRequestHandler {
     public void loadAd();
     public boolean adFailedToLoad();
     public void setAdFailedToLoad(boolean adFailedToLoad);
+
 }

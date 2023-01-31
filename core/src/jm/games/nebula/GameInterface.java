@@ -609,7 +609,7 @@ public class GameInterface extends GameElements {
         }
     }
 
-    public void checkForAdButtonTap(Main game, boolean soundEnabled, Prefs prefs) {
+    public void checkForAdButtonTap(Main game, boolean soundEnabled, Prefs prefs, MASound titleSong) {
         gemCount = prefs.getGemCount();
 
         if (selectButton.getTappedBefore()) {
@@ -638,6 +638,7 @@ public class GameInterface extends GameElements {
         } else if (Gdx.app.getType() == Application.ApplicationType.iOS && game.requestHandlerIOS.isAdLoaded() && isAdLoaded) {
             game.requestHandlerIOS.showAd(false, soundEnabled, prefs, gemSound);
             isAdLoaded = false;
+            titleSong.setVolume(0);
         }
         if (Gdx.app.getType() == Application.ApplicationType.Android && game.requestHandlerAndroid.isAdFinished()) {
             adRequested = false;
@@ -684,7 +685,7 @@ public class GameInterface extends GameElements {
         confirmScreenFont.draw(game.batch, "WATCH AN AD \n\nTO CONTINUE?", SCREEN_WIDTH / 2f - (gl.width / 2), CONFIRM_LEAVE_FONT_Y);
     }
 
-    public void drawGemScreen(Main game, float delta, boolean soundEnabled, SpriteBatch batch, Prefs prefs) {
+    public void drawGemScreen(Main game, float delta, boolean soundEnabled, SpriteBatch batch, Prefs prefs, MASound titleSong) {
         if (gemCount == 0) {
             gemCount = prefs.getGemCount();
         } else if (prePurchaseGemCount != 0 && gemCount < prefs.getGemCount()) {
@@ -726,7 +727,7 @@ public class GameInterface extends GameElements {
         }
 
         if (selectedGemScreenElement == AD_ID) {
-            checkForAdButtonTap(game, soundEnabled, prefs);
+            checkForAdButtonTap(game, soundEnabled, prefs, titleSong);
         } else {
             checkForSelectButtonTap(soundEnabled, false, true, prefs);
             gl.setText(buyFont, '$' + Float.toString(GemElement.getPriceByElementId(selectedGemScreenElement)), Color.valueOf(PURPLE_COLOR_HEX), SCREEN_WIDTH, Align.center, true);
