@@ -11,7 +11,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import java.util.Map;
 
 public class ShopElement extends GameElements{
-    public static int shipCount = 10; // one less than actual count for cycling between ships
+    public static int shipCount = 14; // one less than actual count for cycling between ships
 
     public static final String SHIP_ID = "0"; //this determines ship ownership in prefs
     public static final String BLUE_SHIP_ID = "1";
@@ -24,25 +24,38 @@ public class ShopElement extends GameElements{
     public static final String BRED_SHIP_ID = "8";
     public static final String PURPLE_SHIP_ID = "9";
     public static final String NEGATIVE_SHIP_ID = "A";
+    public static final String BLACK_GREEN_SHIP_ID = "B";
+    public static final String MINT_SHIP_ID = "C";
+    public static final String NEON_SHIP_ID = "D";
+    public static final String BLUE_ORANGE_SHIP_ID = "E";
+
 
     public static final int SHIP_SLOT = 0; //this determines the display order in the shop
     public static final int BLUE_SHIP_SLOT = 1;
-    public static final int RED_SHIP_SLOT = 2;
-    public static final int CYAN_SHIP_SLOT = 3;
-    public static final int YELLOW_SHIP_SLOT = 4;
-    public static final int BLACK_SHIP_SLOT = 5;
-    public static final int GREEN_SHIP_SLOT = 6;
-    public static final int ORANGE_SHIP_SLOT = 7;
-    public static final int NEGATIVE_SHIP_SLOT = 8;
-    public static final int BRED_SHIP_SLOT = 9;
-    public static final int PURPLE_SHIP_SLOT = 10;
+    public static final int BLACK_GREEN_SHIP_SLOT = 2;
+    public static final int RED_SHIP_SLOT = 3;
+    public static final int CYAN_SHIP_SLOT = 4;
+    public static final int MINT_SHIP_SLOT = 5;
+    public static final int YELLOW_SHIP_SLOT = 6;
+    public static final int BLACK_SHIP_SLOT = 7;
+    public static final int NEON_SHIP_SLOT = 8;
+    public static final int GREEN_SHIP_SLOT = 9;
+    public static final int BLUE_ORANGE_SHIP_SLOT = 10;
+    public static final int ORANGE_SHIP_SLOT = 11;
+    public static final int NEGATIVE_SHIP_SLOT = 12;
+    public static final int BRED_SHIP_SLOT = 13;
+    public static final int PURPLE_SHIP_SLOT = 14;
 
     public static final int BLUE_SHIP_PRICE = 100;
+    public static final int BLACK_GREEN_SHIP_PRICE = 250;
     public static final int RED_SHIP_PRICE = 500;
     public static final int CYAN_SHIP_PRICE = 1000;
+    public static final int MINT_SHIP_PRICE = 1500;
     public static final int YELLOW_SHIP_PRICE = 2500;
     public static final int BLACK_SHIP_PRICE = 5000;
+    public static final int NEON_SHIP_PRICE = 7500;
     public static final int GREEN_SHIP_PRICE = 10000;
+    public static final int BLUE_ORANGE_SHIP_PRICE = 12500;
     public static final int ORANGE_SHIP_PRICE = 15000;
     public static final int NEGATIVE_SHIP_PRICE = 99999;
     public static final int BRED_SHIP_PRICE = 99999;
@@ -53,6 +66,7 @@ public class ShopElement extends GameElements{
 
     static Sprite mainShip, blackShip, redShip, purpleShip, yellowShip, cyanShip;
     static Sprite bredShip, greenShip, orangeShip, blueShip, negativeShip;
+    static Sprite blueOrangeShip, neonShip, mintShip, blackGreenShip;
 
     private int colorId;
 
@@ -95,6 +109,10 @@ public class ShopElement extends GameElements{
         orangeShip = new Sprite(assets.assetManager.get(Assets.ship_orange_ss, Texture.class));
         greenShip = new Sprite(assets.assetManager.get(Assets.ship_green_ss, Texture.class));
         negativeShip = new Sprite(assets.assetManager.get(Assets.ship_negative_ss, Texture.class));
+        blueOrangeShip = new Sprite(assets.assetManager.get(Assets.ship_blue_orange_ss, Texture.class));
+        neonShip = new Sprite(assets.assetManager.get(Assets.ship_neon_ss, Texture.class));
+        mintShip = new Sprite(assets.assetManager.get(Assets.ship_mint_ss, Texture.class));
+        blackGreenShip = new Sprite(assets.assetManager.get(Assets.ship_black_green_ss, Texture.class));
     }
 
     public String getTitle(){
@@ -124,6 +142,14 @@ public class ShopElement extends GameElements{
                 return ORANGE_SHIP_ID;
             case NEGATIVE_SHIP_SLOT:
                 return NEGATIVE_SHIP_ID;
+            case BLACK_GREEN_SHIP_SLOT:
+                return BLACK_GREEN_SHIP_ID;
+            case MINT_SHIP_SLOT:
+                return MINT_SHIP_ID;
+            case NEON_SHIP_SLOT:
+                return NEON_SHIP_ID;
+            case BLUE_ORANGE_SHIP_SLOT:
+                return BLUE_ORANGE_SHIP_ID;
         }
         return "";
     }
@@ -176,6 +202,22 @@ public class ShopElement extends GameElements{
                 elementSheet = negativeShip;
                 title = "NEGATIVE";
                 break;
+            case MINT_SHIP_SLOT:
+                elementSheet = mintShip;
+                title = "MINT";
+                break;
+            case NEON_SHIP_SLOT:
+                elementSheet = neonShip;
+                title = "NEON";
+                break;
+            case BLACK_GREEN_SHIP_SLOT:
+                elementSheet = blackGreenShip;
+                title = "ACID";
+                break;
+            case BLUE_ORANGE_SHIP_SLOT:
+                elementSheet = blueOrangeShip;
+                title = "NOVA";
+                break;
         }
 
         if(elementSheet != null) {
@@ -213,6 +255,18 @@ public class ShopElement extends GameElements{
         }
         else if(shipSlot == NEGATIVE_SHIP_SLOT){
             return NEGATIVE_SHIP_PRICE;
+        }
+        else if(shipSlot == BLUE_ORANGE_SHIP_SLOT){
+            return BLUE_ORANGE_SHIP_PRICE;
+        }
+        else if(shipSlot == NEON_SHIP_SLOT){
+            return NEON_SHIP_PRICE;
+        }
+        else if(shipSlot == BLACK_GREEN_SHIP_SLOT){
+            return BLACK_GREEN_SHIP_PRICE;
+        }
+        else if(shipSlot == MINT_SHIP_SLOT){
+            return MINT_SHIP_PRICE;
         }
         return 0;
     }

@@ -1,5 +1,5 @@
 android {
-    buildToolsVersion "33.0.0"
+    buildToolsVersion "33.0.1"
     compileSdkVersion 33
     sourceSets {
         main {
@@ -16,7 +16,7 @@ android {
     buildscript{
         // ...
         dependencies {
-            classpath 'com.google.gms:google-services:4.3.14'
+            classpath 'com.google.gms:google-services:4.3.15'
         }
     }
     dependencies {
@@ -28,7 +28,7 @@ android {
         implementation 'com.google.firebase:firebase-auth'
         implementation 'com.google.firebase:firebase-database'
         implementation 'com.google.firebase:firebase-crashlytics'
-        implementation 'com.google.firebase:firebase-analytics:21.2.0'
+        implementation 'com.google.firebase:firebase-analytics:21.2.1'
 
     }
     packagingOptions {
@@ -38,8 +38,8 @@ android {
         applicationId "jm.games.nebula"
         minSdkVersion 19
         targetSdkVersion 33
-        versionCode 27
-        versionName "1.4.1"
+        versionCode 29
+        versionName "1.4.2"
         multiDexEnabled true
         signingConfig signingConfigs.debug
     }
@@ -115,6 +115,6 @@ task run(type: Exec) {
 
 eclipse.project.name = appName + "-android"
 apply plugin: 'com.google.gms.google-services'
-//apply plugin: 'com.google.firebase.crashlytics'
+apply plugin: 'com.google.firebase.crashlytics'
 
 

@@ -1249,13 +1249,16 @@ public class MainGame extends GameElements implements Screen {
     public void drawMainElements() {
         if (!isRunningResumeCountdown)
             stateTime += deltaP / 6;
-
+        resetShader();
         if (isTransitioningIn) {
             shipAnim.drawAnim(shipAnimation, stateTime, SHIP_X, SHIP_START_Y, SHIP_WIDTH, SHIP_HEIGHT, true, game.batch, true);
         } else if (!justHit && health != 0) {
             shipAnim.drawAnim(shipAnimation, stateTime, SHIP_X, SHIP_START_Y, SHIP_WIDTH, SHIP_HEIGHT, true, game.batch);
         } else if (!isTransitioningOut) {
             runShipBlinking();
+        }
+        if(isHourglass){
+            game.batch.setShader(invertedShader);
         }
 
         if (isTransitionedIn) {
@@ -1634,18 +1637,18 @@ public class MainGame extends GameElements implements Screen {
     }
 
     public void updateGemSpawnTimes() {
-        if (score > 1000 && score < 2000 && maxGemSpawnTime != MAX_GEM_SPAWN_TIME - 3f) {
-            maxGemSpawnTime -= 3f;
-            minGemSpawnTime -= 2f;
-        } else if (score >= 2000 && score < 3000 && maxGemSpawnTime != MAX_GEM_SPAWN_TIME - 6f) {
-            maxGemSpawnTime -= 3f;
-            minGemSpawnTime -= 2f;
-        } else if (score >= 3000 && score < 4000 && maxGemSpawnTime != MAX_GEM_SPAWN_TIME - 9f) {
-            maxGemSpawnTime -= 3f;
-            minGemSpawnTime -= 2f;
-        } else if (score >= 4000 && maxGemSpawnTime != MAX_GEM_SPAWN_TIME - 12f) {
-            maxGemSpawnTime -= 3f;
-            minGemSpawnTime -= 2f;
+        if (score > 1000 && score < 2000 && minGemSpawnTime != MIN_GEM_SPAWN_TIME - 1f) {
+            maxGemSpawnTime -= 2f;
+            minGemSpawnTime -= 1f;
+        } else if (score >= 2000 && score < 3000 && minGemSpawnTime != MIN_GEM_SPAWN_TIME - 2f) {
+            maxGemSpawnTime -= 2f;
+            minGemSpawnTime -= 1f;
+        } else if (score >= 3000 && score < 4000 && minGemSpawnTime != MIN_GEM_SPAWN_TIME - 3f) {
+            maxGemSpawnTime -= 2f;
+            minGemSpawnTime -= 1f;
+        } else if (score >= 4000 && minGemSpawnTime != MIN_GEM_SPAWN_TIME - 4f) {
+            maxGemSpawnTime -= 2f;
+            minGemSpawnTime -= 1f;
         }
     }
 
@@ -2067,6 +2070,18 @@ public class MainGame extends GameElements implements Screen {
                 break;
             case NEGATIVE_SHIP_SLOT:
                 shipSS = new Sprite(assets.assetManager.get(Assets.ship_negative_ss, Texture.class));
+                break;
+            case MINT_SHIP_SLOT:
+                shipSS = new Sprite(assets.assetManager.get(Assets.ship_mint_ss, Texture.class));
+                break;
+            case NEON_SHIP_SLOT:
+                shipSS = new Sprite(assets.assetManager.get(Assets.ship_neon_ss, Texture.class));
+                break;
+            case BLACK_GREEN_SHIP_SLOT:
+                shipSS = new Sprite(assets.assetManager.get(Assets.ship_black_green_ss, Texture.class));
+                break;
+            case BLUE_ORANGE_SHIP_SLOT:
+                shipSS = new Sprite(assets.assetManager.get(Assets.ship_blue_orange_ss, Texture.class));
                 break;
         }
     }

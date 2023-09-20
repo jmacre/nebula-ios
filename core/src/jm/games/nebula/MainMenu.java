@@ -104,11 +104,11 @@ public class MainMenu extends GameElements implements Screen {
             deltaList.add(delta);
         }
 
-        for (int i = 0; i < deltaList.size; i++) {
-            deltaSum += deltaList.get(i);
-        }
-        delta = deltaSum / deltaList.size;
-        deltaSum = 0;
+//        for (int i = 0; i < deltaList.size; i++) {
+//            deltaSum += deltaList.get(i);
+//        }
+//        delta = deltaSum / deltaList.size;
+//        deltaSum = 0;
 
         if (fadeInOpacity < 1) {
 
@@ -120,7 +120,6 @@ public class MainMenu extends GameElements implements Screen {
 
         }
 
-        if (deltaList.size >= 100 || canRenderBackground) {
             if (START_BUTTON_Y >= START_BUTTON_Y_TRANSITIONED && !switchScreens) {
                 isTransitioningIn = true;
                 transitionIn(delta);
@@ -152,12 +151,8 @@ public class MainMenu extends GameElements implements Screen {
                     isCreditsOpen = false;
                 }
             }
-        }
 
-        if (beganFading || (START_BUTTON_Y <= START_BUTTON_Y_TRANSITIONED))
-            canRenderBackground = true;
 
-        if (canRenderBackground)
             background.updateAndRender(delta, false, false, 0, starsAnimFront, starsAnimBack, game.batch, true, false, false, true);
 
         if (switchScreens) {
