@@ -179,7 +179,7 @@ public class MainMenu extends GameElements implements Screen {
             gameInterface.drawCreditsScreen(game);
         }
         else{
-            gameInterface.drawGemScreen(game, delta, soundEnabled, game.batch, prefs);
+            gameInterface.drawGemScreen(game, delta, soundEnabled, game.batch, prefs, titleSong);
         }
 
 
@@ -191,6 +191,7 @@ public class MainMenu extends GameElements implements Screen {
             if(musicVolume > 0f && titleSong != null) {
                 musicVolume = 1-fadeOutOpacity;
 
+                if(!gameInterface.adRequested)
                 titleSong.setVolume(musicVolume);
             }
 
