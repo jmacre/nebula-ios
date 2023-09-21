@@ -18,10 +18,10 @@ public class ItemDrop extends GameElements {
     public static final int SPREAD_ID = 6;
 
     public static final float MIN_ITEM_SPAWN_TIME = 15f;
-    public static final float MAX_ITEM_SPAWN_TIME = 25f;
+    public static final float MAX_ITEM_SPAWN_TIME = 20f;
 
-    public static final float MAX_GEM_SPAWN_TIME = 10f;
-    public static final float MIN_GEM_SPAWN_TIME = 5f;
+    public static final float MAX_GEM_SPAWN_TIME = 5f;
+    public static final float MIN_GEM_SPAWN_TIME = 2f;
 
     public static float MISSILE_TIMER = -9f;
     public static float RAPID_FIRE_TIMER = -10f;

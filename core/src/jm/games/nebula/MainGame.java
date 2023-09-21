@@ -1627,7 +1627,7 @@ public class MainGame extends GameElements implements Screen {
     }
 
     public void addGemDrops() {
-        gemSpawnTimer -= deltaP;
+        gemSpawnTimer -= deltaP * hourglassMultiplier;
         if (gemSpawnTimer <= 0) {
             ItemDrop itemDrop = idp.obtain();
             itemDrop.create(random.nextInt((int) (SCREEN_WIDTH - ItemDrop.GEM_WIDTH)), (int) ItemDrop.GEM_HEIGHT, ItemDrop.GEM_WIDTH, GEM_ID, assets);
@@ -1637,18 +1637,18 @@ public class MainGame extends GameElements implements Screen {
     }
 
     public void updateGemSpawnTimes() {
-        if (score > 1000 && score < 2000 && minGemSpawnTime != MIN_GEM_SPAWN_TIME - 1f) {
-            maxGemSpawnTime -= 2f;
-            minGemSpawnTime -= 1f;
-        } else if (score >= 2000 && score < 3000 && minGemSpawnTime != MIN_GEM_SPAWN_TIME - 2f) {
-            maxGemSpawnTime -= 2f;
-            minGemSpawnTime -= 1f;
-        } else if (score >= 3000 && score < 4000 && minGemSpawnTime != MIN_GEM_SPAWN_TIME - 3f) {
-            maxGemSpawnTime -= 2f;
-            minGemSpawnTime -= 1f;
-        } else if (score >= 4000 && minGemSpawnTime != MIN_GEM_SPAWN_TIME - 4f) {
-            maxGemSpawnTime -= 2f;
-            minGemSpawnTime -= 1f;
+        if (score > 1000 && score < 2000 && minGemSpawnTime != MIN_GEM_SPAWN_TIME - .25f) {
+            maxGemSpawnTime -= .5f;
+            minGemSpawnTime -= .25f;
+        } else if (score >= 2000 && score < 3000 && minGemSpawnTime != MIN_GEM_SPAWN_TIME - .5f) {
+            maxGemSpawnTime -= .5f;
+            minGemSpawnTime -= .25f;
+        } else if (score >= 3000 && score < 4000 && minGemSpawnTime != MIN_GEM_SPAWN_TIME - .75f) {
+            maxGemSpawnTime -= .5f;
+            minGemSpawnTime -= .25f;
+        } else if (score >= 4000 && minGemSpawnTime != MIN_GEM_SPAWN_TIME - 1f) {
+            maxGemSpawnTime -= .5f;
+            minGemSpawnTime -= .25f;
         }
     }
 
