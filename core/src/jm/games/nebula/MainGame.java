@@ -992,6 +992,7 @@ public class MainGame extends GameElements implements Screen {
         resetBulletTimers();
         resetInterface();
         scoreTickerTimer = SCORE_TICKER_TIMER;
+        isAdLoaded = false;
     }
 
     public void playMusic() {
@@ -1901,7 +1902,7 @@ public class MainGame extends GameElements implements Screen {
                 if (health == 0) {
                     isAlive = false;
                 }
-                if(health == 1){
+                if(health == 2){
                     if (!isAdLoaded) {
                         if (Gdx.app.getType() == Application.ApplicationType.Android) {
                             game.requestHandlerAndroid.loadAd();
