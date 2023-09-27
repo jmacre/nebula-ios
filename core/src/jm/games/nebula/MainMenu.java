@@ -96,11 +96,9 @@ public class MainMenu extends GameElements implements Screen {
     public void render(float delta) {
         Gdx.gl.glClearColor(0f, 0f, 0f, 1f);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        System.out.println(deltaList.size);
 
         game.batch.enableBlending();
         game.batch.begin();
-        System.out.println(delta);
 
         deltaList.add(delta);
 
