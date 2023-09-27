@@ -96,19 +96,20 @@ public class MainMenu extends GameElements implements Screen {
     public void render(float delta) {
         Gdx.gl.glClearColor(0f, 0f, 0f, 1f);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        System.out.println(deltaList.size);
 
         game.batch.enableBlending();
         game.batch.begin();
+        System.out.println(delta);
 
-        if(Gdx.graphics.getFramesPerSecond() > refreshRate * .8f && Gdx.graphics.getFramesPerSecond() < refreshRate * 1.2f) {
-            deltaList.add(delta);
+        deltaList.add(delta);
+
+
+        for (int i = 0; i < deltaList.size; i++) {
+            deltaSum += deltaList.get(i);
         }
-
-//        for (int i = 0; i < deltaList.size; i++) {
-//            deltaSum += deltaList.get(i);
-//        }
-//        delta = deltaSum / deltaList.size;
-//        deltaSum = 0;
+        delta = deltaSum / deltaList.size;
+        deltaSum = 0;
 
         if (fadeInOpacity < 1) {
 
@@ -119,6 +120,9 @@ public class MainMenu extends GameElements implements Screen {
                 playMusic();
 
         }
+
+        if (deltaList.size >= 100 || canRenderBackground) {
+            canRenderBackground = true;
 
             if (START_BUTTON_Y >= START_BUTTON_Y_TRANSITIONED && !switchScreens) {
                 isTransitioningIn = true;
@@ -151,8 +155,12 @@ public class MainMenu extends GameElements implements Screen {
                     isCreditsOpen = false;
                 }
             }
+        }
 
+        if (beganFading || (START_BUTTON_Y <= START_BUTTON_Y_TRANSITIONED))
+            canRenderBackground = true;
 
+        if (canRenderBackground)
             background.updateAndRender(delta, false, false, 0, starsAnimFront, starsAnimBack, game.batch, true, false, false, true);
 
         if (switchScreens) {
