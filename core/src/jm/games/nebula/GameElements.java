@@ -10,7 +10,7 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import games.rednblack.miniaudio.MASound;
 
 public class GameElements {
-    Button pauseButton, replayResumeButton, soundButton, homeButton;
+    Button pauseButton, replayResumeButton, soundButton, homeButton, ingameShopButton;
 
     public static int SCREEN_WIDTH = Gdx.graphics.getWidth();
     public static int SCREEN_HEIGHT = Gdx.graphics.getHeight();

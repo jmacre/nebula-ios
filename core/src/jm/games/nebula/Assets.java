@@ -68,6 +68,10 @@ public class Assets implements Disposable {
     public static final String sound_off_button_ts = "ui/sound_off_button_ts.png";
     public static final String sound_on_button_ts = "ui/sound_on_button_ts.png";
 
+    public static final String ingame_shop_button_inactive = "ui/ingame_shop_button_inactive.png";
+    public static final String ingame_shop_button_active = "ui/ingame_shop_button_active.png";
+
+
     public static final String right_arrow_btn_active = "ui/right_arrow_btn_active.png";
     public static final String left_arrow_btn_active = "ui/left_arrow_btn_active.png";
     public static final String right_arrow_btn_inactive = "ui/right_arrow_btn_inactive.png";
@@ -213,6 +217,8 @@ public class Assets implements Disposable {
 
         assetManager.load(sound_off_button_ts, Texture.class);
         assetManager.load(sound_on_button_ts, Texture.class);
+        assetManager.load(ingame_shop_button_inactive, Texture.class);
+        assetManager.load(ingame_shop_button_active, Texture.class);
 
         assetManager.load(black_transition, Texture.class);
         assetManager.load(white_flash, Texture.class);
@@ -367,6 +373,9 @@ public class Assets implements Disposable {
         assetManager.unload(sound_off_button_ts);
         assetManager.unload(sound_on_button_ts);
 
+        assetManager.unload(ingame_shop_button_inactive);
+        assetManager.unload(ingame_shop_button_active);
+
         assetManager.unload(black_transition);
         assetManager.unload(white_flash);
         assetManager.unload(eyebat_blue_ss);
@@ -392,7 +401,10 @@ public class Assets implements Disposable {
         assetManager.unload(ship_green_ss);
         assetManager.unload(ship_bred_ss);
         assetManager.unload(ship_blue_ss);
-        assetManager.unload(ship_negative_ss);
+        assetManager.unload(ship_cyan_ss);
+        assetManager.unload(ship_black_green_ss);
+        assetManager.unload(ship_mint_ss);
+        assetManager.unload(ship_neon_ss);
 
         assetManager.unload(explosion);
         assetManager.unload(heart_item_ss);

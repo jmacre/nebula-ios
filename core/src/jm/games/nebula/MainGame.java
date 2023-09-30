@@ -69,6 +69,8 @@ public class MainGame extends GameElements implements Screen {
     float maxGemSpawnTime = MAX_GEM_SPAWN_TIME;
     float minGemSpawnTime = MIN_GEM_SPAWN_TIME;
 
+    boolean isShopOpen = false;
+
     float gemCountTimerDelay = GEM_COUNT_TIMER_DELAY;
 
     float shipMovementVal;
@@ -133,6 +135,8 @@ public class MainGame extends GameElements implements Screen {
 
     float eyebatSpawnTimer;
 
+    int gemCountTemp;
+
     float enemyShipSpawnTimer;
     float laserTrapSpawnTimer;
 
@@ -161,7 +165,8 @@ public class MainGame extends GameElements implements Screen {
     boolean gemCountComplete = false;
     boolean scoreCountComplete = false;
     boolean recapComplete = false;
-    boolean recapSkipped = false;
+
+    boolean choseToNotWatchAd;
 
     int gemSkipTapCount = 0, tapToContinueScreenTapCount = 0;
 
@@ -424,9 +429,13 @@ public class MainGame extends GameElements implements Screen {
             if (score >= 100) {
                 finalGemCount = gemCount + (score / 100);
             }
-            if (!gemCountUpdated) {
+
+            if (!gemCountUpdated && gameInterface.isRecapScreenOpen && choseToNotWatchAd) {
                 prefs.setGemCount(prefs.getGemCount() + finalGemCount);
                 finalGemCountTemp = finalGemCount;
+
+                System.out.println("UPDATED GEMS COUNT");
+                System.out.println(finalGemCount);
                 gemCountUpdated = true;
             }
         }
@@ -552,7 +561,7 @@ public class MainGame extends GameElements implements Screen {
                 movePlayer();
             }
         }
-        if ((!isAlive || isPaused || gameInterface.isReplayScreenOpen) && inputProcessor.getTapCount() > tapToContinueScreenTapCount && gameInterface.checkForSoundButtonTap(soundEnabled, isAlive) && !gameInterface.isConfirmLeaveScreenOpen()) {
+        if (isPaused && !gameInterface.isReplayScreenOpen && inputProcessor.getTapCount() > tapToContinueScreenTapCount && gameInterface.checkForSoundButtonTap(soundEnabled, isAlive) && !gameInterface.isConfirmLeaveScreenOpen()) {
             if (prefs.isSoundEnabled()) {
                 prefs.setSound(false);
                 soundEnabled = false;
@@ -560,6 +569,15 @@ public class MainGame extends GameElements implements Screen {
                 prefs.setSound(true);
                 soundEnabled = true;
             }
+        }
+
+        if ((!isAlive && gameInterface.isReplayScreenOpen && !isShopOpen) && inputProcessor.getTapCount() > tapToContinueScreenTapCount && gameInterface.checkForIngameShopButtonTap(soundEnabled) && !gameInterface.isConfirmLeaveScreenOpen()) {
+            isShopOpen = true;
+
+        }
+        if (isShopOpen && gameInterface.checkForXButtonTap(true, false,false, soundEnabled)) {
+            isShopOpen = false;
+            resetInterface();
         }
 
         //Pausing (pauses music/freezes delta)
@@ -589,7 +607,7 @@ public class MainGame extends GameElements implements Screen {
 
                 }
             }
-            if (gameInterface.checkForHomeButtonTap(soundEnabled) || gameInterface.isConfirmLeaveScreenOpen()) {
+            if (!isShopOpen && gameInterface.checkForHomeButtonTap(soundEnabled) || gameInterface.isConfirmLeaveScreenOpen()) {
                 if (!gameInterface.isConfirmLeaveScreenOpen()) {
                     gameInterface.setConfirmLeaveScreenOpen(true);
 
@@ -636,10 +654,14 @@ public class MainGame extends GameElements implements Screen {
 
                 if (!recapComplete) {
 
+
                     if (Gdx.input.justTouched()) {
                         gemCountStarted = true;
                         scoreCountStarted = true;
                         recapStarted = true;
+
+                        gemsCaught = gemCountTemp;
+
 
                         scoreCountComplete = true;
                         gemCountComplete = true;
@@ -648,7 +670,6 @@ public class MainGame extends GameElements implements Screen {
                         gemSkipTapCount = inputProcessor.getTapCount();
                         replayScreenGemCount = prefs.getGemCount();
                         gemsFromScore = (int) Math.floor(finalScore / 100f);
-                        gemsCaught = finalGemCountTemp - gemsFromScore;
 
                         gemCount = 0;
                         finalGemCount = 0;
@@ -658,8 +679,9 @@ public class MainGame extends GameElements implements Screen {
                         runGemCountUpdateTimer();
                     }
                 }
-                if (!gameInterface.isConfirmLeaveScreenOpen() && !gameInterface.isContinueScreenOpen() && !isPlayingAd) {
-                    gameInterface.drawReplayScreen(game, menuScoreFont, gameOverFont, gemCountFont, newHighscore, replayScreenGemCount, gemsFromScore, gemsCaught, gemCountStarted, finalScore, prefs.getHighScore(), scoreCountStarted, recapStarted, recapComplete, deltaP);
+                if (!gameInterface.isConfirmLeaveScreenOpen() && !gameInterface.isContinueScreenOpen() && !isPlayingAd && !isShopOpen) {
+                    choseToNotWatchAd = true;
+                    gameInterface.drawReplayScreen(game, menuScoreFont, gameOverFont, gemCountFont, newHighscore, replayScreenGemCount, gemsFromScore, gemsCaught, finalGemCountTemp, gemCountStarted, finalScore, prefs.getHighScore(), scoreCountStarted, recapStarted, recapComplete, deltaP);
                     isAdLoaded = false;
                 }
                 if (recapComplete && gameInterface.isRecapScreenOpen) {
@@ -678,11 +700,12 @@ public class MainGame extends GameElements implements Screen {
                 }
             }
 
-            if (gameInterface.isReplayScreenOpen && inputProcessor.getTapCount() > tapToContinueScreenTapCount && isTransitionedOut) {
+            if (gameInterface.isReplayScreenOpen && !isShopOpen && inputProcessor.getTapCount() > tapToContinueScreenTapCount && isTransitionedOut) {
                 if (gameInterface.checkForReplayButtonTap()) {
                     resetScreen();
+
                 }
-            } else if (isTransitionedOut) {
+            } else if (isTransitionedOut && !isShopOpen) {
                 if (!gameInterface.isRecapScreenOpen && inputProcessor.getTapCount() > tapToContinueScreenTapCount || gameInterface.isConfirmLeaveScreenOpen()) {
                     if (!gameInterface.isConfirmLeaveScreenOpen()) {
 
@@ -705,6 +728,7 @@ public class MainGame extends GameElements implements Screen {
                             isShipLeaving = true;
                         }
                         if (gameInterface.checkForNoButtonTap(soundEnabled)) {
+                            choseToNotWatchAd = true;
                             gameInterface.setConfirmLeaveScreenOpen(false);
                         }
 
@@ -723,7 +747,10 @@ public class MainGame extends GameElements implements Screen {
         if (isMissile || isRapidFire || isHourglass || isSpreadFire) {
             updatePowerUpTimer();
         }
+        if(isShopOpen){
 
+            gameInterface.drawShopScreen(game, soundEnabled, delta, game.batch, gemCountFont, prefs);
+        }
         game.batch.end();
     }
 
@@ -805,6 +832,7 @@ public class MainGame extends GameElements implements Screen {
         gemCount = 0;
         gemsFromScore = 0;
         gemsCaught = 0;
+        gemCountTemp = 0;
     }
 
     public void stopSounds() {
@@ -834,7 +862,6 @@ public class MainGame extends GameElements implements Screen {
         gemCountComplete = false;
         scoreCountComplete = false;
         recapComplete = false;
-        recapSkipped = false;
 
         gameInterface.isRecapScreenOpen = true;
         gameInterface.isReplayScreenOpen = false;
@@ -976,6 +1003,7 @@ public class MainGame extends GameElements implements Screen {
     }
 
     public void resetScreen() {
+        getSelectedShip();
         resetMusicAndSoundPitches();
         stopSounds();
         resetGemCounts();
@@ -993,6 +1021,7 @@ public class MainGame extends GameElements implements Screen {
         resetInterface();
         scoreTickerTimer = SCORE_TICKER_TIMER;
         isAdLoaded = false;
+        choseToNotWatchAd = false;
     }
 
     public void playMusic() {
@@ -1159,8 +1188,9 @@ public class MainGame extends GameElements implements Screen {
                 if (score >= 100) {
                     finalGemCount = gemCount + (score / 100);
                 }
-                if (!gemCountUpdated) {
+                if (!gemCountUpdated && choseToNotWatchAd) {
                     prefs.setGemCount(prefs.getGemCount() + finalGemCount);
+
                     finalGemCountTemp = finalGemCount;
                     gemCountUpdated = true;
                 }
@@ -1185,39 +1215,14 @@ public class MainGame extends GameElements implements Screen {
 
             if (Gdx.app.getType() == Application.ApplicationType.Android) {
                 if (game.requestHandlerAndroid.isAdFinished()) {
-                    isPlayingAd = false;
-                    isAdLoaded = false;
-                    isPaused = false;
-
-                    gameInterface.setContinueScreenOpen(false);
                     game.requestHandlerAndroid.setAdFinished(false);
-                    scoreTickerTimer = SCORE_TICKER_TIMER;
-                    countDownTimer = 0f;
-
-                    resetPlayer(1);
-                    resetPools();
-                    resetMainLists();
-                    resetBulletTimers();
-                    resetItems();
-                    resetMusicAndSoundPitches();
+                    resetForContinue();
                 }
             } else if (Gdx.app.getType() == Application.ApplicationType.iOS) {
                 if (game.requestHandlerIOS.isAdFinished()) {
-                    isPlayingAd = false;
-                    isAdLoaded = false;
-                    isPaused = false;
-
-                    gameInterface.setContinueScreenOpen(false);
                     game.requestHandlerIOS.setAdFinished(false);
-                    scoreTickerTimer = SCORE_TICKER_TIMER;
-                    countDownTimer = 0f;
+                    resetForContinue();
 
-                    resetPlayer(1);
-                    resetPools();
-                    resetMainLists();
-                    resetBulletTimers();
-                    resetItems();
-                    resetMusicAndSoundPitches();
                 }
             }
         }
@@ -1226,6 +1231,25 @@ public class MainGame extends GameElements implements Screen {
             prefs.setHighScore(score);
             newHighscore = true;
         }
+    }
+
+    public void resetForContinue() {
+
+
+        isPlayingAd = false;
+        isAdLoaded = false;
+        isPaused = false;
+
+        gameInterface.setContinueScreenOpen(false);
+        scoreTickerTimer = SCORE_TICKER_TIMER;
+        countDownTimer = 0f;
+
+        resetPlayer(1);
+        resetPools();
+        resetMainLists();
+        resetBulletTimers();
+        resetItems();
+        resetMusicAndSoundPitches();
     }
 
     public void fadeOut() {
@@ -1902,16 +1926,14 @@ public class MainGame extends GameElements implements Screen {
                 if (health == 0) {
                     isAlive = false;
                 }
-                if(health == 2){
-                    if (!isAdLoaded) {
-                        if (Gdx.app.getType() == Application.ApplicationType.Android) {
-                            game.requestHandlerAndroid.loadAd();
-                            isAdLoaded = true;
+                if (!isAdLoaded) {
+                    if (Gdx.app.getType() == Application.ApplicationType.Android) {
+                        game.requestHandlerAndroid.loadAd();
+                        isAdLoaded = true;
 
-                        } else if (Gdx.app.getType() == Application.ApplicationType.iOS) {
-                            game.requestHandlerIOS.loadAd();
-                            isAdLoaded = true;
-                        }
+                    } else if (Gdx.app.getType() == Application.ApplicationType.iOS) {
+                        game.requestHandlerIOS.loadAd();
+                        isAdLoaded = true;
                     }
                 }
             }
@@ -1996,6 +2018,8 @@ public class MainGame extends GameElements implements Screen {
 
                     case GEM_ID:
                         gemCount++;
+                        gemCountTemp = gemCount;
+
 
                         if (soundEnabled) {
                             gemSound.play();
@@ -2038,6 +2062,8 @@ public class MainGame extends GameElements implements Screen {
     }
 
     public void getSelectedShip() {
+        selectedShip = prefs.getShip();
+
         switch (selectedShip) {
             case SHIP_SLOT:
                 shipSS = new Sprite(assets.assetManager.get(Assets.ship_ss, Texture.class));
@@ -2085,6 +2111,7 @@ public class MainGame extends GameElements implements Screen {
                 shipSS = new Sprite(assets.assetManager.get(Assets.ship_blue_orange_ss, Texture.class));
                 break;
         }
+        shipAnimation = Anim.createAnimation(shipSS, 4, DEFAULT_FRAME_DURATION * 1.5f);
     }
 
     public void addPowerUpTimer(float totalTimerLength) {
@@ -2131,7 +2158,6 @@ public class MainGame extends GameElements implements Screen {
 
                 if (gemCount > 0) {
                     gemCount--;
-                    finalGemCount--;
                     gemsCaught++;
                 }
                 if (gemCount == 0) {
