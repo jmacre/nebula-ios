@@ -46,8 +46,8 @@ public class GameElements {
     public static float SHIP_X = (SCREEN_WIDTH/2f - SHIP_WIDTH/2f);
     public static float CURRENT_SHIP_X =  (SCREEN_WIDTH/2f - SHIP_WIDTH/2f);
 
-    public static float SHIP_Y = 0.15f*SCREEN_HEIGHT;
-    public static float SHIP_START_Y = - 3 * SHIP_HEIGHT;
+    public static float SHIP_START_Y = 0.15f * SCREEN_HEIGHT;
+    public static float SHIP_Y = - 3 * SHIP_HEIGHT;
 
     public static float BULLET_WIDTH;
     public static float BULLET_HEIGHT;
@@ -186,8 +186,8 @@ public class GameElements {
         SHIP_X = (SCREEN_WIDTH/2f - SHIP_WIDTH/2f);
         CURRENT_SHIP_X =  (SCREEN_WIDTH/2f - SHIP_WIDTH/2f);
 
-        SHIP_Y = 0.15f*SCREEN_HEIGHT;
-        SHIP_START_Y = - 3 * SHIP_HEIGHT;
+        SHIP_START_Y = 0.15f*SCREEN_HEIGHT;
+        SHIP_Y = - 3 * SHIP_HEIGHT;
     }
 
     public static void defineSizesAndPositions(){
@@ -265,19 +265,19 @@ public class GameElements {
         MIDDLE_HEART_X = RIGHT_HEART_X - HEART_WIDTH*1.1f;
         LEFT_HEART_X = MIDDLE_HEART_X - HEART_WIDTH*1.1f;
 
-        BOMB_HEIGHT = HEART_HEIGHT * (24/11f);
-        BOMB_WIDTH = BOMB_HEIGHT * (18/24f);
+        BOMB_HEIGHT = HEART_HEIGHT * (25/11f);
+        BOMB_WIDTH = BOMB_HEIGHT * (18/25f);
 
-        SPREAD_HEIGHT = BOMB_HEIGHT * (17/24f);
+        SPREAD_HEIGHT = BOMB_HEIGHT * (18/25f);
         SPREAD_WIDTH = SPREAD_HEIGHT;
 
-        GEM_HEIGHT = BOMB_HEIGHT / 2f;
-        GEM_WIDTH = BOMB_WIDTH * (17/18f);
+        GEM_HEIGHT = BOMB_HEIGHT * (12/25f);
+        GEM_WIDTH = GEM_HEIGHT * (17/12f);
 
         GEM_SHOP_HEIGHT = WHITE_EYEBAT_HEIGHT * (48 / 39f);
         GEM_SHOP_WIDTH = WHITE_EYEBAT_WIDTH * (69 / 60f);
 
-        RAPID_FIRE_HEIGHT = BOMB_HEIGHT * (16/23f);
+        RAPID_FIRE_HEIGHT = BOMB_HEIGHT * (16/25f);
         RAPID_FIRE_WIDTH = HEART_WIDTH;
 
         SMALL_EXPLOSION_WIDTH = 1.5f*BLUE_EYEBAT_WIDTH;

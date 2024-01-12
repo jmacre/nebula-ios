@@ -73,7 +73,7 @@ public class MainGame extends GameElements implements Screen {
 
     float gemCountTimerDelay = GEM_COUNT_TIMER_DELAY;
 
-    float shipMovementVal;
+    float shipMovementValX, shipMovementValY;
 
     int gemCount = 0;
     int gemsFromScore = 0;
@@ -99,7 +99,7 @@ public class MainGame extends GameElements implements Screen {
     float fadeInOpacity = 1;
     float fadeOutOpacity = 0;
 
-    float totalTransitionDist = SHIP_Y + Math.abs(SHIP_START_Y);
+    float totalTransitionDist = SHIP_START_Y + Math.abs(SHIP_Y);
     float transitionDistTraveled = 0f;
 
     float stateTime = 0f;
@@ -433,9 +433,6 @@ public class MainGame extends GameElements implements Screen {
             if (!gemCountUpdated && gameInterface.isRecapScreenOpen && choseToNotWatchAd) {
                 prefs.setGemCount(prefs.getGemCount() + finalGemCount);
                 finalGemCountTemp = finalGemCount;
-
-                System.out.println("UPDATED GEMS COUNT");
-                System.out.println(finalGemCount);
                 gemCountUpdated = true;
             }
         }
@@ -791,7 +788,7 @@ public class MainGame extends GameElements implements Screen {
                 if (speedIncrease < 1) {
                     speedIncrease += (0.0005 * scoreMultiplier) / 5f;
                 }
-            } else if (score < 10000) {
+            } else if (score < 12500) {
                 if (eyebatsSpawning) {
                     maxEyebatSpawnTime -= (.0002 * scoreMultiplier) / 5f;
                     minEyebatSpawnTime -= (.0001 * scoreMultiplier) / 5f;
@@ -1049,14 +1046,39 @@ public class MainGame extends GameElements implements Screen {
 
     public void movePlayer() {
         if (!isPaused && isTransitionedIn && !isShipLeaving && !isFadingOut && !isTransitioningOut) {
-            if (!(Gdx.input.getY() < (int) (SCREEN_HEIGHT / 5f)) && SHIP_START_Y > SHIP_Y) {
-                shipMovementVal = (deltaP * moveSpeed * (Gdx.input.getX() - SHIP_X - SHIP_WIDTH / 2f));
-                if (SHIP_X + shipMovementVal > SCREEN_WIDTH - SHIP_WIDTH) {
+            float targetX = Gdx.input.getX() - SHIP_WIDTH / 2f;
+            float deltaX = targetX - SHIP_X;
+
+            float targetY = SCREEN_HEIGHT - Gdx.input.getY() + SHIP_HEIGHT / 2f;
+            float deltaY = targetY - SHIP_Y;
+
+            shipMovementValX = (deltaP * moveSpeed * deltaX);
+            shipMovementValY = (deltaP * moveSpeed * deltaY);
+
+            System.out.println(SCREEN_HEIGHT);
+            System.out.println(SCREEN_HEIGHT - TOP_ELEM_Y + PAUSE_BUTTON_HEIGHT);
+
+
+            if((Gdx.input.getY() > SCREEN_HEIGHT - TOP_ELEM_Y + PAUSE_BUTTON_HEIGHT)){
+                if (SHIP_X + shipMovementValX > SCREEN_WIDTH - SHIP_WIDTH) {
                     SHIP_X = SCREEN_WIDTH - SHIP_WIDTH;
-                } else if (SHIP_X + shipMovementVal < 0) {
+                } else if (SHIP_X + shipMovementValX < 0) {
                     SHIP_X = 0;
                 } else {
-                    SHIP_X += (int) shipMovementVal;
+                    SHIP_X += (int) shipMovementValX;
+                }
+            }
+
+
+            if (!(Gdx.input.getY() < (int) (SCREEN_HEIGHT / 4f))) {
+
+                if (SHIP_Y + shipMovementValY > SCREEN_HEIGHT - SHIP_HEIGHT) {
+                    SHIP_Y = SCREEN_HEIGHT - SHIP_HEIGHT;
+                } else if (SHIP_Y + shipMovementValY < 0) {
+                    SHIP_Y = 0;
+                }
+                else {
+                    SHIP_Y += (int) shipMovementValY;
                 }
 
                 GameElements.CURRENT_SHIP_X = SHIP_X;
@@ -1105,14 +1127,18 @@ public class MainGame extends GameElements implements Screen {
             stopSounds();
         }
 
-        if (SHIP_START_Y < -3 * SHIP_HEIGHT) {
-            SHIP_START_Y = -3 * SHIP_HEIGHT;
+        if (SHIP_Y < -3 * SHIP_HEIGHT) {
+            SHIP_Y = -3 * SHIP_HEIGHT;
         }
 
-        if (SHIP_START_Y <= SHIP_Y) {
-            SHIP_X = (int) (SCREEN_WIDTH / 2 - SHIP_WIDTH / 2);
-            SHIP_START_Y += (int) (1.6 * SHIP_Y * deltaP);
-            transitionDistTraveled += 1.6 * SHIP_Y * deltaP;
+        if (SHIP_Y <= SHIP_START_Y) {
+
+            if(!isTransitionedIn){
+                SHIP_X = (int) (SCREEN_WIDTH / 2 - SHIP_WIDTH / 2);
+                SHIP_Y += (int) (1.6 * SHIP_START_Y * deltaP);
+            }
+
+            transitionDistTraveled += 1.6 * SHIP_START_Y * deltaP;
             transitionInTapVal = inputProcessor.getTapCount();
         }
 
@@ -1120,13 +1146,16 @@ public class MainGame extends GameElements implements Screen {
             if (transitionDistTraveled <= totalTransitionDist / 3) {
                 gl.setText(countdownFont, "3", Color.WHITE, SCREEN_WIDTH, Align.center, true);
                 countdownFont.draw(game.batch, "3", (SCREEN_WIDTH - gl.width) / 2, SCREEN_HEIGHT / 2f + gl.height / 2);
-            } else if (transitionDistTraveled <= 2 * totalTransitionDist / 3) {
+            }
+            else if (transitionDistTraveled <= 2 * totalTransitionDist / 3) {
                 gl.setText(countdownFont, "2", Color.WHITE, SCREEN_WIDTH, Align.center, true);
                 countdownFont.draw(game.batch, "2", (SCREEN_WIDTH - gl.width) / 2, SCREEN_HEIGHT / 2f + gl.height / 2);
-            } else if (transitionDistTraveled < totalTransitionDist) {
+            }
+            else if (transitionDistTraveled < totalTransitionDist) {
                 gl.setText(countdownFont, "1", Color.WHITE, SCREEN_WIDTH, Align.center, true);
                 countdownFont.draw(game.batch, "1", (SCREEN_WIDTH - gl.width) / 2, SCREEN_HEIGHT / 2f + gl.height / 2);
-            } else if (transitionDistTraveled >= totalTransitionDist || SHIP_START_Y >= SHIP_Y) {
+            }
+            else if (transitionDistTraveled >= totalTransitionDist || SHIP_Y >= SHIP_START_Y) {
 
                 if (countDownTimer < 0.25f) {
                     countDownTimer += deltaP;
@@ -1135,7 +1164,8 @@ public class MainGame extends GameElements implements Screen {
                 }
                 isTransitionedIn = true;
                 isTransitioningIn = false;
-            } else {
+            }
+            else {
                 isTransitionedIn = true;
                 isTransitioningIn = false;
             }
@@ -1151,18 +1181,18 @@ public class MainGame extends GameElements implements Screen {
             finalScore = score;
         }
 
-        if (SHIP_START_Y > -3 * SHIP_HEIGHT) {
+        if (SHIP_Y > -3 * SHIP_HEIGHT) {
             isTransitionedOut = false;
             isTransitioningOut = true;
         }
         if (!isTransitionedOut && !gameInterface.isContinueScreenOpen()) {
-            SHIP_START_Y -= 1.6 * SHIP_Y * deltaP;
+            SHIP_Y -= 1.6 * SHIP_START_Y * deltaP;
         }
 
-        shipAnim.drawAnim(shipAnimation, stateTime, SHIP_X_TRANSITION_OUT, SHIP_START_Y, SHIP_WIDTH, SHIP_HEIGHT, true, game.batch, true);
+        shipAnim.drawAnim(shipAnimation, stateTime, SHIP_X_TRANSITION_OUT, SHIP_Y, SHIP_WIDTH, SHIP_HEIGHT, true, game.batch, true);
 
-        if (SHIP_START_Y <= -3 * SHIP_HEIGHT) {
-            SHIP_START_Y = -3 * SHIP_HEIGHT;
+        if (SHIP_Y <= -3 * SHIP_HEIGHT) {
+            SHIP_Y = -3 * SHIP_HEIGHT;
 
 
 
@@ -1276,9 +1306,9 @@ public class MainGame extends GameElements implements Screen {
             stateTime += deltaP / 6;
         resetShader();
         if (isTransitioningIn) {
-            shipAnim.drawAnim(shipAnimation, stateTime, SHIP_X, SHIP_START_Y, SHIP_WIDTH, SHIP_HEIGHT, true, game.batch, true);
+            shipAnim.drawAnim(shipAnimation, stateTime, SHIP_X, SHIP_Y, SHIP_WIDTH, SHIP_HEIGHT, true, game.batch, true);
         } else if (!justHit && health != 0) {
-            shipAnim.drawAnim(shipAnimation, stateTime, SHIP_X, SHIP_START_Y, SHIP_WIDTH, SHIP_HEIGHT, true, game.batch);
+            shipAnim.drawAnim(shipAnimation, stateTime, SHIP_X, SHIP_Y, SHIP_WIDTH, SHIP_HEIGHT, true, game.batch);
         } else if (!isTransitioningOut) {
             runShipBlinking();
         }
@@ -1305,9 +1335,9 @@ public class MainGame extends GameElements implements Screen {
         shipBlinkingTimer += deltaP;
 
         if (shipBlinkingTimer < 0) {
-            shipAnim.drawAnim(shipAnimation, stateTime, SHIP_X, SHIP_START_Y, SHIP_WIDTH, SHIP_HEIGHT, true, game.batch, true);
+            shipAnim.drawAnim(shipAnimation, stateTime, SHIP_X, SHIP_Y, SHIP_WIDTH, SHIP_HEIGHT, true, game.batch, true);
         } else if (shipBlinkingTimer < 0.175) {
-            shipAnim.drawAnim(shipAnimation, stateTime, SHIP_X, SHIP_START_Y, SHIP_WIDTH, SHIP_HEIGHT, true, game.batch);
+            shipAnim.drawAnim(shipAnimation, stateTime, SHIP_X, SHIP_Y, SHIP_WIDTH, SHIP_HEIGHT, true, game.batch);
         } else {
             shipBlinkingTimer = -0.175f;
         }
@@ -1327,7 +1357,7 @@ public class MainGame extends GameElements implements Screen {
         }
 
         if (bulletTimer > bulletThreshold) {
-            if (!isShipLeaving && SHIP_START_Y >= SHIP_Y && isAlive && !gameInterface.isContinueScreenOpen()) {
+            if (!isShipLeaving && isTransitionedIn && isAlive && !gameInterface.isContinueScreenOpen()) {
                 addBullets();
             }
             if (!isShipLeaving) {
@@ -1363,7 +1393,7 @@ public class MainGame extends GameElements implements Screen {
             for (Enemy enemy : enemies) {
                 if (enemy.getId() == (ENEMY_SHIP_ID)) {
                     if (enemy.getEnemyY() < SCREEN_HEIGHT && enemy.getEnemyBulletTimer() > enemy.getEnemyBulletThreshold()) {
-                        if (!isShipLeaving && SHIP_START_Y >= SHIP_Y) {
+                        if (!isShipLeaving && SHIP_Y >= SHIP_START_Y) {
                             addEnemyBullets(enemy);
                             enemy.setEnemyBulletTimer(enemy.getEnemyBulletTimer() - enemy.getEnemyBulletThreshold());
                         }

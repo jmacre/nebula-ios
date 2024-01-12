@@ -458,6 +458,7 @@ public class GameInterface extends GameElements {
                 }
             }
             return !isShopOpen;
+
         } else if (isGemScreenOpen) {
             if (xButton.getTapped()) {
                 isGemScreenOpen = false;

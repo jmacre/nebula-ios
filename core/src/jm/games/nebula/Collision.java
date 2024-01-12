@@ -63,7 +63,7 @@ public class Collision {
 
 
             this.vertices = new float[]{
-                    center.x + Player.getWidth() / 2, center.y - Player.getWidth() / 2.5f,
+                    center.x + Player.getWidth() / 2, center.y - Player.getWidth() / 1.85f,
                     center.x + Player.getWidth() / 2.75f, center.y + Player.getWidth() / 1.75f,
                     center.x + Player.getWidth() / 3.75f, center.y + Player.getWidth() / 1.75f,
                     center.x + Player.getWidth() / 3.75f, center.y + Player.getWidth() / 4f,
@@ -75,7 +75,7 @@ public class Collision {
                     center.x - Player.getWidth() / 3.75f, center.y + Player.getWidth() / 4f,
                     center.x - Player.getWidth() / 3.75f, center.y + Player.getWidth() / 1.75f,
                     center.x - Player.getWidth() / 2.75f, center.y + Player.getWidth() / 1.75f,
-                    center.x - Player.getWidth() / 2, center.y - Player.getWidth() / 2.5f,
+                    center.x - Player.getWidth() / 2, center.y - Player.getWidth() / 1.85f,
             };
             polygon.setVertices(vertices);
             polygon.setPosition(this.x, this.y);
