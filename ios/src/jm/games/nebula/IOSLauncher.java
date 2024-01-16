@@ -22,7 +22,8 @@ import pl.mk5.gdx.fireapp.auth.GdxFirebaseUser;
 
 public class IOSLauncher extends IOSApplication.Delegate implements IActivityRequestHandler {
     IOSApplication iosApplication;
-    NSString testDeviceIdentifier = new NSString("88e3db1c9244ffe80ad4c3b0b79b21f7");
+    NSString testDeviceIdentifier = new NSString("006e7e5b1cfbc0645cf3a0487fd57446");
+    NSString testDeviceIdentifier1 = new NSString("88e3db1c9244ffe80ad4c3b0b79b21f7");
     private GADRewardedAd mRewardedAd;
     private boolean adFinished, adFailedToLoad;
     GADRequest request = new GADRequest();
@@ -32,7 +33,7 @@ public class IOSLauncher extends IOSApplication.Delegate implements IActivityReq
         IOSApplicationConfiguration config = new IOSApplicationConfiguration();
         config.screenEdgesDeferringSystemGestures = UIRectEdge.All;
 
-        GADMobileAds.sharedInstance().getRequestConfiguration().setTestDeviceIdentifiers(new NSArray<>(testDeviceIdentifier));
+        GADMobileAds.sharedInstance().getRequestConfiguration().setTestDeviceIdentifiers(new NSArray<>(testDeviceIdentifier, testDeviceIdentifier1));
         GADMobileAds.sharedInstance().start(status -> {
             System.out.println("GADMobileAds started with status == " + status);
         });
@@ -79,6 +80,7 @@ public class IOSLauncher extends IOSApplication.Delegate implements IActivityReq
                     mRewardedAd = null;
                     adFinished = true;
                     adFailedToLoad = true;
+
                 }
             });
             mRewardedAd.present(iosApplication.getUIViewController(), new Runnable() {
@@ -113,9 +115,9 @@ public class IOSLauncher extends IOSApplication.Delegate implements IActivityReq
                     new VoidBlock2<GADRewardedAd, NSError>() {
                 @Override
                 public void invoke(GADRewardedAd ad, NSError error) {
+
                     if (error != null) {
                         adFailedToLoad = true;
-                        System.out.println("failed to load ad due to " + error);
                     } else {
                         mRewardedAd = ad;
                         adFailedToLoad = false;

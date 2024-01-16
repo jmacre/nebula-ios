@@ -753,10 +753,10 @@ public class MainGame extends GameElements implements Screen {
             updatePowerUpTimer();
         }
         if(isShopOpen){
-            gameInterface.drawShopScreen(game, soundEnabled, delta, game.batch, gemCountFont, prefs);
+            gameInterface.drawShopScreen(game, soundEnabled, delta, game.batch, gemCountFont, prefs, mainSong);
         }
         else if(isGemScreenOpen){
-            gameInterface.drawGemMenu(game, soundEnabled, delta, game.batch, prefs, titleSong);
+            gameInterface.drawGemMenu(game, soundEnabled, delta, game.batch, prefs, mainSong);
         }
         game.batch.end();
     }

@@ -181,7 +181,7 @@ public class MainMenu extends GameElements implements Screen {
             gameInterface.drawTitleScreen(game, delta,transitionInDone, prefs);
         }
         else if(isShopScreenOpen){
-            gameInterface.drawShopScreen(game, soundEnabled, delta, game.batch, gemCountFont, prefs);
+            gameInterface.drawShopScreen(game, soundEnabled, delta, game.batch, gemCountFont, prefs, titleSong);
         }
         else if (isCreditsOpen){
             gameInterface.drawCreditsScreen(game);

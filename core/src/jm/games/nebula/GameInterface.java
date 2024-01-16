@@ -682,7 +682,7 @@ public class GameInterface extends GameElements {
         }
     }
 
-    public void checkForAdButtonTap(Main game, boolean soundEnabled, Prefs prefs, MASound titleSong) {
+    public void checkForAdButtonTap(Main game, boolean soundEnabled, Prefs prefs, MASound activeSong) {
         gemCount = prefs.getGemCount();
 
         if (selectButton.getTappedBefore()) {
@@ -702,6 +702,8 @@ public class GameInterface extends GameElements {
                 game.requestHandlerIOS.setAdFinished(false);
                 game.requestHandlerIOS.loadAd();
                 isAdLoaded = true;
+
+                activeSong.setVolume(0);
             }
         }
 
@@ -711,12 +713,12 @@ public class GameInterface extends GameElements {
         } else if (Gdx.app.getType() == Application.ApplicationType.iOS && game.requestHandlerIOS.isAdLoaded() && isAdLoaded) {
             game.requestHandlerIOS.showAd(false, soundEnabled, prefs, gemSound);
             isAdLoaded = false;
-            titleSong.setVolume(0);
         }
         if (Gdx.app.getType() == Application.ApplicationType.Android && game.requestHandlerAndroid.isAdFinished()) {
             adRequested = false;
         } else if (Gdx.app.getType() == Application.ApplicationType.iOS && game.requestHandlerIOS.isAdFinished()) {
             adRequested = false;
+            activeSong.setVolume(1);
         }
     }
 
@@ -766,13 +768,13 @@ public class GameInterface extends GameElements {
         }
     }
 
-    public void drawShopScreen(Main game, boolean soundEnabled, float delta, SpriteBatch batch, BitmapFont gemCountFont, Prefs prefs) {
+    public void drawShopScreen(Main game, boolean soundEnabled, float delta, SpriteBatch batch, BitmapFont gemCountFont, Prefs prefs, MASound activeSong) {
 
         if(isShipMenuOpen){
             drawShipMenu(game, soundEnabled, delta, batch, gemCountFont, prefs);
         }
         else if(isGemMenuOpen){
-            drawGemMenu(game, soundEnabled, delta, batch, prefs, titleSong);
+            drawGemMenu(game, soundEnabled, delta, batch, prefs, activeSong);
         }
         else{
             stateTime += delta / 6;
@@ -860,7 +862,7 @@ public class GameInterface extends GameElements {
 
     }
 
-    public void drawGemMenu(Main game, boolean soundEnabled, float delta, SpriteBatch batch, Prefs prefs, MASound titleSong) {
+    public void drawGemMenu(Main game, boolean soundEnabled, float delta, SpriteBatch batch, Prefs prefs, MASound activeSong) {
         gemCountFont.setColor(1, 1, 1, 0.8f);
 
         if (gemCount == 0) {
@@ -914,7 +916,7 @@ public class GameInterface extends GameElements {
         }
 
         if (selectedGemScreenElement == AD_ID) {
-            checkForAdButtonTap(game, soundEnabled, prefs, titleSong);
+            checkForAdButtonTap(game, soundEnabled, prefs, activeSong);
 
         } else {
             checkForSelectButtonTap(soundEnabled, false, true, prefs);
