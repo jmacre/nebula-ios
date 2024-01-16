@@ -136,7 +136,7 @@ public class MainMenu extends GameElements implements Screen {
                 if (gameInterface.checkForShopButtonTap(isShopScreenOpen, isGemScreenOpen, isCreditsOpen, switchScreens, soundEnabled)) {
                     isShopScreenOpen = true;
                 }
-                if (isShopScreenOpen && gameInterface.checkForXButtonTap(true, isGemScreenOpen,false, soundEnabled)) {
+                if (isShopScreenOpen && !gameInterface.adRequested && gameInterface.checkForXButtonTap(true, isGemScreenOpen,false, soundEnabled)) {
                     isShopScreenOpen = false;
 
                     gameInterface.isShipMenuOpen = false;
@@ -148,7 +148,7 @@ public class MainMenu extends GameElements implements Screen {
                     gameInterface.isShipMenuOpen = false;
                     gameInterface.isGemMenuOpen = false;
                 }
-                if(gameInterface.checkForCreditsButtonTap(isShopScreenOpen, isGemScreenOpen, isCreditsOpen, switchScreens, soundEnabled)){
+                if(gameInterface.checkForQuestionButtonTap(isShopScreenOpen, isGemScreenOpen, isCreditsOpen, switchScreens, soundEnabled)){
                     isCreditsOpen = true;
                 }
                 if(isCreditsOpen && gameInterface.checkForXButtonCreditsTap(true,  soundEnabled)){
@@ -196,7 +196,7 @@ public class MainMenu extends GameElements implements Screen {
                 musicVolume = 1-fadeOutOpacity;
 
                 if(!gameInterface.adRequested)
-                titleSong.setVolume(musicVolume);
+                    titleSong.setVolume(musicVolume);
             }
 
             fadeOut(delta);

@@ -86,14 +86,14 @@ public class Assets implements Disposable {
     public static final String ad_button_active = "ui/ad_button_active.png";
     public static final String active_button = "ui/active_button.png";
 
+    public static final String back_button = "ui/back_button.png";
+    public static final String question_button = "ui/question_button.png";
+
     public static final String blank_active = "ui/blank_active.png";
     public static final String blank_inactive = "ui/blank_inactive.png";
 
     public static final String blank_shop_button_active = "ui/blank_shop_button_active.png";
     public static final String blank_shop_button_inactive = "ui/blank_shop_button_inactive.png";
-
-    public static final String credits_active = "ui/credits_button_active.png";
-    public static final String credits_inactive = "ui/credits_button_inactive.png";
 
     public static final String bullet_yellow = "weapon/bullet_yellow.png";
     public static final String bullet_red = "weapon/bullet_red.png";
@@ -193,9 +193,6 @@ public class Assets implements Disposable {
         assetManager.load(ad_button_active, Texture.class);
         assetManager.load(ad_button_inactive, Texture.class);
 
-        assetManager.load(credits_active, Texture.class);
-        assetManager.load(credits_inactive, Texture.class);
-
         assetManager.load(shop_button_active, Texture.class);
 
         assetManager.load(title_logo, Texture.class);
@@ -287,7 +284,10 @@ public class Assets implements Disposable {
 
         assetManager.load(select_button_active, Texture.class);
         assetManager.load(select_button_inactive, Texture.class);
-        assetManager.load(active_button, Texture.class);;
+        assetManager.load(active_button, Texture.class);
+
+        assetManager.load(back_button, Texture.class);
+        assetManager.load(question_button, Texture.class);
 
         assetManager.load(blank_active, Texture.class);
         assetManager.load(blank_inactive, Texture.class);
@@ -329,9 +329,6 @@ public class Assets implements Disposable {
         assetManager.unload(error_sound);
         assetManager.unload(starship_song);
         assetManager.unload(title_song);
-
-        assetManager.unload(credits_active);
-        assetManager.unload(credits_inactive);
 
         assetManager.unload(default_background);
         assetManager.unload(green_background);
@@ -438,6 +435,9 @@ public class Assets implements Disposable {
 
         assetManager.unload(blank_shop_button_inactive);
         assetManager.unload(blank_shop_button_active);
+
+        assetManager.unload(back_button);
+        assetManager.unload(question_button);
 
         assetManager.unload(gem_100);
         assetManager.unload(gem_10k);
