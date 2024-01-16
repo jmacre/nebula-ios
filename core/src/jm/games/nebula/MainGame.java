@@ -371,10 +371,10 @@ public class MainGame extends GameElements implements Screen {
         ShaderProgram.pedantic = false;
         invertedShader = new ShaderProgram(Gdx.files.internal("shader/invert.vsh"), Gdx.files.internal("shader/invert.fsh"));
 
-        if(Gdx.app.getType() == Application.ApplicationType.Android && !game.requestHandlerAndroid.isAdLoaded() && !gameInterface.isGemMenuOpen){
+        if(Gdx.app.getType() == Application.ApplicationType.Android && !game.requestHandlerAndroid.isAdLoaded()){
             game.requestHandlerAndroid.setAdFinished(false);
         }
-        else if(Gdx.app.getType() == Application.ApplicationType.iOS && !game.requestHandlerIOS.isAdLoaded() && !gameInterface.isGemMenuOpen){
+        else if(Gdx.app.getType() == Application.ApplicationType.iOS && !game.requestHandlerIOS.isAdLoaded()){
             game.requestHandlerIOS.setAdFinished(false);
         }
         isPlayingAd = false;
@@ -1026,9 +1026,23 @@ public class MainGame extends GameElements implements Screen {
         resetScoreVariables();
         resetBulletTimers();
         resetInterface();
+        resetAds();
+
         scoreTickerTimer = SCORE_TICKER_TIMER;
         isAdLoaded = false;
         choseToNotWatchAd = false;
+    }
+
+    public void resetAds(){
+        if (Gdx.app.getType() == Application.ApplicationType.Android) {
+            if (game.requestHandlerAndroid.isAdFinished()) {
+                game.requestHandlerAndroid.setAdFinished(false);
+            }
+        } else if (Gdx.app.getType() == Application.ApplicationType.iOS) {
+            if (game.requestHandlerIOS.isAdFinished()) {
+                game.requestHandlerIOS.setAdFinished(false);
+            }
+        }
     }
 
     public void playMusic() {
@@ -1251,12 +1265,12 @@ public class MainGame extends GameElements implements Screen {
 
             if(!recapStarted){
                 if (Gdx.app.getType() == Application.ApplicationType.Android) {
-                    if (game.requestHandlerAndroid.isAdFinished() && !gameInterface.isGemMenuOpen) {
+                    if (game.requestHandlerAndroid.isAdFinished()) {
                         game.requestHandlerAndroid.setAdFinished(false);
                         resetForContinue();
                     }
                 } else if (Gdx.app.getType() == Application.ApplicationType.iOS) {
-                    if (game.requestHandlerIOS.isAdFinished() && !gameInterface.isGemMenuOpen) {
+                    if (game.requestHandlerIOS.isAdFinished()) {
                         game.requestHandlerIOS.setAdFinished(false);
                         resetForContinue();
 
