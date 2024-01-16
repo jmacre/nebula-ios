@@ -2,6 +2,10 @@ package jm.games.nebula;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 import static jm.games.nebula.GameElements.SCREEN_HEIGHT;
 
@@ -9,6 +13,9 @@ public class Button {
     private float height, width, x, y, extendXTapBy, extendYTapBy;
     private boolean tapped, focused;
     private Texture texture;
+    private Sprite sprite;
+    Animation<TextureRegion> buttonAnimation;
+    float stateTime = 0f;
 
     public Button(Texture texture, float x, float y, float width, float height){
         this.texture = texture;
@@ -30,6 +37,37 @@ public class Button {
         this.extendYTapBy = extendYTapBy;
 
     }
+
+    public Button(Sprite sprite, int frameCount, float frameDuration, float x, float y, float width, float height){
+        this.sprite = sprite;
+        this.x = x;
+        this.y = y;
+        this.width = width;
+        this.height = height;
+
+    }
+
+    public Button(Sprite sprite, int frameCount, float frameDuration, float x, float y, float width, float height, float extendXTapBy, float extendYTapBy){
+        this.sprite = sprite;
+        this.x = x;
+        this.y = y;
+        this.width = width;
+        this.height = height;
+        this.extendXTapBy = extendXTapBy;
+        this.extendYTapBy = extendYTapBy;
+
+        buttonAnimation = Anim.createAnimation(sprite, frameCount, frameDuration);
+        buttonAnimation.setPlayMode(Animation.PlayMode.LOOP);
+
+    }
+
+    public void render(Anim buttonAnim, float delta, SpriteBatch batch){
+        stateTime += delta / 56;
+
+        buttonAnim.drawAnim(buttonAnimation, stateTime, x, y, width, height, true, batch);
+
+    }
+
     private boolean checkFocused(int tapX, int tapY, float extendXTapBy, float extendYTapBy){
         this.focused = (Gdx.input.isTouched()) && tapX < this.x + this.width + extendXTapBy && tapX > this.x - extendXTapBy
                 && SCREEN_HEIGHT - tapY < this.y + this.height + extendYTapBy && SCREEN_HEIGHT - tapY > this.y - extendYTapBy;

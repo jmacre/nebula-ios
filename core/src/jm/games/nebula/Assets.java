@@ -56,6 +56,10 @@ public class Assets implements Disposable {
     public static final String play_button_active = "ui/play_button_active.png";
 
     public static final String gem_button_inactive = "ui/gem_button_inactive.png";
+    public static final String gem_button_active = "ui/gem_button_active.png";
+
+    public static final String ship_button_inactive = "ui/ship_button_inactive.png";
+    public static final String ship_button_active = "ui/ship_button_active.png";
 
     public static final String replay_button_inactive = "ui/replay_button_inactive.png";
     public static final String home_button_inactive = "ui/home_button_inactive.png";
@@ -71,7 +75,6 @@ public class Assets implements Disposable {
     public static final String ingame_shop_button_inactive = "ui/ingame_shop_button_inactive.png";
     public static final String ingame_shop_button_active = "ui/ingame_shop_button_active.png";
 
-
     public static final String right_arrow_btn_active = "ui/right_arrow_btn_active.png";
     public static final String left_arrow_btn_active = "ui/left_arrow_btn_active.png";
     public static final String right_arrow_btn_inactive = "ui/right_arrow_btn_inactive.png";
@@ -85,6 +88,9 @@ public class Assets implements Disposable {
 
     public static final String blank_active = "ui/blank_active.png";
     public static final String blank_inactive = "ui/blank_inactive.png";
+
+    public static final String blank_shop_button_active = "ui/blank_shop_button_active.png";
+    public static final String blank_shop_button_inactive = "ui/blank_shop_button_inactive.png";
 
     public static final String credits_active = "ui/credits_button_active.png";
     public static final String credits_inactive = "ui/credits_button_inactive.png";
@@ -180,7 +186,10 @@ public class Assets implements Disposable {
         assetManager.load(start_button_active_clear, Texture.class);
         assetManager.load(shop_button_inactive, Texture.class);
         assetManager.load(shop_button_inactive_clear, Texture.class);
+        assetManager.load(gem_button_active, Texture.class);
         assetManager.load(gem_button_inactive, Texture.class);
+        assetManager.load(ship_button_active, Texture.class);
+        assetManager.load(ship_button_inactive, Texture.class);
         assetManager.load(ad_button_active, Texture.class);
         assetManager.load(ad_button_inactive, Texture.class);
 
@@ -283,6 +292,9 @@ public class Assets implements Disposable {
         assetManager.load(blank_active, Texture.class);
         assetManager.load(blank_inactive, Texture.class);
 
+        assetManager.load(blank_shop_button_active, Texture.class);
+        assetManager.load(blank_shop_button_inactive, Texture.class);
+
         assetManager.load(gem_100, Texture.class);
         assetManager.load(gem_10k, Texture.class);
         assetManager.load(gem_75k, Texture.class);
@@ -360,6 +372,9 @@ public class Assets implements Disposable {
         assetManager.unload(active_button);
 
         assetManager.unload(gem_button_inactive);
+        assetManager.unload(gem_button_active);
+        assetManager.unload(ship_button_inactive);
+        assetManager.unload(ship_button_active);
 
         assetManager.unload(bullet_yellow);
         assetManager.unload(bullet_red);
@@ -417,8 +432,12 @@ public class Assets implements Disposable {
         assetManager.unload(pause_menu_back);
 
         assetManager.unload(powerup_timer);
+
         assetManager.unload(blank_inactive);
         assetManager.unload(blank_active);
+
+        assetManager.unload(blank_shop_button_inactive);
+        assetManager.unload(blank_shop_button_active);
 
         assetManager.unload(gem_100);
         assetManager.unload(gem_10k);

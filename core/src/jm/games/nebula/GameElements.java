@@ -365,10 +365,15 @@ public class GameElements {
         TS_SOUND_BUTTON_X = SCORE_X;
         TS_SOUND_BUTTON_Y = TS_SOUND_BUTTON_HEIGHT * 1.05f;
 
-        GEM_BUTTON_WIDTH = GEM_WIDTH;
-        GEM_BUTTON_HEIGHT = GEM_HEIGHT;
-        GEM_BUTTON_X = SCREEN_WIDTH - TS_SOUND_BUTTON_X - GEM_BUTTON_WIDTH;
-        GEM_BUTTON_Y = TS_SOUND_BUTTON_Y + (TS_SOUND_BUTTON_HEIGHT - GEM_BUTTON_HEIGHT)/2f;
+        GEM_BUTTON_WIDTH = PLAY_BUTTON_WIDTH;
+        GEM_BUTTON_HEIGHT = PLAY_BUTTON_HEIGHT;
+        GEM_BUTTON_X = SHOP_BACK_X + (SHOP_BACK_WIDTH/ 2) + GEM_BUTTON_WIDTH/2;
+        GEM_BUTTON_Y = SHOP_BACK_Y + (SHOP_BACK_HEIGHT/ 2) - GEM_BUTTON_HEIGHT/2;
+
+        SHIP_BUTTON_WIDTH = PLAY_BUTTON_WIDTH;
+        SHIP_BUTTON_HEIGHT = PLAY_BUTTON_HEIGHT;
+        SHIP_BUTTON_X = SHOP_BACK_X + (SHOP_BACK_WIDTH/ 4) - SHIP_BUTTON_WIDTH/2;
+        SHIP_BUTTON_Y = SHOP_BACK_Y + (SHOP_BACK_HEIGHT/ 2) - SHIP_BUTTON_HEIGHT/2;
 
         CREDITS_BUTTON_WIDTH = (SCREEN_WIDTH / 4f) * WIDTH_ADJUSTMENT;
         CREDITS_BUTTON_HEIGHT = CREDITS_BUTTON_WIDTH * (64f / 176);
@@ -377,7 +382,6 @@ public class GameElements {
         if(CREDITS_BUTTON_Y + CREDITS_BUTTON_HEIGHT > SHOP_BUTTON_Y_TRANSITIONED){
             CREDITS_BUTTON_Y = 20;
             TS_SOUND_BUTTON_Y = 20;
-            GEM_BUTTON_Y = 20;
         }
 
         CREDITS_BUTTON_X = SCREEN_WIDTH/2f - CREDITS_BUTTON_WIDTH/2f;
@@ -441,16 +445,20 @@ public class GameElements {
     public static float TS_SOUND_BUTTON_X = SCORE_X;
     public static float TS_SOUND_BUTTON_Y = TS_SOUND_BUTTON_HEIGHT * 1.05f;
 
-    public static float GEM_BUTTON_WIDTH = GEM_WIDTH;
-    public static float GEM_BUTTON_HEIGHT = GEM_HEIGHT;
-    public static float GEM_BUTTON_X = SCREEN_WIDTH - TS_SOUND_BUTTON_X - GEM_BUTTON_WIDTH;
-    public static float GEM_BUTTON_Y = TS_SOUND_BUTTON_Y + (TS_SOUND_BUTTON_HEIGHT - GEM_BUTTON_HEIGHT)/2f;
+    public static float GEM_BUTTON_WIDTH = PLAY_BUTTON_WIDTH;
+    public static float GEM_BUTTON_HEIGHT = PLAY_BUTTON_HEIGHT;
+    public static float GEM_BUTTON_X = SHOP_BACK_X + (SHOP_BACK_WIDTH/ 2) + GEM_BUTTON_WIDTH/2;
+    public static float GEM_BUTTON_Y = SHOP_BACK_Y + (SHOP_BACK_HEIGHT/ 2) - GEM_BUTTON_HEIGHT/2;
+
+    public static float SHIP_BUTTON_WIDTH = PLAY_BUTTON_WIDTH;
+    public static float SHIP_BUTTON_HEIGHT = PLAY_BUTTON_HEIGHT;
+    public static float SHIP_BUTTON_X = SHOP_BACK_X + (SHOP_BACK_WIDTH/ 2) - SHIP_BUTTON_WIDTH/2;
+    public static float SHIP_BUTTON_Y = SHOP_BACK_Y + (SHOP_BACK_HEIGHT/ 2) - SHIP_BUTTON_HEIGHT/2;
 
     public static float CREDITS_BUTTON_WIDTH;
     public static float CREDITS_BUTTON_HEIGHT;
     public static float CREDITS_BUTTON_Y;
     public static float CREDITS_BUTTON_X;
-
 
     public static float PAUSE_BUTTON_X = SCREEN_WIDTH - SCREEN_WIDTH / 7.5f;
     public static float PAUSE_BUTTON_HEIGHT = MAIN_UI_HEIGHT/1.2f;
@@ -500,6 +508,11 @@ public class GameElements {
     Anim powerupAnim = new Anim();
     Anim starsAnimFront = new Anim();
     Anim starsAnimBack = new Anim();
+    Anim gemButtonAnim = new Anim();
+    Anim shipButtonAnim = new Anim();
+
+    Animation<TextureRegion>  gemButtonAnimation;
+    Animation<TextureRegion>  shipButtonAnimation;
 
 
     Sprite blackTransition, whiteFlash, shipSS;

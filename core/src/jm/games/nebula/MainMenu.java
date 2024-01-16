@@ -11,10 +11,6 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.utils.Array;
 
-import java.io.Console;
-
-import jdk.internal.net.http.common.Log;
-
 public class MainMenu extends GameElements implements Screen {
     public Prefs prefs = new Prefs();
     Assets assets;
@@ -41,12 +37,15 @@ public class MainMenu extends GameElements implements Screen {
     boolean beganFading = false;
     boolean canRenderBackground = false;
 
-    boolean isShopOpen = false;
+    boolean isShopScreenOpen = false;
     boolean isGemScreenOpen = false;
     boolean isCreditsOpen = false;
 
     boolean soundEnabled, soundLoaded, playSoundHasPlayed;
     boolean isTitleSongPlaying = false;
+
+    boolean wasGemScreenOpen = false;
+    boolean wasShipScreenOpen = false;
 
     GameInterface gameInterface;
     float refreshRate;
@@ -128,25 +127,28 @@ public class MainMenu extends GameElements implements Screen {
             } else {
                 isTransitioningIn = false;
                 transitionInDone = true;
-                if (!isShopOpen && !isGemScreenOpen && !isCreditsOpen) {
+                if (!isShopScreenOpen && !isGemScreenOpen && !isCreditsOpen) {
                     if (gameInterface.checkForStartButtonTap(switchScreens)) {
                         switchScreens = true;
                     }
                 }
 
-                if (gameInterface.checkForShopButtonTap(isShopOpen, isGemScreenOpen, isCreditsOpen, switchScreens, soundEnabled)) {
-                    isShopOpen = true;
+                if (gameInterface.checkForShopButtonTap(isShopScreenOpen, isGemScreenOpen, isCreditsOpen, switchScreens, soundEnabled)) {
+                    isShopScreenOpen = true;
                 }
-                if (isShopOpen && gameInterface.checkForXButtonTap(true, isGemScreenOpen,false, soundEnabled)) {
-                    isShopOpen = false;
+                if (isShopScreenOpen && gameInterface.checkForXButtonTap(true, isGemScreenOpen,false, soundEnabled)) {
+                    isShopScreenOpen = false;
+
+                    gameInterface.isShipMenuOpen = false;
+                    gameInterface.isGemMenuOpen = false;
                 }
-                if(gameInterface.checkForGemButtonTap(isGemScreenOpen, isShopOpen,  isCreditsOpen, switchScreens, soundEnabled)){
-                    isGemScreenOpen = true;
-                }
-                if(isGemScreenOpen && !gameInterface.adRequested && gameInterface.checkForXButtonTap(isShopOpen, true, false, soundEnabled)){
+
+                if(isGemScreenOpen && !gameInterface.adRequested && gameInterface.checkForXButtonTap(isShopScreenOpen, true, false, soundEnabled)){
                     isGemScreenOpen = false;
+                    gameInterface.isShipMenuOpen = false;
+                    gameInterface.isGemMenuOpen = false;
                 }
-                if(gameInterface.checkForCreditsButtonTap(isShopOpen, isGemScreenOpen, isCreditsOpen, switchScreens, soundEnabled)){
+                if(gameInterface.checkForCreditsButtonTap(isShopScreenOpen, isGemScreenOpen, isCreditsOpen, switchScreens, soundEnabled)){
                     isCreditsOpen = true;
                 }
                 if(isCreditsOpen && gameInterface.checkForXButtonCreditsTap(true,  soundEnabled)){
@@ -175,19 +177,15 @@ public class MainMenu extends GameElements implements Screen {
             soundLoaded = true;
         }
 
-        if (!isShopOpen && !isGemScreenOpen && !isCreditsOpen) {
-            gameInterface.drawTitleScreen(game, transitionInDone, prefs);
+        if (!isShopScreenOpen && !isGemScreenOpen && !isCreditsOpen) {
+            gameInterface.drawTitleScreen(game, delta,transitionInDone, prefs);
         }
-        else if(isShopOpen){
+        else if(isShopScreenOpen){
             gameInterface.drawShopScreen(game, soundEnabled, delta, game.batch, gemCountFont, prefs);
         }
         else if (isCreditsOpen){
             gameInterface.drawCreditsScreen(game);
         }
-        else{
-            gameInterface.drawGemScreen(game, delta, soundEnabled, game.batch, prefs, titleSong);
-        }
-
 
         if (isTransitioningIn && !isFadingOut) {
             fadeIn(delta);
@@ -205,7 +203,7 @@ public class MainMenu extends GameElements implements Screen {
         }
 
         if (!isFadingOut && !isTransitioningIn) {
-            if (transitionInDone && !switchScreens && !isShopOpen && !isGemScreenOpen && !isCreditsOpen) {
+            if (transitionInDone && !switchScreens && !isShopScreenOpen && !isGemScreenOpen && !isCreditsOpen) {
                 soundEnabled = gameInterface.checkForTSSoundButtonTap(game, soundEnabled, prefs);
             }
         }
@@ -275,6 +273,9 @@ public class MainMenu extends GameElements implements Screen {
 
     @Override
     public void pause() {
+        wasGemScreenOpen = gameInterface.isGemMenuOpen;
+        wasShipScreenOpen = gameInterface.isShipMenuOpen;
+
     }
 
     @Override
@@ -284,11 +285,13 @@ public class MainMenu extends GameElements implements Screen {
             deltaList.clear();
 
         }
+        gameInterface.isGemMenuOpen = wasGemScreenOpen;
+        gameInterface.isShipMenuOpen = wasShipScreenOpen;
+
     }
 
     @Override
-    public void hide() {
-    }
+    public void hide() {}
 
     @Override
     public void resize(int width, int height) {
@@ -299,5 +302,8 @@ public class MainMenu extends GameElements implements Screen {
         resetShipPositionOnResize();
         this.gameInterface = new GameInterface(assets, game, prefs);
         this.background = new Background(assets);
+
+        gameInterface.isGemMenuOpen = wasGemScreenOpen;
+        gameInterface.isShipMenuOpen = wasShipScreenOpen;
     }
 }

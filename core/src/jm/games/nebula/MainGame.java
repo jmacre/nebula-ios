@@ -66,10 +66,14 @@ public class MainGame extends GameElements implements Screen {
     Array<Integer> shipPositions;
     int position;
 
+    boolean wasGemScreenOpen = false;
+    boolean wasShipScreenOpen = false;
+
     float maxGemSpawnTime = MAX_GEM_SPAWN_TIME;
     float minGemSpawnTime = MIN_GEM_SPAWN_TIME;
 
     boolean isShopOpen = false;
+    boolean isGemScreenOpen = false;
 
     float gemCountTimerDelay = GEM_COUNT_TIMER_DELAY;
 
@@ -367,10 +371,10 @@ public class MainGame extends GameElements implements Screen {
         ShaderProgram.pedantic = false;
         invertedShader = new ShaderProgram(Gdx.files.internal("shader/invert.vsh"), Gdx.files.internal("shader/invert.fsh"));
 
-        if(Gdx.app.getType() == Application.ApplicationType.Android && !game.requestHandlerAndroid.isAdLoaded()){
+        if(Gdx.app.getType() == Application.ApplicationType.Android && !game.requestHandlerAndroid.isAdLoaded() && !gameInterface.isGemMenuOpen){
             game.requestHandlerAndroid.setAdFinished(false);
         }
-        else if(Gdx.app.getType() == Application.ApplicationType.iOS && !game.requestHandlerIOS.isAdLoaded()){
+        else if(Gdx.app.getType() == Application.ApplicationType.iOS && !game.requestHandlerIOS.isAdLoaded() && !gameInterface.isGemMenuOpen){
             game.requestHandlerIOS.setAdFinished(false);
         }
         isPlayingAd = false;
@@ -572,8 +576,12 @@ public class MainGame extends GameElements implements Screen {
             isShopOpen = true;
 
         }
+
         if (isShopOpen && gameInterface.checkForXButtonTap(true, false,false, soundEnabled)) {
+            gameInterface.isShipMenuOpen = false;
+            gameInterface.isGemMenuOpen = false;
             isShopOpen = false;
+
             resetInterface();
         }
 
@@ -676,7 +684,7 @@ public class MainGame extends GameElements implements Screen {
                         runGemCountUpdateTimer();
                     }
                 }
-                if (!gameInterface.isConfirmLeaveScreenOpen() && !gameInterface.isContinueScreenOpen() && !isPlayingAd && !isShopOpen) {
+                if (!gameInterface.isConfirmLeaveScreenOpen() && !gameInterface.isContinueScreenOpen() && !isPlayingAd && !isShopOpen && !isGemScreenOpen) {
                     choseToNotWatchAd = true;
                     gameInterface.drawReplayScreen(game, menuScoreFont, gameOverFont, gemCountFont, newHighscore, replayScreenGemCount, gemsFromScore, gemsCaught, finalGemCountTemp, gemCountStarted, finalScore, prefs.getHighScore(), scoreCountStarted, recapStarted, recapComplete, deltaP);
                     isAdLoaded = false;
@@ -700,9 +708,9 @@ public class MainGame extends GameElements implements Screen {
             if (gameInterface.isReplayScreenOpen && !isShopOpen && inputProcessor.getTapCount() > tapToContinueScreenTapCount && isTransitionedOut) {
                 if (gameInterface.checkForReplayButtonTap()) {
                     resetScreen();
-
                 }
-            } else if (isTransitionedOut && !isShopOpen) {
+            }
+            else if (isTransitionedOut && !isShopOpen) {
                 if (!gameInterface.isRecapScreenOpen && inputProcessor.getTapCount() > tapToContinueScreenTapCount || gameInterface.isConfirmLeaveScreenOpen()) {
                     if (!gameInterface.isConfirmLeaveScreenOpen()) {
 
@@ -745,8 +753,10 @@ public class MainGame extends GameElements implements Screen {
             updatePowerUpTimer();
         }
         if(isShopOpen){
-
             gameInterface.drawShopScreen(game, soundEnabled, delta, game.batch, gemCountFont, prefs);
+        }
+        else if(isGemScreenOpen){
+            gameInterface.drawGemMenu(game, soundEnabled, delta, game.batch, prefs, titleSong);
         }
         game.batch.end();
     }
@@ -1055,10 +1065,6 @@ public class MainGame extends GameElements implements Screen {
             shipMovementValX = (deltaP * moveSpeed * deltaX);
             shipMovementValY = (deltaP * moveSpeed * deltaY);
 
-            System.out.println(SCREEN_HEIGHT);
-            System.out.println(SCREEN_HEIGHT - TOP_ELEM_Y + PAUSE_BUTTON_HEIGHT);
-
-
             if((Gdx.input.getY() > SCREEN_HEIGHT - TOP_ELEM_Y + PAUSE_BUTTON_HEIGHT)){
                 if (SHIP_X + shipMovementValX > SCREEN_WIDTH - SHIP_WIDTH) {
                     SHIP_X = SCREEN_WIDTH - SHIP_WIDTH;
@@ -1243,16 +1249,18 @@ public class MainGame extends GameElements implements Screen {
                 }
             }
 
-            if (Gdx.app.getType() == Application.ApplicationType.Android) {
-                if (game.requestHandlerAndroid.isAdFinished()) {
-                    game.requestHandlerAndroid.setAdFinished(false);
-                    resetForContinue();
-                }
-            } else if (Gdx.app.getType() == Application.ApplicationType.iOS) {
-                if (game.requestHandlerIOS.isAdFinished()) {
-                    game.requestHandlerIOS.setAdFinished(false);
-                    resetForContinue();
+            if(!recapStarted){
+                if (Gdx.app.getType() == Application.ApplicationType.Android) {
+                    if (game.requestHandlerAndroid.isAdFinished() && !gameInterface.isGemMenuOpen) {
+                        game.requestHandlerAndroid.setAdFinished(false);
+                        resetForContinue();
+                    }
+                } else if (Gdx.app.getType() == Application.ApplicationType.iOS) {
+                    if (game.requestHandlerIOS.isAdFinished() && !gameInterface.isGemMenuOpen) {
+                        game.requestHandlerIOS.setAdFinished(false);
+                        resetForContinue();
 
+                    }
                 }
             }
         }
@@ -1264,7 +1272,6 @@ public class MainGame extends GameElements implements Screen {
     }
 
     public void resetForContinue() {
-
 
         isPlayingAd = false;
         isAdLoaded = false;
@@ -2388,13 +2395,6 @@ public class MainGame extends GameElements implements Screen {
         }
     }
 
-    @Override
-    public void resize(int width, int height) {
-        SCREEN_HEIGHT = Gdx.graphics.getHeight();
-        SCREEN_WIDTH = Gdx.graphics.getWidth();
-
-        defineSizesAndPositions();
-    }
 
     @Override
     public void pause() {
@@ -2404,6 +2404,8 @@ public class MainGame extends GameElements implements Screen {
         if (!isTransitioningOut && !isFadingOut) {
             isPaused = true;
         }
+        wasGemScreenOpen = gameInterface.isGemMenuOpen;
+        wasShipScreenOpen = gameInterface.isShipMenuOpen;
     }
 
     @Override
@@ -2412,10 +2414,22 @@ public class MainGame extends GameElements implements Screen {
             refreshRate = Gdx.graphics.getDisplayMode().refreshRate;
             deltaList.clear();
         }
+        gameInterface.isGemMenuOpen = wasGemScreenOpen;
+        gameInterface.isShipMenuOpen = wasShipScreenOpen;
     }
 
     @Override
-    public void hide() {
+    public void hide() {}
+
+    @Override
+    public void resize(int width, int height) {
+        SCREEN_HEIGHT = Gdx.graphics.getHeight();
+        SCREEN_WIDTH = Gdx.graphics.getWidth();
+
+        defineSizesAndPositions();
+
+        gameInterface.isGemMenuOpen = wasGemScreenOpen;
+        gameInterface.isShipMenuOpen = wasShipScreenOpen;
     }
 
     @Override
