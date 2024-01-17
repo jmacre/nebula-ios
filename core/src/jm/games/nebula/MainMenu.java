@@ -99,8 +99,9 @@ public class MainMenu extends GameElements implements Screen {
         game.batch.enableBlending();
         game.batch.begin();
 
-        deltaList.add(delta);
-
+        if(!gameInterface.adRequested){
+            deltaList.add(delta);
+        }
 
         for (int i = 0; i < deltaList.size; i++) {
             deltaSum += deltaList.get(i);

@@ -390,9 +390,12 @@ public class MainGame extends GameElements implements Screen {
         game.batch.enableBlending();
         game.batch.begin();
 
-        deltaList.add(delta);
+        if(!gameInterface.adRequested){
+            deltaList.add(delta);
+        }
 
-        if (isPaused || isRunningResumeCountdown) {
+
+        if (isPaused || isRunningResumeCountdown || gameInterface.adRequested) {
             deltaP = 0;
         }
 

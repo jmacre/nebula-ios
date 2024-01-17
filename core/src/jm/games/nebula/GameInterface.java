@@ -922,7 +922,6 @@ public class GameInterface extends GameElements {
             checkForSelectButtonTap(soundEnabled, false, true, prefs);
             gl.setText(buyFont, '$' + Float.toString(GemElement.getPriceByElementId(selectedGemScreenElement)), Color.valueOf(PURPLE_COLOR_HEX), SCREEN_WIDTH, Align.center, true);
             buyFont.draw(game.batch, '$' + Float.toString(GemElement.getPriceByElementId(selectedGemScreenElement)), (SCREEN_WIDTH - gl.width) / 2, SELECT_BUTTON_Y + gl.height / 2 + SELECT_BUTTON_HEIGHT / 2);
-
         }
 
         if (gemsPurchased) {
