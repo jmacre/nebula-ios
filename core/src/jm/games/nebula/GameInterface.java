@@ -277,7 +277,7 @@ public class GameInterface extends GameElements {
             gl.setText(gemCountFont, " x " + prefs.getGemCount(), Color.WHITE, SCREEN_WIDTH, Align.center, true);
             gemCountFont.draw(game.batch, " x " + prefs.getGemCount(), 0.95f * (SCREEN_WIDTH - gl.width), scoreY);
 
-            game.batch.draw(gemIcon, 0.95f * (SCREEN_WIDTH - gl.width) - GEM_ICON_WIDTH, scoreY - GEM_ICON_HEIGHT * .8f, GEM_ICON_WIDTH, GEM_ICON_HEIGHT);
+            game.batch.draw(gemIcon, 0.945f * (SCREEN_WIDTH - gl.width) - GEM_ICON_WIDTH, scoreY - GEM_ICON_HEIGHT * .8f, GEM_ICON_WIDTH, GEM_ICON_HEIGHT);
         }
     }
 
@@ -795,9 +795,10 @@ public class GameInterface extends GameElements {
             gl.setText(gemCountFont, " x " + prefs.getGemCount(), Color.WHITE, SCREEN_WIDTH, Align.center, true);
             gemCountFont.draw(game.batch, " x " + prefs.getGemCount(), SHOP_BACK_X + SHOP_BACK_WIDTH*.95f - gl.width, GEM_COUNT_SHOP_Y);
 
-            glx = SHOP_BACK_X + SHOP_BACK_WIDTH*.95f - gl.width;
+            glx = 0.945f * (SHOP_BACK_X + SHOP_BACK_WIDTH - gl.width) - GEM_ICON_WIDTH;
 
-            game.batch.draw(gemIcon, glx*.945f, GEM_ICON_SHOP_Y, GEM_ICON_WIDTH, GEM_ICON_HEIGHT);
+
+            game.batch.draw(gemIcon, glx, GEM_ICON_SHOP_Y, GEM_ICON_WIDTH, GEM_ICON_HEIGHT);
         }
 
         if(checkForShipButtonTap(soundEnabled)){
@@ -948,8 +949,8 @@ public class GameInterface extends GameElements {
         scoreFont.draw(game.batch, "HIGH SCORE: " + prefs.getHighScore(), MENU_SCORE_X, MENU_SCORE_Y);
 
         gl.setText(gemCountFont, " x " + prefs.getGemCount(), Color.WHITE, SCREEN_WIDTH, Align.center, true);
-        gemCountFont.draw(game.batch, " x " + prefs.getGemCount(), 0.95f * (MENU_BACK_X + MENU_BACK_WIDTH - gl.width), GEM_COUNT_MENU_Y);
-        game.batch.draw(gemIcon, 0.95f * (MENU_BACK_X + MENU_BACK_WIDTH - gl.width) - GEM_ICON_WIDTH, GEM_ICON_MENU_Y, GEM_ICON_WIDTH, GEM_ICON_HEIGHT);
+        gemCountFont.draw(game.batch, " x " + prefs.getGemCount(), 0.94f * (MENU_BACK_X + MENU_BACK_WIDTH - gl.width), GEM_COUNT_MENU_Y);
+        game.batch.draw(gemIcon, 0.945f * (MENU_BACK_X + MENU_BACK_WIDTH - gl.width) - GEM_ICON_WIDTH, GEM_ICON_MENU_Y, GEM_ICON_WIDTH, GEM_ICON_HEIGHT);
     }
 
     public void drawConfirmLeave(Main game, BitmapFont confirmScreenFont) {
@@ -1007,7 +1008,7 @@ public class GameInterface extends GameElements {
 
             gl.setText(gemCountFont, " x " + replayScreenGemCount, Color.WHITE, SCREEN_WIDTH, Align.center, true);
             gemCountFont.draw(game.batch, " x " + replayScreenGemCount, 0.95f * (MENU_BACK_X + MENU_BACK_WIDTH - gl.width), GEM_COUNT_MENU_Y);
-            game.batch.draw(gemIcon, 0.95f * (MENU_BACK_X + MENU_BACK_WIDTH - gl.width) - GEM_ICON_WIDTH, GEM_ICON_MENU_Y, GEM_ICON_WIDTH, GEM_ICON_HEIGHT);
+            game.batch.draw(gemIcon, 0.945f * (MENU_BACK_X + MENU_BACK_WIDTH - gl.width) - GEM_ICON_WIDTH, GEM_ICON_MENU_Y, GEM_ICON_WIDTH, GEM_ICON_HEIGHT);
         }
 
         if (isRecapScreenOpen) {

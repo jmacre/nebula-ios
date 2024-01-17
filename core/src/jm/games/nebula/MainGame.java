@@ -395,11 +395,11 @@ public class MainGame extends GameElements implements Screen {
         }
 
 
-        if (isPaused || isRunningResumeCountdown || gameInterface.adRequested) {
+        if (isPaused || isRunningResumeCountdown) {
             deltaP = 0;
         }
 
-        if (deltaList.size >= 60) {
+        if (deltaList.size >= 60 && !gameInterface.adRequested) {
             for (int i = 0; i < deltaList.size; i++) {
                 deltaSum += deltaList.get(i);
             }
@@ -504,6 +504,18 @@ public class MainGame extends GameElements implements Screen {
             }
 
             if (isAlive) {
+
+                if (!isAdLoaded) {
+                    if (Gdx.app.getType() == Application.ApplicationType.Android) {
+                        game.requestHandlerAndroid.loadAd();
+                        isAdLoaded = true;
+
+                    } else if (Gdx.app.getType() == Application.ApplicationType.iOS) {
+                        game.requestHandlerIOS.loadAd();
+                        isAdLoaded = true;
+                    }
+                }
+
                 if (score >= 100 && !isTransitioningIn) {
                     addGemDrops();
                     addItemDrops();
@@ -1979,16 +1991,6 @@ public class MainGame extends GameElements implements Screen {
 
                 if (health == 0) {
                     isAlive = false;
-                }
-                if (!isAdLoaded) {
-                    if (Gdx.app.getType() == Application.ApplicationType.Android) {
-                        game.requestHandlerAndroid.loadAd();
-                        isAdLoaded = true;
-
-                    } else if (Gdx.app.getType() == Application.ApplicationType.iOS) {
-                        game.requestHandlerIOS.loadAd();
-                        isAdLoaded = true;
-                    }
                 }
             }
         }
