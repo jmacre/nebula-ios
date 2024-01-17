@@ -92,7 +92,7 @@ public class Background {
 
     }
 
-    public void updateAndRender(float delta, boolean isAlive, boolean isHourglass, int score, Anim starsAnimFront, Anim starsAnimBack, SpriteBatch batch, boolean constantSpeed, boolean isResettingScreen, boolean stayStill, boolean isOnTitleScreen) {
+    public void updateAndRender(float delta, boolean isAlive, boolean isHourglass, int score, Anim starsAnimFront, Anim starsAnimBack, SpriteBatch batch, boolean constantSpeed, boolean isResettingScreen, boolean stayStill, boolean isOnTitleScreen, boolean choseToNotWatchAd) {
         if (isHourglass) {
             hourglassMultiplier = HOURGLASS_SPEED_MULTIPLIER;
         } else {
@@ -115,14 +115,15 @@ public class Background {
             backgroundSprite = backgroundTransitionSprite;
             transitionOpacity = 0f;
 
-            if(WIDTH_ADJUSTMENT != 1F){
+            if(WIDTH_ADJUSTMENT != 1f){
                 backgroundSprite1 = backgroundTransitionSprite1;
             }
         }
 
         if (speed < goalSpeed && !constantSpeed && !isResettingScreen) {
             speed += (SCREEN_HEIGHT / 416f) * delta * hourglassMultiplier;
-        } else if (isResettingScreen && speed > DEFAULT_SPEED) {
+        }
+        else if (isResettingScreen && speed > DEFAULT_SPEED && choseToNotWatchAd) {
             speed -= (SCREEN_HEIGHT / 3.12f) * delta * hourglassMultiplier;
 
         } else if (constantSpeed) {

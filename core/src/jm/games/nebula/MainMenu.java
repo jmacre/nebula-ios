@@ -162,7 +162,7 @@ public class MainMenu extends GameElements implements Screen {
             canRenderBackground = true;
 
         if (canRenderBackground)
-            background.updateAndRender(delta, false, false, 0, starsAnimFront, starsAnimBack, game.batch, true, false, false, true);
+            background.updateAndRender(delta, false, false, 0, starsAnimFront, starsAnimBack, game.batch, true, false, false, true, false);
 
         if (switchScreens) {
             if (soundEnabled && !playSoundHasPlayed) {

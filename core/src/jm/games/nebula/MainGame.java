@@ -446,7 +446,7 @@ public class MainGame extends GameElements implements Screen {
 
         if (fadeInOpacity < 1) {
             musicPosition = mainSong.getCursorPosition();
-            background.updateAndRender(deltaP, isAlive, isHourglass, score, starsAnimFront, starsAnimBack, game.batch, false, isResettingScreen, false, false);
+            background.updateAndRender(deltaP, isAlive, isHourglass, score, starsAnimFront, starsAnimBack, game.batch, false, isResettingScreen, false, false, choseToNotWatchAd);
             if (!isRunningResumeCountdown) {
                 bulletTimer += deltaP;
                 for (Enemy enemy : enemies) {
