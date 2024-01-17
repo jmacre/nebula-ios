@@ -1337,9 +1337,12 @@ public class MainGame extends GameElements implements Screen {
     }
 
     public void drawMainElements() {
-        if (!isRunningResumeCountdown)
+        if (!isRunningResumeCountdown) {
             stateTime += deltaP / 6;
+        }
+
         resetShader();
+
         if (isTransitioningIn) {
             shipAnim.drawAnim(shipAnimation, stateTime, SHIP_X, SHIP_Y, SHIP_WIDTH, SHIP_HEIGHT, true, game.batch, true);
         } else if (!justHit && health != 0) {
@@ -1351,7 +1354,7 @@ public class MainGame extends GameElements implements Screen {
             game.batch.setShader(invertedShader);
         }
 
-        if (isTransitionedIn) {
+        if (isTransitionedIn && !isShopOpen) {
             gameInterface.drawTopUI(game, isPaused || isRunningResumeCountdown, health, isAlive, true);
 
 
