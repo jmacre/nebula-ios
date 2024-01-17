@@ -1088,7 +1088,7 @@ public class MainGame extends GameElements implements Screen {
             float targetX = Gdx.input.getX() - SHIP_WIDTH / 2f;
             float deltaX = targetX - SHIP_X;
 
-            float targetY = SCREEN_HEIGHT - Gdx.input.getY() + SHIP_HEIGHT / 2f;
+            float targetY = SCREEN_HEIGHT - Gdx.input.getY() + SHIP_HEIGHT / 3f;
             float deltaY = targetY - SHIP_Y;
 
             shipMovementValX = (deltaP * moveSpeed * deltaX);
@@ -1103,7 +1103,6 @@ public class MainGame extends GameElements implements Screen {
                     SHIP_X += (int) shipMovementValX;
                 }
             }
-
 
             if (!(Gdx.input.getY() < (int) (SCREEN_HEIGHT / 4f))) {
 

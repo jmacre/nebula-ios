@@ -186,7 +186,9 @@ public class Background {
         backgroundSprite.setPosition(0, background_y2);
         backgroundSprite.draw(batch);
 
-        changeBackgroundColor(delta, score, batch, isAlive);
+        if(choseToNotWatchAd || isAlive){
+            changeBackgroundColor(delta, score, batch, isAlive);
+        }
 
         if (!isHourglass)
             stateTime += delta / 10 * hourglassMultiplier;

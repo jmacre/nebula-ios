@@ -824,10 +824,11 @@ public class GameInterface extends GameElements {
         game.batch.draw(backButton.getTexture(), BACK_BUTTON_X, BACK_BUTTON_Y, BACK_BUTTON_WIDTH, BACK_BUTTON_HEIGHT);
 
         gl.setText(gemCountFont, " x " + prefs.getGemCount(), Color.WHITE, SCREEN_WIDTH, Align.center, true);
-        glx = SHOP_BACK_X + SHOP_BACK_WIDTH*.95f - gl.width;
 
+        glx = 0.945f * (SHOP_BACK_X + SHOP_BACK_WIDTH - gl.width) - GEM_ICON_WIDTH;
+
+        game.batch.draw(gemIcon, glx, GEM_ICON_SHOP_Y, GEM_ICON_WIDTH, GEM_ICON_HEIGHT);
         gemCountFont.draw(game.batch, " x " + prefs.getGemCount(), SHOP_BACK_X + SHOP_BACK_WIDTH*.95f - gl.width, GEM_COUNT_SHOP_Y);
-        game.batch.draw(gemIcon, glx*.945f, GEM_ICON_SHOP_Y, GEM_ICON_WIDTH, GEM_ICON_HEIGHT);
 
         checkForLeftArrowBtnTap(soundEnabled, true, false);
         checkForRightArrowBtnTap(soundEnabled, true, false);
