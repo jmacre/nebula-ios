@@ -797,7 +797,7 @@ public class GameInterface extends GameElements {
 
             glx = SHOP_BACK_X + SHOP_BACK_WIDTH*.95f - gl.width;
 
-            game.batch.draw(gemIcon, glx*.935f, GEM_ICON_SHOP_Y, GEM_ICON_WIDTH, GEM_ICON_HEIGHT);
+            game.batch.draw(gemIcon, glx*.945f, GEM_ICON_SHOP_Y, GEM_ICON_WIDTH, GEM_ICON_HEIGHT);
         }
 
         if(checkForShipButtonTap(soundEnabled)){
@@ -826,7 +826,7 @@ public class GameInterface extends GameElements {
         glx = SHOP_BACK_X + SHOP_BACK_WIDTH*.95f - gl.width;
 
         gemCountFont.draw(game.batch, " x " + prefs.getGemCount(), SHOP_BACK_X + SHOP_BACK_WIDTH*.95f - gl.width, GEM_COUNT_SHOP_Y);
-        game.batch.draw(gemIcon, glx*.935f, GEM_ICON_SHOP_Y, GEM_ICON_WIDTH, GEM_ICON_HEIGHT);
+        game.batch.draw(gemIcon, glx*.945f, GEM_ICON_SHOP_Y, GEM_ICON_WIDTH, GEM_ICON_HEIGHT);
 
         checkForLeftArrowBtnTap(soundEnabled, true, false);
         checkForRightArrowBtnTap(soundEnabled, true, false);
@@ -885,7 +885,7 @@ public class GameInterface extends GameElements {
             glx = SHOP_BACK_X + SHOP_BACK_WIDTH*.95f - gl.width;
 
             gemCountFont.draw(game.batch, " x " + prefs.getGemCount(), SHOP_BACK_X + SHOP_BACK_WIDTH*.95f - gl.width, GEM_COUNT_SHOP_Y);
-            game.batch.draw(gemIcon, glx*.935f, GEM_ICON_SHOP_Y, GEM_ICON_WIDTH, GEM_ICON_HEIGHT);
+            game.batch.draw(gemIcon, glx*.945f, GEM_ICON_SHOP_Y, GEM_ICON_WIDTH, GEM_ICON_HEIGHT);
 
 
             game.batch.draw(leftArrowBtn.getTexture(), LEFT_ARROW_BTN_X, LEFT_ARROW_BTN_Y, LEFT_ARROW_BTN_WIDTH, LEFT_ARROW_BTN_HEIGHT);

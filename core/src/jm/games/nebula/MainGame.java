@@ -624,13 +624,13 @@ public class MainGame extends GameElements implements Screen {
                     gameInterface.drawConfirmLeave(game, confirmScreenFont);
                 }
 
-                if (gameInterface.checkForYesButtonTap()) {
+                if (gameInterface.checkForYesButtonTap() && !isFadingOut) {
                     yesButtonTapVal = inputProcessor.getTapCount();
 
                     if (soundEnabled) {
                         playSound.play();
-
                     }
+
                     isShipLeaving = true;
                 }
                 if (gameInterface.checkForNoButtonTap(soundEnabled)) {
