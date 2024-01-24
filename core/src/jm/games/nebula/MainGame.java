@@ -1495,19 +1495,19 @@ public class MainGame extends GameElements implements Screen {
             bullet4 = bp.obtain();
 
             //left diagonal spread
-            bullet1.create((int) (SHIP_X + SHIP_WIDTH * (4 / 27f)), activePowerUp, "isLeftSpread", assets, isHourglass);
+            bullet1.create((SHIP_X + SHIP_WIDTH * (4 / 27f)), activePowerUp, "isLeftSpread", assets, isHourglass);
             bullets.add(bullet1);
 
             //right diagonal spread
-            bullet2.create((int) (SHIP_X + SHIP_WIDTH - SHIP_WIDTH * (6 / 27f)), activePowerUp,  "isRightSpread", assets, isHourglass);
+            bullet2.create((SHIP_X + SHIP_WIDTH - SHIP_WIDTH * (6 / 27f)), activePowerUp,  "isRightSpread", assets, isHourglass);
             bullets.add(bullet2);
 
             //left bullet
-            bullet3.create((int) (SHIP_X + SHIP_WIDTH * (4 / 27f)), activePowerUp, assets, isHourglass);
+            bullet3.create(SHIP_X + SHIP_WIDTH * (4 / 27f), activePowerUp, assets, isHourglass);
             bullets.add(bullet3);
 
             //right bullet
-            bullet4.create((int) (SHIP_X + SHIP_WIDTH - SHIP_WIDTH * (6 / 27f)), activePowerUp, assets, isHourglass);
+            bullet4.create((SHIP_X + SHIP_WIDTH - SHIP_WIDTH * (6 / 27f)), activePowerUp, assets, isHourglass);
             bullets.add(bullet4);
 
         }
@@ -1517,10 +1517,10 @@ public class MainGame extends GameElements implements Screen {
             bullet2 = bp.obtain();
 
             if (!beamBulletsCreated){
-                bullet1.create((int) (SHIP_X + SHIP_WIDTH * (4 / 27f)), activePowerUp, "isLeftBeam", assets, isHourglass);
+                bullet1.create(SHIP_X + SHIP_WIDTH * (4 / 27f), activePowerUp, "isLeftBeam", assets, isHourglass);
                 bullets.add(bullet1);
 
-                bullet2.create((int) (SHIP_X + SHIP_WIDTH - SHIP_WIDTH * (6 / 27f)), activePowerUp, "isRightBeam", assets, isHourglass);
+                bullet2.create(SHIP_X + SHIP_WIDTH - SHIP_WIDTH * (6 / 27f), activePowerUp, "isRightBeam", assets, isHourglass);
                 bullets.add(bullet2);
 
                 beamBulletsCreated = true;
@@ -1531,10 +1531,10 @@ public class MainGame extends GameElements implements Screen {
             bullet1 = bp.obtain();
             bullet2 = bp.obtain();
 
-            bullet1.create((int) (SHIP_X + SHIP_WIDTH * (4 / 27f)),  activePowerUp, assets, isHourglass);
+            bullet1.create(SHIP_X + SHIP_WIDTH * (4 / 27f),  activePowerUp, assets, isHourglass);
             bullets.add(bullet1);
 
-            bullet2.create((int) (SHIP_X + SHIP_WIDTH - SHIP_WIDTH * (6 / 27f)), activePowerUp, assets, isHourglass);
+            bullet2.create(SHIP_X + SHIP_WIDTH - SHIP_WIDTH * (6 / 27f), activePowerUp, assets, isHourglass);
             bullets.add(bullet2);
 
             missileTimer = MISSILE_TIMER;
@@ -1547,7 +1547,7 @@ public class MainGame extends GameElements implements Screen {
         bulletsToRemove.clear();
 
         for (Bullet bullet : bullets) {
-            bullet.update(deltaP, isHourglass, bullet.isSpreadFire(), bullet.isLeftSpread(), bullet.isRightSpread(), (int) (SHIP_X + SHIP_WIDTH * (4 / 27f)), (int) (SHIP_X + SHIP_WIDTH - SHIP_WIDTH * (6 / 27f)));
+            bullet.update(deltaP, isHourglass, bullet.isSpreadFire(), bullet.isLeftSpread(), bullet.isRightSpread(), SHIP_X + SHIP_WIDTH * (4 / 27f), SHIP_X + SHIP_WIDTH - SHIP_WIDTH * (6 / 27f));
 
             if (bullet.getBulletY() - Bullet.getBulletHeight() > SCREEN_HEIGHT && !bulletsToRemove.contains(bullet, true)) {
                 bulletsToRemove.add(bullet);
@@ -1569,10 +1569,10 @@ public class MainGame extends GameElements implements Screen {
             EnemyBullet enemyBullet1 = ebp.obtain();
             EnemyBullet enemyBullet2 = ebp.obtain();
             if (enemy.getId() == (ENEMY_SHIP_ID) && enemy.getEnemyBulletTimer() > enemy.getEnemyBulletThreshold()) {
-                enemyBullet1.create((int) (enemy.ENEMY_X + ENEMY_SHIP_WIDTH * (5 / 31f)), (int) (enemy.ENEMY_Y + enemy.ENEMY_HEIGHT * (3 / 27f)), enemy.getBulletSpeed(), RED_ID, 0, assets);
+                enemyBullet1.create((int) (enemy.ENEMY_X + ENEMY_SHIP_WIDTH * (5 / 31f)), (int) (enemy.ENEMY_Y + enemy.ENEMY_HEIGHT * (3 / 27f)), enemy.getBulletSpeed(), RED_ID,  assets);
                 enemyBullets.add(enemyBullet1);
 
-                enemyBullet2.create((int) (enemy.ENEMY_X + ENEMY_SHIP_WIDTH - ENEMY_SHIP_WIDTH * (7 / 31f)), (int) (enemy.ENEMY_Y + enemy.ENEMY_HEIGHT * (3 / 27f)), enemy.getBulletSpeed(), RED_ID, 0, assets);
+                enemyBullet2.create((int) (enemy.ENEMY_X + ENEMY_SHIP_WIDTH - ENEMY_SHIP_WIDTH * (7 / 31f)), (int) (enemy.ENEMY_Y + enemy.ENEMY_HEIGHT * (3 / 27f)), enemy.getBulletSpeed(), RED_ID, assets);
                 enemyBullets.add(enemyBullet2);
             }
         }

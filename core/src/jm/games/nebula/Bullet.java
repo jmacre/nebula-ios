@@ -24,7 +24,7 @@ public class Bullet extends GameElements {
     public static final float SPEED_VERTICAL = SCREEN_HEIGHT/1.4f;
     public static final float SPEED_HORIZONTAL = (SPEED_VERTICAL * ((float)SCREEN_WIDTH / SCREEN_HEIGHT))/3;
 
-    int BULLET_X, BULLET_Y;
+    float BULLET_X, BULLET_Y;
     float stateTime = 0f;
 
     private boolean isMissile = false;
@@ -40,10 +40,10 @@ public class Bullet extends GameElements {
 
     public Bullet(){
     }
-    public void create(int BULLET_X, int powerUp, Assets assets, boolean isHourglass){
+    public void create(float BULLET_X, int powerUp, Assets assets, boolean isHourglass){
         create(BULLET_X, powerUp, "", assets, isHourglass);
     }
-    public void create(int BULLET_X, int powerUp, String bulletType, Assets assets, boolean isHourglass){
+    public void create(float BULLET_X, int powerUp, String bulletType, Assets assets, boolean isHourglass){
         this.BULLET_X = BULLET_X;
         this.BULLET_Y = (int) (SHIP_Y + SHIP_HEIGHT - BULLET_HEIGHT/2f);
 
@@ -111,7 +111,7 @@ public class Bullet extends GameElements {
     }
 
 
-    public void update(float delta, boolean isHourglass, boolean isSpreadFire, boolean isLeftSpread, boolean isRightSpread, int leftBeamPos, int rightBeamPos){
+    public void update(float delta, boolean isHourglass, boolean isSpreadFire, boolean isLeftSpread, boolean isRightSpread, float leftBeamPos, float rightBeamPos){
         if(isSpreadFire) {
             if (isLeftSpread) {
                 BULLET_X -= (int)(SPEED_HORIZONTAL * delta);
@@ -149,11 +149,11 @@ public class Bullet extends GameElements {
         }
     }
 
-    public int getBulletY(){
+    public float getBulletY(){
         return BULLET_Y;
     }
 
-    public int getBulletX(){
+    public float getBulletX(){
         return BULLET_X;
     }
 

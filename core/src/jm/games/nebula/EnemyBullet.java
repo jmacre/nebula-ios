@@ -38,12 +38,12 @@ public class EnemyBullet {
     Collision rect;
     float stateTime = 0f;
 
-    public void create (int ENEMY_BULLET_X, int ENEMY_BULLET_Y, float speed, int bulletColor, float stateTime, Assets assets) {
+    public void create (int ENEMY_BULLET_X, int ENEMY_BULLET_Y, float speed, int bulletColor, Assets assets) {
         this.assets = assets;
         this.ENEMY_BULLET_X = (int)ENEMY_BULLET_X;
         this.ENEMY_BULLET_Y = (int)ENEMY_BULLET_Y;
         this.speed = speed;
-        this.stateTime = stateTime;
+        this.stateTime = 0;
 
         this.bulletColor = bulletColor;
 
