@@ -97,6 +97,7 @@ public class Assets implements Disposable {
 
     public static final String bullet_yellow = "weapon/bullet_yellow.png";
     public static final String bullet_red = "weapon/bullet_red.png";
+
     public static final String bullet_blue = "weapon/bullet_blue.png";
     public static final String bullet_purple = "weapon/bullet_purple.png";
     public static final String bullet_green = "weapon/bullet_green.png";
@@ -117,6 +118,7 @@ public class Assets implements Disposable {
     public static final String enemy_ship_green_ss = "enemy/enemy_ship_green_ss.png";
     public static final String enemy_ship_purple_ss = "enemy/enemy_ship_purple_ss.png";
     public static final String enemy_ship_white_ss = "enemy/enemy_ship_white_ss.png";
+    public static final String enemy_bullet_ss = "weapon/enemy_bullet_ss.png";
 
     public static final String ship_ss = "player/ship_ss.png";
     public static final String ship_red_ss = "player/ship_red_ss.png";
@@ -152,6 +154,7 @@ public class Assets implements Disposable {
     public static final String hourglass_ss = "item/hourglass_ss.png";
     public static final String gem_ss = "item/gem_ss.png";
     public static final String spread_ss = "item/spread_ss.png";
+    public static final String beam_ss = "item/beam_ss.png";
 
     public static final String gem_100 = "gem/gem_100.png";
     public static final String gem_10k = "gem/gem_10k.png";
@@ -240,6 +243,7 @@ public class Assets implements Disposable {
         assetManager.load(enemy_ship_red_ss, Texture.class);
         assetManager.load(enemy_ship_purple_ss, Texture.class);
         assetManager.load(enemy_ship_white_ss, Texture.class);
+        assetManager.load(enemy_bullet_ss, Texture.class);
 
         assetManager.load(laser_trap_h_ss, Texture.class);
 
@@ -268,6 +272,7 @@ public class Assets implements Disposable {
         assetManager.load(hourglass_ss, Texture.class);
         assetManager.load(gem_ss, Texture.class);
         assetManager.load(spread_ss, Texture.class);
+        assetManager.load(beam_ss, Texture.class);
 
         assetManager.load(pause_menu_back, Texture.class);
         assetManager.load(shop_back, Texture.class);
@@ -402,6 +407,7 @@ public class Assets implements Disposable {
         assetManager.unload(enemy_ship_white_ss);
         assetManager.unload(enemy_ship_green_ss);
         assetManager.unload(laser_trap_h_ss);
+        assetManager.unload(enemy_bullet_ss);
 
         assetManager.unload(ship_ss);
         assetManager.unload(ship_red_ss);
@@ -425,6 +431,7 @@ public class Assets implements Disposable {
         assetManager.unload(rapid_fire_ss);
         assetManager.unload(gem_ss);
         assetManager.unload(spread_ss);
+        assetManager.unload(beam_ss);
 
         assetManager.unload(pause_menu_back);
 

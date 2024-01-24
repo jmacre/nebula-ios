@@ -32,6 +32,9 @@ import static jm.games.nebula.EnemyBullet.greenShipBulletSpeed;
 import static jm.games.nebula.EnemyBullet.purpleShipBulletSpeed;
 import static jm.games.nebula.EnemyBullet.redShipBulletSpeed;
 import static jm.games.nebula.EnemyBullet.whiteShipBulletSpeed;
+import static jm.games.nebula.ItemDrop.BEAM_ID;
+import static jm.games.nebula.ItemDrop.BEAM_TIMER;
+import static jm.games.nebula.ItemDrop.DEFAULT_BULLET_ID;
 import static jm.games.nebula.ItemDrop.GEM_ID;
 import static jm.games.nebula.ItemDrop.HOURGLASS_TIMER;
 import static jm.games.nebula.ItemDrop.MAX_GEM_SPAWN_TIME;
@@ -65,6 +68,8 @@ public class MainGame extends GameElements implements Screen {
     GlyphLayout gl;
     Array<Integer> shipPositions;
     int position;
+
+    int activePowerUp;
 
     boolean wasGemScreenOpen = false;
     boolean wasShipScreenOpen = false;
@@ -115,6 +120,7 @@ public class MainGame extends GameElements implements Screen {
     float rapidFireTimer = RAPID_FIRE_TIMER;
     float spreadFireTimer = SPREAD_FIRE_TIMER;
     float hourglassTimer = HOURGLASS_TIMER;
+    float beamTimer = BEAM_TIMER;
 
     float moveSpeed = 27f;
 
@@ -190,6 +196,10 @@ public class MainGame extends GameElements implements Screen {
     boolean rapidFireUsed = false;
     float rapidFireUsedTimer = -.1f;
 
+    boolean beamUsed = false;
+    boolean beamBulletsCreated = false;
+    float beamUsedTimer = -.1f;
+
     boolean isFadingOut, isFadingIn = false;
     boolean justHit = false;
     boolean soundEnabled;
@@ -199,8 +209,9 @@ public class MainGame extends GameElements implements Screen {
     boolean isMissile = false;
     boolean isRapidFire = false;
     boolean isSpreadFire = false;
-
     boolean isHourglass = false;
+    boolean isBeam = false;
+
     boolean soundLoaded;
     boolean isEnemyHurt;
     boolean isTransitioningIn = true;
@@ -394,7 +405,6 @@ public class MainGame extends GameElements implements Screen {
             deltaList.add(delta);
         }
 
-
         if (isPaused || isRunningResumeCountdown) {
             deltaP = 0;
         }
@@ -456,7 +466,7 @@ public class MainGame extends GameElements implements Screen {
                 }
 
                 if (isAlive) {
-                    enemyDamaged();
+                    checkIfEnemyDamaged();
                     runBulletTimers(); //Adds bullets/bullet sounds
                 }
             }
@@ -545,16 +555,27 @@ public class MainGame extends GameElements implements Screen {
 
             if (isMissile) {
                 runMissileTimer();
-            } else if (isRapidFire) {
+            }
+            else if (isRapidFire) {
                 runRapidFireTimer();
-            } else if (isHourglass) {
+            }
+            else if (isHourglass) {
                 runHourglassTimer();
-            } else if (rapidFireUsed) {
+            }
+            else if (rapidFireUsed) {
                 runRapidFireUsedTimer();
-            } else if (isSpreadFire) {
+            }
+            else if (isSpreadFire) {
                 runSpreadFireTimer();
-            } else if (bombUsed) {
+            }
+            else if (bombUsed) {
                 runBombUsedTimer();
+            }
+            else if(isBeam){
+                runBeamTimer();
+            }
+            else if(beamUsed){
+                runBeamUsedTimer();
             }
 
             if (!hurtEnemies.isEmpty()) {
@@ -764,7 +785,7 @@ public class MainGame extends GameElements implements Screen {
             transitionOut(CURRENT_SHIP_X);
             fadeOut();
         }
-        if (isMissile || isRapidFire || isHourglass || isSpreadFire) {
+        if (isMissile || isRapidFire || isHourglass || isSpreadFire || isBeam) {
             updatePowerUpTimer();
         }
         if(isShopOpen){
@@ -910,11 +931,21 @@ public class MainGame extends GameElements implements Screen {
         bombUsed = false;
         missileUsed = false;
         rapidFireUsed = false;
+        beamUsed = false;
 
         rapidFireTimer = RAPID_FIRE_TIMER;
         missileTimer = MISSILE_TIMER;
         spreadFireTimer = SPREAD_FIRE_TIMER;
         hourglassTimer = HOURGLASS_TIMER;
+        beamTimer = BEAM_TIMER;
+
+        isMissile = false;
+        isRapidFire = false;
+        isSpreadFire = false;
+        isHourglass = false;
+        isBeam = false;
+
+        beamBulletsCreated = false;
     }
 
     public void resetBulletTimers() {
@@ -931,14 +962,12 @@ public class MainGame extends GameElements implements Screen {
 
         isAlive = true;
         justHit = false;
+
         isTransitionedIn = false;
         isTransitionedOut = false;
         isTransitioningOut = false;
         isTransitioningIn = true;
-        isMissile = false;
-        isRapidFire = false;
-        isSpreadFire = false;
-        isHourglass = false;
+
         transitionDistTraveled = 0f;
         isFadingOut = false;
         isFadingIn = false;
@@ -1382,6 +1411,9 @@ public class MainGame extends GameElements implements Screen {
     }
 
     public void runBulletTimers() {
+        bulletSound.setPitch(1f);
+        bulletSound1.setPitch(1f);
+
         if (isMissile) {
             if (missileUsed) {
                 bulletThreshold = 0.3f;
@@ -1408,14 +1440,13 @@ public class MainGame extends GameElements implements Screen {
                             } else {
                                 missileSound.play();
                             }
-                        } else if (!bullets.isEmpty()) {
+                        } else if (!bullets.isEmpty() && !isBeam) {
                             if (bulletSound.isPlaying()) {
                                 bulletSound1.play();
                             } else {
                                 bulletSound.play();
 
                             }
-
                         }
                     }
                 }
@@ -1426,12 +1457,18 @@ public class MainGame extends GameElements implements Screen {
             }
             bulletTimer -= bulletThreshold;
         }
+        if(isBeam && soundEnabled && !isPaused){
+            bulletSound.setPitch(0.65f);
+            bulletSound1.setPitch(0.65f);
+            bulletSound.play();
+            bulletSound1.play();
+        }
 
         if (enemyShipsSpawning) {
             for (Enemy enemy : enemies) {
                 if (enemy.getId() == (ENEMY_SHIP_ID)) {
                     if (enemy.getEnemyY() < SCREEN_HEIGHT && enemy.getEnemyBulletTimer() > enemy.getEnemyBulletThreshold()) {
-                        if (!isShipLeaving && SHIP_Y >= SHIP_START_Y) {
+                        if (!isShipLeaving && isAlive) {
                             addEnemyBullets(enemy);
                             enemy.setEnemyBulletTimer(enemy.getEnemyBulletTimer() - enemy.getEnemyBulletThreshold());
                         }
@@ -1442,40 +1479,59 @@ public class MainGame extends GameElements implements Screen {
     }
 
     public void addBullets() {
+
         if (isMissile) {
             bullet1 = bp.obtain();
-            bullet1.create((int) SHIP_X, true, false, false, false, false, false, assets);
+            bullet1.create((int) SHIP_X, MISSILE_ID, assets, isHourglass);
             bullets.add(bullet1);
-        } else if (isSpreadFire) {
+        }
+        else if (isSpreadFire) {
             bullet1 = bp.obtain();
             bullet2 = bp.obtain();
             bullet3 = bp.obtain();
             bullet4 = bp.obtain();
 
             //left diagonal spread
-            bullet1.create((int) (SHIP_X + SHIP_WIDTH * (4 / 27f)), false, isRapidFire, isSpreadFire, true, false, isHourglass, assets);
+            bullet1.create((int) (SHIP_X + SHIP_WIDTH * (4 / 27f)), activePowerUp, "isLeftSpread", assets, isHourglass);
             bullets.add(bullet1);
 
             //right diagonal spread
-            bullet2.create((int) (SHIP_X + SHIP_WIDTH - SHIP_WIDTH * (6 / 27f)), false, isRapidFire, isSpreadFire, false, true, isHourglass, assets);
+            bullet2.create((int) (SHIP_X + SHIP_WIDTH - SHIP_WIDTH * (6 / 27f)), activePowerUp,  "isRightSpread", assets, isHourglass);
             bullets.add(bullet2);
 
             //left bullet
-            bullet3.create((int) (SHIP_X + SHIP_WIDTH * (4 / 27f)), false, isRapidFire, isSpreadFire, false, false, isHourglass, assets);
+            bullet3.create((int) (SHIP_X + SHIP_WIDTH * (4 / 27f)), activePowerUp, assets, isHourglass);
             bullets.add(bullet3);
 
             //right bullet
-            bullet4.create((int) (SHIP_X + SHIP_WIDTH - SHIP_WIDTH * (6 / 27f)), false, isRapidFire, isSpreadFire, false, false, isHourglass, assets);
+            bullet4.create((int) (SHIP_X + SHIP_WIDTH - SHIP_WIDTH * (6 / 27f)), activePowerUp, assets, isHourglass);
             bullets.add(bullet4);
 
-        } else {
+        }
+        else if (isBeam) {
+
             bullet1 = bp.obtain();
             bullet2 = bp.obtain();
 
-            bullet1.create((int) (SHIP_X + SHIP_WIDTH * (4 / 27f)), isMissile, isRapidFire, isSpreadFire, false, false, isHourglass, assets);
+            if (!beamBulletsCreated){
+                bullet1.create((int) (SHIP_X + SHIP_WIDTH * (4 / 27f)), activePowerUp, "isLeftBeam", assets, isHourglass);
+                bullets.add(bullet1);
+
+                bullet2.create((int) (SHIP_X + SHIP_WIDTH - SHIP_WIDTH * (6 / 27f)), activePowerUp, "isRightBeam", assets, isHourglass);
+                bullets.add(bullet2);
+
+                beamBulletsCreated = true;
+            }
+
+        }
+        else {
+            bullet1 = bp.obtain();
+            bullet2 = bp.obtain();
+
+            bullet1.create((int) (SHIP_X + SHIP_WIDTH * (4 / 27f)),  activePowerUp, assets, isHourglass);
             bullets.add(bullet1);
 
-            bullet2.create((int) (SHIP_X + SHIP_WIDTH - SHIP_WIDTH * (6 / 27f)), isMissile, isRapidFire, isSpreadFire, false, false, isHourglass, assets);
+            bullet2.create((int) (SHIP_X + SHIP_WIDTH - SHIP_WIDTH * (6 / 27f)), activePowerUp, assets, isHourglass);
             bullets.add(bullet2);
 
             missileTimer = MISSILE_TIMER;
@@ -1488,14 +1544,18 @@ public class MainGame extends GameElements implements Screen {
         bulletsToRemove.clear();
 
         for (Bullet bullet : bullets) {
-            bullet.update(deltaP, isHourglass, bullet.isSpreadFire(), bullet.isLeftSpread(), bullet.isRightSpread());
+            bullet.update(deltaP, isHourglass, bullet.isSpreadFire(), bullet.isLeftSpread(), bullet.isRightSpread(), (int) (SHIP_X + SHIP_WIDTH * (4 / 27f)), (int) (SHIP_X + SHIP_WIDTH - SHIP_WIDTH * (6 / 27f)));
 
             if (bullet.getBulletY() - Bullet.getBulletHeight() > SCREEN_HEIGHT && !bulletsToRemove.contains(bullet, true)) {
                 bulletsToRemove.add(bullet);
             }
 
-            if (bullet.isMissile())
+            if (bullet.isMissile()) {
                 bullet.render(missileAnim, deltaP, Bullet.MISSILE_WIDTH, Bullet.MISSILE_HEIGHT, game.batch);
+            }
+            else if(bullet.isBeam()){
+                bullet.render(beamAnim, deltaP, Bullet.MISSILE_WIDTH, Bullet.MISSILE_HEIGHT, game.batch);
+            }
             else
                 bullet.render(game.batch);
         }
@@ -1702,7 +1762,7 @@ public class MainGame extends GameElements implements Screen {
 
         for (Enemy enemy : enemies) {
             if (isAlive) {
-                enemy.update(deltaP, enemy, isHourglass);
+                enemy.update(deltaP, enemy, isHourglass, isBeam);
 
                 switch (enemy.getId()) {
                     case EYEBAT_ID:
@@ -1749,7 +1809,7 @@ public class MainGame extends GameElements implements Screen {
         itemSpawnTimer -= deltaP;
         if (itemSpawnTimer <= 0) {
 
-            randomDrop = random.nextInt(6);
+            randomDrop = random.nextInt(7);
 
             if (randomDrop == lastItemDrop) {
                 addItemDrops();
@@ -1782,11 +1842,16 @@ public class MainGame extends GameElements implements Screen {
                     itemDrop.create(random.nextInt((int) (SCREEN_WIDTH - ItemDrop.SPREAD_WIDTH)), (int) ItemDrop.SPREAD_HEIGHT, ItemDrop.SPREAD_WIDTH, SPREAD_ID, assets);
                     itemDrops.add(itemDrop);
 
-                } else {
+                } else if (randomDrop == 5) {
                     ItemDrop itemDrop = idp.obtain();
                     itemDrop.create(random.nextInt((int) (SCREEN_WIDTH - ItemDrop.HOURGLASS_WIDTH)), (int) ItemDrop.HOURGLASS_HEIGHT, ItemDrop.HOURGLASS_WIDTH, HOURGLASS_ID, assets);
                     itemDrops.add(itemDrop);
 
+                }
+                else{
+                    ItemDrop itemDrop = idp.obtain();
+                    itemDrop.create(random.nextInt((int) (SCREEN_WIDTH - ItemDrop.BEAM_WIDTH)), (int) ItemDrop.BEAM_HEIGHT, ItemDrop.BEAM_WIDTH, BEAM_ID, assets);
+                    itemDrops.add(itemDrop);
                 }
             }
             lastItemDrop = randomDrop;
@@ -1821,6 +1886,9 @@ public class MainGame extends GameElements implements Screen {
                 case HOURGLASS_ID:
                     itemDrop.render(ItemDrop.HOURGLASS_WIDTH, ItemDrop.HOURGLASS_HEIGHT, deltaP * hourglassMultiplier, game.batch);
                     break;
+                case BEAM_ID:
+                    itemDrop.render(ItemDrop.BEAM_WIDTH, ItemDrop.BEAM_HEIGHT, deltaP * hourglassMultiplier, game.batch);
+                    break;
             }
 
             if (itemDrop.getY() + itemDrop.getHeight() < 0) {
@@ -1829,7 +1897,7 @@ public class MainGame extends GameElements implements Screen {
         }
     }
 
-    public void enemyDamaged() {
+    public void checkIfEnemyDamaged() {
         for (Enemy enemy : enemies) {
             boolean pointsEarned = false;
 
@@ -1861,11 +1929,11 @@ public class MainGame extends GameElements implements Screen {
                         }
                     }
 
-                    if ((Collision.isNearby(bullet.getCollision(), enemy.getCollision())
-                            && Collision.isColliding(bullet.getCollision(), enemy.getCollision()))) {
+                    if ((Collision.isNearby(bullet.getCollision(), enemy.getCollision()) || isBeam)
+                            && Collision.isColliding(bullet.getCollision(), enemy.getCollision())) {
 
 
-                        if (!bullet.isMissile() && enemy.getId() != LASER_TRAP_ID && !bulletsToRemove.contains(bullet, true)) {
+                        if (!bullet.isBeam() && !bullet.isMissile() && enemy.getId() != LASER_TRAP_ID && !bulletsToRemove.contains(bullet, true)) {
                             bulletsToRemove.add(bullet);
                         }
 
@@ -1879,7 +1947,11 @@ public class MainGame extends GameElements implements Screen {
                         if (!bullet.isMissile() && enemy.getId() != LASER_TRAP_ID) {
                             if (bullet.isRapidFire()) {
                                 enemy.HP -= 0.5f;
-                            } else {
+                            }
+                            else if(bullet.isBeam()){
+                                enemy.HP -= 3*deltaP;
+                            }
+                            else{
                                 enemy.HP -= 1;
                             }
                             if (soundEnabled && enemy.getHP() <= 0) {
@@ -2063,6 +2135,7 @@ public class MainGame extends GameElements implements Screen {
 
                     case MISSILE_ID:
                         isMissile = true;
+                        activePowerUp = MISSILE_ID;
 
                         if (soundEnabled) {
                             itemSound.play();
@@ -2087,6 +2160,7 @@ public class MainGame extends GameElements implements Screen {
 
                     case RAPID_FIRE_ID:
                         isRapidFire = true;
+                        activePowerUp = RAPID_FIRE_ID;
 
                         if (soundEnabled) {
                             itemSound.play();
@@ -2099,6 +2173,7 @@ public class MainGame extends GameElements implements Screen {
 
                     case SPREAD_ID:
                         isSpreadFire = true;
+                        activePowerUp = SPREAD_ID;
 
                         if (soundEnabled) {
                             itemSound.play();
@@ -2108,6 +2183,17 @@ public class MainGame extends GameElements implements Screen {
 
                     case HOURGLASS_ID:
                         isHourglass = true;
+                        activePowerUp = HOURGLASS_ID;
+
+                        if (soundEnabled) {
+                            itemSound.play();
+                        }
+
+                        break;
+                    case BEAM_ID:
+                        isBeam = true;
+                        activePowerUp = BEAM_ID;
+
                         if (soundEnabled) {
                             itemSound.play();
                         }
@@ -2323,6 +2409,7 @@ public class MainGame extends GameElements implements Screen {
 
         } else {
             isMissile = false;
+            activePowerUp = DEFAULT_BULLET_ID;
             missileTimer = MISSILE_TIMER;
         }
     }
@@ -2334,10 +2421,35 @@ public class MainGame extends GameElements implements Screen {
             rapidFireTimer += deltaP;
         } else {
             isRapidFire = false;
+            activePowerUp = DEFAULT_BULLET_ID;
             rapidFireTimer = RAPID_FIRE_TIMER;
 
         }
     }
+
+    public void runBeamTimer() {
+        if (beamTimer < 0) {
+            addPowerUpTimer(BEAM_TIMER);
+
+            beamTimer += deltaP;
+        } else {
+            isBeam = false;
+            activePowerUp = DEFAULT_BULLET_ID;
+            bullets.clear();
+            beamBulletsCreated = false;
+            beamTimer = BEAM_TIMER;
+
+        }
+    }
+    public void runBeamUsedTimer() {
+        if (beamUsedTimer < 0) {
+            beamUsedTimer += deltaP;
+        } else {
+            beamUsed = false;
+            beamUsedTimer = -.1f;
+        }
+    }
+
 
     public void runSpreadFireTimer() {
         if (spreadFireTimer < 0) {
@@ -2346,6 +2458,7 @@ public class MainGame extends GameElements implements Screen {
             spreadFireTimer += deltaP;
         } else {
             isSpreadFire = false;
+            activePowerUp = DEFAULT_BULLET_ID;
             spreadFireTimer = SPREAD_FIRE_TIMER;
 
         }
@@ -2379,6 +2492,7 @@ public class MainGame extends GameElements implements Screen {
             }
 
             isHourglass = false;
+
             resetShader();
             hourglassMultiplier = 1;
             hourglassTimer = HOURGLASS_TIMER;

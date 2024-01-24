@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 public class ItemDrop extends GameElements {
     Assets assets;
     Animation<TextureRegion> itemAnimation;
+    public static final int DEFAULT_BULLET_ID = -1;
     public static final int BOMB_ID = 0;
     public static final int MISSILE_ID = 1;
     public static final int HEART_ID = 2;
@@ -16,6 +17,7 @@ public class ItemDrop extends GameElements {
     public static final int GEM_ID = 4;
     public static final int HOURGLASS_ID = 5;
     public static final int SPREAD_ID = 6;
+    public static final int BEAM_ID = 7;
 
     public static final float MIN_ITEM_SPAWN_TIME = 15f;
     public static final float MAX_ITEM_SPAWN_TIME = 20f;
@@ -26,6 +28,7 @@ public class ItemDrop extends GameElements {
     public static float MISSILE_TIMER = -9f;
     public static float RAPID_FIRE_TIMER = -10f;
     public static float SPREAD_FIRE_TIMER = -10f;
+    public static float BEAM_TIMER = -10f;
     public static float HOURGLASS_TIMER = -6f;
     public static float HOURGLASS_SPEED_MULTIPLIER = 0.25f;
 
@@ -77,6 +80,9 @@ public class ItemDrop extends GameElements {
                 break;
             case SPREAD_ID:
                 itemSheet = new Sprite(assets.assetManager.get(Assets.spread_ss, Texture.class));
+                break;
+            case BEAM_ID:
+                itemSheet = new Sprite(assets.assetManager.get(Assets.beam_ss, Texture.class));
         }
 
         itemAnimation = Anim.createAnimation(itemSheet, 2, 0.02f);

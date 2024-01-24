@@ -194,7 +194,7 @@ public class Enemy extends GameElements implements Pool.Poolable{
 
     }
 
-    public void update(float delta, Enemy enemy, boolean isHourglass){
+    public void update(float delta, Enemy enemy, boolean isHourglass, boolean isBeam){
         if(isHourglass){
             hourglassMultiplier = HOURGLASS_SPEED_MULTIPLIER;
         }
@@ -203,8 +203,12 @@ public class Enemy extends GameElements implements Pool.Poolable{
         }
 
         if(id == EYEBAT_ID) {
-            if(!isHurt())
-                ENEMY_Y -= Math.ceil((int)(SPEED * delta * ENEMY_Y_SPEED_MULTIPLIER * hourglassMultiplier));
+            if(!isHurt()) {
+                ENEMY_Y -= Math.ceil((int) (SPEED * delta * ENEMY_Y_SPEED_MULTIPLIER * hourglassMultiplier));
+            }
+            if(isHurt() && isBeam){
+                ENEMY_Y -= Math.ceil((int) (SPEED * delta * .5f * ENEMY_Y_SPEED_MULTIPLIER * hourglassMultiplier));
+            }
         }
 
         else if(id == ENEMY_SHIP_ID && shipMovingToPos) {

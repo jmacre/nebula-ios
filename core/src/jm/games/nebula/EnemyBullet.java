@@ -48,7 +48,7 @@ public class EnemyBullet {
         this.bulletColor = bulletColor;
 
         this.rect = new Collision(ENEMY_BULLET_X, ENEMY_BULLET_Y, ENEMY_BULLET_WIDTH, ENEMY_BULLET_HEIGHT);
-        enemyBulletSprite = new Sprite(assets.assetManager.get(Assets.bullet_red, Texture.class));
+        enemyBulletSprite = new Sprite(assets.assetManager.get(Assets.enemy_bullet_ss, Texture.class));
         enemyBulletSprite.setSize(ENEMY_BULLET_WIDTH, ENEMY_BULLET_HEIGHT);
         enemyBulletAnimation = Anim.createAnimation(enemyBulletSprite, 2, Anim.DEFAULT_FRAME_DURATION*2f);
 

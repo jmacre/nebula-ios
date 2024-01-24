@@ -102,6 +102,9 @@ public class GameElements {
     public static float SPREAD_HEIGHT;
     public static float SPREAD_WIDTH;
 
+    public static float BEAM_HEIGHT;
+    public static float BEAM_WIDTH;
+
     public static float GEM_HEIGHT;
     public static float GEM_WIDTH;
 
@@ -280,6 +283,9 @@ public class GameElements {
 
         SPREAD_HEIGHT = BOMB_HEIGHT * (18/25f);
         SPREAD_WIDTH = SPREAD_HEIGHT;
+
+        BEAM_WIDTH = SPREAD_WIDTH;
+        BEAM_HEIGHT = SPREAD_HEIGHT;
 
         GEM_HEIGHT = BOMB_HEIGHT * (12/25f);
         GEM_WIDTH = GEM_HEIGHT * (17/12f);
@@ -504,6 +510,7 @@ public class GameElements {
 
     Anim shipAnim = new Anim();
     Anim missileAnim = new Anim();
+    Anim beamAnim = new Anim();
     Anim enemyBulletAnim = new Anim();
     Anim eyebatAnim = new Anim();
     Anim enemyShipAnim = new Anim();
