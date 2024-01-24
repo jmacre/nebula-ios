@@ -939,6 +939,8 @@ public class MainGame extends GameElements implements Screen {
         hourglassTimer = HOURGLASS_TIMER;
         beamTimer = BEAM_TIMER;
 
+        activePowerUp = DEFAULT_BULLET_ID;
+
         isMissile = false;
         isRapidFire = false;
         isSpreadFire = false;
@@ -1239,6 +1241,7 @@ public class MainGame extends GameElements implements Screen {
 
         mainSong.stop();
         resetHourglassMultiplier();
+        resetItems();
 
         if (finalScore == 0 || score > finalScore) {
             finalScore = score;
@@ -1459,9 +1462,9 @@ public class MainGame extends GameElements implements Screen {
         }
         if(isBeam && soundEnabled && !isPaused){
             bulletSound.setPitch(0.65f);
-            bulletSound1.setPitch(0.65f);
+//            bulletSound1.setPitch(0.65f);
             bulletSound.play();
-            bulletSound1.play();
+//            bulletSound1.play();
         }
 
         if (enemyShipsSpawning) {

@@ -47,6 +47,12 @@ public class Bullet extends GameElements {
         this.BULLET_X = BULLET_X;
         this.BULLET_Y = (int) (SHIP_Y + SHIP_HEIGHT - BULLET_HEIGHT/2f);
 
+        this.isMissile = false;
+        this.isRapidFire = false;
+        this.isSpreadFire = false;
+        this.isBeam = false;
+        this.stateTime = 0;
+
         if(powerUp == MISSILE_ID){
             this.isMissile = true;
         }
@@ -59,12 +65,6 @@ public class Bullet extends GameElements {
 
         else if(powerUp == BEAM_ID){
             this.isBeam = true;
-        }
-        else{
-            this.isMissile = false;
-            this.isRapidFire = false;
-            this.isSpreadFire = false;
-            this.isBeam = false;
         }
 
         this.isLeftSpread = Objects.equals(bulletType, "isLeftSpread");
