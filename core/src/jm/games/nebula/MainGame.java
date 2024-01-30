@@ -1423,9 +1423,11 @@ public class MainGame extends GameElements implements Screen {
             } else {
                 bulletThreshold = 0.65f;
             }
-        } else if (isRapidFire) {
+        }
+        else if (isRapidFire) {
             bulletThreshold = 0.1f;
-        } else if (!bullets.isEmpty()) {
+        }
+        else if (!bullets.isEmpty()) {
             bulletThreshold = 0.4f;
         }
 
@@ -1553,6 +1555,8 @@ public class MainGame extends GameElements implements Screen {
                 bulletsToRemove.add(bullet);
             }
 
+            resetShader();
+
             if (bullet.isMissile()) {
                 bullet.render(missileAnim, deltaP, Bullet.MISSILE_WIDTH, Bullet.MISSILE_HEIGHT, game.batch);
             }
@@ -1561,6 +1565,10 @@ public class MainGame extends GameElements implements Screen {
             }
             else
                 bullet.render(game.batch);
+
+            if(isHourglass){
+                game.batch.setShader(invertedShader);
+            }
         }
     }
 
@@ -1951,6 +1959,9 @@ public class MainGame extends GameElements implements Screen {
                             if (bullet.isRapidFire()) {
                                 enemy.HP -= 0.5f;
                             }
+                            else if(bullet.isSpreadFire()){
+                                enemy.HP -= 0.85f;
+                            }
                             else if(bullet.isBeam()){
                                 enemy.HP -= 3*deltaP;
                             }
@@ -2199,6 +2210,12 @@ public class MainGame extends GameElements implements Screen {
 
                         if (soundEnabled) {
                             itemSound.play();
+                        }
+
+                        if(!beamUsed){
+                            bulletThreshold = 0;
+                            System.out.println("TESTTESTESTESETSET");
+                            beamUsed = true;
                         }
 
                         break;

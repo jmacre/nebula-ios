@@ -904,7 +904,7 @@ public class GameInterface extends GameElements {
             if (gemElement == null) {
                 gemElement = new GemElement(AD_ID, selectedGemScreenElement, SHOP_BACK_X + SHOP_BACK_WIDTH / 2 - GEM_SHOP_WIDTH / 2f, SHOP_BACK_Y + SHOP_BACK_HEIGHT / 2 - GEM_SHOP_HEIGHT / 2f, GEM_SHOP_WIDTH, GEM_SHOP_HEIGHT);
             }
-            gemElement.render(stateTime, batch);
+            gemElement.render(delta, batch);
             gemElement.setElementAnimation(selectedGemScreenElement);
 
             gl.setText(storeFont, gemElement.getTitle(), Color.valueOf(PURPLE_COLOR_HEX), SCREEN_WIDTH, Align.center, true);

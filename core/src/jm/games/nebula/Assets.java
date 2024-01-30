@@ -156,11 +156,11 @@ public class Assets implements Disposable {
     public static final String spread_ss = "item/spread_ss.png";
     public static final String beam_ss = "item/beam_ss.png";
 
-    public static final String gem_100 = "gem/gem_100.png";
-    public static final String gem_10k = "gem/gem_10k.png";
-    public static final String gem_75k = "gem/gem_75k.png";
-    public static final String gem_200k = "gem/gem_200k.png";
-    public static final String gem_500k = "gem/gem_500k.png";
+    public static final String gem_100_ss = "gem/gem_100_ss.png";
+    public static final String gem_10k_ss = "gem/gem_10k_ss.png";
+    public static final String gem_75k_ss = "gem/gem_75k_ss.png";
+    public static final String gem_200k_ss = "gem/gem_200k_ss.png";
+    public static final String gem_500k_ss = "gem/gem_500k_ss.png";
 
     public static final String gem_icon = "ui/gem.png";
 
@@ -300,11 +300,11 @@ public class Assets implements Disposable {
         assetManager.load(blank_shop_button_active, Texture.class);
         assetManager.load(blank_shop_button_inactive, Texture.class);
 
-        assetManager.load(gem_100, Texture.class);
-        assetManager.load(gem_10k, Texture.class);
-        assetManager.load(gem_75k, Texture.class);
-        assetManager.load(gem_200k, Texture.class);
-        assetManager.load(gem_500k, Texture.class);
+        assetManager.load(gem_100_ss, Texture.class);
+        assetManager.load(gem_10k_ss, Texture.class);
+        assetManager.load(gem_75k_ss, Texture.class);
+        assetManager.load(gem_200k_ss, Texture.class);
+        assetManager.load(gem_500k_ss, Texture.class);
 
         assetManager.setLoader(MASound.class, new MASoundLoader(miniAudio, assetManager.getFileHandleResolver()));
 
@@ -446,11 +446,11 @@ public class Assets implements Disposable {
         assetManager.unload(back_button);
         assetManager.unload(question_button);
 
-        assetManager.unload(gem_100);
-        assetManager.unload(gem_10k);
-        assetManager.unload(gem_75k);
-        assetManager.unload(gem_200k);
-        assetManager.unload(gem_500k);
+        assetManager.unload(gem_100_ss);
+        assetManager.unload(gem_10k_ss);
+        assetManager.unload(gem_75k_ss);
+        assetManager.unload(gem_200k_ss);
+        assetManager.unload(gem_500k_ss);
     }
 
     @Override

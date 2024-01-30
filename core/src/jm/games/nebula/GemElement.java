@@ -24,6 +24,7 @@ public class GemElement extends GameElements{
     static Sprite adGem, oneDollarGem, fiveDollarGem, tenDollarGem, twentyDollarGem;
 
     float x, y, width, height;
+    float stateTime = 0f;
 
     public static int gemOptionsCount = 4;
 
@@ -45,21 +46,22 @@ public class GemElement extends GameElements{
             setElementAnimation(colorId);
 
             if(elementSheet != null) {
-                elementAnimation = Anim.createAnimation(elementSheet, 1, DEFAULT_FRAME_DURATION * 1.5f);
+                elementAnimation = Anim.createAnimation(elementSheet, 2, DEFAULT_FRAME_DURATION * 1.5f);
                 elementAnimation.setPlayMode(Animation.PlayMode.LOOP);
             }
         }
     }
-    public void render(float stateTime, SpriteBatch batch){
+    public void render(float delta, SpriteBatch batch){
+        stateTime += delta / 10;
         elementAnim.drawAnim(elementAnimation, stateTime, x, y, width, height, true, batch);
     }
 
     public static void createElements(Assets assets){
-        adGem = new Sprite(assets.assetManager.get(Assets.gem_100, Texture.class));
-        oneDollarGem = new Sprite(assets.assetManager.get(Assets.gem_10k, Texture.class));
-        fiveDollarGem = new Sprite(assets.assetManager.get(Assets.gem_75k, Texture.class));
-        tenDollarGem = new Sprite(assets.assetManager.get(Assets.gem_200k, Texture.class));
-        twentyDollarGem = new Sprite(assets.assetManager.get(Assets.gem_500k, Texture.class));
+        adGem = new Sprite(assets.assetManager.get(Assets.gem_100_ss, Texture.class));
+        oneDollarGem = new Sprite(assets.assetManager.get(Assets.gem_10k_ss, Texture.class));
+        fiveDollarGem = new Sprite(assets.assetManager.get(Assets.gem_75k_ss, Texture.class));
+        tenDollarGem = new Sprite(assets.assetManager.get(Assets.gem_200k_ss, Texture.class));
+        twentyDollarGem = new Sprite(assets.assetManager.get(Assets.gem_500k_ss, Texture.class));
     }
 
     public String getTitle(){
@@ -96,10 +98,11 @@ public class GemElement extends GameElements{
         }
 
         if(elementSheet != null) {
-            elementAnimation = Anim.createAnimation(elementSheet, 1, DEFAULT_FRAME_DURATION * 1.5f);
+            elementAnimation = Anim.createAnimation(elementSheet, 2, DEFAULT_FRAME_DURATION * 1.5f);
             elementAnimation.setPlayMode(Animation.PlayMode.LOOP);
         }
     }
+
     public static float getPriceByElementId(int elementId){
         if(elementId == AD_ID){
             return AD_PRICE;

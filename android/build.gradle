@@ -38,8 +38,8 @@ android {
         applicationId "jm.games.nebula"
         minSdkVersion 19
         targetSdkVersion 33
-        versionCode 37
-        versionName "2.1"
+        versionCode 39
+        versionName "2.3"
         multiDexEnabled true
         signingConfig signingConfigs.debug
     }
