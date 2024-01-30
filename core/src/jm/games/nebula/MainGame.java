@@ -2213,8 +2213,7 @@ public class MainGame extends GameElements implements Screen {
                         }
 
                         if(!beamUsed){
-                            bulletThreshold = 0;
-                            System.out.println("TESTTESTESTESETSET");
+                            bulletTimer = 1;
                             beamUsed = true;
                         }
 
