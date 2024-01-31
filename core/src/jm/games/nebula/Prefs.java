@@ -30,6 +30,9 @@ public class Prefs {
         prefs.putBoolean("hasSound",hasSound);
         prefs.flush();
     }
+    public boolean isSoundEnabled(){
+        return prefs.getBoolean("hasSound", true);
+    }
 
     public void setShip(int selectedShip){
         prefs.putInteger("shipColor", selectedShip);
@@ -39,9 +42,6 @@ public class Prefs {
     public int getShip(){
         return prefs.getInteger("shipColor", 0);
     }
-    public boolean isSoundEnabled(){
-        return prefs.getBoolean("hasSound", true);
-    }
     public String getUnlockedShips(){
         return prefs.getString("unlockedShips");
     }
@@ -50,4 +50,21 @@ public class Prefs {
         //space is added to ensure that 10 isn't confused with 1 and 0
         prefs.flush();
     }
+    public void setBullet(int selectedBullet){
+        prefs.putInteger("bulletColor", selectedBullet);
+        prefs.flush();
+    }
+
+    public int getBullet(){
+        return prefs.getInteger("bulletColor", 0);
+    }
+    public String getUnlockedBullets(){
+        return prefs.getString("unlockedBullets");
+    }
+    public void setUnlockedBullets(String unlockedBullets){
+        prefs.putString("unlockedBullets", unlockedBullets + ' ');
+        //space is added to ensure that 10 isn't confused with 1 and 0
+        prefs.flush();
+    }
+
 }

@@ -87,8 +87,9 @@ public class MainMenu extends GameElements implements Screen {
 
         refreshRate = Gdx.graphics.getDisplayMode().refreshRate;
 
-        ShopElement.createElements(assets);
+        ShipElement.createElements(assets);
         GemElement.createElements(assets);
+        BulletElement.createElements(assets);
     }
 
     @Override

@@ -55,12 +55,6 @@ public class Assets implements Disposable {
     public static final String play_button_inactive = "ui/play_button_inactive.png";
     public static final String play_button_active = "ui/play_button_active.png";
 
-    public static final String gem_button_inactive = "ui/gem_button_inactive.png";
-    public static final String gem_button_active = "ui/gem_button_active.png";
-
-    public static final String ship_button_inactive = "ui/ship_button_inactive.png";
-    public static final String ship_button_active = "ui/ship_button_active.png";
-
     public static final String replay_button_inactive = "ui/replay_button_inactive.png";
     public static final String home_button_inactive = "ui/home_button_inactive.png";
     public static final String sound_off_button_inactive = "ui/sound_off_button_inactive.png";
@@ -95,12 +89,23 @@ public class Assets implements Disposable {
     public static final String blank_shop_button_active = "ui/blank_shop_button_active.png";
     public static final String blank_shop_button_inactive = "ui/blank_shop_button_inactive.png";
 
+    public static final String bullet_btn_ss = "ui/bullet_btn_ss.png";
+
     public static final String bullet_yellow = "weapon/bullet_yellow.png";
     public static final String bullet_red = "weapon/bullet_red.png";
-
     public static final String bullet_blue = "weapon/bullet_blue.png";
     public static final String bullet_purple = "weapon/bullet_purple.png";
     public static final String bullet_green = "weapon/bullet_green.png";
+    public static final String bullet_orange = "weapon/bullet_orange.png";
+    public static final String bullet_pink = "weapon/bullet_pink.png";
+    public static final String bullet_cotton_candy = "weapon/bullet_cottoncandy.png";
+    public static final String bullet_rocketPop = "weapon/bullet_rocketpop.png";
+    public static final String bullet_smoke = "weapon/bullet_smoke.png";
+    public static final String bullet_nebula = "weapon/bullet_nebula.png";
+    public static final String bullet_rainbow = "weapon/bullet_rainbow.png";
+    public static final String bullet_cherry = "weapon/bullet_cherry.png";
+    public static final String bullet_aquamarine = "weapon/bullet_aquamarine.png";
+
     public static final String missile_ss = "weapon/missile_ss.png";
 
     public static final String black_transition = "misc/black_transition.png";
@@ -189,10 +194,8 @@ public class Assets implements Disposable {
         assetManager.load(start_button_active_clear, Texture.class);
         assetManager.load(shop_button_inactive, Texture.class);
         assetManager.load(shop_button_inactive_clear, Texture.class);
-        assetManager.load(gem_button_active, Texture.class);
-        assetManager.load(gem_button_inactive, Texture.class);
-        assetManager.load(ship_button_active, Texture.class);
-        assetManager.load(ship_button_inactive, Texture.class);
+        assetManager.load(bullet_btn_ss, Texture.class);
+
         assetManager.load(ad_button_active, Texture.class);
         assetManager.load(ad_button_inactive, Texture.class);
 
@@ -217,6 +220,16 @@ public class Assets implements Disposable {
         assetManager.load(bullet_blue, Texture.class);
         assetManager.load(bullet_purple, Texture.class);
         assetManager.load(bullet_green, Texture.class);
+        assetManager.load(bullet_orange, Texture.class);
+        assetManager.load(bullet_pink, Texture.class);
+        assetManager.load(bullet_cherry, Texture.class);
+        assetManager.load(bullet_smoke, Texture.class);
+        assetManager.load(bullet_aquamarine, Texture.class);
+        assetManager.load(bullet_cotton_candy, Texture.class);
+        assetManager.load(bullet_nebula, Texture.class);
+        assetManager.load(bullet_rainbow, Texture.class);
+        assetManager.load(bullet_rocketPop, Texture.class);
+
         assetManager.load(missile_ss, Texture.class);
 
         assetManager.load(sound_off_button_active, Texture.class);
@@ -372,17 +385,23 @@ public class Assets implements Disposable {
         assetManager.unload(select_button_active);
         assetManager.unload(select_button_inactive);
         assetManager.unload(active_button);
-
-        assetManager.unload(gem_button_inactive);
-        assetManager.unload(gem_button_active);
-        assetManager.unload(ship_button_inactive);
-        assetManager.unload(ship_button_active);
+        assetManager.unload(bullet_btn_ss);
 
         assetManager.unload(bullet_yellow);
         assetManager.unload(bullet_red);
         assetManager.unload(bullet_blue);
         assetManager.unload(bullet_purple);
         assetManager.unload(bullet_green);
+        assetManager.unload(bullet_pink);
+        assetManager.unload(bullet_orange);
+        assetManager.unload(bullet_cotton_candy);
+        assetManager.unload(bullet_nebula);
+        assetManager.unload(bullet_aquamarine);
+        assetManager.unload(bullet_cherry);
+        assetManager.unload(bullet_smoke);
+        assetManager.unload(bullet_rainbow);
+        assetManager.unload(bullet_rocketPop);
+
         assetManager.unload(missile_ss);
 
         assetManager.unload(sound_off_button_inactive);

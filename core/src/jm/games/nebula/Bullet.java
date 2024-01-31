@@ -5,8 +5,20 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
+import static jm.games.nebula.BulletElement.AQUAMARINE_BULLET_SLOT;
+import static jm.games.nebula.BulletElement.BLUE_BULLET_SLOT;
+import static jm.games.nebula.BulletElement.COTTON_CANDY_BULLET_SLOT;
+import static jm.games.nebula.BulletElement.CHERRY_BULLET_SLOT;
+import static jm.games.nebula.BulletElement.GREEN_BULLET_SLOT;
+import static jm.games.nebula.BulletElement.ORANGE_BULLET_SLOT;
+import static jm.games.nebula.BulletElement.PINK_BULLET_SLOT;
+import static jm.games.nebula.BulletElement.PURPLE_BULLET_SLOT;
+import static jm.games.nebula.BulletElement.RAINBOW_BULLET_SLOT;
+import static jm.games.nebula.BulletElement.RED_BULLET_SLOT;
+import static jm.games.nebula.BulletElement.ROCKETPOP_BULLET_SLOT;
+import static jm.games.nebula.BulletElement.SMOKE_BULLET_SLOT;
+import static jm.games.nebula.BulletElement.YELLOW_BULLET_SLOT;
 import static jm.games.nebula.ItemDrop.BEAM_ID;
-import static jm.games.nebula.ItemDrop.HOURGLASS_ID;
 import static jm.games.nebula.ItemDrop.HOURGLASS_SPEED_MULTIPLIER;
 import static jm.games.nebula.ItemDrop.MISSILE_ID;
 import static jm.games.nebula.ItemDrop.RAPID_FIRE_ID;
@@ -15,11 +27,11 @@ import static jm.games.nebula.ItemDrop.SPREAD_ID;
 import java.util.Objects;
 
 public class Bullet extends GameElements {
-    public Sprite missileSprite = new Sprite();
-    public Sprite bulletSprite = new Sprite();
 
-    Animation<TextureRegion> missileAnimation;
-    Animation<TextureRegion> beamAnimation;
+    public Sprite bulletSprite = new Sprite();
+    public Sprite selectedBulletSprite;
+    int selectedBullet = 0;
+    Animation<TextureRegion> bulletAnimation;
 
     public static final float SPEED_VERTICAL = SCREEN_HEIGHT/1.4f;
     public static final float SPEED_HORIZONTAL = (SPEED_VERTICAL * ((float)SCREEN_WIDTH / SCREEN_HEIGHT))/3;
@@ -40,10 +52,10 @@ public class Bullet extends GameElements {
 
     public Bullet(){
     }
-    public void create(float BULLET_X, int powerUp, Assets assets, boolean isHourglass){
-        create(BULLET_X, powerUp, "", assets, isHourglass);
+    public void create(float BULLET_X, int powerUp, Assets assets, boolean isHourglass, Prefs prefs){
+        create(BULLET_X, powerUp, "", assets, isHourglass, prefs);
     }
-    public void create(float BULLET_X, int powerUp, String bulletType, Assets assets, boolean isHourglass){
+    public void create(float BULLET_X, int powerUp, String bulletType, Assets assets, boolean isHourglass, Prefs prefs){
         this.BULLET_X = BULLET_X;
         this.BULLET_Y = (int) (SHIP_Y + SHIP_HEIGHT - BULLET_HEIGHT/2f);
 
@@ -73,40 +85,45 @@ public class Bullet extends GameElements {
         this.isLeftBeam = Objects.equals(bulletType, "isLeftBeam");
         this.isRightBeam = Objects.equals(bulletType, "isRightBeam");
 
-        if(!isMissile) {
-            this.rect = new Collision(BULLET_X, BULLET_Y, BULLET_WIDTH, BULLET_HEIGHT);
-            bulletSprite.setSize(BULLET_WIDTH, BULLET_HEIGHT);
+        this.rect = new Collision(BULLET_X, BULLET_Y, BULLET_WIDTH, BULLET_HEIGHT);
+
+        if(selectedBulletSprite == null){
+            getSelectedBullet(assets, prefs);
         }
+
+        bulletSprite.setSize(BULLET_WIDTH, BULLET_HEIGHT);
+        bulletSprite.setTexture(selectedBulletSprite.getTexture());
+        bulletAnimation = Anim.createAnimation(bulletSprite, 1, 1f);
+
 
         if(isMissile) {
             this.rect = new Collision(BULLET_X - MISSILE_WIDTH, BULLET_Y, MISSILE_WIDTH, MISSILE_HEIGHT);
-            missileSprite.setTexture(assets.assetManager.get(Assets.missile_ss,Texture.class));
-            missileSprite.setSize(MISSILE_WIDTH, MISSILE_HEIGHT);
-            missileAnimation = Anim.createAnimation(missileSprite, 4, Anim.DEFAULT_FRAME_DURATION*1.5f);
+            bulletSprite.setTexture(assets.assetManager.get(Assets.missile_ss,Texture.class));
+            bulletSprite.setSize(MISSILE_WIDTH, MISSILE_HEIGHT);
+            bulletAnimation = Anim.createAnimation(bulletSprite, 4, Anim.DEFAULT_FRAME_DURATION*1.5f);
         }
 
         else if(isRapidFire){
             bulletSprite.setTexture(assets.assetManager.get(Assets.bullet_blue,Texture.class));
+            bulletAnimation = Anim.createAnimation(bulletSprite, 1, 1f);
         }
 
         else if(isHourglass){
             this.rect = new Collision(BULLET_X, BULLET_Y, BULLET_WIDTH, BULLET_HEIGHT);
             bulletSprite.setTexture(assets.assetManager.get(Assets.bullet_purple,Texture.class));
+            bulletAnimation = Anim.createAnimation(bulletSprite, 1, 1f);
         }
 
         else if (isSpreadFire){
             bulletSprite.setTexture(assets.assetManager.get(Assets.bullet_green,Texture.class));
+            bulletAnimation = Anim.createAnimation(bulletSprite, 1, 1f);
         }
 
         else if(isBeam){
             this.rect = new Collision(BULLET_X, BULLET_Y, BULLET_WIDTH, SCREEN_HEIGHT);
             bulletSprite.setTexture(assets.assetManager.get(Assets.enemy_bullet_ss, Texture.class));
             bulletSprite.setSize(BULLET_WIDTH, SCREEN_HEIGHT);
-            beamAnimation = Anim.createAnimation(bulletSprite, 2, Anim.DEFAULT_FRAME_DURATION*2f);
-        }
-
-        else{
-            bulletSprite.setTexture(assets.assetManager.get(Assets.bullet_yellow,Texture.class));
+            bulletAnimation = Anim.createAnimation(bulletSprite, 2, Anim.DEFAULT_FRAME_DURATION*2f);
         }
     }
 
@@ -167,17 +184,67 @@ public class Bullet extends GameElements {
 
     public void render (SpriteBatch batch) {
         if(BULLET_Y < SCREEN_HEIGHT)
-            bulletSprite.draw(batch);
+            bulletAnim.drawAnim(bulletAnimation, 0, BULLET_X, BULLET_Y, BULLET_WIDTH, BULLET_HEIGHT, true, batch);
     }
 
-    public void render (Anim bulletAnim, float delta, float width, float height, SpriteBatch batch) {
+    public void render (float delta, float width, float height, SpriteBatch batch) {
         stateTime += delta / 6;
         if(BULLET_Y < SCREEN_HEIGHT && isMissile) {
-            bulletAnim.drawAnim(missileAnimation, stateTime, BULLET_X, BULLET_Y, width, height, true, batch);
+            bulletAnim.drawAnim(bulletAnimation, stateTime, BULLET_X, BULLET_Y, width, height, true, batch);
         }
         if(isBeam){
-            bulletAnim.drawAnim(beamAnimation, stateTime, BULLET_X, BULLET_Y, BULLET_WIDTH, SCREEN_HEIGHT, true, batch);
+            bulletAnim.drawAnim(bulletAnimation, stateTime, BULLET_X, BULLET_Y, BULLET_WIDTH, SCREEN_HEIGHT, true, batch);
         }
+        else{
+            bulletAnim.drawAnim(bulletAnimation, stateTime, BULLET_X, BULLET_Y, width, height, true, batch);
+        }
+    }
+    public void getSelectedBullet(Assets assets, Prefs prefs) {
+        selectedBullet = prefs.getBullet();
+
+        switch (selectedBullet) {
+            case YELLOW_BULLET_SLOT:
+                bulletSS = new Sprite(assets.assetManager.get(Assets.bullet_yellow, Texture.class));
+                break;
+            case RED_BULLET_SLOT:
+                bulletSS = new Sprite(assets.assetManager.get(Assets.bullet_red, Texture.class));
+                break;
+            case GREEN_BULLET_SLOT:
+                bulletSS = new Sprite(assets.assetManager.get(Assets.bullet_green, Texture.class));
+                break;
+            case BLUE_BULLET_SLOT:
+                bulletSS = new Sprite(assets.assetManager.get(Assets.bullet_blue, Texture.class));
+                break;
+            case PURPLE_BULLET_SLOT:
+                bulletSS = new Sprite(assets.assetManager.get(Assets.bullet_purple, Texture.class));
+                break;
+            case ORANGE_BULLET_SLOT:
+                bulletSS = new Sprite(assets.assetManager.get(Assets.bullet_orange, Texture.class));
+                break;
+            case PINK_BULLET_SLOT:
+                bulletSS = new Sprite(assets.assetManager.get(Assets.bullet_pink, Texture.class));
+                break;
+            case COTTON_CANDY_BULLET_SLOT:
+                bulletSS = new Sprite(assets.assetManager.get(Assets.bullet_cotton_candy, Texture.class));
+                break;
+            case ROCKETPOP_BULLET_SLOT:
+                bulletSS = new Sprite(assets.assetManager.get(Assets.bullet_rocketPop, Texture.class));
+                break;
+            case SMOKE_BULLET_SLOT:
+                bulletSS = new Sprite(assets.assetManager.get(Assets.bullet_smoke, Texture.class));
+                break;
+            case CHERRY_BULLET_SLOT:
+                bulletSS = new Sprite(assets.assetManager.get(Assets.bullet_cherry, Texture.class));
+                break;
+            case AQUAMARINE_BULLET_SLOT:
+                bulletSS = new Sprite(assets.assetManager.get(Assets.bullet_aquamarine, Texture.class));
+                break;
+            case RAINBOW_BULLET_SLOT:
+                bulletSS = new Sprite(assets.assetManager.get(Assets.bullet_rainbow, Texture.class));
+                break;
+        }
+        selectedBulletSprite = bulletSS;
+        bulletAnimation = Anim.createAnimation(bulletSS, 1, 1f);
     }
 
     public Collision getCollision() {

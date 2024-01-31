@@ -195,6 +195,82 @@ public class GameElements {
     public static float WIDTH_ADJUSTMENT;
     public static float SHOP_FONT_WIDTH_ADJUSTMENT;
 
+    public static float SELECT_BUTTON_WIDTH;
+    public static float SELECT_BUTTON_HEIGHT;
+    public static float SELECT_BUTTON_Y;
+    public static float SELECT_BUTTON_X;
+
+    public static float LEFT_ARROW_BTN_WIDTH;
+    public static float LEFT_ARROW_BTN_HEIGHT;
+    public static float LEFT_ARROW_BTN_Y;
+    public static float LEFT_ARROW_BTN_X;
+
+    public static float RIGHT_ARROW_BTN_WIDTH;
+    public static float RIGHT_ARROW_BTN_HEIGHT;
+    public static float RIGHT_ARROW_BTN_Y;
+    public static float RIGHT_ARROW_BTN_X;
+    public static float TS_SOUND_BUTTON_WIDTH;
+    public static float TS_SOUND_BUTTON_HEIGHT;
+    public static float TS_SOUND_BUTTON_X;
+    public static float TS_SOUND_BUTTON_Y;
+
+    public static float GEM_BUTTON_WIDTH;
+    public static float GEM_BUTTON_HEIGHT;
+    public static float GEM_BUTTON_X;
+    public static float GEM_BUTTON_Y;
+
+    public static float SHIP_BUTTON_WIDTH;
+    public static float SHIP_BUTTON_HEIGHT;
+    public static float SHIP_BUTTON_X;
+    public static float SHIP_BUTTON_Y;
+
+    public static float BULLET_BUTTON_WIDTH;
+    public static float BULLET_BUTTON_HEIGHT;
+    public static float BULLET_BUTTON_X;
+    public static float BULLET_BUTTON_Y;
+
+    public static float BULLET_BUTTON_SS_HEIGHT;
+    public static float BULLET_BUTTON_SS_WIDTH;
+
+    public static float PAUSE_BUTTON_X;
+    public static float PAUSE_BUTTON_HEIGHT;
+    public static float PAUSE_BUTTON_WIDTH;
+    public static float PAUSE_BUTTON_Y;
+
+    public static float MENU_SCORE_X;
+    public static float MENU_SCORE_Y;
+
+    public static float GEM_ICON_HEIGHT;
+    public static float GEM_ICON_WIDTH;
+    public static float GEM_ICON_X;
+
+    public static float GEM_ICON_Y;
+
+    public static float GEM_ICON_MENU_X;
+    public static float GEM_ICON_MENU_Y;
+
+    public static float GEM_COUNT_MENU_X;
+    public static float GEM_COUNT_MENU_Y;
+
+    public static float GEM_ICON_SHOP_X;
+    public static float GEM_ICON_SHOP_Y;
+
+    public static float GEM_COUNT_SHOP_X;
+    public static float GEM_COUNT_SHOP_Y;
+
+    public static float GEM_COUNT_X;
+    public static float GEM_COUNT_Y;
+
+    public static float POWERUP_TIMER_HEIGHT;
+    public static float POWERUP_TIMER_WIDTH;
+    public static float POWERUP_TIMER_X;
+    public static float POWERUP_TIMER_Y;
+
+    public static float CONFIRM_LEAVE_FONT_Y;
+
+    public static float GAME_OVER_TEXT_Y;
+
+
     public static void resetShipPositionOnResize(){
         SHIP_X = (SCREEN_WIDTH/2f - SHIP_WIDTH/2f);
         CURRENT_SHIP_X =  (SCREEN_WIDTH/2f - SHIP_WIDTH/2f);
@@ -391,15 +467,25 @@ public class GameElements {
         QUESTION_BUTTON_X = SCREEN_WIDTH - TS_SOUND_BUTTON_X - QUESTION_BUTTON_WIDTH;
         QUESTION_BUTTON_Y = TS_SOUND_BUTTON_HEIGHT * 1.05f;
 
-        GEM_BUTTON_WIDTH = PLAY_BUTTON_WIDTH;
-        GEM_BUTTON_HEIGHT = PLAY_BUTTON_HEIGHT;
-        GEM_BUTTON_X = SHOP_BACK_X + (SHOP_BACK_WIDTH/ 2) + GEM_BUTTON_WIDTH/2;
-        GEM_BUTTON_Y = SHOP_BACK_Y + (SHOP_BACK_HEIGHT/ 2) - GEM_BUTTON_HEIGHT/2;
-
         SHIP_BUTTON_WIDTH = PLAY_BUTTON_WIDTH;
         SHIP_BUTTON_HEIGHT = PLAY_BUTTON_HEIGHT;
-        SHIP_BUTTON_X = SHOP_BACK_X + (SHOP_BACK_WIDTH/ 4) - SHIP_BUTTON_WIDTH/2;
+        SHIP_BUTTON_X = SHOP_BACK_X + (SHOP_BACK_WIDTH/ 4) - SHIP_BUTTON_WIDTH/1.5f;
         SHIP_BUTTON_Y = SHOP_BACK_Y + (SHOP_BACK_HEIGHT/ 2) - SHIP_BUTTON_HEIGHT/2;
+
+        GEM_BUTTON_WIDTH = PLAY_BUTTON_WIDTH;
+        GEM_BUTTON_HEIGHT = PLAY_BUTTON_HEIGHT;
+        GEM_BUTTON_X = SHOP_BACK_X + (SHOP_BACK_WIDTH/ 2) - GEM_BUTTON_WIDTH/2;
+        GEM_BUTTON_Y = SHOP_BACK_Y + (SHOP_BACK_HEIGHT/ 2) - GEM_BUTTON_HEIGHT/2;
+
+        BULLET_BUTTON_WIDTH = PLAY_BUTTON_WIDTH;
+        BULLET_BUTTON_HEIGHT = PLAY_BUTTON_HEIGHT;
+        BULLET_BUTTON_X = SHOP_BACK_X + (SHOP_BACK_WIDTH/ 2) + BULLET_BUTTON_WIDTH/1.5f;
+        BULLET_BUTTON_Y = SHOP_BACK_Y + (SHOP_BACK_HEIGHT/ 2) - BULLET_BUTTON_HEIGHT/2;
+
+        BULLET_BUTTON_SS_WIDTH = (int) SHIP_WIDTH * (21/27f);
+        BULLET_BUTTON_SS_HEIGHT = (int) BULLET_BUTTON_SS_WIDTH * (8/7f);
+//        BULLET_BUTTON_X = SHOP_BACK_X + (SHOP_BACK_WIDTH/ 2) + BULLET_BUTTON_WIDTH/1.5f;
+//        BULLET_BUTTON_Y = SHOP_BACK_Y + (SHOP_BACK_HEIGHT/ 2) - BULLET_BUTTON_HEIGHT/2;
 
         PAUSE_BUTTON_X = SCREEN_WIDTH - SCREEN_WIDTH / 7.5f;
         PAUSE_BUTTON_HEIGHT = MAIN_UI_HEIGHT/1.2f;
@@ -440,77 +526,8 @@ public class GameElements {
         GAME_OVER_TEXT_Y = (MENU_BACK_Y + MENU_BACK_HEIGHT) + (GEM_ICON_Y - MENU_BACK_Y - MENU_BACK_HEIGHT)/2;
     }
 
-    public static float SELECT_BUTTON_WIDTH = (SHOP_BACK_WIDTH / 4.5f) * 2;
-    public static float SELECT_BUTTON_HEIGHT = (SHOP_BACK_WIDTH / 4.5f) * (64f / 88);
-    public static float SELECT_BUTTON_Y = SHOP_BACK_Y + SHOP_BACK_HEIGHT * .0375f;
-    public static float SELECT_BUTTON_X = SHOP_BACK_X + SHOP_BACK_WIDTH/2f - SELECT_BUTTON_WIDTH/2f;
-
-    public static float LEFT_ARROW_BTN_WIDTH = SHOP_BACK_WIDTH / 4.5f;
-    public static float LEFT_ARROW_BTN_HEIGHT = SELECT_BUTTON_HEIGHT;
-    public static float LEFT_ARROW_BTN_Y = SELECT_BUTTON_Y;
-    public static float LEFT_ARROW_BTN_X = SELECT_BUTTON_X - LEFT_ARROW_BTN_WIDTH - (SELECT_BUTTON_X - LEFT_ARROW_BTN_WIDTH - MENU_BACK_X)/4f;
-
-    public static float RIGHT_ARROW_BTN_WIDTH = LEFT_ARROW_BTN_WIDTH;
-    public static float RIGHT_ARROW_BTN_HEIGHT = LEFT_ARROW_BTN_HEIGHT;
-    public static float RIGHT_ARROW_BTN_Y = SELECT_BUTTON_Y;
-    public static float RIGHT_ARROW_BTN_X = SHOP_BACK_X + SHOP_BACK_WIDTH - (LEFT_ARROW_BTN_X - SHOP_BACK_X) - LEFT_ARROW_BTN_WIDTH;
-
-    public static float TS_SOUND_BUTTON_WIDTH = SCREEN_WIDTH / 9f;
-    public static float TS_SOUND_BUTTON_HEIGHT = TS_SOUND_BUTTON_WIDTH;
-    public static float TS_SOUND_BUTTON_X = SCORE_X;
-    public static float TS_SOUND_BUTTON_Y = TS_SOUND_BUTTON_HEIGHT * 1.05f;
-
-    public static float GEM_BUTTON_WIDTH = PLAY_BUTTON_WIDTH;
-    public static float GEM_BUTTON_HEIGHT = PLAY_BUTTON_HEIGHT;
-    public static float GEM_BUTTON_X = SHOP_BACK_X + (SHOP_BACK_WIDTH/ 2) + GEM_BUTTON_WIDTH/2;
-    public static float GEM_BUTTON_Y = SHOP_BACK_Y + (SHOP_BACK_HEIGHT/ 2) - GEM_BUTTON_HEIGHT/2;
-
-    public static float SHIP_BUTTON_WIDTH = PLAY_BUTTON_WIDTH;
-    public static float SHIP_BUTTON_HEIGHT = PLAY_BUTTON_HEIGHT;
-    public static float SHIP_BUTTON_X = SHOP_BACK_X + (SHOP_BACK_WIDTH/ 2) - SHIP_BUTTON_WIDTH/2;
-    public static float SHIP_BUTTON_Y = SHOP_BACK_Y + (SHOP_BACK_HEIGHT/ 2) - SHIP_BUTTON_HEIGHT/2;
-
-    public static float PAUSE_BUTTON_X = SCREEN_WIDTH - SCREEN_WIDTH / 7.5f;
-    public static float PAUSE_BUTTON_HEIGHT = MAIN_UI_HEIGHT/1.2f;
-    public static float PAUSE_BUTTON_WIDTH = PAUSE_BUTTON_HEIGHT * 1.3f;
-    public static float PAUSE_BUTTON_Y = SCORE_Y - PAUSE_BUTTON_HEIGHT;
-
-    public static float MENU_SCORE_X = MENU_BACK_X + MENU_BACK_WIDTH * 0.05f;
-    public static float MENU_SCORE_Y = (MENU_BACK_Y + MENU_BACK_HEIGHT - .45f * HOME_BUTTON_HEIGHT);
-
-    public static float GEM_ICON_HEIGHT = HEART_HEIGHT * (6 / 11f);
-    public static float GEM_ICON_WIDTH = HEART_WIDTH * (7 / 13f);
-    public static float GEM_ICON_X = SCORE_X;
-
-    public static float GEM_ICON_Y = TOP_ELEM_Y - GEM_ICON_HEIGHT*1.75f;
-
-    public static float GEM_ICON_MENU_X = PLAY_BUTTON_X + PLAY_BUTTON_WIDTH;
-    public static float GEM_ICON_MENU_Y = MENU_SCORE_Y - GEM_ICON_HEIGHT * 0.8f;
-
-    public static float GEM_COUNT_MENU_X = GEM_ICON_MENU_X + (GEM_ICON_WIDTH * 1.1f);
-    public static float GEM_COUNT_MENU_Y = GEM_ICON_MENU_Y + (GEM_ICON_HEIGHT * .8f);
-
-    public static float GEM_ICON_SHOP_X = SHOP_BACK_X + SHOP_BACK_WIDTH * 0.05f;
-    public static float GEM_ICON_SHOP_Y = SHOP_BACK_Y + (SHOP_BACK_HEIGHT* .9f);
-
-    public static float GEM_COUNT_SHOP_X = GEM_ICON_SHOP_X + GEM_ICON_WIDTH;
-    public static float GEM_COUNT_SHOP_Y = GEM_ICON_SHOP_Y + (GEM_ICON_HEIGHT * .8f);
-
-    public static float GEM_COUNT_X = GEM_ICON_X + (GEM_ICON_WIDTH * 1.1f);
-    public static float GEM_COUNT_Y = GEM_ICON_Y + (GEM_ICON_HEIGHT * .8f);
-
-    public static float POWERUP_TIMER_HEIGHT = HEART_HEIGHT * (17/11f);
-    public static float POWERUP_TIMER_WIDTH = POWERUP_TIMER_HEIGHT;
-    public static float POWERUP_TIMER_X = SCORE_X;
-    public static float POWERUP_TIMER_Y= GEM_ICON_Y - (POWERUP_TIMER_HEIGHT * 1.2f);
-
-    public static float CONFIRM_LEAVE_FONT_Y = (MENU_BACK_Y + MENU_BACK_HEIGHT - .55f * HOME_BUTTON_HEIGHT) * WIDTH_ADJUSTMENT;
-
-    public static float GAME_OVER_TEXT_Y = (MENU_BACK_Y + MENU_BACK_HEIGHT) + (GEM_ICON_Y - MENU_BACK_Y - MENU_BACK_HEIGHT)/2;
-
     Anim shipAnim = new Anim();
-    Anim missileAnim = new Anim();
-    Anim beamAnim = new Anim();
+    Anim bulletAnim = new Anim();
     Anim enemyBulletAnim = new Anim();
     Anim eyebatAnim = new Anim();
     Anim enemyShipAnim = new Anim();
@@ -521,12 +538,14 @@ public class GameElements {
     Anim starsAnimBack = new Anim();
     Anim gemButtonAnim = new Anim();
     Anim shipButtonAnim = new Anim();
+    Anim bulletButtonAnim = new Anim();
 
     Animation<TextureRegion>  gemButtonAnimation;
     Animation<TextureRegion>  shipButtonAnimation;
+    Animation<TextureRegion>  bulletButtonAnimation;
 
 
-    Sprite blackTransition, whiteFlash, shipSS;
+    Sprite blackTransition, whiteFlash, shipSS, bulletSS;
     Animation<TextureRegion> shipAnimation;
 
     MASound mainSong;

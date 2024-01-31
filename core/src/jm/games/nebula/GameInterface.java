@@ -4,9 +4,11 @@ import static jm.games.nebula.Anim.DEFAULT_FRAME_DURATION;
 import static jm.games.nebula.Assets.ad_button_inactive;
 import static jm.games.nebula.Assets.pause_sound;
 import static jm.games.nebula.Assets.play_sound;
+import static jm.games.nebula.BulletElement.YELLOW_BULLET_ID;
+import static jm.games.nebula.BulletElement.YELLOW_BULLET_SLOT;
 import static jm.games.nebula.GemElement.AD_ID;
-import static jm.games.nebula.ShopElement.SHIP_ID;
-import static jm.games.nebula.ShopElement.SHIP_SLOT;
+import static jm.games.nebula.ShipElement.SHIP_ID;
+import static jm.games.nebula.ShipElement.SHIP_SLOT;
 
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
@@ -46,11 +48,14 @@ public class GameInterface extends GameElements {
 
     Button gemButton;
     Button shipButton;
+    Button bulletButton;
 
     Sprite gemButtonSprite;
     Sprite shipButtonSprite;
+    Sprite bulletButtonSprite;
 
-    ShopElement ship;
+    ShipElement ship;
+    BulletElement bullet;
     GemElement gemElement;
 
     Sprite titleTexture;
@@ -93,6 +98,7 @@ public class GameInterface extends GameElements {
     boolean isPauseScreenOpen = false;
 
     boolean isShipMenuOpen;
+    boolean isBulletMenuOpen;
     boolean isGemMenuOpen;
 
     float scoreY;
@@ -103,8 +109,9 @@ public class GameInterface extends GameElements {
     float topElemY;
     float stateTime = 0f;
 
-    int selectedShopElement = 0;
+    int selectedShipElement = 0;
     int selectedGemScreenElement = 0;
+    int selectedBulletElement = 0;
 
     int topInset = 0;
 
@@ -135,6 +142,7 @@ public class GameInterface extends GameElements {
 
         shipButton = new Button(assets.assetManager.get(Assets.blank_shop_button_inactive, Texture.class), SHIP_BUTTON_X, SHIP_BUTTON_Y, SHIP_BUTTON_WIDTH, SHIP_BUTTON_HEIGHT);
         gemButton = new Button(assets.assetManager.get(Assets.blank_shop_button_inactive, Texture.class), GEM_BUTTON_X, GEM_BUTTON_Y, GEM_BUTTON_WIDTH, GEM_BUTTON_HEIGHT);
+        bulletButton = new Button(assets.assetManager.get(Assets.blank_shop_button_inactive, Texture.class), BULLET_BUTTON_X, BULLET_BUTTON_Y, BULLET_BUTTON_WIDTH, BULLET_BUTTON_HEIGHT);
 
         leftArrowBtn = new Button(assets.assetManager.get(Assets.left_arrow_btn_inactive, Texture.class), LEFT_ARROW_BTN_X, LEFT_ARROW_BTN_Y, LEFT_ARROW_BTN_WIDTH, LEFT_ARROW_BTN_HEIGHT);
         rightArrowBtn = new Button(assets.assetManager.get(Assets.right_arrow_btn_inactive, Texture.class), RIGHT_ARROW_BTN_X, RIGHT_ARROW_BTN_Y, RIGHT_ARROW_BTN_WIDTH, RIGHT_ARROW_BTN_HEIGHT);
@@ -184,11 +192,13 @@ public class GameInterface extends GameElements {
         soundOnButton = new Sprite(assets.assetManager.get(Assets.sound_on_button_inactive, Texture.class));
 //        gemButton = new Button(new Sprite(assets.assetManager.get(Assets.gem_button_ss, Texture.class)), 2, DEFAULT_FRAME_DURATION, GEM_BUTTON_X, GEM_BUTTON_Y, GEM_WIDTH, GEM_HEIGHT, GEM_WIDTH / 2f, GEM_HEIGHT / 2f);
 
+        gemButtonSprite = new Sprite(assets.assetManager.get(Assets.gem_ss, Texture.class));
         shipButtonSprite = new Sprite(assets.assetManager.get(Assets.ship_purple_ss, Texture.class));
-        gemButtonSprite = new Sprite(assets.assetManager.get(Assets.gem_ss, Texture.class), (int) (GEM_BUTTON_X + GEM_BUTTON_WIDTH/2 - GEM_WIDTH/2), (int) (GEM_BUTTON_Y + GEM_BUTTON_HEIGHT/2 - GEM_HEIGHT/2), (int) GEM_WIDTH, (int) GEM_HEIGHT);
+        bulletButtonSprite = new Sprite(assets.assetManager.get(Assets.bullet_btn_ss, Texture.class));
 
         gemButtonAnimation = Anim.createAnimation(gemButtonSprite, 2, 0.034f);
         shipButtonAnimation = Anim.createAnimation(shipButtonSprite, 4, (1.5f * DEFAULT_FRAME_DURATION));
+        bulletButtonAnimation = Anim.createAnimation(bulletButtonSprite, 4, (1.5f * DEFAULT_FRAME_DURATION));
 
         heart1 = new Sprite(assets.assetManager.get(Assets.heart, Texture.class));
         heart2 = heart1;
@@ -317,7 +327,13 @@ public class GameInterface extends GameElements {
     }
 
     public boolean checkForShopButtonTap(boolean isShopOpen, boolean isGemScreenOpen, boolean isCreditsOpen, boolean switchScreens, boolean soundEnabled) {
+        assignDefaultShipAndBullet();
+
         if (!isShopOpen && !switchScreens && !isGemScreenOpen && !isCreditsOpen) {
+            isGemMenuOpen = false;
+            isBulletMenuOpen = false;
+            isShipMenuOpen = false;
+
             if (shopButton.getTappedBefore()) {
                 shopButton.setTexture(assets.assetManager.get(Assets.shop_button_active, Texture.class));
             } else {
@@ -399,7 +415,11 @@ public class GameInterface extends GameElements {
         return false;
     }
 
-    public boolean checkForIngameShopButtonTap(boolean soundEnabled) {
+    public boolean checkForInGameShopButtonTap(boolean soundEnabled) {
+        assignDefaultShipAndBullet();
+        isGemMenuOpen = false;
+        isBulletMenuOpen = false;
+        isShipMenuOpen = false;
 
         if (!isConfirmLeaveScreenOpen()) {
             if (ingameShopButton.getTappedBefore()) {
@@ -470,6 +490,7 @@ public class GameInterface extends GameElements {
             }
             return !isGemScreenOpen;
         }
+
 
         return false;
     }
@@ -551,6 +572,24 @@ public class GameInterface extends GameElements {
         return false;
     }
 
+    public boolean checkForBulletButtonTap(boolean soundEnabled) {
+        if (!isConfirmLeaveScreenOpen()) {
+            if (bulletButton.getTappedBefore()) {
+                bulletButton.setTexture(assets.assetManager.get(Assets.blank_shop_button_active, Texture.class));
+            } else {
+                bulletButton.setTexture(assets.assetManager.get(Assets.blank_shop_button_inactive, Texture.class));
+            }
+        }
+        if (bulletButton.getReleased()) {
+            if (soundEnabled) {
+                pauseSound.stop();
+                pauseSound.play();
+            }
+            return true;
+        }
+        return false;
+    }
+
     public boolean checkForGemButtonTap(boolean soundEnabled) {
         if (!isConfirmLeaveScreenOpen()) {
             if (gemButton.getTappedBefore()) {
@@ -582,24 +621,34 @@ public class GameInterface extends GameElements {
         return false;
     }
 
-    public void checkForLeftArrowBtnTap(boolean soundEnabled, boolean isShopOpen, boolean isGemScreenOpen) {
+    public void checkForLeftArrowBtnTap(boolean soundEnabled) {
         if (leftArrowBtn.getTappedBefore()) {
             leftArrowBtn.setTexture(assets.assetManager.get(Assets.left_arrow_btn_active, Texture.class));
         } else {
             leftArrowBtn.setTexture(assets.assetManager.get(Assets.left_arrow_btn_inactive, Texture.class));
         }
         if (leftArrowBtn.getReleased()) {
-            if (isShopOpen && !isGemScreenOpen) {
+            if (isShipMenuOpen) {
 
-                if (selectedShopElement == 0) {
-                    selectedShopElement = ShopElement.shipCount;
+                if (selectedShipElement == 0) {
+                    selectedShipElement = ShipElement.shipCount;
                 } else {
-                    selectedShopElement -= 1;
+                    selectedShipElement -= 1;
                 }
 
-                ship.setElementAnimation(selectedShopElement);
+                ship.setElementAnimation(selectedShipElement);
             }
-            if (isGemScreenOpen && !isShopOpen) {
+            else if (isBulletMenuOpen) {
+
+                if (selectedBulletElement == 0) {
+                    selectedBulletElement = BulletElement.bulletCount;
+                } else {
+                    selectedBulletElement -= 1;
+                }
+
+                bullet.setElementAnimation(selectedBulletElement);
+            }
+            else if (isGemMenuOpen) {
                 isAdLoaded = false;
 
                 if (selectedGemScreenElement == 0) {
@@ -615,24 +664,36 @@ public class GameInterface extends GameElements {
         }
     }
 
-    public void checkForRightArrowBtnTap(boolean soundEnabled, boolean isShopOpen, boolean isGemScreenOpen) {
+    public void checkForRightArrowBtnTap(boolean soundEnabled) {
         if (rightArrowBtn.getTappedBefore()) {
             rightArrowBtn.setTexture(assets.assetManager.get(Assets.right_arrow_btn_active, Texture.class));
         } else {
             rightArrowBtn.setTexture(assets.assetManager.get(Assets.right_arrow_btn_inactive, Texture.class));
         }
         if (rightArrowBtn.getReleased()) {
-            if (isShopOpen && !isGemScreenOpen) {
 
-                if (selectedShopElement == ShopElement.shipCount)
-                    selectedShopElement = 0;
+            if(isBulletMenuOpen){
+                if (selectedBulletElement == BulletElement.bulletCount)
+                    selectedBulletElement = 0;
                 else {
-                    selectedShopElement += 1;
+                    selectedBulletElement += 1;
                 }
 
-                ship.setElementAnimation(selectedShopElement);
+                bullet.setElementAnimation(selectedBulletElement);
             }
-            if (isGemScreenOpen && !isShopOpen) {
+
+            if (isShipMenuOpen) {
+
+                if (selectedShipElement == ShipElement.shipCount)
+                    selectedShipElement = 0;
+                else {
+                    selectedShipElement += 1;
+                }
+
+                ship.setElementAnimation(selectedShipElement);
+
+            }
+            if (isGemMenuOpen) {
                 isAdLoaded = false;
                 if (selectedGemScreenElement == GemElement.gemOptionsCount) {
                     selectedGemScreenElement = 0;
@@ -649,21 +710,38 @@ public class GameInterface extends GameElements {
         }
     }
 
-    public void checkForSelectButtonTap(boolean soundEnabled, boolean isShopOpen, boolean isGemScreenOpen, Prefs prefs) {
-        if (isShopOpen) {
+    public void checkForSelectButtonTap(boolean soundEnabled, Prefs prefs) {
+        if (isShipMenuOpen) {
             if (selectButton.getTappedBefore()) {
                 selectButton.setTexture(assets.assetManager.get(Assets.select_button_active, Texture.class));
             } else {
                 selectButton.setTexture(assets.assetManager.get(Assets.select_button_inactive, Texture.class));
             }
-            if (selectButton.getReleased() && !isGemScreenOpen) {
-                prefs.setShip(selectedShopElement);
+            if (selectButton.getReleased() && !isGemMenuOpen) {
+                prefs.setShip(selectedShipElement);
                 if (soundEnabled) {
                     playSound.stop();
                     playSound.play();
                 }
             }
-        } else if (isGemScreenOpen) {
+        }
+
+        else if (isBulletMenuOpen) {
+            if (selectButton.getTappedBefore()) {
+                selectButton.setTexture(assets.assetManager.get(Assets.select_button_active, Texture.class));
+            } else {
+                selectButton.setTexture(assets.assetManager.get(Assets.select_button_inactive, Texture.class));
+            }
+            if (selectButton.getReleased() && !isGemMenuOpen) {
+                prefs.setBullet(selectedBulletElement);
+                if (soundEnabled) {
+                    playSound.stop();
+                    playSound.play();
+                }
+            }
+        }
+
+        else if (isGemMenuOpen) {
             if (selectButton.getTappedBefore()) {
                 if (gemsPurchased) {
                     gemCount = prefs.getGemCount();
@@ -675,7 +753,6 @@ public class GameInterface extends GameElements {
                 selectButton.setTexture(assets.assetManager.get(Assets.blank_inactive, Texture.class));
             }
             if (selectButton.getReleased()) {
-
                 buyItem(gemElement.getSKU());
 
             }
@@ -723,6 +800,7 @@ public class GameInterface extends GameElements {
     }
 
     public void checkForShopBuyButtonTap(boolean soundEnabled, int itemPrice, Prefs prefs) {
+
         if (selectButton.getTappedBefore()) {
             selectButton.setTexture(assets.assetManager.get(Assets.blank_active, Texture.class));
 
@@ -734,8 +812,16 @@ public class GameInterface extends GameElements {
 
             if (prefs.getGemCount() >= itemPrice) {
                 selectButton.setTexture(assets.assetManager.get(Assets.select_button_inactive, Texture.class));
-                prefs.setUnlockedShips(prefs.getUnlockedShips() + ShopElement.getIdBySlot(selectedShopElement));
-                prefs.setGemCount(prefs.getGemCount() - itemPrice);
+
+                if(isShipMenuOpen){
+                    prefs.setUnlockedShips(prefs.getUnlockedShips() + ShipElement.getIdBySlot(selectedShipElement));
+                    prefs.setGemCount(prefs.getGemCount() - itemPrice);
+
+                }
+                else if(isBulletMenuOpen){
+                    prefs.setUnlockedBullets(prefs.getUnlockedBullets() + BulletElement.getIdBySlot(selectedBulletElement));
+                    prefs.setGemCount(prefs.getGemCount() - itemPrice);
+                }
 
                 if (soundEnabled) {
                     gemSound.stop();
@@ -773,6 +859,9 @@ public class GameInterface extends GameElements {
         if(isShipMenuOpen){
             drawShipMenu(game, soundEnabled, delta, batch, gemCountFont, prefs);
         }
+        else if(isBulletMenuOpen){
+            drawBulletMenu(game, soundEnabled, delta, batch, gemCountFont, prefs);
+        }
         else if(isGemMenuOpen){
             drawGemMenu(game, soundEnabled, delta, batch, prefs, activeSong);
         }
@@ -788,9 +877,11 @@ public class GameInterface extends GameElements {
 
             game.batch.draw(shipButton.getTexture(), SHIP_BUTTON_X, SHIP_BUTTON_Y, SHIP_BUTTON_WIDTH, SHIP_BUTTON_HEIGHT);
             game.batch.draw(gemButton.getTexture(), GEM_BUTTON_X, GEM_BUTTON_Y, GEM_BUTTON_WIDTH, GEM_BUTTON_HEIGHT);
+            game.batch.draw(bulletButton.getTexture(), BULLET_BUTTON_X, BULLET_BUTTON_Y, BULLET_BUTTON_WIDTH, BULLET_BUTTON_HEIGHT);
 
             gemButtonAnim.drawAnim(gemButtonAnimation, stateTime, (int) (GEM_BUTTON_X + GEM_BUTTON_WIDTH/2 - GEM_WIDTH/2), (int) (GEM_BUTTON_Y + GEM_BUTTON_HEIGHT/2 - GEM_HEIGHT/2), (int) GEM_WIDTH, (int) GEM_HEIGHT, true, game.batch);
             shipButtonAnim.drawAnim(shipButtonAnimation, stateTime, (int) (SHIP_BUTTON_X + SHIP_BUTTON_WIDTH/2 - SHIP_WIDTH/2), (int) (SHIP_BUTTON_Y + SHIP_BUTTON_HEIGHT/2 - SHIP_HEIGHT/2), (int) SHIP_WIDTH, (int) SHIP_HEIGHT, true, game.batch);
+            bulletButtonAnim.drawAnim(bulletButtonAnimation, stateTime, (int) (BULLET_BUTTON_X + BULLET_BUTTON_WIDTH/2 - BULLET_BUTTON_SS_WIDTH/2), (int) (BULLET_BUTTON_Y + BULLET_BUTTON_HEIGHT/2 - BULLET_BUTTON_SS_HEIGHT/2), (int) BULLET_BUTTON_SS_WIDTH, (int) BULLET_BUTTON_SS_HEIGHT, true, game.batch);
 
             gl.setText(gemCountFont, " x " + prefs.getGemCount(), Color.WHITE, SCREEN_WIDTH, Align.center, true);
             gemCountFont.draw(game.batch, " x " + prefs.getGemCount(), SHOP_BACK_X + SHOP_BACK_WIDTH*.95f - gl.width, GEM_COUNT_SHOP_Y);
@@ -801,11 +892,17 @@ public class GameInterface extends GameElements {
             game.batch.draw(gemIcon, glx, GEM_ICON_SHOP_Y, GEM_ICON_WIDTH, GEM_ICON_HEIGHT);
         }
 
-        if(checkForShipButtonTap(soundEnabled)){
-            isShipMenuOpen = true;
-        }
-        if(checkForGemButtonTap(soundEnabled)) {
-            isGemMenuOpen = true;
+        if(!isShipMenuOpen && !isBulletMenuOpen && !isGemMenuOpen){
+            if(checkForShipButtonTap(soundEnabled)){
+                isShipMenuOpen = true;
+            }
+            if(checkForBulletButtonTap(soundEnabled)){
+                isBulletMenuOpen = true;
+            }
+            if(checkForGemButtonTap(soundEnabled)) {
+                isGemMenuOpen = true;
+
+            }
         }
     }
 
@@ -830,37 +927,95 @@ public class GameInterface extends GameElements {
         game.batch.draw(gemIcon, glx, GEM_ICON_SHOP_Y, GEM_ICON_WIDTH, GEM_ICON_HEIGHT);
         gemCountFont.draw(game.batch, " x " + prefs.getGemCount(), SHOP_BACK_X + SHOP_BACK_WIDTH*.95f - gl.width, GEM_COUNT_SHOP_Y);
 
-        checkForLeftArrowBtnTap(soundEnabled, true, false);
-        checkForRightArrowBtnTap(soundEnabled, true, false);
+        checkForLeftArrowBtnTap(soundEnabled);
+        checkForRightArrowBtnTap(soundEnabled);
 
         if(checkForBackButtonTap(soundEnabled)){
             isShipMenuOpen = false;
+            isBulletMenuOpen = false;
+            isGemMenuOpen = false;
         }
 
-        if (!prefs.getUnlockedShips().contains(ShopElement.getIdBySlot(selectedShopElement)) && !String.valueOf(selectedShopElement).equals(SHIP_ID)) {
+        if (!prefs.getUnlockedShips().contains(ShipElement.getIdBySlot(selectedShipElement)) && !String.valueOf(selectedShipElement).equals(SHIP_ID)) {
             selectButton.setTexture(assets.assetManager.get(Assets.blank_inactive, Texture.class));
-            gl.setText(buyFont, Integer.toString(ShopElement.getPriceByShipSlot(selectedShopElement)), Color.valueOf(PURPLE_COLOR_HEX), SCREEN_WIDTH, Align.center, true);
-            buyFont.draw(game.batch, Integer.toString(ShopElement.getPriceByShipSlot(selectedShopElement)), (SCREEN_WIDTH - gl.width) / 2, SELECT_BUTTON_Y + gl.height / 2 + SELECT_BUTTON_HEIGHT / 2);
+            gl.setText(buyFont, Integer.toString(ShipElement.getPriceByShipSlot(selectedShipElement)), Color.valueOf(PURPLE_COLOR_HEX), SCREEN_WIDTH, Align.center, true);
+            buyFont.draw(game.batch, Integer.toString(ShipElement.getPriceByShipSlot(selectedShipElement)), (SCREEN_WIDTH - gl.width) / 2, SELECT_BUTTON_Y + gl.height / 2 + SELECT_BUTTON_HEIGHT / 2);
             game.batch.draw(gemIcon, (SCREEN_WIDTH + gl.width) / 2 + GEM_ICON_WIDTH / 2, SELECT_BUTTON_Y + SELECT_BUTTON_HEIGHT / 2 - GEM_ICON_HEIGHT / 2, GEM_ICON_WIDTH, GEM_ICON_HEIGHT);
 
-            checkForShopBuyButtonTap(soundEnabled, ShopElement.getPriceByShipSlot(selectedShopElement), prefs);
+            checkForShopBuyButtonTap(soundEnabled, ShipElement.getPriceByShipSlot(selectedShipElement), prefs);
 
         } else {
-            if (prefs.getShip() == selectedShopElement) {
+            if (prefs.getShip() == selectedShipElement) {
                 selectButton.setTexture(assets.assetManager.get(Assets.active_button, Texture.class));
             } else {
-                checkForSelectButtonTap(soundEnabled, true, false, prefs);
+                checkForSelectButtonTap(soundEnabled, prefs);
             }
         }
 
         if (ship == null) {
-            ship = new ShopElement(SHIP_SLOT, selectedShopElement, SHOP_BACK_X + SHOP_BACK_WIDTH / 2 - SHIP_WIDTH / 2f, SHOP_BACK_Y + SHOP_BACK_HEIGHT / 2 - SHIP_HEIGHT / 2f, SHIP_WIDTH, SHIP_HEIGHT);
+            ship = new ShipElement(SHIP_SLOT, selectedShipElement, SHOP_BACK_X + SHOP_BACK_WIDTH / 2 - SHIP_WIDTH / 2f, SHOP_BACK_Y + SHOP_BACK_HEIGHT / 2 - SHIP_HEIGHT / 2f, SHIP_WIDTH, SHIP_HEIGHT);
         }
 
         ship.render(stateTime, batch);
 
         gl.setText(storeFont, ship.getTitle(), Color.valueOf(PURPLE_COLOR_HEX), SCREEN_WIDTH, Align.center, true);
         storeFont.draw(game.batch, ship.getTitle(), (SCREEN_WIDTH - gl.width) / 2, SHOP_BACK_Y + SHOP_BACK_HEIGHT * .8f + gl.height / 2);
+
+    }
+    public void drawBulletMenu(Main game, boolean soundEnabled, float delta, SpriteBatch batch, BitmapFont gemCountFont, Prefs prefs) {
+        skipGemPurchaseCount();
+
+        stateTime += delta / 6;
+
+        game.batch.draw(shopBack, SHOP_BACK_X, SHOP_BACK_Y, SHOP_BACK_WIDTH, SHOP_BACK_HEIGHT);
+        game.batch.draw(xButton.getTexture(), X_BUTTON_X, X_BUTTON_Y, X_BUTTON_WIDTH, X_BUTTON_HEIGHT);
+
+        game.batch.draw(leftArrowBtn.getTexture(), LEFT_ARROW_BTN_X, LEFT_ARROW_BTN_Y, LEFT_ARROW_BTN_WIDTH, LEFT_ARROW_BTN_HEIGHT);
+        game.batch.draw(rightArrowBtn.getTexture(), RIGHT_ARROW_BTN_X, RIGHT_ARROW_BTN_Y, RIGHT_ARROW_BTN_WIDTH, RIGHT_ARROW_BTN_HEIGHT);
+        game.batch.draw(selectButton.getTexture(), SELECT_BUTTON_X, SELECT_BUTTON_Y, SELECT_BUTTON_WIDTH, SELECT_BUTTON_HEIGHT);
+
+        game.batch.draw(backButton.getTexture(), BACK_BUTTON_X, BACK_BUTTON_Y, BACK_BUTTON_WIDTH, BACK_BUTTON_HEIGHT);
+
+        gl.setText(gemCountFont, " x " + prefs.getGemCount(), Color.WHITE, SCREEN_WIDTH, Align.center, true);
+
+        glx = 0.945f * (SHOP_BACK_X + SHOP_BACK_WIDTH - gl.width) - GEM_ICON_WIDTH;
+
+        game.batch.draw(gemIcon, glx, GEM_ICON_SHOP_Y, GEM_ICON_WIDTH, GEM_ICON_HEIGHT);
+        gemCountFont.draw(game.batch, " x " + prefs.getGemCount(), SHOP_BACK_X + SHOP_BACK_WIDTH*.95f - gl.width, GEM_COUNT_SHOP_Y);
+
+        checkForLeftArrowBtnTap(soundEnabled);
+        checkForRightArrowBtnTap(soundEnabled);
+
+        if(checkForBackButtonTap(soundEnabled)){
+            isShipMenuOpen = false;
+            isBulletMenuOpen = false;
+            isGemMenuOpen = false;
+        }
+
+        if (!prefs.getUnlockedBullets().contains(BulletElement.getIdBySlot(selectedBulletElement)) && !String.valueOf(selectedBulletElement).equals(YELLOW_BULLET_ID)) {
+            selectButton.setTexture(assets.assetManager.get(Assets.blank_inactive, Texture.class));
+            gl.setText(buyFont, Integer.toString(BulletElement.getPriceByBulletSlot(selectedBulletElement)), Color.valueOf(PURPLE_COLOR_HEX), SCREEN_WIDTH, Align.center, true);
+            buyFont.draw(game.batch, Integer.toString(BulletElement.getPriceByBulletSlot(selectedBulletElement)), (SCREEN_WIDTH - gl.width) / 2, SELECT_BUTTON_Y + gl.height / 2 + SELECT_BUTTON_HEIGHT / 2);
+            game.batch.draw(gemIcon, (SCREEN_WIDTH + gl.width) / 2 + GEM_ICON_WIDTH / 2, SELECT_BUTTON_Y + SELECT_BUTTON_HEIGHT / 2 - GEM_ICON_HEIGHT / 2, GEM_ICON_WIDTH, GEM_ICON_HEIGHT);
+
+            checkForShopBuyButtonTap(soundEnabled, BulletElement.getPriceByBulletSlot(selectedBulletElement), prefs);
+
+        } else {
+            if (prefs.getBullet() == selectedBulletElement) {
+                selectButton.setTexture(assets.assetManager.get(Assets.active_button, Texture.class));
+            } else {
+                checkForSelectButtonTap(soundEnabled, prefs);
+            }
+        }
+
+        if (bullet == null) {
+            bullet = new BulletElement(YELLOW_BULLET_SLOT, selectedBulletElement, SHOP_BACK_X + SHOP_BACK_WIDTH / 2 - BULLET_WIDTH / 2f, SHOP_BACK_Y + SHOP_BACK_HEIGHT / 2 - BULLET_HEIGHT / 2f, BULLET_WIDTH, BULLET_HEIGHT);
+        }
+
+        bullet.render(stateTime, batch);
+
+        gl.setText(storeFont, bullet.getTitle(), Color.valueOf(PURPLE_COLOR_HEX), SCREEN_WIDTH, Align.center, true);
+        storeFont.draw(game.batch, bullet.getTitle(), (SCREEN_WIDTH - gl.width) / 2, SHOP_BACK_Y + SHOP_BACK_HEIGHT * .8f + gl.height / 2);
 
     }
 
@@ -894,10 +1049,12 @@ public class GameInterface extends GameElements {
             game.batch.draw(rightArrowBtn.getTexture(), RIGHT_ARROW_BTN_X, RIGHT_ARROW_BTN_Y, RIGHT_ARROW_BTN_WIDTH, RIGHT_ARROW_BTN_HEIGHT);
             game.batch.draw(selectButton.getTexture(), SELECT_BUTTON_X, SELECT_BUTTON_Y, SELECT_BUTTON_WIDTH, SELECT_BUTTON_HEIGHT);
 
-            checkForLeftArrowBtnTap(soundEnabled, false, true);
-            checkForRightArrowBtnTap(soundEnabled, false, true);
+            checkForLeftArrowBtnTap(soundEnabled);
+            checkForRightArrowBtnTap(soundEnabled);
 
             if(checkForBackButtonTap(soundEnabled)){
+                isShipMenuOpen = false;
+                isBulletMenuOpen = false;
                 isGemMenuOpen = false;
             }
 
@@ -921,7 +1078,7 @@ public class GameInterface extends GameElements {
             checkForAdButtonTap(game, soundEnabled, prefs, activeSong);
 
         } else {
-            checkForSelectButtonTap(soundEnabled, false, true, prefs);
+            checkForSelectButtonTap(soundEnabled, prefs);
             gl.setText(buyFont, '$' + Float.toString(GemElement.getPriceByElementId(selectedGemScreenElement)), Color.valueOf(PURPLE_COLOR_HEX), SCREEN_WIDTH, Align.center, true);
             buyFont.draw(game.batch, '$' + Float.toString(GemElement.getPriceByElementId(selectedGemScreenElement)), (SCREEN_WIDTH - gl.width) / 2, SELECT_BUTTON_Y + gl.height / 2 + SELECT_BUTTON_HEIGHT / 2);
         }
@@ -1031,6 +1188,15 @@ public class GameInterface extends GameElements {
                     runTapToContinueBlinking(game, deltaP);
                 }
             }
+        }
+    }
+    public void assignDefaultShipAndBullet(){
+        if(prefs.getUnlockedBullets().length() == 1){
+            prefs.setBullet(YELLOW_BULLET_SLOT);
+        }
+
+        if(prefs.getUnlockedShips().length() == 1){
+            prefs.setShip(SHIP_SLOT);
         }
     }
 
