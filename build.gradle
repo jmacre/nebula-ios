@@ -1,6 +1,6 @@
 buildscript {
     project.ext.altpodsVersion = '1.32.0-SNAPSHOT'
-    project.ext.gdxPayVersion = '1.3.4'
+    project.ext.gdxPayVersion = '1.3.8'
     project.ext.roboVMVersion = '2.3.20'
     project.ext.gdxFireappVersion = '3.3.1'
 

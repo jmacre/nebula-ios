@@ -38,12 +38,15 @@ android {
         applicationId "jm.games.nebula"
         minSdkVersion 19
         targetSdkVersion 33
-        versionCode 40
-        versionName "2.4"
+        versionCode 43
+        versionName "2.5.1"
         multiDexEnabled true
         signingConfig signingConfigs.debug
     }
     buildTypes {
+        debug {
+            debuggable true
+        }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
