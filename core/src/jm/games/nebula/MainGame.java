@@ -782,7 +782,7 @@ public class MainGame extends GameElements implements Screen {
         shipHitTimer.update(justHit, deltaP);
         missileUsedTimer.update(missileUsed, deltaP);
         missileTimer.update(isMissile, deltaP);
-        beamUsedTimer.update(missileUsed, deltaP);
+        beamUsedTimer.update(beamUsed, deltaP);
         beamTimer.update(isBeam, deltaP);
         rapidFireTimer.update(isRapidFire, deltaP);
         bombUsedTimer.update(bombUsed, deltaP);
