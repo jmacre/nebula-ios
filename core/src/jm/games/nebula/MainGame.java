@@ -15,6 +15,7 @@ import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.FloatArray;
 
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.ObjectMap;
 
 import java.util.Random;
 
@@ -59,7 +60,6 @@ import static jm.games.nebula.ItemDrop.MIN_ITEM_SPAWN_TIME;
 import static jm.games.nebula.ItemDrop.MISSILE_ID;
 import static jm.games.nebula.ItemDrop.SPREAD_FIRE_TIMER;
 import static jm.games.nebula.ItemDrop.SPREAD_ID;
-import static jm.games.nebula.ShipElement.*;
 
 public class MainGame extends GameElements implements Screen {
     public Prefs prefs = new Prefs();
@@ -116,15 +116,17 @@ public class MainGame extends GameElements implements Screen {
     float bulletTimer = -2f;
     float enemyBulletDelay = -0.5f;
 
-    float missileTimer = MISSILE_TIMER;
-    float rapidFireTimer = RAPID_FIRE_TIMER;
+    GameTimer missileTimer;
+    GameTimer rapidFireTimer;
+    GameTimer beamTimer;
+
     float spreadFireTimer = SPREAD_FIRE_TIMER;
     float hourglassTimer = HOURGLASS_TIMER;
-    float beamTimer = BEAM_TIMER;
 
     float moveSpeed = 27f;
 
-    float shipHitTimer = -2f;
+    GameTimer shipHitTimer;
+
     float shipBlinkingTimer = -0.2f;
 
     float hurtTimer = -0.15f;
@@ -135,7 +137,7 @@ public class MainGame extends GameElements implements Screen {
     float countDownTimer = 0f;
     float resumeCountdownTimer = -1.5f;
 
-    PowerupTimer powerUpTimer = new PowerupTimer();
+    PowerupDial powerUpDial = new PowerupDial();
 
     float bulletThreshold = 0f;
     float musicVolume = 0.8f;
@@ -181,24 +183,24 @@ public class MainGame extends GameElements implements Screen {
     int gemSkipTapCount = 0, tapToContinueScreenTapCount = 0;
 
     boolean scoreUpdated = false;
-    float scoreTickerTimer = SCORE_TICKER_TIMER;
     int finalScore = 0;
+    GameTimer scoreTickerTimer;
 
     boolean playHitSound = false;
     float hitSoundTimer = -.08f;
 
     boolean bombUsed = false;
-    float bombUsedTimer = -.05f;
+    GameTimer bombUsedTimer;
 
     boolean missileUsed = false;
-    float missileUsedTimer = -.1f;
+    GameTimer missileUsedTimer;
 
     boolean rapidFireUsed = false;
-    float rapidFireUsedTimer = -.1f;
+    GameTimer rapidFireUsedTimer;
 
     boolean beamUsed = false;
     boolean beamBulletsCreated = false;
-    float beamUsedTimer = -.1f;
+    GameTimer beamUsedTimer;
 
     boolean isFadingOut, isFadingIn = false;
     boolean justHit = false;
@@ -231,6 +233,7 @@ public class MainGame extends GameElements implements Screen {
     float musicPosition;
 
     GameInterface gameInterface;
+    ObjectMap<Explosion, Float> explosionDelays = new ObjectMap<>();
 
     boolean isPaused = false;
     boolean isAlive = true;
@@ -250,7 +253,7 @@ public class MainGame extends GameElements implements Screen {
     Array<Enemy> enemies = new Array<>();
     Array<Enemy> hurtEnemies = new Array<>();
     Array<Enemy> enemiesToRemove = new Array<>();
-    Array<PowerupTimer> powerUpTimers = new Array<>();
+    Array<PowerupDial> powerUpDials = new Array<>();
 
     Array<Explosion> explosions = new Array<>();
     Array<Explosion> explosionsToDelay = new Array<>();
@@ -269,7 +272,6 @@ public class MainGame extends GameElements implements Screen {
     Player player;
     int health = 3;
     int selectedShip = 0;
-    int selectedBullet = 0;
     float refreshRate;
 
     Bullet bullet1, bullet2, bullet3, bullet4;
@@ -285,7 +287,9 @@ public class MainGame extends GameElements implements Screen {
     public void show() {
         Enemy.createEnemySprites(assets);
         Explosion.createExplosionSprite(assets);
-        PowerupTimer.createPowerupSprite(assets);
+        PowerupDial.createPowerupSprite(assets);
+
+        createTimers();
 
         minEnemyShipSpawnTime = MIN_ENEMY_SHIP_SPAWN_TIME;
         maxEnemyShipSpawnTime = MAX_ENEMY_SHIP_SPAWN_TIME;
@@ -348,12 +352,9 @@ public class MainGame extends GameElements implements Screen {
         whiteFlash = new Sprite(assets.assetManager.get(Assets.white_flash, Texture.class));
         whiteFlash.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
 
-        selectedShip = prefs.getShip();
         powerupTimerSheet = new Sprite(assets.assetManager.get(Assets.powerup_timer, Texture.class));
 
-        getSelectedShip();
-
-        shipAnimation = Anim.createAnimation(shipSS, 4, DEFAULT_FRAME_DURATION * 1.5f);
+        setShipSprite();
 
         textParameter.size = (int) ((SCREEN_WIDTH / 40) * WIDTH_ADJUSTMENT);
         menuScoreFont = generator.generateFont(textParameter);
@@ -402,28 +403,8 @@ public class MainGame extends GameElements implements Screen {
         game.batch.enableBlending();
         game.batch.begin();
 
-        if(!gameInterface.adRequested){
-            deltaList.add(delta);
-        }
+        updateDelta(delta);
 
-        if (isPaused || isRunningResumeCountdown) {
-            deltaP = 0;
-        }
-
-        if (deltaList.size >= 60 && !gameInterface.adRequested) {
-            for (int i = 0; i < deltaList.size; i++) {
-                deltaSum += deltaList.get(i);
-            }
-            delta = deltaSum / deltaList.size;
-
-            if (isPaused || isRunningResumeCountdown) {
-                deltaP = 0;
-            } else {
-                deltaP = delta;
-            }
-            deltaList.removeIndex(0);
-            deltaSum = 0;
-        }
 
         if (fadeOutOpacity > 0 || fadeInOpacity > 0)
             blackTransition.draw(game.batch);
@@ -496,7 +477,7 @@ public class MainGame extends GameElements implements Screen {
         if (!isRunningResumeCountdown) {
             if (isTransitionedIn && isAlive) {
 
-                runScoreTickerTimer();
+                scoreTickerTimer.update(deltaP);
 
                 addEyebats();
                 eyebatsSpawning = true;
@@ -546,38 +527,16 @@ public class MainGame extends GameElements implements Screen {
                 transitionIn();
             }
 
-            if (justHit) {
-                runShipHitTimer();
-            }
+            updateTimers();
 
-            if (missileUsed) {
-                runMissileUsedTimer();
-            }
-
-            if (isMissile) {
-                runMissileTimer();
-            }
-            else if (isRapidFire) {
-                runRapidFireTimer();
-            }
-            else if (isHourglass) {
+            if (isHourglass) {
                 runHourglassTimer();
             }
-            else if (rapidFireUsed) {
-                runRapidFireUsedTimer();
-            }
+
             else if (isSpreadFire) {
                 runSpreadFireTimer();
             }
-            else if (bombUsed) {
-                runBombUsedTimer();
-            }
-            else if(isBeam){
-                runBeamTimer();
-            }
-            else if(beamUsed){
-                runBeamUsedTimer();
-            }
+
 
             if (!hurtEnemies.isEmpty()) {
                 for (Enemy enemy : hurtEnemies) {
@@ -786,9 +745,8 @@ public class MainGame extends GameElements implements Screen {
             transitionOut(CURRENT_SHIP_X);
             fadeOut();
         }
-        if (isMissile || isRapidFire || isHourglass || isSpreadFire || isBeam) {
-            updatePowerUpTimer();
-        }
+        updatePowerUpDial();
+
         if(isShopOpen){
             gameInterface.drawShopScreen(game, soundEnabled, delta, game.batch, gemCountFont, prefs, mainSong);
         }
@@ -796,6 +754,38 @@ public class MainGame extends GameElements implements Screen {
             gameInterface.drawGemMenu(game, soundEnabled, delta, game.batch, prefs, mainSong);
         }
         game.batch.end();
+    }
+    void updateDelta(float delta){
+        if(!gameInterface.adRequested){
+            deltaList.add(delta);
+        }
+
+        if (isPaused || isRunningResumeCountdown) {
+            deltaP = 0;
+        }
+        if (deltaList.size >= 60 && !gameInterface.adRequested) {
+            for (int i = 0; i < deltaList.size; i++) {
+                deltaSum += deltaList.get(i);
+            }
+            delta = deltaSum / deltaList.size;
+
+            if (isPaused || isRunningResumeCountdown) {
+                deltaP = 0;
+            } else {
+                deltaP = delta;
+            }
+            deltaList.removeIndex(0);
+            deltaSum = 0;
+        }
+    }
+    void updateTimers(){
+        shipHitTimer.update(justHit, deltaP);
+        missileUsedTimer.update(missileUsed, deltaP);
+        missileTimer.update(isMissile, deltaP);
+        beamUsedTimer.update(missileUsed, deltaP);
+        beamTimer.update(isBeam, deltaP);
+        rapidFireTimer.update(isRapidFire, deltaP);
+        bombUsedTimer.update(bombUsed, deltaP);
     }
 
     public void updateSpawnRates(int score) {
@@ -934,11 +924,8 @@ public class MainGame extends GameElements implements Screen {
         rapidFireUsed = false;
         beamUsed = false;
 
-        rapidFireTimer = RAPID_FIRE_TIMER;
-        missileTimer = MISSILE_TIMER;
         spreadFireTimer = SPREAD_FIRE_TIMER;
         hourglassTimer = HOURGLASS_TIMER;
-        beamTimer = BEAM_TIMER;
 
         activePowerUp = DEFAULT_BULLET_ID;
 
@@ -960,8 +947,6 @@ public class MainGame extends GameElements implements Screen {
         SHIP_X = (int) (SCREEN_WIDTH / 2 - SHIP_WIDTH / 2);
         CURRENT_SHIP_X = SHIP_X;
         health = hp;
-        shipHitTimer = -2f;
-        shipBlinkingTimer = -0.175f;
 
         isAlive = true;
         justHit = false;
@@ -1010,8 +995,8 @@ public class MainGame extends GameElements implements Screen {
         if (enemiesToRemove.size > 0)
             enemiesToRemove.clear();
 
-        if (powerUpTimers.size > 0)
-            powerUpTimers.clear();
+        if (powerUpDials.size > 0)
+            powerUpDials.clear();
 
         if (itemDrops.size > 0)
             itemDrops.clear();
@@ -1045,7 +1030,7 @@ public class MainGame extends GameElements implements Screen {
         gemCountUpdated = false;
         countDownTimer = 0f;
 
-        gameInterface.tapToContinueBlinkingTimer = TAP_TO_CONTINUE_BLINKING_TIMER * 2;
+        gameInterface.tapToContinueBlinkingTimer = TAP_TO_CONTINUE_BLINKING_TIMER;
         gemCountTimerDelay = GEM_COUNT_TIMER_DELAY;
 
         isResettingScreen = false;
@@ -1061,7 +1046,7 @@ public class MainGame extends GameElements implements Screen {
     }
 
     public void resetScreen() {
-        getSelectedShip();
+        setShipSprite();
         resetMusicAndSoundPitches();
         stopSounds();
         resetGemCounts();
@@ -1078,8 +1063,8 @@ public class MainGame extends GameElements implements Screen {
         resetBulletTimers();
         resetInterface();
         resetAds();
+        createTimers();
 
-        scoreTickerTimer = SCORE_TICKER_TIMER;
         isAdLoaded = false;
         choseToNotWatchAd = false;
     }
@@ -1265,17 +1250,13 @@ public class MainGame extends GameElements implements Screen {
         if (SHIP_Y <= -3 * SHIP_HEIGHT) {
             SHIP_Y = -3 * SHIP_HEIGHT;
 
-
-
             if (!isPlayingAd && !isTransitionedOut && ((Gdx.app.getType() == Application.ApplicationType.Android && game.requestHandlerAndroid.isAdLoaded()) || (Gdx.app.getType() == Application.ApplicationType.iOS && game.requestHandlerIOS.isAdLoaded()))) {
                 gameInterface.drawContinueScreen(game, confirmScreenFont);
 
             } else {
                 gameInterface.setContinueScreenOpen(false);
                 isTransitionedOut = true;
-
             }
-
 
             if (gameInterface.isContinueScreenOpen() && gameInterface.checkForNoButtonTap(soundEnabled)) {
                 gameInterface.setContinueScreenOpen(false);
@@ -1337,13 +1318,11 @@ public class MainGame extends GameElements implements Screen {
     }
 
     public void resetForContinue() {
-
         isPlayingAd = false;
         isAdLoaded = false;
         isPaused = false;
 
         gameInterface.setContinueScreenOpen(false);
-        scoreTickerTimer = SCORE_TICKER_TIMER;
         countDownTimer = 0f;
 
         resetPlayer(1);
@@ -1411,10 +1390,10 @@ public class MainGame extends GameElements implements Screen {
 
         if (shipBlinkingTimer < 0) {
             shipAnim.drawAnim(shipAnimation, stateTime, SHIP_X, SHIP_Y, SHIP_WIDTH, SHIP_HEIGHT, true, game.batch, true);
-        } else if (shipBlinkingTimer < 0.175) {
+        } else if (shipBlinkingTimer < 0.2) {
             shipAnim.drawAnim(shipAnimation, stateTime, SHIP_X, SHIP_Y, SHIP_WIDTH, SHIP_HEIGHT, true, game.batch);
         } else {
-            shipBlinkingTimer = -0.175f;
+            shipBlinkingTimer = -0.2f;
         }
     }
 
@@ -1426,7 +1405,7 @@ public class MainGame extends GameElements implements Screen {
             if (missileUsed) {
                 bulletThreshold = 0.3f;
             } else {
-                bulletThreshold = 0.65f;
+                bulletThreshold = 1f;
             }
         }
         else if (isRapidFire) {
@@ -1543,8 +1522,6 @@ public class MainGame extends GameElements implements Screen {
 
             bullet2.create(SHIP_X + SHIP_WIDTH - SHIP_WIDTH * (6 / 27f), activePowerUp, assets, isHourglass, prefs);
             bullets.add(bullet2);
-
-            missileTimer = MISSILE_TIMER;
         }
     }
 
@@ -2149,7 +2126,6 @@ public class MainGame extends GameElements implements Screen {
                             bombSound.play();
                         }
                         enemyBullets.clear();
-
                         break;
 
                     case MISSILE_ID:
@@ -2197,7 +2173,6 @@ public class MainGame extends GameElements implements Screen {
                         if (soundEnabled) {
                             itemSound.play();
                         }
-
                         break;
 
                     case HOURGLASS_ID:
@@ -2207,8 +2182,8 @@ public class MainGame extends GameElements implements Screen {
                         if (soundEnabled) {
                             itemSound.play();
                         }
-
                         break;
+
                     case BEAM_ID:
                         isBeam = true;
                         activePowerUp = BEAM_ID;
@@ -2216,12 +2191,10 @@ public class MainGame extends GameElements implements Screen {
                         if (soundEnabled) {
                             itemSound.play();
                         }
-
                         if(!beamUsed){
                             bulletTimer = 1;
                             beamUsed = true;
                         }
-
                         break;
                 }
             }
@@ -2229,79 +2202,58 @@ public class MainGame extends GameElements implements Screen {
         }
     }
 
-    public void getSelectedShip() {
+    public void setShipSprite() {
         selectedShip = prefs.getShip();
-
-        switch (selectedShip) {
-            case SHIP_SLOT:
-                shipSS = new Sprite(assets.assetManager.get(Assets.ship_ss, Texture.class));
-                break;
-            case RED_SHIP_SLOT:
-                shipSS = new Sprite(assets.assetManager.get(Assets.ship_red_ss, Texture.class));
-                break;
-            case BLACK_SHIP_SLOT:
-                shipSS = new Sprite(assets.assetManager.get(Assets.ship_black_ss, Texture.class));
-                break;
-            case PURPLE_SHIP_SLOT:
-                shipSS = new Sprite(assets.assetManager.get(Assets.ship_purple_ss, Texture.class));
-                break;
-            case YELLOW_SHIP_SLOT:
-                shipSS = new Sprite(assets.assetManager.get(Assets.ship_yellow_ss, Texture.class));
-                break;
-            case CYAN_SHIP_SLOT:
-                shipSS = new Sprite(assets.assetManager.get(Assets.ship_cyan_ss, Texture.class));
-                break;
-            case BLUE_SHIP_SLOT:
-                shipSS = new Sprite(assets.assetManager.get(Assets.ship_blue_ss, Texture.class));
-                break;
-            case BRED_SHIP_SLOT:
-                shipSS = new Sprite(assets.assetManager.get(Assets.ship_bred_ss, Texture.class));
-                break;
-            case GREEN_SHIP_SLOT:
-                shipSS = new Sprite(assets.assetManager.get(Assets.ship_green_ss, Texture.class));
-                break;
-            case ORANGE_SHIP_SLOT:
-                shipSS = new Sprite(assets.assetManager.get(Assets.ship_orange_ss, Texture.class));
-                break;
-            case NEGATIVE_SHIP_SLOT:
-                shipSS = new Sprite(assets.assetManager.get(Assets.ship_negative_ss, Texture.class));
-                break;
-            case MINT_SHIP_SLOT:
-                shipSS = new Sprite(assets.assetManager.get(Assets.ship_mint_ss, Texture.class));
-                break;
-            case NEON_SHIP_SLOT:
-                shipSS = new Sprite(assets.assetManager.get(Assets.ship_neon_ss, Texture.class));
-                break;
-            case BLACK_GREEN_SHIP_SLOT:
-                shipSS = new Sprite(assets.assetManager.get(Assets.ship_black_green_ss, Texture.class));
-                break;
-            case BLUE_ORANGE_SHIP_SLOT:
-                shipSS = new Sprite(assets.assetManager.get(Assets.ship_blue_orange_ss, Texture.class));
-                break;
-        }
-        shipAnimation = Anim.createAnimation(shipSS, 4, DEFAULT_FRAME_DURATION * 1.5f);
+        shipAnimation = ShipElement.getShipAnimation(selectedShip, assets);
     }
 
+    void createTimers() {
+        scoreTickerTimer = new GameTimer(SCORE_TICKER_TIMER, () -> {
+            score += 1;
+            scoreUpdated = false;
+        });
 
-    public void addPowerUpTimer(float totalTimerLength) {
-        if (powerUpTimers.isEmpty()) {
-            powerUpTimer = new PowerupTimer();
-            powerUpTimer.create(POWERUP_TIMER_X, POWERUP_TIMER_Y - (int) (0.6f * Gdx.graphics.getSafeInsetTop()), POWERUP_TIMER_HEIGHT, totalTimerLength);
+        shipHitTimer = new GameTimer(-2f, () -> {
+            playerHitSoundPlayed = false;
+            justHit = false;
+        });
 
+        beamUsedTimer = new GameTimer(BEAM_USED_TIMER, () -> beamUsed = false);
+        rapidFireUsedTimer = new GameTimer(RAPID_FIRE_USED_TIMER, () -> rapidFireUsed = false);
+        missileUsedTimer = new GameTimer(MISSILE_USED_TIMER, () -> missileUsed = false);
 
-            powerUpTimers.add(powerUpTimer);
+        bombUsedTimer = new GameTimer(BOMB_USED_TIMER,
+                () -> { bombUsed = false; whiteFlash.draw(game.batch); });
+
+        missileTimer = new GameTimer(MISSILE_TIMER,
+                () -> addPowerUpDial(MISSILE_TIMER),
+                () -> { isMissile = false; activePowerUp = DEFAULT_BULLET_ID; });
+
+        beamTimer = new GameTimer(BEAM_TIMER,
+                () -> addPowerUpDial(BEAM_TIMER),
+                () -> { isBeam = false; activePowerUp = DEFAULT_BULLET_ID; });
+
+        rapidFireTimer = new GameTimer(RAPID_FIRE_TIMER,
+                () -> addPowerUpDial(RAPID_FIRE_TIMER),
+                () -> { isRapidFire = false; activePowerUp = DEFAULT_BULLET_ID; });
+    }
+
+    public void addPowerUpDial(float totalTimerLength) {
+        if (powerUpDials.isEmpty()) {
+            powerUpDial = new PowerupDial();
+            powerUpDial.create(POWERUP_TIMER_X, POWERUP_TIMER_Y - (int) (0.6f * Gdx.graphics.getSafeInsetTop()), POWERUP_TIMER_HEIGHT, totalTimerLength);
+            powerUpDials.add(powerUpDial);
         }
     }
 
-    public void updatePowerUpTimer() {
-        if (powerUpTimer != null && !isTransitioningOut) {
-            powerUpTimer.update(deltaP);
-            powerUpTimer.render(powerupAnim, game.batch);
+    public void updatePowerUpDial() {
+        if (powerUpDial != null && !isTransitioningOut) {
+            powerUpDial.update(deltaP);
+            powerUpDial.render(powerupAnim, game.batch);
         }
-        if (powerUpTimer != null && powerUpTimer.powerUpAnimation.isAnimationFinished(powerUpTimer.getStateTime())) {
-            powerUpTimers.clear();
-            powerUpTimer = null;
-
+        if (powerUpDial != null && powerUpDial.powerUpAnimation != null && powerUpDial.powerUpAnimation.isAnimationFinished(powerUpDial.getStateTime())) {
+            powerUpDials.clear();
+            powerUpDial = null;
         }
     }
 
@@ -2351,7 +2303,6 @@ public class MainGame extends GameElements implements Screen {
                 }
             }
 
-
             if (scoreCountComplete && gemCountComplete && gemCountTimerDelay == 0 && !recapComplete) {
                 recapStarted = true;
                 if (replayScreenGemCount < prefs.getGemCount()) {
@@ -2374,16 +2325,6 @@ public class MainGame extends GameElements implements Screen {
         }
     }
 
-    public void runScoreTickerTimer() {
-        if (scoreTickerTimer < 0) {
-            scoreTickerTimer += deltaP;
-        } else {
-            score += 1;
-            scoreUpdated = false;
-            scoreTickerTimer = SCORE_TICKER_TIMER;
-        }
-    }
-
     public void runEnemyHitSoundTimer() {
         if (hitSoundTimer < 0) {
             hitSoundTimer += deltaP;
@@ -2398,87 +2339,9 @@ public class MainGame extends GameElements implements Screen {
         }
     }
 
-    public void runBombUsedTimer() {
-        if (bombUsedTimer < 0) {
-            bombUsedTimer += deltaP;
-            whiteFlash.draw(game.batch);
-        } else {
-            bombUsed = false;
-            bombUsedTimer = -.05f;
-        }
-    }
-
-    public void runMissileUsedTimer() { //missile item drop
-        if (missileUsedTimer < 0) {
-            missileUsedTimer += deltaP;
-        } else {
-            missileUsed = false;
-            missileUsedTimer = -.1f;
-        }
-    }
-
-    public void runRapidFireUsedTimer() {
-        if (rapidFireUsedTimer < 0) {
-            rapidFireUsedTimer += deltaP;
-        } else {
-            rapidFireUsed = false;
-            rapidFireUsedTimer = -.1f;
-        }
-    }
-
-    public void runMissileTimer() { //missile weapon
-        if (missileTimer < 0) {
-            addPowerUpTimer(MISSILE_TIMER);
-
-            missileTimer += deltaP;
-
-        } else {
-            isMissile = false;
-            activePowerUp = DEFAULT_BULLET_ID;
-            missileTimer = MISSILE_TIMER;
-        }
-    }
-
-    public void runRapidFireTimer() {
-        if (rapidFireTimer < 0) {
-            addPowerUpTimer(RAPID_FIRE_TIMER);
-
-            rapidFireTimer += deltaP;
-        } else {
-            isRapidFire = false;
-            activePowerUp = DEFAULT_BULLET_ID;
-            rapidFireTimer = RAPID_FIRE_TIMER;
-
-        }
-    }
-
-    public void runBeamTimer() {
-        if (beamTimer < 0) {
-            addPowerUpTimer(BEAM_TIMER);
-
-            beamTimer += deltaP;
-        } else {
-            isBeam = false;
-            activePowerUp = DEFAULT_BULLET_ID;
-            bullets.clear();
-            beamBulletsCreated = false;
-            beamTimer = BEAM_TIMER;
-
-        }
-    }
-    public void runBeamUsedTimer() {
-        if (beamUsedTimer < 0) {
-            beamUsedTimer += deltaP;
-        } else {
-            beamUsed = false;
-            beamUsedTimer = -.1f;
-        }
-    }
-
-
     public void runSpreadFireTimer() {
         if (spreadFireTimer < 0) {
-            addPowerUpTimer(SPREAD_FIRE_TIMER);
+            addPowerUpDial(SPREAD_FIRE_TIMER);
 
             spreadFireTimer += deltaP;
         } else {
@@ -2501,7 +2364,7 @@ public class MainGame extends GameElements implements Screen {
         game.batch.setShader(invertedShader);
 
         if (hourglassTimer < 0) {
-            addPowerUpTimer(HOURGLASS_TIMER * hourglassMultiplier);
+            addPowerUpDial(HOURGLASS_TIMER * hourglassMultiplier);
 
             hourglassTimer += deltaP;
             hourglassMultiplier = .25f;
@@ -2524,17 +2387,6 @@ public class MainGame extends GameElements implements Screen {
         }
     }
 
-    public void runShipHitTimer() {
-        if (shipHitTimer < 0) {
-            shipHitTimer += deltaP;
-        } else {
-            justHit = false;
-            playerHitSoundPlayed = false;
-            shipHitTimer = -2f;
-            shipBlinkingTimer = -0.175f;
-        }
-    }
-
     public void runEnemyHurtDelay(Enemy enemy) {
         if (hurtDelayTimer < 0) {
             hurtDelayTimer += deltaP;
@@ -2554,7 +2406,6 @@ public class MainGame extends GameElements implements Screen {
             explosionDelayTimer = -.025f;
         }
     }
-
 
     @Override
     public void pause() {

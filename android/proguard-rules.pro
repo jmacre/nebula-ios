@@ -34,7 +34,6 @@
 
 # Required if using Gdx-Controllers extension
 -keep class com.badlogic.gdx.controllers.android.AndroidControllers
--keep class com.android.vending.billing.5.0.0
 -keep class pl.mk5.gdx.fireapp.**{*;}
 -keepattributes Signature
 -keepattributes *Annotation*

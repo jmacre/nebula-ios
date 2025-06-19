@@ -83,7 +83,7 @@ public class GameInterface extends GameElements {
 
     int totalGemsEarned;
 
-    float tapToContinueBlinkingTimer = TAP_TO_CONTINUE_BLINKING_TIMER * 2;
+    float tapToContinueBlinkingTimer = TAP_TO_CONTINUE_BLINKING_TIMER;
 
     float gemPurchaseTimer = GEM_COUNT_UPDATE_TIMER;
 
@@ -1206,7 +1206,7 @@ public class GameInterface extends GameElements {
         if (tapToContinueBlinkingTimer < 0f && tapToContinueBlinkingTimer >= -0.5f) {
             gemCountFont.draw(game.batch, "TAP TO CONTINUE", (SCREEN_WIDTH - gl.width) / 2, MENU_BACK_Y + gemCountFont.getLineHeight() * 2.5f);
         } else if (tapToContinueBlinkingTimer > 0) {
-            tapToContinueBlinkingTimer = TAP_TO_CONTINUE_BLINKING_TIMER * 2f;
+            tapToContinueBlinkingTimer = TAP_TO_CONTINUE_BLINKING_TIMER;
         }
     }
 

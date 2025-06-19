@@ -143,7 +143,7 @@ public class Assets implements Disposable {
 
     public static final String explosion = "misc/explosion_ss.png";
     public static final String pause_menu_back = "ui/menu_back.png";
-    public static final String powerup_timer = "ui/powerup_timer_ss.png";
+    public static final String powerup_timer = "ui/powerup_dial_ss.png";
 
     public static final String shop_back = "ui/shop_back.png";
     public static final String x_button = "ui/x_button.png";

@@ -23,11 +23,13 @@ public class Anim{
         sprite.draw(batch);
     }
     public void drawAnim(Animation<TextureRegion> animation, float animSpeed, float x, float y, float width, float height, boolean looping, SpriteBatch batch){
-        currentFrame = animation.getKeyFrame(animSpeed, looping);
-        sprite = new Sprite(currentFrame);
-        sprite.setSize(width, height);
-        sprite.setPosition(x,y);
-        sprite.draw(batch);
+        if(animation != null){
+            currentFrame = animation.getKeyFrame(animSpeed, looping);
+            sprite = new Sprite(currentFrame);
+            sprite.setSize(width, height);
+            sprite.setPosition(x,y);
+            sprite.draw(batch);
+        }
     }
 
     public static Animation<TextureRegion> createAnimation(Sprite sprite, int frameCount, float frameDuration){

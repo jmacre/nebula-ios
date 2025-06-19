@@ -270,4 +270,56 @@ public class ShipElement extends GameElements{
         }
         return 0;
     }
+    public static Animation<TextureRegion> getShipAnimation(int selectedShip, Assets assets){
+        Sprite shipSS = null;
+        switch (selectedShip) {
+            case SHIP_SLOT:
+                shipSS = new Sprite(assets.assetManager.get(Assets.ship_ss, Texture.class));
+                break;
+            case RED_SHIP_SLOT:
+                shipSS = new Sprite(assets.assetManager.get(Assets.ship_red_ss, Texture.class));
+                break;
+            case BLACK_SHIP_SLOT:
+                shipSS = new Sprite(assets.assetManager.get(Assets.ship_black_ss, Texture.class));
+                break;
+            case PURPLE_SHIP_SLOT:
+                shipSS = new Sprite(assets.assetManager.get(Assets.ship_purple_ss, Texture.class));
+                break;
+            case YELLOW_SHIP_SLOT:
+                shipSS = new Sprite(assets.assetManager.get(Assets.ship_yellow_ss, Texture.class));
+                break;
+            case CYAN_SHIP_SLOT:
+                shipSS = new Sprite(assets.assetManager.get(Assets.ship_cyan_ss, Texture.class));
+                break;
+            case BLUE_SHIP_SLOT:
+                shipSS = new Sprite(assets.assetManager.get(Assets.ship_blue_ss, Texture.class));
+                break;
+            case BRED_SHIP_SLOT:
+                shipSS = new Sprite(assets.assetManager.get(Assets.ship_bred_ss, Texture.class));
+                break;
+            case GREEN_SHIP_SLOT:
+                shipSS = new Sprite(assets.assetManager.get(Assets.ship_green_ss, Texture.class));
+                break;
+            case ORANGE_SHIP_SLOT:
+                shipSS = new Sprite(assets.assetManager.get(Assets.ship_orange_ss, Texture.class));
+                break;
+            case NEGATIVE_SHIP_SLOT:
+                shipSS = new Sprite(assets.assetManager.get(Assets.ship_negative_ss, Texture.class));
+                break;
+            case MINT_SHIP_SLOT:
+                shipSS = new Sprite(assets.assetManager.get(Assets.ship_mint_ss, Texture.class));
+                break;
+            case NEON_SHIP_SLOT:
+                shipSS = new Sprite(assets.assetManager.get(Assets.ship_neon_ss, Texture.class));
+                break;
+            case BLACK_GREEN_SHIP_SLOT:
+                shipSS = new Sprite(assets.assetManager.get(Assets.ship_black_green_ss, Texture.class));
+                break;
+            case BLUE_ORANGE_SHIP_SLOT:
+                shipSS = new Sprite(assets.assetManager.get(Assets.ship_blue_orange_ss, Texture.class));
+                break;
+        }
+        assert shipSS != null;
+        return Anim.createAnimation(shipSS, 4, DEFAULT_FRAME_DURATION * 1.5f);
+    }
 }

@@ -6,9 +6,9 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
-public class PowerupTimer {
+public class PowerupDial {
     Animation<TextureRegion> powerUpAnimation;
-    public static Sprite powerUpTimerSheet;
+    public static Sprite powerUpDialSheet;
     float x,y;
     float stateTime;
     float size;
@@ -16,27 +16,26 @@ public class PowerupTimer {
     public boolean remove = false;
 
     public static void createPowerupSprite(Assets assets){
-        powerUpTimerSheet = new Sprite(assets.assetManager.get(Assets.powerup_timer, Texture.class));
+        powerUpDialSheet = new Sprite(assets.assetManager.get(Assets.powerup_timer, Texture.class));
     }
     public void create(float x, float y, float size, float totalTimerLength){
         this.x = x;
         this.y = y;
         this.size = size;
         stateTime = 0;
-        powerUpAnimation = Anim.createAnimation(powerUpTimerSheet, 9, Math.abs(totalTimerLength)/9f);
+        powerUpAnimation = Anim.createAnimation(powerUpDialSheet, 9, Math.abs(totalTimerLength)/9f);
 
     }
 
     public void update(float delta){
         stateTime += delta;
-        if (powerUpAnimation.isAnimationFinished(stateTime))
+        if (powerUpAnimation!= null && powerUpAnimation.isAnimationFinished(stateTime))
             remove = true;
     }
 
-    public void render (Anim explosionAnim, SpriteBatch batch) {
-
+    public void render (Anim powerupDialAnim, SpriteBatch batch) {
         if(y < MainGame.SCREEN_HEIGHT)
-            explosionAnim.drawAnim(powerUpAnimation, stateTime, x, y, size, size, false, batch);
+            powerupDialAnim.drawAnim(powerUpAnimation, stateTime, x, y, size, size, false, batch);
 
     }
     public float getStateTime(){
