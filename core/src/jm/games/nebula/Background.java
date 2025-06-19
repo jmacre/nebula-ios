@@ -89,7 +89,6 @@ public class Background {
         goalSpeed = SCREEN_HEIGHT / 1.78f;
         starsFrontAnimation = Anim.createAnimation(starsFront, 4, 0.1f);
         starsBackAnimation = Anim.createAnimation(starsBack, 4, 0.1f);
-
     }
 
     public void updateAndRender(float delta, boolean isAlive, boolean isHourglass, int score, Anim starsAnimFront, Anim starsAnimBack, SpriteBatch batch, boolean constantSpeed, boolean isResettingScreen, boolean stayStill, boolean isOnTitleScreen, boolean choseToNotWatchAd) {
@@ -186,9 +185,7 @@ public class Background {
         backgroundSprite.setPosition(0, background_y2);
         backgroundSprite.draw(batch);
 
-        if(choseToNotWatchAd || isAlive){
-            changeBackgroundColor(delta, score, batch, isAlive);
-        }
+        changeBackgroundColor(delta, score, batch, isAlive);
 
         if (!isHourglass)
             stateTime += delta / 10 * hourglassMultiplier;
@@ -247,7 +244,7 @@ public class Background {
                 backgroundTransitionSprite1.draw(batch);
             }
 
-        } else if (score < 100 || !isAlive) {
+        } else if (score < 100) {
             backgroundTransitionSprite = defaultBackgroundSprite;
         } else if (score < 1000) {
             backgroundTransitionSprite = blueBackgroundSprite;

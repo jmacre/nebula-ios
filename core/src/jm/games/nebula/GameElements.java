@@ -31,7 +31,12 @@ public class GameElements {
     public static float SCORE_TICKER_TIMER = -.25f;
     public static float GEM_COUNT_UPDATE_TIMER = -.065f;
     public static float GEM_COUNT_TIMER_DELAY = -0.5f;
-    public static float TAP_TO_CONTINUE_BLINKING_TIMER = -0.5f;
+    public static float TAP_TO_CONTINUE_BLINKING_TIMER = -1f;
+
+    public static float MISSILE_USED_TIMER = -0.1f;
+    public static float RAPID_FIRE_USED_TIMER = -0.1f;
+    public static float BEAM_USED_TIMER = -0.1f;
+    public static float BOMB_USED_TIMER = -0.05f;
 
     public static float MAIN_UI_HEIGHT;
 
@@ -545,7 +550,7 @@ public class GameElements {
     Animation<TextureRegion>  bulletButtonAnimation;
 
 
-    Sprite blackTransition, whiteFlash, shipSS, bulletSS;
+    Sprite blackTransition, whiteFlash, bulletSS;
     Animation<TextureRegion> shipAnimation;
 
     MASound mainSong;
