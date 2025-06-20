@@ -2231,7 +2231,8 @@ public class MainGame extends GameElements implements Screen {
 
         beamTimer = new GameTimer(BEAM_TIMER,
                 () -> addPowerUpDial(BEAM_TIMER),
-                () -> { isBeam = false; activePowerUp = DEFAULT_BULLET_ID; });
+                () -> { isBeam = false; activePowerUp = DEFAULT_BULLET_ID; bullets.clear();
+                        beamBulletsCreated = false;});
 
         rapidFireTimer = new GameTimer(RAPID_FIRE_TIMER,
                 () -> addPowerUpDial(RAPID_FIRE_TIMER),
