@@ -1,5 +1,7 @@
 package jm.games.nebula;
 
+import com.badlogic.gdx.math.Interpolation;
+
 public class GameTimer {
     private float timer;
     private final float resetValue;
@@ -42,6 +44,8 @@ public class GameTimer {
 
     public void reset() {
         timer = resetValue;
+        onStartRan = false;
+        onExpireRan = false;
     }
 
     public void set(float newValue) {

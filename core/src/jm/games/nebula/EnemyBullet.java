@@ -40,8 +40,8 @@ public class EnemyBullet {
 
     public void create (int ENEMY_BULLET_X, int ENEMY_BULLET_Y, float speed, int bulletColor, Assets assets) {
         this.assets = assets;
-        this.ENEMY_BULLET_X = (int)ENEMY_BULLET_X;
-        this.ENEMY_BULLET_Y = (int)ENEMY_BULLET_Y;
+        this.ENEMY_BULLET_X = ENEMY_BULLET_X;
+        this.ENEMY_BULLET_Y = ENEMY_BULLET_Y;
         this.speed = speed;
         this.stateTime = 0;
 
@@ -74,7 +74,7 @@ public class EnemyBullet {
     }
 
     public void render (SpriteBatch batch, float delta, Anim enemyBulletAnim) {
-        stateTime += delta / 6;
+        stateTime += delta / 4;
 
         if (ENEMY_BULLET_Y + ENEMY_BULLET_HEIGHT > 0) {
             enemyBulletAnim.drawAnim(enemyBulletAnimation, stateTime, ENEMY_BULLET_X, ENEMY_BULLET_Y, ENEMY_BULLET_WIDTH, ENEMY_BULLET_HEIGHT, true, batch);

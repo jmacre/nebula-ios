@@ -124,6 +124,7 @@ public class Assets implements Disposable {
     public static final String enemy_ship_purple_ss = "enemy/enemy_ship_purple_ss.png";
     public static final String enemy_ship_white_ss = "enemy/enemy_ship_white_ss.png";
     public static final String enemy_bullet_ss = "weapon/enemy_bullet_ss.png";
+    public static final String beam_bullet_ss = "weapon/beam_bullet_ss.png";
 
     public static final String ship_ss = "player/ship_ss.png";
     public static final String ship_red_ss = "player/ship_red_ss.png";
@@ -231,6 +232,7 @@ public class Assets implements Disposable {
         assetManager.load(bullet_rocketPop, Texture.class);
 
         assetManager.load(missile_ss, Texture.class);
+        assetManager.load(beam_bullet_ss, Texture.class);
 
         assetManager.load(sound_off_button_active, Texture.class);
         assetManager.load(sound_on_button_active, Texture.class);
@@ -403,6 +405,7 @@ public class Assets implements Disposable {
         assetManager.unload(bullet_rocketPop);
 
         assetManager.unload(missile_ss);
+        assetManager.unload(beam_bullet_ss);
 
         assetManager.unload(sound_off_button_inactive);
         assetManager.unload(sound_on_button_inactive);

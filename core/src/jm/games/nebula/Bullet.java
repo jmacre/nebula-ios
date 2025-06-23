@@ -121,7 +121,7 @@ public class Bullet extends GameElements {
 
         else if(isBeam){
             this.rect = new Collision(BULLET_X, BULLET_Y, BULLET_WIDTH, SCREEN_HEIGHT);
-            bulletSprite.setTexture(assets.assetManager.get(Assets.enemy_bullet_ss, Texture.class));
+            bulletSprite.setTexture(assets.assetManager.get(Assets.beam_bullet_ss, Texture.class));
             bulletSprite.setSize(BULLET_WIDTH, SCREEN_HEIGHT);
             bulletAnimation = Anim.createAnimation(bulletSprite, 2, Anim.DEFAULT_FRAME_DURATION*2f);
         }

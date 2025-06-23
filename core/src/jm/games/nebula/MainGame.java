@@ -120,7 +120,7 @@ public class MainGame extends GameElements implements Screen {
     GameTimer rapidFireTimer;
     GameTimer beamTimer;
 
-    float spreadFireTimer = SPREAD_FIRE_TIMER;
+    GameTimer spreadFireTimer;
     float hourglassTimer = HOURGLASS_TIMER;
 
     float moveSpeed = 27f;
@@ -392,6 +392,7 @@ public class MainGame extends GameElements implements Screen {
         }
         isPlayingAd = false;
         isAdLoaded = false;
+        activePowerUp = DEFAULT_BULLET_ID;
 
     }
 
@@ -532,11 +533,6 @@ public class MainGame extends GameElements implements Screen {
             if (isHourglass) {
                 runHourglassTimer();
             }
-
-            else if (isSpreadFire) {
-                runSpreadFireTimer();
-            }
-
 
             if (!hurtEnemies.isEmpty()) {
                 for (Enemy enemy : hurtEnemies) {
@@ -786,6 +782,7 @@ public class MainGame extends GameElements implements Screen {
         beamTimer.update(isBeam, deltaP);
         rapidFireTimer.update(isRapidFire, deltaP);
         bombUsedTimer.update(bombUsed, deltaP);
+        spreadFireTimer.update(isSpreadFire, deltaP);
     }
 
     public void updateSpawnRates(int score) {
@@ -924,9 +921,7 @@ public class MainGame extends GameElements implements Screen {
         rapidFireUsed = false;
         beamUsed = false;
 
-        spreadFireTimer = SPREAD_FIRE_TIMER;
         hourglassTimer = HOURGLASS_TIMER;
-
         activePowerUp = DEFAULT_BULLET_ID;
 
         isMissile = false;
@@ -1010,7 +1005,6 @@ public class MainGame extends GameElements implements Screen {
 
         if (shipPositions.size > 0)
             shipPositions.clear();
-
     }
 
     public void resetHourglassMultiplier() {
@@ -2223,24 +2217,38 @@ public class MainGame extends GameElements implements Screen {
         missileUsedTimer = new GameTimer(MISSILE_USED_TIMER, () -> missileUsed = false);
 
         bombUsedTimer = new GameTimer(BOMB_USED_TIMER,
-                () -> { bombUsed = false; whiteFlash.draw(game.batch); });
+                () -> { bombUsed = false;
+                        whiteFlash.draw(game.batch);
+        });
 
         missileTimer = new GameTimer(MISSILE_TIMER,
                 () -> addPowerUpDial(MISSILE_TIMER),
-                () -> { isMissile = false; activePowerUp = DEFAULT_BULLET_ID; });
+                () -> { isMissile = false;
+                        activePowerUp = DEFAULT_BULLET_ID;
+        });
 
         beamTimer = new GameTimer(BEAM_TIMER,
                 () -> addPowerUpDial(BEAM_TIMER),
-                () -> { isBeam = false; activePowerUp = DEFAULT_BULLET_ID; bullets.clear();
-                        beamBulletsCreated = false;});
+                () -> { isBeam = false;
+                        activePowerUp = DEFAULT_BULLET_ID;
+                        bullets.clear();
+                        beamBulletsCreated = false;
+        });
 
         rapidFireTimer = new GameTimer(RAPID_FIRE_TIMER,
                 () -> addPowerUpDial(RAPID_FIRE_TIMER),
-                () -> { isRapidFire = false; activePowerUp = DEFAULT_BULLET_ID; });
+                () -> { isRapidFire = false;
+                        activePowerUp = DEFAULT_BULLET_ID;
+        });
+        spreadFireTimer = new GameTimer(SPREAD_FIRE_TIMER,
+                () -> addPowerUpDial(SPREAD_FIRE_TIMER),
+                () -> { isSpreadFire = false;
+                        activePowerUp = DEFAULT_BULLET_ID;
+        });
     }
 
     public void addPowerUpDial(float totalTimerLength) {
-        if (powerUpDials.isEmpty()) {
+        if (powerUpDials.isEmpty() && activePowerUp != DEFAULT_BULLET_ID) {
             powerUpDial = new PowerupDial();
             powerUpDial.create(POWERUP_TIMER_X, POWERUP_TIMER_Y - (int) (0.6f * Gdx.graphics.getSafeInsetTop()), POWERUP_TIMER_HEIGHT, totalTimerLength);
             powerUpDials.add(powerUpDial);
@@ -2248,7 +2256,7 @@ public class MainGame extends GameElements implements Screen {
     }
 
     public void updatePowerUpDial() {
-        if (powerUpDial != null && !isTransitioningOut) {
+        if (powerUpDial != null && activePowerUp != DEFAULT_BULLET_ID && !isTransitioningOut) {
             powerUpDial.update(deltaP);
             powerUpDial.render(powerupAnim, game.batch);
         }
@@ -2337,19 +2345,6 @@ public class MainGame extends GameElements implements Screen {
             }
             playHitSound = false;
             hitSoundTimer = -.08f;
-        }
-    }
-
-    public void runSpreadFireTimer() {
-        if (spreadFireTimer < 0) {
-            addPowerUpDial(SPREAD_FIRE_TIMER);
-
-            spreadFireTimer += deltaP;
-        } else {
-            isSpreadFire = false;
-            activePowerUp = DEFAULT_BULLET_ID;
-            spreadFireTimer = SPREAD_FIRE_TIMER;
-
         }
     }
 
