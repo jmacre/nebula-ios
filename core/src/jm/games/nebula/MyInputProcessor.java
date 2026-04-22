@@ -38,7 +38,12 @@ public class MyInputProcessor implements InputProcessor {
         return false;
     }
 
-
+    // Added in libGDX 1.12+ — fires when a touch is cancelled (e.g. the
+    // OS steals focus). Mirror touchUp so our tap bookkeeping stays sane.
+    @Override
+    public boolean touchCancelled(int screenX, int screenY, int pointer, int button) {
+        return false;
+    }
 
     @Override
     public boolean mouseMoved(int screenX, int screenY) {
