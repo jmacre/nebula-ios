@@ -4,7 +4,7 @@ A fast-paced arcade space shooter for Android and iOS, built solo in Java on lib
 
 <!-- TODO: add a screenshot or short gameplay GIF here, e.g. ![Gameplay](docs/gameplay.gif) -->
 
-**Download:** [Google Play](https://play.google.com/store/apps/details?id=jm.games.nebula) · App Store: _TODO: add link_
+**Download:** [Google Play](https://play.google.com/store/apps/details?id=jm.games.nebula) · [App Store](https://apps.apple.com/us/app/nebula-endless-space-shooter/id1662640194)
 
 <!-- TODO (optional): add real download / rating numbers once you've checked the consoles -->
 
